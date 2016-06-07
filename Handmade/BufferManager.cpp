@@ -140,7 +140,10 @@ void BufferManager::Destroy(BufferType bufferType, RemoveType removeType, const 
 void BufferManager::Output()
 {
 
+	//clear the console window for a fresh display
 	system("cls");
+
+	//display total amount of buffer IDs stored in all VBO maps
 	std::cout << "------------------------------------" << std::endl;
 	std::cout << "Total size of all VBO maps : " << std::endl;
 	std::cout << "------------------------------------" << std::endl;
@@ -149,5 +152,35 @@ void BufferManager::Output()
 	std::cout << "Size of Normal Buffer Map  : " << m_normalBufferIDMap.size() << std::endl;
 	std::cout << "Size of Texture Buffer Map : " << m_textureBufferIDMap.size() << std::endl;
 	std::cout << "------------------------------------" << std::endl;
+
+	//loop through vertex map and display each buffer detailing its OpenGL ID and tag name
+	for (auto it = m_vertexBufferIDMap.begin(); it != m_vertexBufferIDMap.end(); it++)
+	{
+		std::cout << it->second << " : " << it->first << std::endl;
+	}
+
+	std::cout << "------------------------------------" << std::endl;
+
+	//loop through color map and display each buffer detailing its OpenGL ID and tag name
+	for (auto it = m_colorBufferIDMap.begin(); it != m_colorBufferIDMap.end(); it++)
+	{
+		std::cout << it->second << " : " << it->first << std::endl;
+	}
+
+	std::cout << "------------------------------------" << std::endl;
+
+	//loop through normal map and display each buffer detailing its OpenGL ID and tag name
+	for (auto it = m_normalBufferIDMap.begin(); it != m_normalBufferIDMap.end(); it++)
+	{
+		std::cout << it->second << " : " << it->first << std::endl;
+	}
+
+	std::cout << "------------------------------------" << std::endl;
+
+	//loop through texture map and display each buffer detailing its OpenGL ID and tag name
+	for (auto it = m_textureBufferIDMap.begin(); it != m_textureBufferIDMap.end(); it++)
+	{
+		std::cout << it->second << " : " << it->first << std::endl;
+	}
 
 }

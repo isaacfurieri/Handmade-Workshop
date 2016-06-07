@@ -150,9 +150,17 @@ void TextureManager::UnloadFromMemory(RemoveType removeType, const std::string& 
 void TextureManager::Output()
 {
 
-	//todo : edit layout a little
+	//clear the console window for a fresh display
 	system("cls");
+	
+	//display total amount of texture IDs stored in map
 	std::cout << "Size of Texture ID Map : " << m_textureIDMap.size() << std::endl;
-	std::cout << "--------------------------" << std::endl;
+	std::cout << "------------------------------" << std::endl;
+
+	//loop through map and display each texture detailing its OpenGL ID and tag name
+	for (auto it = m_textureIDMap.begin(); it != m_textureIDMap.end(); it++)
+	{
+		std::cout << it->second << " : " << it->first << std::endl;
+	}
 
 }

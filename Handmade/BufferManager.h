@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : November 2015
+  UPDATED : June 2016
 
   -----------------------------------------------------------------------------------------------
 
@@ -34,8 +34,8 @@
   activate and de-activate buffers respectively, and this needs to be done before a specific VBO
   can be used.
 
-- An Output() routine is there for debug purposes only and will print to the console how many buffer
-  IDs are currently stored in each of the four supported maps.
+- An Output() routine is there for debug purposes only and will print to the console how many VBO
+  IDs are currently stored in all the maps, as well as detailing each one.
 
 */
 

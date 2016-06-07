@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : November 2015
+  UPDATED : June 2016
 
   -----------------------------------------------------------------------------------------------
 
@@ -29,7 +29,7 @@
   and this needs to be done before a specific texture can be used.
 
 - An Output() routine is there for debug purposes only and will print to the console how many texture 
-  IDs are currently stored in the map.
+  IDs are currently stored in the map, as well as detailing each one.
 
 */
 
