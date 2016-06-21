@@ -26,12 +26,21 @@ GameState* Game::GetActiveGameState()
 
 }
 //------------------------------------------------------------------------------------------------------
-//setter function that adds a game state to the end of the vector container 
+//function that adds a game state to the end of the vector  
 //------------------------------------------------------------------------------------------------------
 void Game::AddGameState(GameState* gameState)
 {
 
 	m_gameStateManager.push_back(gameState);
+
+}
+//------------------------------------------------------------------------------------------------------
+//function that removes a game state from the middle of the vector based on index value passed 
+//------------------------------------------------------------------------------------------------------
+void Game::RemoveGameState(int index)
+{
+
+	m_gameStateManager.erase(m_gameStateManager.begin() + index);
 
 }
 //------------------------------------------------------------------------------------------------------
