@@ -137,7 +137,7 @@ bool Model::LoadFromFile(const std::string& OBJfilename, const std::string& MTLf
 		getline(file, lineText);
 
 		//break text string into smaller substrings
-		ParseString(lineText, ' ', subStrings);
+		ParseString(lineText, subStrings, ' ');
 
 		//if first token is "g", create a new group
 		/*if(subStrings[0] == "g")
@@ -179,7 +179,7 @@ bool Model::LoadFromFile(const std::string& OBJfilename, const std::string& MTLf
 			{
 
 				//break each face substring into three face numeric values
-				ParseString(subStrings[i], '/', subNumbers);
+				ParseString(subStrings[i], subNumbers, '/');
 
 				Vector3D<GLuint> v(atoi(subNumbers[0].c_str()) - 1,
 					               atoi(subNumbers[1].c_str()) - 1,
@@ -237,7 +237,7 @@ bool Model::LoadFromFile(const std::string& OBJfilename, const std::string& MTLf
 		getline(file, lineText);
 
 		//break text string into smaller substrings
-		ParseString(lineText, ' ', subStrings);
+		ParseString(lineText, subStrings, ' ');
 
 		//if first token is "newmtl", add a new material object to map
 		if (subStrings[0] == "newmtl")

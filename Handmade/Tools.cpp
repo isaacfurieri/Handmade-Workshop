@@ -1,90 +1,52 @@
+#include <iostream>
 #include "Tools.h"
 
 //------------------------------------------------------------------------------------------------------
-//function that splits a string of text into segments based on token passed
+//function that converts passed string object to an integer value
 //------------------------------------------------------------------------------------------------------
-void ParseString(std::string& text, char token, std::vector<std::string>& subStrings)
+int StringToInteger(const std::string& str)
+{
+
+	return atoi(str.c_str());
+
+}
+//------------------------------------------------------------------------------------------------------
+//function that converts passed string object to a float value
+//------------------------------------------------------------------------------------------------------
+float StringToFloat(const std::string& str)
+{
+
+	return (float)atof(str.c_str());
+
+}
+//------------------------------------------------------------------------------------------------------
+//function that splits a string object into segments based on token passed
+//------------------------------------------------------------------------------------------------------
+void ParseString(std::string& str, std::vector<std::string>& subStrings, char token)
 {
 
 	//variable to hold position of token
 	unsigned int tokenPosition = 0;
 
-	//as long as the end of the string is not reached place each
-	//substring in a vector whenever the token symbol is found
-	do
+	//first check if string is empty and display error message if it is
+	if (str.empty())
 	{
+		std::cout << "The passed string is empty." << std::endl;
+	}
 
-		tokenPosition = text.find(token);
-		subStrings.push_back(text.substr(0, tokenPosition));
-
-		if (tokenPosition != std::string::npos)
+	//otherwise find the token position, store the substring  
+	//and erase that portion of the original string object as 
+	//long as the end of the string has not been reached 
+	else
+	{
+		do
 		{
-			text.erase(0, tokenPosition + 1);
-		}
 
-	} while (tokenPosition != std::string::npos);
+			tokenPosition = str.find(token);
+			subStrings.push_back(str.substr(0, tokenPosition));
+			str.erase(0, tokenPosition + 1);
+
+		} while (tokenPosition != std::string::npos);
+	}
 
 }
-
-//------------------------------------------------------------------------------------------------------
-//function that converts a passed degree into a radian value
-//------------------------------------------------------------------------------------------------------
-//double DegreeToRadian(double degree)
-//{
-//
-//	return degree / 180.0 * PI;
-//	
-//}
-////------------------------------------------------------------------------------------------------------
-////function that converts a passed radian into a degree value
-////------------------------------------------------------------------------------------------------------
-//double RadianToDegree(double radian)
-//{
-//
-//	return radian / PI * 180.0;
-//
-//}
-////------------------------------------------------------------------------------------------------------
-////function that converts a string object to an integer value
-////------------------------------------------------------------------------------------------------------
-//int StringToInt(const string& str)
-//{
-//
-//	return atoi(str.c_str());
-//
-//}
-////------------------------------------------------------------------------------------------------------
-////function that converts an integer value to a string object
-////------------------------------------------------------------------------------------------------------
-//string IntToString(int num)
-//{
-//
-//	char tempStr[10];
-//	
-//	string str;
-//	_itoa_s(num, tempStr, sizeof(tempStr), 10);
-//	str = tempStr;
-//
-//	return str;
-//
-//}
-////------------------------------------------------------------------------------------------------------
-////function that converts a string object to a float value
-////------------------------------------------------------------------------------------------------------
-//float StringToFloat(const string& str)
-//{
-//
-//	return (float)atof(str.c_str());
-//
-//}
-////------------------------------------------------------------------------------------------------------
-////function that converts a float value to a string object
-////------------------------------------------------------------------------------------------------------
-//string FloatToString(float num)
-//{
-//
-//	stringstream str;
-//	str << num;
-//	return str.str();
-//
-//}

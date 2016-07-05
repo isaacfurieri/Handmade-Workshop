@@ -6,40 +6,46 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : February 2016
+  UPDATED : July 2016
 
   -----------------------------------------------------------------------------------------------
 
-- This is a collection of some global tools that can be used throughout the client code
+- This is a collection of some global tools that is intended be used throughout the client code.
+  It consists of a few helper functions for converting string text to numeric values and vice- 
+  versa, and for parsing text. More helper functions will be added at a later stage.
+
+- The conversion functions use low level conversion routines and c-style strings to convert numeric
+  values to string values and vice-versa. The StringToInteger() and StringToFloat() functions both
+  use two different conversion routines, hence why they couldn't be rolled into one. The
+  NumberToString() function uses a stringstream object to convert any numberical type (int, float, etc)
+  to a string object.
+
+- The ParseString() function is intended to be used to break a large string sentence into smaller 
+  chunks, using a character token that acts as a symbol which specifies where to split the string.
+  For instance MyName=John could be split into two parts, namely "MyName" and "John", using the "="
+  character as a splitting token. The function does not return anything, but rather uses the passed
+  substring vector reference to store the smaller substrings in. If the substring vector were to be
+  created in the routine that would mean returning a copy of it, which would be quite large if there
+  were many substrings. 
 
 */
 
 #ifndef TOOLS_H
 #define TOOLS_H
 
+#include <sstream>
 #include <string>
 #include <vector>
 
-//------------------------------------------------------------------------------------------------------
-//declare and initialize global PI value
-//------------------------------------------------------------------------------------------------------
+int StringToInteger(const std::string& str);
+float StringToFloat(const std::string& str);
+void ParseString(std::string& str, std::vector<std::string>& subStrings, char token);
 
-static const double PI = 3.14159265359;
-
-//------------------------------------------------------------------------------------------------------
-//global function headers 
-//------------------------------------------------------------------------------------------------------
-
-void ParseString(std::string& text, char token, std::vector<std::string>& subStrings);
-
-//double DegreeToRadian(double degree);
-//double RadianToDegree(double radian);
-
-//int StringToInt(const string& str);
-//string IntToString(int num);
-//float StringToFloat(const string& str);
-//string FloatToString(float num);
-
-
+template <typename T> std::string NumberToString(T number)
+{
+	std::stringstream str;
+	str << number;
+	return str.str();
+}
 
 #endif
