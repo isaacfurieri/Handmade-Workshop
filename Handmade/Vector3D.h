@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : March 2016
+  UPDATED : July 2016
 
   -----------------------------------------------------------------------------------------------
 
@@ -157,7 +157,7 @@ public :
 	void Set(T x, T y, T z);
 	double Angle(Vector3D<T>& secondVector);
 		
-	Vector3D<T> Normalise();
+	Vector3D<T> Normalise() const;
 	Vector2D<T> Convert2D() const;
 	Vector4D<T> Convert4D() const;
 	Vector3D<T> CrossProduct(const Vector3D<T>& secondVector) const;
@@ -874,7 +874,7 @@ template <class T> double Vector3D<T>::Angle(Vector3D<T>& secondVector)
 //------------------------------------------------------------------------------------------------------
 //function that normalises a Vector3D object
 //------------------------------------------------------------------------------------------------------
-template <class T> Vector3D<T> Vector3D<T>::Normalise()
+template <class T> Vector3D<T> Vector3D<T>::Normalise() const
 {
 
 	Vector3D<T> temp(*this);

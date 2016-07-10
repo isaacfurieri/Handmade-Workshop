@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : April 2016
+  UPDATED : July 2016
 
   -----------------------------------------------------------------------------------------------
 
@@ -21,13 +21,13 @@
   are floats because that provides more accuracy when calculating the bounds, and will provide 
   better collision precision even if it's just a minute amount.
   
-- There are four IsColliding() functions, one for checking two spheres for collision, another for
-  checking if a sphere and a AABB collide, a third one for checking intersections with a line
-  segment, and a fourth one for checking for collisions with a plane. The first one uses its own 
+- There are five IsColliding() functions, one for checking two spheres for collision, another two
+  for checking if a sphere and a AABB or OBB collide, a fourth one for checking intersections with
+  a line segment, a fifth one for checking for collisions with a plane. The first one uses its own 
   radius and the radius of another sphere within a formula to calculate for collision. The sphere-box
-  collision routine makes use of the AABB's IsColliding() routine, so that code is not duplicated. 
-  Likewise the sphere-line and sphere-plane collision functions makes use of the Line2D's IsColliding()
-  and the Plane2D's IsColliding() routines resepctively.
+  collision routines makes use of the AABB or OBB's IsColliding() routines, so that code is not 
+  duplicated. Likewise the sphere-line and sphere-plane collision functions makes use of the Line2D's
+  IsColliding() and the Plane2D's IsColliding() routines resepctively.
 
 - The Update() routine calculates the radius based on the dimension of the sphere and its scale
   value, which is then used to calculate for collision. These values are purely for collision
@@ -60,6 +60,7 @@
 #include "AABB2D.h"
 #include "Bound.h"
 #include "Line2D.h"
+#include "OBB2D.h"
 #include "Plane2D.h"
 
 class Sphere2D : public Bound
@@ -81,6 +82,7 @@ public :
 		
 public :
 
+	bool IsColliding(const OBB2D& secondBox) const;
 	bool IsColliding(const AABB2D& secondBox) const;
 	bool IsColliding(const Line2D& secondLine) const;
 	bool IsColliding(const Plane2D& secondPlane) const;

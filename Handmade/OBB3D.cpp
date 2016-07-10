@@ -2,6 +2,7 @@
 #include "DebugManager.h"
 #include "OBB3D.h"
 #include "ScreenManager.h"
+#include "Sphere3D.h"
 #include "Transform.h"
 
 //------------------------------------------------------------------------------------------------------
@@ -97,6 +98,77 @@ bool OBB3D::IsColliding(const AABB3D& secondBox) const
 
 	//check if OBBs collide using inner IsColliding() routine
 	return IsColliding(tempBox);
+
+}
+//------------------------------------------------------------------------------------------------------
+//function that checks if OBB collides with a sphere object
+//------------------------------------------------------------------------------------------------------
+bool OBB3D::IsColliding(const Sphere3D& secondSphere) const
+{
+
+	Vector3D<float> distanceFromBox;
+
+	//calculate the distance the sphere and point on box edge are apart from each other
+	//this makes use of inner function that calculates the point on box edge closest to sphere 
+	distanceFromBox = secondSphere.GetPosition() - PointOnBox(secondSphere.GetPosition().X,
+															  secondSphere.GetPosition().Y,
+															  secondSphere.GetPosition().Z);
+
+	//return flag based on if box intersects with sphere
+	return (distanceFromBox.Length() <= secondSphere.GetRadius());
+
+}
+//------------------------------------------------------------------------------------------------------
+//function that determines point on box edge that is closest to position passed 
+//------------------------------------------------------------------------------------------------------
+Vector3D<float> OBB3D::PointOnBox(float positionX, float positionY, float positionZ) const
+{
+
+	float projectValue;
+	float clampValue[3];
+	float halfDimension[3];
+
+	Vector3D<float> tempAxis[3];
+	Vector3D<float> normalizedAxis[3];
+	Vector3D<float> distanceFromSphere;
+	Vector3D<float> tempPosition(positionX, positionY, positionZ);
+
+	//first determine the half width, height and depth of bound based on scale value 
+	//here an array is used instead of a vector for use in the loop below
+	halfDimension[0] = m_dimension.X * m_scale.X / 2.0f;
+	halfDimension[1] = m_dimension.Y * m_scale.Y / 2.0f;
+	halfDimension[2] = m_dimension.Z * m_scale.Z / 2.0f;
+
+	//assign the box's right, up and forward axis to the temporary array
+	//so that we can make use of them easily in the loop below
+	tempAxis[0] = m_rightAxis;
+	tempAxis[1] = m_upAxis;
+	tempAxis[2] = m_forwardAxis;
+
+	//calculate distance between the box and position passed
+	distanceFromSphere = tempPosition - m_position;
+
+	//loop through all three axes 
+	for (int i = 0; i < 3; i++)
+	{
+
+		//normalise each axis for projection purposes later
+		normalizedAxis[i] = tempAxis[i].Normalise();
+
+		//project distance vector onto current axis
+		projectValue = distanceFromSphere.DotProduct(normalizedAxis[i]);
+
+		//calculate the clamp value based on the projected value 
+		//and the half dimension of the box using a min/max formula 
+		clampValue[i] = std::max(-halfDimension[i], std::min(halfDimension[i], projectValue));
+
+	}
+
+	//the clamp values are used together with the axes to determine the exact
+	//point on the edge of the box that lines up with the passed position point
+	return m_position + (normalizedAxis[0] * clampValue[0])
+					  + (normalizedAxis[1] * clampValue[1])
+					  + (normalizedAxis[2] * clampValue[2]);
 
 }
 //------------------------------------------------------------------------------------------------------

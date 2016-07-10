@@ -42,6 +42,16 @@ void Sphere3D::SetDimension(float dimension)
 
 }
 //------------------------------------------------------------------------------------------------------
+//function that checks if sphere collides with a OBB object
+//------------------------------------------------------------------------------------------------------
+bool Sphere3D::IsColliding(const OBB3D& secondBox) const
+{
+
+	//make use of OBB's box-sphere collision function
+	return (secondBox.IsColliding(*this));
+
+}
+//------------------------------------------------------------------------------------------------------
 //function that checks if sphere collides with a AABB object
 //------------------------------------------------------------------------------------------------------
 bool Sphere3D::IsColliding(const AABB3D& secondBox) const

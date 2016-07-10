@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : March 2016
+  UPDATED : July 2016
 
   -----------------------------------------------------------------------------------------------
 
@@ -114,7 +114,7 @@ public:
 
 	void Set(T x, T y, T z, T w);
 	
-	Vector4D<T> Normalise();
+	Vector4D<T> Normalise() const;
 	Vector2D<T> Convert2D() const;
 	Vector3D<T> Convert3D() const;
 
@@ -646,7 +646,7 @@ template <class T> void Vector4D<T>::Set(T x, T y, T z, T w)
 //------------------------------------------------------------------------------------------------------
 //function that normalises a Vector4D object
 //------------------------------------------------------------------------------------------------------
-template <class T> Vector4D<T> Vector4D<T>::Normalise()
+template <class T> Vector4D<T> Vector4D<T>::Normalise() const
 {
 
 	Vector4D<T> temp(*this);

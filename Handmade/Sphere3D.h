@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP.Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : April 2016
+  UPDATED : July 2016
 
   ----------------------------------------------------------------------------------------------
 
@@ -19,11 +19,11 @@
   sphere can only be scaled in one dimension so to speak, and will not be scaled in all axes, turning
   it into an ellipse.
   
-- There are four IsColliding() functions, one for checking two spheres for collision, another for
-  checking if a sphere and a AABB collide, a third one for checking intersections with a line
-  segment, and a fourth one for checking for collisions with a plane. The first one uses its own
-  radius and the radius of another sphere within a formula to calculate for collision. The 
-  sphere-box collision routine makes use of the AABB's IsColliding() routine, so that code is not
+- There are five IsColliding() functions, one for checking two spheres for collision, another two
+  for checking if a sphere and a AABB or OBB collide, a fourth one for checking intersections with
+  a line segment, a fifth one for checking for collisions with a plane. The first one uses its own
+  radius and the radius of another sphere within a formula to calculate for collision. The sphere-box
+  collision routines makes use of the AABB or OBB's IsColliding() routines, so that code is not
   duplicated. Likewise the sphere-line and sphere-plane collision functions makes use of the Line3D's
   IsColliding() and the Plane3D's IsColliding() routines resepctively.
 
@@ -58,6 +58,7 @@
 #include "AABB3D.h"
 #include "Bound.h"
 #include "Line3D.h"
+#include "OBB3D.h"
 #include "Plane3D.h"
 
 class Sphere3D : public Bound
@@ -79,6 +80,7 @@ public:
 
 public:
 
+	bool IsColliding(const OBB3D& secondBox) const;
 	bool IsColliding(const AABB3D& secondBox) const;
 	bool IsColliding(const Line3D& secondLine) const;
 	bool IsColliding(const Plane3D& secondPlane) const;
