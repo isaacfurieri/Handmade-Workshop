@@ -28,6 +28,15 @@ bool& Animation::IsAnimationLooping()
 
 }
 //------------------------------------------------------------------------------------------------------
+//getter function that returns kill animation flag variable 
+//------------------------------------------------------------------------------------------------------
+bool Animation::GetKillAnimation()
+{
+
+	return m_killAnimation;
+
+}
+//------------------------------------------------------------------------------------------------------
 //setter function that assigns speed of animation
 //------------------------------------------------------------------------------------------------------
 void Animation::SetAnimationVelocity(GLfloat velocity)
@@ -43,10 +52,10 @@ void Animation::Draw()
 {
 
 	//store the total time elapsed since timer began which will be used in formula below
-	GLdouble timeElapsed = TheTime::Instance()->GetTotalTimeSeconds();
+	m_timeElapsed += TheTime::Instance()->GetElapsedTimeSeconds();
 
 	//aquire index value of specific texture cell to "cut out" using a formula
-	m_textureIndex = (GLint)(timeElapsed * m_animationVelocity) % 
+	m_textureIndex = (GLint)(m_timeElapsed * m_animationVelocity) %
 		             (m_textureDimension.X * m_textureDimension.Y);
 
 	//if animation is set to cycle endlessly then set the kill and final flags to false

@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : December 2015
+  UPDATED : July 2016
 
   -----------------------------------------------------------------------------------------------
 
@@ -39,6 +39,7 @@ public:
 public:
 
 	bool& IsAnimationLooping();
+	bool GetKillAnimation();
 	void SetAnimationVelocity(GLfloat velocity);
 	
 public:
@@ -51,6 +52,7 @@ protected:
 	bool m_finalAnimationLoop;
 	bool m_isAnimationLooping;
 	
+	GLdouble m_timeElapsed;
 	GLfloat m_animationVelocity;
 
 };

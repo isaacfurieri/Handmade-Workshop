@@ -20,6 +20,10 @@
   NumberToString() function uses a stringstream object to convert any numberical type (int, float, etc)
   to a string object.
 
+- The RemoveCharacter() function can be used to remove specific characters from a string. The routine
+  will run through the entire string passed to the funciton and search for every occurence of the 
+  desired character that needs to be removed from the string.
+
 - The ParseString() function is intended to be used to break a large string sentence into smaller 
   chunks, using a character token that acts as a symbol which specifies where to split the string.
   For instance MyName=John could be split into two parts, namely "MyName" and "John", using the "="
@@ -39,6 +43,7 @@
 
 int StringToInteger(const std::string& str);
 float StringToFloat(const std::string& str);
+void RemoveCharacter(std::string& str, char character);
 void ParseString(std::string& str, std::vector<std::string>& subStrings, char token);
 
 template <typename T> std::string NumberToString(T number)

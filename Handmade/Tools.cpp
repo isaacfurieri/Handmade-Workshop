@@ -20,6 +20,36 @@ float StringToFloat(const std::string& str)
 
 }
 //------------------------------------------------------------------------------------------------------
+//function that finds passed character in string object and removes it
+//------------------------------------------------------------------------------------------------------
+void RemoveCharacter(std::string& str, char character)
+{
+
+	//try to find first instance of passed character and store its position
+	auto it = std::find(str.begin(), str.end(), character);
+
+	//if character could not be found display an error message
+	if (it == str.end())
+	{
+		std::cout << "Character not found." << std::endl;
+	}
+
+	//otherwise remove the character from the string and continue
+	//to find and erase more occurrences of the character 
+	//as long as the end of the string has not been reached 
+	else
+	{
+		do
+		{
+
+			str.erase(it);
+			it = std::find(str.begin(), str.end(), character);
+
+		} while (it != str.end());
+	}
+
+}
+//------------------------------------------------------------------------------------------------------
 //function that splits a string object into segments based on token passed
 //------------------------------------------------------------------------------------------------------
 void ParseString(std::string& str, std::vector<std::string>& subStrings, char token)
