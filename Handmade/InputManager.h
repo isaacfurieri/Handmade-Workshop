@@ -54,6 +54,7 @@ class InputManager
 public :
 
 	enum ButtonState { UP, DOWN };
+	enum CursorState { CURSOR_ON, CURSOR_OFF };
 
 public :
 
@@ -75,6 +76,8 @@ public :
 	Vector2D<Sint32> GetMouseMotion();
 	Vector2D<Sint32> GetMouseWheel();	
 	
+	void SetMouseCursor(CursorState mouseCursor);
+
 public :
 
 	void Update();
