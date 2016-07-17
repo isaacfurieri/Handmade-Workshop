@@ -32,6 +32,9 @@ MainCamera::MainCamera()
 
 #endif
 
+	//disable mouse cursor so that it does not interfere when rotating the camera
+	TheInput::Instance()->SetMouseCursor(InputManager::CURSOR_OFF);
+
 }
 //------------------------------------------------------------------------------------------------------
 //function that reads key and mouse input and sets end of game flag accordingly 

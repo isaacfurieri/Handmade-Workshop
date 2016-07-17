@@ -22,6 +22,7 @@ bool MainState::OnEnter()
 	//create a heads-up display object
 	m_HUD = new HUD();
 
+
 	return true;
 
 }
