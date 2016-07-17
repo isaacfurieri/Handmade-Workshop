@@ -98,6 +98,15 @@ Vector2D<Sint32> InputManager::GetMouseWheel()
 
 }
 //------------------------------------------------------------------------------------------------------
+//setter function that sets flag of mouse cursor to either display or hide it
+//------------------------------------------------------------------------------------------------------
+void InputManager::SetMouseCursor(CursorState mouseCursor)
+{
+
+	SDL_SetRelativeMouseMode((SDL_bool)mouseCursor);
+	
+}
+//------------------------------------------------------------------------------------------------------
 //function that processes all keyboard and mouse events
 //------------------------------------------------------------------------------------------------------
 void InputManager::Update()
@@ -118,6 +127,9 @@ void InputManager::Update()
 	{
 		SDL_PushEvent(&events);
 	}
+
+	//reset window quitting flag 
+	m_isXClicked = false;
 
 	//reset mouse motion so that it's processed from scratch
 	m_mouseMotion = Vector2D<Sint32>::ZERO;

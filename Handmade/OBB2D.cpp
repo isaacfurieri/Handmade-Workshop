@@ -1,7 +1,6 @@
 #include <algorithm>
 #include "DebugManager.h"
 #include "OBB2D.h"
-#include "ScreenManager.h"
 #include "Sphere2D.h"
 
 //------------------------------------------------------------------------------------------------------

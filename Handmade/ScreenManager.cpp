@@ -12,6 +12,8 @@ ScreenManager::ScreenManager()
 	m_width = 0;
 	m_height = 0;
 	m_pixelsPerUnit = 0;
+	
+	m_windowHandle = 0;
 
 	m_window = 0;
 	m_screen = 0;
@@ -46,6 +48,15 @@ int ScreenManager::GetPixelsPerUnit()
 
 }
 //------------------------------------------------------------------------------------------------------
+//getter function that returns Windows handle of SDL game window
+//------------------------------------------------------------------------------------------------------
+HWND ScreenManager::GetWindowHandle()
+{
+
+	return m_windowHandle;
+
+}
+//------------------------------------------------------------------------------------------------------
 //getter function that creates screen size vector and returns it
 //------------------------------------------------------------------------------------------------------
 Vector2D<int> ScreenManager::GetScreenSize()
@@ -55,7 +66,7 @@ Vector2D<int> ScreenManager::GetScreenSize()
 
 }
 //------------------------------------------------------------------------------------------------------
-//setter function that assigns a pre-defined color value for clearing the screen...
+//setter function that assigns a pre-defined color value for clearing the screen
 //------------------------------------------------------------------------------------------------------
 void ScreenManager::SetClearColor(Color& color)
 {
@@ -194,7 +205,7 @@ bool ScreenManager::Initialize(const char* windowTitle, int width, int height, i
 		                             : SDL_WINDOW_OPENGL;
 
 	//create a game window using caption, width, height and screen mode flag
-	m_window = SDL_CreateWindow(windowTitle, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+	m_window = SDL_CreateWindow(windowTitle, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 		                        width, height, screenFlag);
 
 	//if game window could not be created, display error message and return false
@@ -215,18 +226,19 @@ bool ScreenManager::Initialize(const char* windowTitle, int width, int height, i
 		return false;
 	}
 
+	//variable to store window data in
+	SDL_SysWMinfo systemInfo;
+
+	//first store SDL version info
+	SDL_VERSION(&systemInfo.version);
+
+	//aquire main window data from SDL created game window
+	SDL_GetWindowWMInfo(m_window, &systemInfo);
+
 	//initialize GLEW and if it fails, display error message and return false
 	if (glewInit() != GLEW_OK)
 	{
 		std::cout << "GLEW could not be initialized.";
-		return false;
-	}
-
-	//disable mouse cursor so that it won't interfere when rotating the camera
-	//if there was an error disabling the mouse, display error message and return false 
-	if (SDL_SetRelativeMouseMode(SDL_TRUE) == -1)
-	{
-		std::cout << "Unable to disable mouse cursor." << std::endl;
 		return false;
 	}
 
@@ -245,6 +257,9 @@ bool ScreenManager::Initialize(const char* windowTitle, int width, int height, i
 
 	//store pixel scale value for use with 2D applications
 	m_pixelsPerUnit = pixelsPerUnit;
+
+	//store window handle for use with Windows specific functions
+	m_windowHandle = systemInfo.info.win.window;
 
 	return true;
 

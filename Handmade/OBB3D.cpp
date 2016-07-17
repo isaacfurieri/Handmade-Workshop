@@ -1,9 +1,7 @@
 #include <algorithm>
 #include "DebugManager.h"
 #include "OBB3D.h"
-#include "ScreenManager.h"
 #include "Sphere3D.h"
-#include "Transform.h"
 
 //------------------------------------------------------------------------------------------------------
 //constructor that assigns all default values

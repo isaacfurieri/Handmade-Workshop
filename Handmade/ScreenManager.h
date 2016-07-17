@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : March 2016
+  UPDATED : July 2016
 
   -----------------------------------------------------------------------------------------------
 
@@ -41,6 +41,10 @@
   The function will also create the game screen window and then go ahead and initialize the GLEW 
   subsystem, which will manage all extensions for OpenGL core access beyond 1.1. This is for Windows
   OS only, because Windows only allows developer access to the OpenGL core up until version 1.1.
+  Finally the function will gather the HWND window handle from the SDL created window and store it
+  so that it may be used if requested in the client code. This is useful when integrating Windows
+  specific functionality like Windows dialog or message boxes, because the HWND handle will always 
+  reference the main SDL parent window.
 
 - The Update() and Draw() routines will clear and swap the frame buffer respectively, and the ShutDown()
   function closes down the SDL and OpenGL subsystems.  
@@ -52,6 +56,7 @@
 
 #include <string>
 #include <SDL.h>
+#include <SDL_syswm.h>
 #include "Color.h"
 #include "Matrix4D.h"
 #include "Singleton.h"
@@ -62,7 +67,7 @@ class ScreenManager
 
 public :
 
-	enum ScreenOrigin2D { TOP_LEFT, BOTTOM_LEFT };
+	enum ScreenOrigin2D  { TOP_LEFT, BOTTOM_LEFT };
 
 public:
 
@@ -76,6 +81,7 @@ public:
 public :
 
 	int GetPixelsPerUnit();
+	HWND GetWindowHandle();
 	Vector2D<int> GetScreenSize();
 
 public :
@@ -107,6 +113,8 @@ private :
 	int m_width;
 	int m_height;
 	int m_pixelsPerUnit;
+
+	HWND m_windowHandle;
 
 	SDL_Window* m_window;
 	SDL_Surface* m_screen;
