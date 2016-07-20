@@ -1,4 +1,5 @@
 #include "InputManager.h"
+#include "ScreenManager.h"
 
 //------------------------------------------------------------------------------------------------------
 //constructor that assigns all default values 
@@ -41,6 +42,26 @@ const Uint8* InputManager::GetKeyStates()
 {
 
 	return m_keyStates;
+
+}
+//------------------------------------------------------------------------------------------------------
+//predicate function that returns flag stating if mouse cursor collides with passed bound
+//------------------------------------------------------------------------------------------------------
+bool InputManager::IsMouseColliding(AABB2D& bound)
+{
+
+	//create a temporary bounding box to represent mouse cursor
+	AABB2D tempBound;
+
+	//set mouse cursor bounds of 1x1 based on mouse position
+	//flip Y axis as mouse coordinates run from top to bottom
+	tempBound.SetPosition(m_mousePosition.X,
+					      TheScreen::Instance()->GetScreenSize().Y - m_mousePosition.Y);
+	tempBound.SetDimension(1, 1);
+	tempBound.Update();
+
+	//return flag based on if mouse collides with bound
+	return tempBound.IsColliding(bound);
 
 }
 //------------------------------------------------------------------------------------------------------

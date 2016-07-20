@@ -3,7 +3,7 @@
 #include "TextureManager.h"
 
 //------------------------------------------------------------------------------------------------------
-//constructor that assigns all defaults
+//constructor that assigns all default values
 //------------------------------------------------------------------------------------------------------
 Sprite::Sprite()
 {
@@ -123,23 +123,55 @@ void Sprite::Draw()
 	//aquire index value of specific texture cell to "cut out" using a basic formula 
 	m_textureIndex = (m_textureCell.Y * m_textureDimension.X) + m_textureCell.X;
 
-	//only if sprite is set to change or if it needs to be created at least once
-	//then call the functions to create the sprite by adding the vertex data, 
-	//texture coordinate data and color data to buffer before setting flag
+	//only if sprite is set to change or if it needs to be initially 
+	//created then call the necessary functions to create the sprite 
 	if (m_spriteType == DYNAMIC || (m_spriteType == STATIC && !m_isSpriteCreated))
 	{
+
+		//clear all buffer data from vectors
+		ClearBufferData();
+
+		//create the vertex, texture and color buffer data
 		CreateVertices();
 		CreateTexCoords();
 		CreateColors();
+
+		//fill the VBOs with the buffer data
+		FillBuffers();
+
+		//set flag so that static sprites are not created again
 		m_isSpriteCreated = true;
+
 	}
 
-	//create and draw sprite
+	//create and draw the sprite
 	CreateSprite();
 
 }
 //------------------------------------------------------------------------------------------------------
-//function that binds the texture, fills the VBO buffer and draws the sprite
+//function that fills VBO buffers with vertex, texture and color data
+//------------------------------------------------------------------------------------------------------
+void Sprite::FillBuffers()
+{
+
+	m_buffer.FillData(Buffer::COLOR_BUFFER);
+	m_buffer.FillData(Buffer::VERTEX_BUFFER);
+	m_buffer.FillData(Buffer::TEXTURE_BUFFER);
+
+}
+//------------------------------------------------------------------------------------------------------
+//function that clears the vertex, texture and color buffer data for new use
+//------------------------------------------------------------------------------------------------------
+void Sprite::ClearBufferData()
+{
+
+	m_buffer.Colors().clear();
+	m_buffer.Vertices().clear();
+	m_buffer.Textures().clear();
+
+}
+//------------------------------------------------------------------------------------------------------
+//function that binds the texture, and sends sprite data to shaders 
 //------------------------------------------------------------------------------------------------------
 void Sprite::CreateSprite()
 {
@@ -159,9 +191,6 @@ void Sprite::CreateSprite()
 //------------------------------------------------------------------------------------------------------
 void Sprite::CreateColors()
 {
-
-	//clear color buffer data for new use
-	m_buffer.Colors().clear();
 
 	//color data for vertex #1
 	m_buffer.Colors().push_back(m_color.R); m_buffer.Colors().push_back(m_color.G);
@@ -187,9 +216,6 @@ void Sprite::CreateColors()
 	m_buffer.Colors().push_back(m_color.R); m_buffer.Colors().push_back(m_color.G);
 	m_buffer.Colors().push_back(m_color.B); m_buffer.Colors().push_back(m_color.A);
 
-	//fill VBO buffer with color data
-	m_buffer.FillData(Buffer::COLOR_BUFFER);
-
 }
 //------------------------------------------------------------------------------------------------------
 //function that adds vertex data to buffer object's vertex vector
@@ -200,9 +226,6 @@ void Sprite::CreateVertices()
 	//sprite vertices are based on centre position of sprite
 	//therefore we have to halve the width and height dimensions first
 	Vector2D<float> halfDimension(m_spriteDimension.X / 2.0f, m_spriteDimension.Y / 2.0f);
-
-	//clear vertex buffer data for new use
-	m_buffer.Vertices().clear();
 
 	//vertex data for vertex #1
 	m_buffer.Vertices().push_back(-halfDimension.X);
@@ -228,9 +251,6 @@ void Sprite::CreateVertices()
 	m_buffer.Vertices().push_back(halfDimension.X);
 	m_buffer.Vertices().push_back(-halfDimension.Y);
 
-	//fill VBO buffer with vertex data
-	m_buffer.FillData(Buffer::VERTEX_BUFFER);
-
 }
 //------------------------------------------------------------------------------------------------------
 //function that adds texture coordinate data to buffer object's texture coordinate vector
@@ -254,9 +274,6 @@ void Sprite::CreateTexCoords()
 	//oneOverDimension to get a value between 0 and 1
 	texCoord *= oneOverDimension;
 	
-	//clear texture coordinate buffer data for new use
-	m_buffer.Textures().clear();
-
 	//texture coordinate data for vertex #1
 	m_buffer.Textures().push_back(texCoord.X);
 	m_buffer.Textures().push_back(texCoord.Y);
@@ -280,8 +297,5 @@ void Sprite::CreateTexCoords()
 	//texture coordinate data for vertex #6
 	m_buffer.Textures().push_back(texCoord.X + oneOverDimension.X);
 	m_buffer.Textures().push_back(texCoord.Y + oneOverDimension.Y);
-
-	//fill VBO buffer with texture data
-	m_buffer.FillData(Buffer::TEXTURE_BUFFER);
 
 }

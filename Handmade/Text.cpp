@@ -9,13 +9,11 @@
 Text::Text()
 {
 
-	//set sprite to dynamic by default 
-	//as the textures will change constantly
+	//set sprite to be dynamic by default
 	m_spriteType = DYNAMIC;
 
 	//set other default values
 	m_text = "";
-	m_uniform = "";
 	m_charSpace = 0.0f;
 	
 	//default font texture dimensions are set to 16x16
@@ -43,50 +41,83 @@ void Text::SetCharSpace(GLfloat charSpace)
 
 }
 //------------------------------------------------------------------------------------------------------
-//setter function that assigns shader uniform name based on uniform name passed
-//------------------------------------------------------------------------------------------------------
-void Text::SetShaderUniform(const std::string& uniform)
-{
-
-	m_uniform = uniform;
-
-}
-//------------------------------------------------------------------------------------------------------
 //function that creates and draws the actual text on screen
 //------------------------------------------------------------------------------------------------------
 void Text::Draw()
 {
 
-	//set character positioning value for each letter in string text
-	//always translate on X axis no matter how the text object is 
-	//transformed because the letters always read from left to right
-	m_translation.Translate(m_spriteDimension.X + m_charSpace, 0, 0);
-
-	//loop through the entire text string
-	for (size_t i = 0; i < m_text.size(); i++)
+	//only if sprite is set to change or if it needs to be initially 
+	//created then call the necessary functions to create the sprite 
+	if (m_spriteType == DYNAMIC || (m_spriteType == STATIC && !m_isSpriteCreated))
 	{
-		
-		//the texture index is the actual ascii value of the letter
-		m_textureIndex = m_text[i];
-		
-		//draw each individual letter sprite with texture using the base class functions
-		CreateVertices();
-		CreateTexCoords();
-		CreateColors();
-		CreateSprite();
 
-		//move position to next letter in string using translation set earlier 
-		TheScreen::Instance()->ModelViewMatrix() * m_translation.GetMatrix();
+		//clear all buffer data from vectors
+		ClearBufferData();
 
-		//first get the shader modelview matrix uniform id from the shader 
-		//manager then use that to pass the modelview matrix data to the shader
-		//this needs to be done for each letter because the modelview matrix changes each time
-		TheShader::Instance()->SetUniform(TheShader::Instance()->GetUniform(m_uniform),
-			                              TheScreen::Instance()->ModelViewMatrix().GetMatrixArray());
+		//loop through the entire text string and 
+		//create buffer data for each character
+		for (int i = 0; i < m_text.size(); i++)
+		{
+
+			//the texture index is the actual ASCII value of the letter
+			m_textureIndex = m_text[i];
+
+			//create the vertex, texture and color buffer data
+			CreateVertices(i);
+			CreateTexCoords();
+			CreateColors();
+
+		}
+
+		//fill the VBOs with the buffer data
+		FillBuffers();
+
+		//set flag so that static sprites are not created again
+		m_isSpriteCreated = true;
 
 	}
 
-	//reset translation value so that it doesn't accumulate
-	m_translation.GetMatrix() = Matrix4D::IDENTITY;
+	//create and draw the sprite
+	CreateSprite();
+
+}
+//------------------------------------------------------------------------------------------------------
+//function that adds vertex data to buffer object's vertex vector
+//------------------------------------------------------------------------------------------------------
+void Text::CreateVertices(int characterIndex)
+{
+
+	//variable that stores centre point of current character in string text around which 
+	//text object will be created. This will always translate on X axis no matter how the
+	//text object is transformed because the letters always read from left to right
+	float characterOrigin = (0.0f + m_spriteDimension.X + m_charSpace) * characterIndex;
+
+	//sprite vertices are based on centre position of sprite
+	//therefore we have to halve the width and height dimensions first
+	Vector2D<float> halfDimension(m_spriteDimension.X / 2.0f, m_spriteDimension.Y / 2.0f);
+
+	//vertex data for vertex #1
+	m_buffer.Vertices().push_back(characterOrigin - halfDimension.X);
+	m_buffer.Vertices().push_back(halfDimension.Y);
+
+	//vertex data for vertex #2
+	m_buffer.Vertices().push_back(characterOrigin + halfDimension.X);
+	m_buffer.Vertices().push_back(halfDimension.Y);
+
+	//vertex data for vertex #3
+	m_buffer.Vertices().push_back(characterOrigin - halfDimension.X);
+	m_buffer.Vertices().push_back(-halfDimension.Y);
+
+	//vertex data for vertex #4
+	m_buffer.Vertices().push_back(characterOrigin - halfDimension.X);
+	m_buffer.Vertices().push_back(-halfDimension.Y);
+
+	//vertex data for vertex #5
+	m_buffer.Vertices().push_back(characterOrigin + halfDimension.X);
+	m_buffer.Vertices().push_back(halfDimension.Y);
+
+	//vertex data for vertex #6
+	m_buffer.Vertices().push_back(characterOrigin + halfDimension.X);
+	m_buffer.Vertices().push_back(-halfDimension.Y);
 
 }

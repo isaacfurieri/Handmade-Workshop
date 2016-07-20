@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : February 2016
+  UPDATED : July 2016
 
   -----------------------------------------------------------------------------------------------
 
@@ -16,24 +16,21 @@
   specific spritesheet cell image to be used. The Sprite class is a base class from which the 
   Animation and Text classes derive from. 
 
-- The two enum types are there to set the sprite type to either static or dynamic. The static
+- The enumerated type is there to set the sprite type to either static or dynamic. The static
   type is a sprite that gets set and created once and stays the same thereafter. The other type
   is for sprites that will change in terms of vertices, colors and textures. The Animation and 
   Text subclasses are generally dynamic as their texture values will no doubt change all the time.
-  Generally these settings are only really ideal for the Sprite base class. Having these settings
-  prevent the CreateColors(), CreateVertices() and CreateTexCoords() from being called multiple
-  times if they don't need to be. The m_isSpriteCreated flag variable is there to be set if a 
-  static sprite has been created already.
+  The m_isSpriteCreated flag variable is there to be set if a static sprite has been created 
+  already.
 
 - One of the most important member variables is the texture index variable. It is the index value
   of the actual sprite cell of a sprite sheet, if the texture image has multiple images within. 
   If the texture image is singular, the texture index is 0 by default. The texture index is zero 
   based and is a whole number value counting from top left and going right and down the spritesheet. 
-  It is calculated differently in the base class to the subsequent sub-classes.
-
-- If for any reason incorrect texture index values are used, for example if an incorrect texture
-  cell is set, going beyond its maximum value, the textures are capable of wrapping, and will begin
-  again at the beginning.
+  It is calculated differently in the base class to the subsequent sub-classes. If for any reason
+  incorrect texture index values are used, for example if an incorrect texture cell is set, going
+  beyond its maximum value, the textures are capable of wrapping, and will begin again at the
+  beginning.
 
 - There is one getter/setter combo function that returns a reference to the sprite's color property.
   The reason it's a reference is because this makes it easier in the client code to quickly set the 
@@ -53,8 +50,8 @@
   based on what object type is being used. The base class and the sub-classes all calculate the 
   texture index differently.
 
-- The CreateSprite(), CreateColors(), CreateVertices() and CreateTexCoords() routines all belong to 
-  Sprite but are accessible in the sub-classes. They all perform the same functionality for all 
+- The CreateSprite(), CreateColors(), and CreateTexCoords() routines all belong to the Sprite 
+  class but are accessible in the sub-classes. They all perform the same functionality for all 
   classes, therefore they only need to be inside the base class. The CreateSprite() routine might
   seem overkill and could easily be integrated inside the Draw() function, but then the deriving
   subclasses would have to duplicate code.
@@ -65,9 +62,9 @@
 #define SPRITE_H
 
 #include <string>
-#include <OpenGL.h>
 #include "Buffer.h"
 #include "Color.h"
+#include "OpenGL.h"
 #include "Vector2D.h"
 
 class Sprite
@@ -101,6 +98,11 @@ public :
 public :
 
 	virtual void Draw();
+
+protected :
+
+	void FillBuffers();
+	void ClearBufferData();
 
 protected :
 

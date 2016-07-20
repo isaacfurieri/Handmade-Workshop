@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : February 2016
+  UPDATED : July 2016
 
   -----------------------------------------------------------------------------------------------
 
@@ -18,14 +18,16 @@
   spritesheet by using the text's ASCII values. Each character in the string text can be spaced
   out as well.
 
-- The setter functions will set the specific properties of the Text object. The SetShaderUniform()
-  function is there to be able to link the shader modelview uniform variable with the global 
-  modelview matrix that will be sent to the shader in the Draw() function for each letter in the 
-  text string. This is because for each letter, there is a translation to the left. No matter how
-  the text is transformed in the client code, the letters always read from left to right.
-
 - Because the texture index value is calculated differently here than in the Sprite base class, the
-  Draw() function is overriden.
+  Draw() function is overriden. Furthermore the Text class loops through all letters in the text
+  string, therefore an inner loop is used in the Draw() routine.
+
+- There is a local version of CreateVertices() because the Text class will generate its own set of
+  vertices, as there will be multiple sprites for each word, ie one sprite for every letter in the
+  text string. Whereas the Sprite and Animation classes only create a single sprite object that is
+  textured and colored, the Text class creates multiple sprites. The CreateVertices() function will
+  be called multiple times from within the Draw() routine, once for each character in the string 
+  text. 
 
 */
 
@@ -34,7 +36,6 @@
 
 #include <string>
 #include "Sprite.h"
-#include "Transform.h"
 
 class Text : public Sprite
 {
@@ -48,21 +49,20 @@ public :
 
 	void SetText(const std::string& text);
 	void SetCharSpace(GLfloat charSpace);
-	void SetShaderUniform(const std::string& uniform);
 	
 public :
 
 	virtual void Draw();
 
 private :
+
+	void CreateVertices(int characterIndex);
 	
+private :
+	
+	std::string m_text;
 	GLfloat m_charSpace;
 
-	std::string m_text;
-	std::string m_uniform;
-
-	Transform m_translation;
-		
 };
 
 #endif

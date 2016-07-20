@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : December 2015
+  UPDATED : July 2016
 
   -----------------------------------------------------------------------------------------------
 
@@ -16,7 +16,8 @@
   have been pressed and what state the mouse buttons are in, and these states can be queried from
   external code at any time.
 
-- An enumerated type has been created to be used when storing the button states of the mouse buttons.
+- Two enumerated types has been created to be used when storing the button states of the mouse 
+  buttons, and for setting the flag to show or hide the mouse cursor.
 
 - The class variables store all the details of the mouse and keyboard and the m_isXClicked and 
   m_isKeyPressed variables store whether the X in the top right corner of the game window has been 
@@ -32,7 +33,11 @@
   so for that there is a separate keystate array variable.
 
 - For each class property variable there is a getter function for when mouse and keyboard states are
-  queried in the client code. No setters are neccessary as only the Input Manager can set them.
+  queried in the client code. There is a IsMouseColliding() function that uses the current mouse 
+  coordinates and creates a AABB box around that to check if the mouse collides with the passed 
+  AABB bound. This is handy for checking if the mouse cursor is hovering over buttons or any other
+  game objects. (Plans to add OBB and Sphere collisions too!). The SetMouseCursor() routine will toggle
+  the mouse cursor on or off so that it may be shown or hidden respectively. 
 
 - The Update() function is the core of the Input Manager class. It will process all SDL events that
   build up on the event queue and will store particular keyboard and mouse property values in the 
@@ -45,6 +50,7 @@
 #define INPUT_MANAGER_H
 
 #include <SDL.h>
+#include "AABB2D.h"
 #include "Singleton.h"
 #include "Vector2D.h"
 
@@ -65,6 +71,7 @@ public :
 	bool IsXClicked();
 	bool IsKeyPressed();
 	const Uint8* GetKeyStates();
+	bool IsMouseColliding(AABB2D& bound);
 
 public :
 
