@@ -9,6 +9,9 @@
 ScreenManager::ScreenManager()
 {
 
+	//first modelview transformation object to be loaded below 
+	Matrix4D modelView;
+
 	m_width = 0;
 	m_height = 0;
 	m_pixelsPerUnit = 0;
@@ -18,15 +21,22 @@ ScreenManager::ScreenManager()
 	m_window = 0;
 	m_screen = 0;
 	m_context = 0;
+
+	//reserve space for 32 matrices that can be pushed and popped
+	m_modelViewMatrix.reserve(32);
+
+	//load the initial modelview transformation into the vector
+	//there always needs to be at least one transformation present 
+	m_modelViewMatrix.push_back(modelView);
 	
 }
 //------------------------------------------------------------------------------------------------------
-//getter-setter function that returns reference to modelview matrix
+//getter-setter function that returns reference to last modelview matrix object in vector
 //------------------------------------------------------------------------------------------------------
 Matrix4D& ScreenManager::ModelViewMatrix()
 {
 
-	return m_modelViewMatrix;
+	return m_modelViewMatrix.back();
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -217,7 +227,7 @@ bool ScreenManager::Initialize(const char* windowTitle, int width, int height, i
 
 	//create OpenGL context using SDL window created earlier
 	m_context = SDL_GL_CreateContext(m_window);
-
+	
 	//if OpenGL context could not be created, display error message and return false
 	if (m_context == 0)
 	{
@@ -262,6 +272,33 @@ bool ScreenManager::Initialize(const char* windowTitle, int width, int height, i
 	m_windowHandle = systemInfo.info.win.window;
 
 	return true;
+
+}
+//------------------------------------------------------------------------------------------------------
+//function that adds a new transformation to the matrix stack
+//------------------------------------------------------------------------------------------------------
+void ScreenManager::PushMatrix()
+{							   
+
+	//make a copy of the current transformation
+	Matrix4D tempMatrix = m_modelViewMatrix.back();
+
+	//add this copy to the modelview matrix vector
+	m_modelViewMatrix.push_back(tempMatrix);
+
+}
+//------------------------------------------------------------------------------------------------------
+//function that removes last transformation in matrix stack
+//------------------------------------------------------------------------------------------------------
+void ScreenManager::PopMatrix()
+{
+
+	//only remove transformation if there are multiple ones available
+	//there always needs to be at least one transformation present!
+	if (m_modelViewMatrix.size() > 1)
+	{
+		m_modelViewMatrix.pop_back();
+	}
 
 }
 //------------------------------------------------------------------------------------------------------

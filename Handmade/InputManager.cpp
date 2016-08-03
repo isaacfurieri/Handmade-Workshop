@@ -45,9 +45,9 @@ const Uint8* InputManager::GetKeyStates()
 
 }
 //------------------------------------------------------------------------------------------------------
-//predicate function that returns flag stating if mouse cursor collides with passed bound
+//predicate function that checks if mouse cursor collides with passed box bound
 //------------------------------------------------------------------------------------------------------
-bool InputManager::IsMouseColliding(AABB2D& bound)
+bool InputManager::IsMouseColliding(const AABB2D& bound)
 {
 
 	//create a temporary bounding box to represent mouse cursor
@@ -58,6 +58,26 @@ bool InputManager::IsMouseColliding(AABB2D& bound)
 	tempBound.SetPosition(m_mousePosition.X,
 					      TheScreen::Instance()->GetScreenSize().Y - m_mousePosition.Y);
 	tempBound.SetDimension(1, 1);
+	tempBound.Update();
+
+	//return flag based on if mouse collides with bound
+	return tempBound.IsColliding(bound);
+
+}
+//------------------------------------------------------------------------------------------------------
+//predicate function that checks if mouse cursor collides with passed sphere bound
+//------------------------------------------------------------------------------------------------------
+bool InputManager::IsMouseColliding(const Sphere2D& bound)
+{
+
+	//create a temporary sphere bound to represent mouse cursor
+	Sphere2D tempBound;
+
+	//set mouse cursor radius of 1 based on mouse position
+	//flip Y axis as mouse coordinates run from top to bottom
+	tempBound.SetPosition(m_mousePosition.X,
+		                  TheScreen::Instance()->GetScreenSize().Y - m_mousePosition.Y);
+	tempBound.SetDimension(1);
 	tempBound.Update();
 
 	//return flag based on if mouse collides with bound
@@ -154,6 +174,9 @@ void InputManager::Update()
 
 	//reset mouse motion so that it's processed from scratch
 	m_mouseMotion = Vector2D<Sint32>::ZERO;
+
+	//reset mouse wheel so that it's processed from scratch
+	m_mouseWheel = Vector2D<Sint32>::ZERO;
 
 	//store state of keyboard in array
 	m_keyStates = SDL_GetKeyboardState(0);

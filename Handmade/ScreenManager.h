@@ -13,15 +13,20 @@
 - This class encapsulates screen management, and is designed to set up all screen and window 
   related matters. It is there to set up all SDL, OpenGL and GLEW components, screen projections,
   viewports, and keep track of the modelview and projection matrices. A matrix class object has 
-  been assigned for each matrix. The frame buffer is also cleared and swapped via this class. The 
-  m_width and m_height member variables are separate ints because it looks clearer to identify them
-  separately. The m_pixelsPerUnit is there to determine how many pixels will represent one unit
-  of measurement in 2D applications, and this value is stored here and requested by the client code
-  when needed later on. This class is a Singleton.
+  been assigned for the projection matrix, and a vector of matrices is being used for the 
+  modelview matrix, so that multiple modelview transformations can be added, giving the push and
+  pop functionality for parent/child object transformations.
+  The frame buffer is also cleared and swapped via this class. The m_width and m_height member 
+  variables are separate ints because it looks clearer to identify them separately. The 
+  m_pixelsPerUnit is there to determine how many pixels will represent one unit of measurement
+  in 2D applications, and this value is stored here and requested by the client code when needed
+  later on. This class is a Singleton.
 
-- Two getter/setter combo functions have been created to return refernces of the projection and 
+- Two getter/setter combo functions have been created to return references of the projection and 
   modelview matrix objects. This makes accessing and assigning the matrices easier in the calling 
-  client code.
+  client code. The ModelViewMatrix() getter will always return the last modelview matrix
+  transformation, because the last one is the current active one that will be used in the client
+  code.
 
 - There are a few setter functions, of which the Set2DScreen() and Set3DScreen() are important to 
   note. The 2D version will set up an orthographic projection and use a formula to define individual
@@ -46,6 +51,11 @@
   specific functionality like Windows dialog or message boxes, because the HWND handle will always 
   reference the main SDL parent window.
 
+- The PushMatrix() and PopMatrix() functions add push and pop functionality, respectively, to the
+  modelview matrix. Therefore when parent and child objects are being transformed, multiple matrix
+  transformations can exist at any one time, allowing for transformations to be "bookmarked". This
+  works exactly like push/pop worked in legacy OpenGL.
+
 - The Update() and Draw() routines will clear and swap the frame buffer respectively, and the ShutDown()
   function closes down the SDL and OpenGL subsystems.  
 
@@ -55,6 +65,7 @@
 #define SCREEN_MANAGER_H
 
 #include <string>
+#include <vector>
 #include <SDL.h>
 #include <SDL_syswm.h>
 #include "Color.h"
@@ -96,10 +107,12 @@ public:
 	bool Initialize(const char* windowTitle, int width = 1024, int height = 768, int pixelsPerUnit = 0,
 		            double context = 3.2, bool compatibleContext = true, bool fullscreen = false);
 
-public :
+	void PushMatrix();
+	void PopMatrix();
 
 	void Update();
 	void Draw();
+
 	void ShutDown();
 
 private:
@@ -120,8 +133,8 @@ private :
 	SDL_Surface* m_screen;
 	SDL_GLContext m_context;
 	
-	Matrix4D m_modelViewMatrix;
 	Matrix4D m_projectionMatrix;
+	std::vector<Matrix4D> m_modelViewMatrix;
 	
 };
 

@@ -33,11 +33,15 @@
   so for that there is a separate keystate array variable.
 
 - For each class property variable there is a getter function for when mouse and keyboard states are
-  queried in the client code. There is a IsMouseColliding() function that uses the current mouse 
-  coordinates and creates a AABB box around that to check if the mouse collides with the passed 
-  AABB bound. This is handy for checking if the mouse cursor is hovering over buttons or any other
-  game objects. (Plans to add OBB and Sphere collisions too!). The SetMouseCursor() routine will toggle
-  the mouse cursor on or off so that it may be shown or hidden respectively. 
+  queried in the client code. There are two IsMouseColliding() functions, both using the current mouse 
+  coordinates to create either a AABB box or Sphere around that to check if the mouse collides with the
+  passed bound. This is handy for checking if the mouse cursor is hovering over buttons, spherical 
+  things or any other game objects. The IsMouseColliding() could have been passed a generic Bound 
+  object, but then dynamic casting is needed to set the dimension each time and that is expensive! 
+  Templatizing could also work but the two functions are not exactly identical. Basic function 
+  overriding seems to be the best solution here for now. (More TBA)  
+  The SetMouseCursor() routine will toggle the mouse cursor on or off so that it may be shown or hidden
+  respectively. 
 
 - The Update() function is the core of the Input Manager class. It will process all SDL events that
   build up on the event queue and will store particular keyboard and mouse property values in the 
@@ -52,6 +56,7 @@
 #include <SDL.h>
 #include "AABB2D.h"
 #include "Singleton.h"
+#include "Sphere2D.h"
 #include "Vector2D.h"
 
 class InputManager
@@ -71,7 +76,8 @@ public :
 	bool IsXClicked();
 	bool IsKeyPressed();
 	const Uint8* GetKeyStates();
-	bool IsMouseColliding(AABB2D& bound);
+	bool IsMouseColliding(const AABB2D& bound);
+	bool IsMouseColliding(const Sphere2D& bound);
 
 public :
 
