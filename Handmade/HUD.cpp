@@ -17,15 +17,20 @@ HUD::HUD()
 	TheBuffer::Instance()->Create(BufferManager::TEXTURE_BUFFER, "HUD_TEXTURE_BUFFER");
 
 	//load HUD sprite image from file
-	TheTexture::Instance()->LoadFromFile("Sprites\\HUD.png", "HUD_TEXTURE");
+	TheTexture::Instance()->LoadFromFile("Assets\\Sprites\\HUD.png", "HUD_TEXTURE");
 	
 	//set dimension, texture and buffer properties of sprite object
 	m_sprite.SetSpriteDimension(200, 140);
 	m_sprite.SetTextureID("HUD_TEXTURE");
 	m_sprite.SetBufferID("HUD_VERTEX_BUFFER", "HUD_COLOR_BUFFER", "HUD_TEXTURE_BUFFER");
+	m_sprite.SetShaderAttribute("vertexIn", "colorIn", "textureIn");
+
+	//get texture flag ID from fragment shader
+	m_textureFlagUniformID = TheShader::Instance()->GetUniformID("isTextured");
 
 	//create screen position for sprite object based on screen height
-	m_transform.Translate(110.0f, (float)(TheScreen::Instance()->GetScreenSize().Y - 80));
+	float screenHeight = TheScreen::Instance()->GetScreenSize().y;
+	m_transform = glm::translate(m_transform, glm::vec3(110.0f, (screenHeight - 80.0f), 0.0f));
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -34,42 +39,23 @@ HUD::HUD()
 bool HUD::Draw()
 {
 
-	//temporarily disable debug shaders
-	TheDebug::Instance()->Disable();
-
-	//setup screen in 2D orthographic mode because all HUDS are 2D 
+	//setup screen in 2D orthographic mode because all HUDs are 2D 
 	TheScreen::Instance()->Set2DScreen(ScreenManager::BOTTOM_LEFT);
 
-	//set modelview matrix to identity for a fresh new 2D start point
-	TheScreen::Instance()->ModelViewMatrix() = Matrix4D::IDENTITY;
+	//reset model matrix to identity so we don't accumulate transformations
+	GameObject::SetIdentity();
 
-	//temporarily attach and link main program shaders
-	TheShader::Instance()->Attach(ShaderManager::VERTEX_SHADER, "MAIN_VERTEX_SHADER");
-	TheShader::Instance()->Attach(ShaderManager::FRAGMENT_SHADER, "MAIN_FRAGMENT_SHADER");
-	TheShader::Instance()->Link();
+	//apply HUD position transformation to model matrix
+	GameObject::MultiplyMatrix(m_transform);
 
-	//link shader attribute variables to sprite object
-	m_sprite.SetShaderAttribute("vertexIn", "colorIn", "textureIn");
-
-	//move to top left corner of screen, apply position to modelview matrix 
-	TheScreen::Instance()->ModelViewMatrix() * m_transform.GetMatrix();
+	//send model matrix to vertex shader
+	GameObject::ApplyMatrix();
 	
-	//send all matrix data to shaders
-	TheShader::Instance()->SetUniform(TheShader::Instance()->GetUniform("projectionMatrix"),
-		                              TheScreen::Instance()->ProjectionMatrix().GetMatrixArray());
-
-	TheShader::Instance()->SetUniform(TheShader::Instance()->GetUniform("modelviewMatrix"),
-		                              TheScreen::Instance()->ModelViewMatrix().GetMatrixArray());
+	//send texture flag to fragment shader
+	TheShader::Instance()->SetUniformData(m_textureFlagUniformID, true);
 
 	//draw HUD image
 	m_sprite.Draw();
-
-	//detach main program shaders
-	TheShader::Instance()->Detach(ShaderManager::VERTEX_SHADER, "MAIN_VERTEX_SHADER");
-	TheShader::Instance()->Detach(ShaderManager::FRAGMENT_SHADER, "MAIN_FRAGMENT_SHADER");
-
-	//re-enable debug shaders
-	TheDebug::Instance()->Enable();
 
 	return true;
 
