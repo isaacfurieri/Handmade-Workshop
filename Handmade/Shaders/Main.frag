@@ -1,15 +1,25 @@
-#version 150
+#version 330 core
 
-uniform sampler2D textureImage;
-
-in vec4 fragColor;
+in vec4 colorOut;
 in vec2 textureOut;
+in vec3 normalOut;
 
-out vec4 colorOut;
+out vec4 pixelColor;
+
+uniform bool isTextured;
+uniform sampler2D textureImage;
 
 void main(void)
 {
 
-	colorOut = fragColor * texture(textureImage, textureOut.st);
+	if(isTextured)
+	{	
+		pixelColor = colorOut * texture(textureImage, textureOut);  
+	}	
+
+	else
+	{
+		pixelColor = colorOut;
+	}
 
 }
