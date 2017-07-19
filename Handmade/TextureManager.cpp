@@ -43,7 +43,7 @@ bool TextureManager::LoadFromFile(const std::string& filename, const std::string
 	unsigned int format = 0;
 
 	GLuint ID = 0;
-	SDL_Surface* textureData = 0;
+	SDL_Surface* textureData = nullptr;
 
 	//display text to state that file is being opened and read
 	std::cout << "Opening and reading texture file : " << "\"" << filename << "\"" << std::endl;
@@ -109,38 +109,34 @@ bool TextureManager::LoadFromFile(const std::string& filename, const std::string
 void TextureManager::UnloadFromMemory(RemoveType removeType, const std::string& mapIndex)
 {
 
-	//loop through entire texture map in order 
-	//to remove a specific texture or all textures
-	for (auto it = m_textureIDMap.begin(); it != m_textureIDMap.end(); it++)
+	//if a texture file needs to be removed, free it from memory based on if a
+	//single item needs to be removed or if the entire map needs to be cleared
+	if (removeType == CUSTOM_TEXTURE)
 	{
+		auto it = m_textureIDMap.find(mapIndex);
 
-		//if a flag is passed to remove a specific texture
-		//check if map index is the texture that needs to be removed
-		//and remove it from both OpenGL and the map
-		if (removeType == CUSTOM_TEXTURE)
+		if (it == m_textureIDMap.end())
 		{
-			if (it->first == mapIndex)
-			{
-				glDeleteTextures(1, &(it->second));
-				m_textureIDMap.erase(it);
-				break;
-			}
+			std::cout << "Texture ID not found." << std::endl;
 		}
 
-		//otherwise if a flag is passed to remove all textures
-		//remove the texture from OpenGL
-		else if (removeType == ALL_TEXTURES)
+		else
+		{
+			glDeleteTextures(1, &(it->second));
+			m_textureIDMap.erase(it);
+		}
+	}
+
+	else if (removeType == ALL_TEXTURES)
+	{
+
+		for (auto it = m_textureIDMap.begin(); it != m_textureIDMap.end(); it++)
 		{
 			glDeleteTextures(1, &(it->second));
 		}
 
-	}
-
-	//if all textures have been removed from OpenGL, clear the 
-	//entire map in one go, because the IDs in the map still remain
-	if (removeType == ALL_TEXTURES)
-	{
 		m_textureIDMap.clear();
+
 	}
 
 }

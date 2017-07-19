@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : June 2016
+  UPDATED : February 2017
 
   -----------------------------------------------------------------------------------------------
 
@@ -38,7 +38,7 @@
 
 #include <map>
 #include <string>
-#include <OpenGL.h>
+#include <glew.h>
 #include "Singleton.h"
 
 class TextureManager

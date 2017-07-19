@@ -25,8 +25,8 @@ Sprite::Sprite()
 
 	//assign texture dimension to 1 by default
 	//this assumes the sprite's texture contains 1 image
-	m_textureDimension.X = 1;
-	m_textureDimension.Y = 1;
+	m_textureDimension.x = 1.0f;
+	m_textureDimension.y = 1.0f;
 
 	//set the component sizes for the sprite object's vertex and color data
 	m_buffer.SetComponentSize(Buffer::VERTEX_BUFFER, Buffer::XY);
@@ -57,8 +57,8 @@ void Sprite::SetSpriteType(SpriteType spritetype)
 void Sprite::SetTextureCell(int column, int row)
 {
 
-	m_textureCell.X = column;
-	m_textureCell.Y = row;
+	m_textureCell.x = (float)column;
+	m_textureCell.y = (float)row;
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -67,8 +67,8 @@ void Sprite::SetTextureCell(int column, int row)
 void Sprite::SetTextureDimension(int column, int row)
 {
 
-	m_textureDimension.X = column;
-	m_textureDimension.Y = row;
+	m_textureDimension.x = (float)column;
+	m_textureDimension.y = (float)row;
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -86,8 +86,8 @@ void Sprite::SetTextureID(const std::string& mapIndex)
 void Sprite::SetSpriteDimension(float width, float height)
 {
 
-	m_spriteDimension.X = width;
-	m_spriteDimension.Y = height;
+	m_spriteDimension.x = width;
+	m_spriteDimension.y = height;
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -121,7 +121,7 @@ void Sprite::Draw()
 {
 
 	//aquire index value of specific texture cell to "cut out" using a basic formula 
-	m_textureIndex = (m_textureCell.Y * m_textureDimension.X) + m_textureCell.X;
+	m_textureIndex = (int)((m_textureCell.y * m_textureDimension.x) + m_textureCell.x);
 
 	//only if sprite is set to change or if it needs to be initially 
 	//created then call the necessary functions to create the sprite 
@@ -225,31 +225,31 @@ void Sprite::CreateVertices()
 
 	//sprite vertices are based on centre position of sprite
 	//therefore we have to halve the width and height dimensions first
-	Vector2D<float> halfDimension(m_spriteDimension.X / 2.0f, m_spriteDimension.Y / 2.0f);
+	glm::vec2 halfDimension(m_spriteDimension.x / 2.0f, m_spriteDimension.y / 2.0f);
 
 	//vertex data for vertex #1
-	m_buffer.Vertices().push_back(-halfDimension.X);
-	m_buffer.Vertices().push_back(halfDimension.Y);
+	m_buffer.Vertices().push_back(-halfDimension.x);
+	m_buffer.Vertices().push_back(halfDimension.y);
 
 	//vertex data for vertex #2
-	m_buffer.Vertices().push_back(halfDimension.X);
-	m_buffer.Vertices().push_back(halfDimension.Y);
+	m_buffer.Vertices().push_back(halfDimension.x);
+	m_buffer.Vertices().push_back(halfDimension.y);
 
 	//vertex data for vertex #3
-	m_buffer.Vertices().push_back(-halfDimension.X);
-	m_buffer.Vertices().push_back(-halfDimension.Y);
+	m_buffer.Vertices().push_back(-halfDimension.x);
+	m_buffer.Vertices().push_back(-halfDimension.y);
 
 	//vertex data for vertex #4
-	m_buffer.Vertices().push_back(-halfDimension.X);
-	m_buffer.Vertices().push_back(-halfDimension.Y);
+	m_buffer.Vertices().push_back(-halfDimension.x);
+	m_buffer.Vertices().push_back(-halfDimension.y);
 
 	//vertex data for vertex #5
-	m_buffer.Vertices().push_back(halfDimension.X);
-	m_buffer.Vertices().push_back(halfDimension.Y);
+	m_buffer.Vertices().push_back(halfDimension.x);
+	m_buffer.Vertices().push_back(halfDimension.y);
 
 	//vertex data for vertex #6
-	m_buffer.Vertices().push_back(halfDimension.X);
-	m_buffer.Vertices().push_back(-halfDimension.Y);
+	m_buffer.Vertices().push_back(halfDimension.x);
+	m_buffer.Vertices().push_back(-halfDimension.y);
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -259,43 +259,43 @@ void Sprite::CreateTexCoords()
 {
 
 	//variable for temporary texture coordinates
-	Vector2D<float> texCoord;
+	glm::vec2 texCoord;
 
 	//calculate fractional X and Y texture dimension value based on texture dimension
 	//this fractional value is needed to keep texture UVs between 0 and 1
-	Vector2D<float> oneOverDimension(1.0f / m_textureDimension.X, 1.0f / m_textureDimension.Y);
+	glm::vec2 oneOverDimension(1.0f / m_textureDimension.x, 1.0f / m_textureDimension.y);
 
 	//use modulo and divide with the texture index 
 	//to get exact cell block XY coordinates to "cut out"
-	texCoord.X = (float)(m_textureIndex % m_textureDimension.X);
-	texCoord.Y = (float)(m_textureIndex / m_textureDimension.X);
+	texCoord.x = (float)(m_textureIndex % (int)m_textureDimension.x);
+	texCoord.y = (float)(m_textureIndex / (int)m_textureDimension.x);
 
 	//multiply the texture coordinate result by 
 	//oneOverDimension to get a value between 0 and 1
 	texCoord *= oneOverDimension;
 	
 	//texture coordinate data for vertex #1
-	m_buffer.Textures().push_back(texCoord.X);
-	m_buffer.Textures().push_back(texCoord.Y);
+	m_buffer.Textures().push_back(texCoord.x);
+	m_buffer.Textures().push_back(texCoord.y);
 
 	//texture coordinate data for vertex #2
-	m_buffer.Textures().push_back(texCoord.X + oneOverDimension.X);
-	m_buffer.Textures().push_back(texCoord.Y);
+	m_buffer.Textures().push_back(texCoord.x + oneOverDimension.x);
+	m_buffer.Textures().push_back(texCoord.y);
 
 	//texture coordinate data for vertex #3
-	m_buffer.Textures().push_back(texCoord.X);
-	m_buffer.Textures().push_back(texCoord.Y + oneOverDimension.Y);
+	m_buffer.Textures().push_back(texCoord.x);
+	m_buffer.Textures().push_back(texCoord.y + oneOverDimension.y);
 
 	//texture coordinate data for vertex #4
-	m_buffer.Textures().push_back(texCoord.X);
-	m_buffer.Textures().push_back(texCoord.Y + oneOverDimension.Y);
+	m_buffer.Textures().push_back(texCoord.x);
+	m_buffer.Textures().push_back(texCoord.y + oneOverDimension.y);
 
 	//texture coordinate data for vertex #5
-	m_buffer.Textures().push_back(texCoord.X + oneOverDimension.X);
-	m_buffer.Textures().push_back(texCoord.Y);
+	m_buffer.Textures().push_back(texCoord.x + oneOverDimension.x);
+	m_buffer.Textures().push_back(texCoord.y);
 
 	//texture coordinate data for vertex #6
-	m_buffer.Textures().push_back(texCoord.X + oneOverDimension.X);
-	m_buffer.Textures().push_back(texCoord.Y + oneOverDimension.Y);
+	m_buffer.Textures().push_back(texCoord.x + oneOverDimension.x);
+	m_buffer.Textures().push_back(texCoord.y + oneOverDimension.y);
 
 }

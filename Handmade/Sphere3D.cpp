@@ -89,7 +89,7 @@ bool Sphere3D::IsColliding(const Sphere3D& secondSphere) const
 
 	//first calculate distance between both spheres and store that temporarily
 	//we have to temporarily remove the constness to make the formula below work
-	float distance = (m_position - secondSphere.m_position).Length();
+	float distance = glm::length(m_position - secondSphere.m_position);
 
 	//return collision flag based on distance and radii formula  
 	return (distance <= (m_radius + secondSphere.m_radius));

@@ -1,11 +1,12 @@
 #include "BufferManager.h"
+#include "Camera.h"
 #include "DebugManager.h"
+#include "Game.h"
 #include "InputManager.h"
 #include "ScreenManager.h"
 #include "ShaderManager.h"
 #include "SplashScreen.h"
 #include "TextureManager.h"
-#include "TimeManager.h"
 
 //------------------------------------------------------------------------------------------------------
 //constructor that creates VBO objects, loads sprite image and assigns all defaults 
@@ -21,13 +22,17 @@ SplashScreen::SplashScreen(std::string filename)
 	//load splash screen sprite image from file based on filename passed
 	TheTexture::Instance()->LoadFromFile(filename, "SPLASH_TEXTURE");
 
-	//set dimension, texture and buffer properties of sprite object
+	//set dimension, texture, buffer and shader attribute properties of sprite object
 	m_sprite.SetSpriteDimension(1024, 768);
 	m_sprite.SetTextureID("SPLASH_TEXTURE");
 	m_sprite.SetBufferID("SPLASH_VERTEX_BUFFER", "SPLASH_COLOR_BUFFER", "SPLASH_TEXTURE_BUFFER");
+	m_sprite.SetShaderAttribute("vertexIn", "colorIn", "textureIn");
+
+	//get texture flag ID from fragment shader
+	m_textureFlagUniformID = TheShader::Instance()->GetUniformID("isTextured");
 
 	//set screen position for sprite object to be screen centre
-	m_transform.Translate(512, 384);
+	m_transform = glm::translate(m_transform, glm::vec3(512.0f, 384.0f, 0.0f));
 
 	//set sprite alpha channel to 0 so that it fades in later
 	//it will also need to be dynamic so that the alpha updates
@@ -56,14 +61,14 @@ void SplashScreen::Update()
 	//if image is set to fade in and image is not yet fully opaque then fade in image
 	if (m_sprite.SpriteColor().A <= 1.0f && m_fade == FADE_IN)
 	{
-		m_sprite.SpriteColor().A += 0.005f;
+		m_sprite.SpriteColor().A += 0.5f * (float)TheGame::Instance()->GetElapsedTimeSeconds();
 	}
 
 	//otherwise once image becomes opaque set flag to fade out and begin fading out
 	else
 	{
 		m_fade = FADE_OUT;
-		m_sprite.SpriteColor().A -= 0.005f;
+		m_sprite.SpriteColor().A -= 0.5f * (float)TheGame::Instance()->GetElapsedTimeSeconds();
 	}
 	
 	//once image becomes transparent again deactivate this splash screen
@@ -79,42 +84,23 @@ void SplashScreen::Update()
 bool SplashScreen::Draw()
 {
 
-	//temporarily disable debug shaders
-	TheDebug::Instance()->Disable();
-
 	//setup screen in 2D orthographic mode because all splash screens are 2D 
 	TheScreen::Instance()->Set2DScreen(ScreenManager::BOTTOM_LEFT);
 
-	//set modelview matrix to identity for a fresh new 2D start point
-	TheScreen::Instance()->ModelViewMatrix() = Matrix4D::IDENTITY;
+	//reset model matrix to identity so we don't accumulate transformations
+	GameObject::SetIdentity();
 
-	//temporarily attach and link main program shaders
-	TheShader::Instance()->Attach(ShaderManager::VERTEX_SHADER, "MAIN_VERTEX_SHADER");
-	TheShader::Instance()->Attach(ShaderManager::FRAGMENT_SHADER, "MAIN_FRAGMENT_SHADER");
-	TheShader::Instance()->Link();
+	//apply splash screen position transformation to model matrix
+	GameObject::MultiplyMatrix(m_transform);
 
-	//link shader attribute variables to sprite object
-	m_sprite.SetShaderAttribute("vertexIn", "colorIn", "textureIn");
-
-	//move to centre of screen, apply position to modelview matrix 
-	TheScreen::Instance()->ModelViewMatrix() * m_transform.GetMatrix();
-
-	//send all matrix data to shaders
-	TheShader::Instance()->SetUniform(TheShader::Instance()->GetUniform("projectionMatrix"),
-		                              TheScreen::Instance()->ProjectionMatrix().GetMatrixArray());
-
-	TheShader::Instance()->SetUniform(TheShader::Instance()->GetUniform("modelviewMatrix"),
-		                              TheScreen::Instance()->ModelViewMatrix().GetMatrixArray());
+	//send model matrix data to vertex shader 
+	GameObject::ApplyMatrix();
+	        
+	//send texture flag to fragment shader
+	TheShader::Instance()->SetUniformData(m_textureFlagUniformID, true);
 
 	//draw splash screen image
 	m_sprite.Draw();
-
-	//detach main program shaders
-	TheShader::Instance()->Detach(ShaderManager::VERTEX_SHADER, "MAIN_VERTEX_SHADER");
-	TheShader::Instance()->Detach(ShaderManager::FRAGMENT_SHADER, "MAIN_FRAGMENT_SHADER");
-
-	//re-enable debug shaders
-	TheDebug::Instance()->Enable();
 
 	return true;
 

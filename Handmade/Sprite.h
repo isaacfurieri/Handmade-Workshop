@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : July 2016
+  UPDATED : January 2017
 
   -----------------------------------------------------------------------------------------------
 
@@ -62,10 +62,10 @@
 #define SPRITE_H
 
 #include <string>
+#include <glm.hpp>
+#include <glew.h>
 #include "Buffer.h"
 #include "Color.h"
-#include "OpenGL.h"
-#include "Vector2D.h"
 
 class Sprite
 {
@@ -86,10 +86,10 @@ public :
 public :
 
 	void SetSpriteType(SpriteType spritetype);
-	void SetTextureCell(GLint column, GLint row);
-	void SetTextureDimension(GLint column, GLint row);
+	void SetTextureCell(int column, int row);
+	void SetTextureDimension(int column, int row);
 	void SetTextureID(const std::string& mapIndex);
-	void SetSpriteDimension(GLfloat width, GLfloat height); 
+	void SetSpriteDimension(float width, float height); 
 	void SetBufferID(const std::string& vertexID, const std::string& colorID, 
 		             const std::string& textureID);
 	void SetShaderAttribute(const std::string& vertexAttr, const std::string& colorAttr, 
@@ -122,9 +122,9 @@ protected :
 	Buffer m_buffer;
 	SpriteType m_spriteType;
 
-	Vector2D<GLint> m_textureCell;
-	Vector2D<GLint> m_textureDimension;
-	Vector2D<GLfloat> m_spriteDimension;
+	glm::vec2 m_textureCell;
+	glm::vec2 m_textureDimension;
+	glm::vec2 m_spriteDimension;
 	
 };
 

@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : July 2016
+  UPDATED : January 2017
 
   -----------------------------------------------------------------------------------------------
 
@@ -48,7 +48,7 @@ public :
 public :
 
 	void SetText(const std::string& text);
-	void SetCharSpace(GLfloat charSpace);
+	void SetCharSpace(float charSpace);
 	
 public :
 
@@ -61,7 +61,7 @@ private :
 private :
 	
 	std::string m_text;
-	GLfloat m_charSpace;
+	float m_charSpace;
 
 };
 

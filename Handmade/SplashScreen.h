@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : April 2016
+  UPDATED : January 2017
 
   -----------------------------------------------------------------------------------------------
 
@@ -24,6 +24,7 @@
 #define SPLASH_SCREEN_H
 
 #include <string>
+#include <glew.h>
 #include "GameObject.h"
 #include "Sprite.h"
 
@@ -48,6 +49,7 @@ private:
 
 	Fade m_fade;
 	Sprite m_sprite;
+	GLuint m_textureFlagUniformID;
 
 };
 
