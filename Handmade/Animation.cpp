@@ -1,5 +1,5 @@
+#include "Game.h"
 #include "Animation.h"
-#include "TimeManager.h"
 
 //------------------------------------------------------------------------------------------------------
 //constructor that assigns all default values
@@ -14,6 +14,8 @@ Animation::Animation()
 	m_isAnimationDead = false;
 	m_isAnimationLoopFinal = false;
 	m_isAnimationLooping = true;
+
+	m_timeElapsed = 0.0;
 	m_animationVelocity = 0.0f;
 
 }
@@ -38,7 +40,7 @@ bool& Animation::IsAnimationLooping()
 //------------------------------------------------------------------------------------------------------
 //setter function that assigns speed of animation
 //------------------------------------------------------------------------------------------------------
-void Animation::SetAnimationVelocity(GLfloat velocity)
+void Animation::SetAnimationVelocity(float velocity)
 {
 
 	m_animationVelocity = velocity;
@@ -51,11 +53,11 @@ void Animation::Draw()
 {
 
 	//store the total time elapsed since animation began which will be used in formula below
-	m_timeElapsed += TheTime::Instance()->GetElapsedTimeSeconds();
+	m_timeElapsed += TheGame::Instance()->GetElapsedTimeSeconds();
 
 	//aquire index value of specific texture cell to "cut out" using a formula
-	m_textureIndex = (GLint)(m_timeElapsed * m_animationVelocity) %
-		             (m_textureDimension.X * m_textureDimension.Y);
+	m_textureIndex = (int)(m_timeElapsed * m_animationVelocity) %
+		             (int)(m_textureDimension.x * m_textureDimension.y);
 
 	//if animation is set to cycle endlessly then set the kill and final flags
 	//to false so that no other final checks are made and that the animation loops
@@ -68,7 +70,7 @@ void Animation::Draw()
 	//otherwise if animation is set to cycle once and the last texture
 	//cell has been reached then flag this as the final animation loop
 	else if (!m_isAnimationLooping && 
-		     m_textureIndex == (m_textureDimension.X * m_textureDimension.Y - 1))
+		     m_textureIndex == (m_textureDimension.x * m_textureDimension.y - 1))
 	{
 		m_isAnimationLoopFinal = true;
 	}

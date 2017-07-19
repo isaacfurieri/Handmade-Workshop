@@ -62,40 +62,50 @@ bool AudioManager::LoadFromFile(const std::string& filename, AudioType audioType
 	                            const std::string& mapIndex)
 {
 
-	//temporary audio object pointer
-	FMOD::Sound* audioData = 0;	
-
 	//display text to state that file is being opened and read
 	std::cout << "Opening and reading audio file : " << "\"" << filename << "\"" << std::endl;
 
-	//if a music or voice file needs to be loaded create a stream to it, so that it 
-	//is not loaded into memory, and set audio to 2D sound and loop it by default
-	if(audioType == MUSIC_AUDIO || audioType == VOICE_AUDIO)
+	//if a sfx file needs to be loaded load it directly into memory
+	//and set the audio to 2D sound and do not loop it by default
+	//check if file is loaded properly before adding it to the sfx map
+	if (audioType == SFX_AUDIO)
 	{
-		m_audioSystem->createStream(filename.c_str(), FMOD_LOOP_NORMAL | FMOD_2D, 0, &audioData);
+
+		FMOD::Sound* sfx = nullptr;
+
+		m_audioSystem->createSound(filename.c_str(), FMOD_DEFAULT, 0, &sfx);
+
+		if (!sfx)
+		{
+			std::cout << "File could not be loaded." << std::endl;
+			std::cout << "---------------------------------------------------------------" << std::endl;
+			return false;
+		}
+
+		m_sfxDataMap[mapIndex] = sfx;
+
 	}
 
-	//otherwise if a sfx file needs to be loaded load it directly 
-	//into memory set audio to 2D sound and do not loop it by default
-	else if(audioType == SFX_AUDIO)
+	//otherwise if a music or voice file needs to be loaded create a stream to it, so 
+	//that it's not loaded into memory, and set audio to 2D sound and loop it by default
+	//check if file is loaded properly before adding it to the music/voice map
+	else if(audioType == MUSIC_AUDIO || audioType == VOICE_AUDIO)
 	{
-		m_audioSystem->createSound(filename.c_str(), FMOD_DEFAULT, 0, &audioData);
-	}
 
-	//if music loading failed, display error message 
-	if(!audioData)
-	{
-		std::cout << "File could not be loaded." << std::endl;
-		std::cout << "---------------------------------------------------------------" << std::endl;
-		return false;
-	}
+		FMOD::Sound* audio = nullptr;
 
-	//if loading succeeded, add temporary audio data pointer to map accordingly
-	switch (audioType)
-	{
-		case SFX_AUDIO   : m_sfxDataMap[mapIndex] = audioData; break;
-		case MUSIC_AUDIO : m_musicDataMap[mapIndex] = audioData; break;
-		case VOICE_AUDIO : m_voiceDataMap[mapIndex] = audioData; break;
+		m_audioSystem->createStream(filename.c_str(), FMOD_LOOP_NORMAL | FMOD_2D, 0, &audio);
+
+		if (!audio)
+		{
+			std::cout << "File could not be loaded." << std::endl;
+			std::cout << "---------------------------------------------------------------" << std::endl;
+			return false;
+		}
+
+		audioType == MUSIC_AUDIO ? m_musicDataMap[mapIndex] = audio
+								 : m_voiceDataMap[mapIndex] = audio;
+
 	}
 		
 	//display text to state that file has been opened and read
@@ -122,11 +132,11 @@ void AudioManager::UnloadFromMemory(AudioType audioType,
 {
 
 	//temp pointer which will reference specific audio map
-	std::map<std::string, FMOD::Sound*>* tempMap = 0;
+	std::map<std::string, FMOD::Sound*>* tempMap = nullptr;
 
-	//assign whichever audio map needs to be removed from 
-	//to temp pointer so that when looping through the map later, 
-	//the pointer is used instead of looping through three different maps
+	//assign whichever audio map needs to be removed from to the temp 
+	//pointer so that when looping through the map later, the pointer
+	//is used then instead of looping through three different maps
 	switch (audioType)
 	{
 		case SFX_AUDIO   : tempMap = &m_sfxDataMap; break;
@@ -134,40 +144,34 @@ void AudioManager::UnloadFromMemory(AudioType audioType,
 		case VOICE_AUDIO : tempMap = &m_voiceDataMap; break;
 	}
 
-	//loop through entire audio map in order 
-	//to remove a specific audio object or all audio objects
-	for (auto it = tempMap->begin(); it != tempMap->end(); it++)
+	//if a single audio file needs to be removed, find it and free it from memory 
+	if (removeType == CUSTOM_AUDIO)
 	{
+		auto it = tempMap->find(mapIndex);
 
-		//if a flag is passed to remove a specific audio object
-		//check if map index is the audio that needs to be removed
-		//and remove it from both FMOD and the map
-		if (removeType == CUSTOM_AUDIO)
+		if (it == tempMap->end())
 		{
-
-			if (it->first == mapIndex)
-			{
-				it->second->release();
-				tempMap->erase(it);
-				break;
-			}
-
+			std::cout << "Audio data not found." << std::endl;
 		}
 
-		//otherwise if a flag is passed to remove all audio objects
-		//remove the audio from FMOD
-		else if (removeType == ALL_AUDIO)
+		else
+		{
+			it->second->release();
+			tempMap->erase(it);
+		}
+	}
+
+	//otherwise loop through the entire map and remove all audio data and clear the map
+	else if (removeType == ALL_AUDIO)
+	{
+
+		for (auto it = tempMap->begin(); it != tempMap->end(); it++)
 		{
 			it->second->release();
 		}
 
-	}
-
-	//if all audio objects have been removed from FMOD, clear the 
-	//entire map in one go, because the pointers in the map still remain
-	if (removeType == ALL_AUDIO)
-	{
 		tempMap->clear();
+
 	}
 
 }

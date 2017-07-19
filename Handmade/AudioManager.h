@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : January 2016
+  UPDATED : February 2017
 
   -----------------------------------------------------------------------------------------------
 
@@ -31,7 +31,7 @@
 
 - The LoadFromFile() routine will load in the audio data from a file and store the audio in the 
   correct audio map. Both the music and voice audio is loaded into memory in a streamed way, so
-  as to save on memory beacuse these files can become plentiful and large. SFX files are loaded
+  as to save on memory because these files can become plentiful and large. SFX files are loaded
   in directly into memory and kept there. Streamed audio is CPU intensive!
 
 - An Output() routine is there for debug purposes only and will print to the console how many audio
@@ -44,7 +44,6 @@
 
 #include <map>
 #include <string>
-#include <vector>
 #include <fmod.hpp>
 #include "Singleton.h"
 
