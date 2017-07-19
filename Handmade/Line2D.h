@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : April 2016
+  UPDATED : January 2017
 
   -----------------------------------------------------------------------------------------------
 
@@ -54,9 +54,8 @@
 #ifndef LINE_2D_H
 #define LINE_2D_H
 
+#include <glm.hpp>
 #include "Bound.h"
-#include "Transform.h"
-#include "Vector2D.h"
 
 class Sphere2D;
 
@@ -72,12 +71,12 @@ public:
 
 	void SetScale(float scale);
 	void SetLength(float length);
-	void SetRotation(Transform rotation);
+	void SetRotation(glm::mat4& rotation);
 
 public:
 
 	bool IsColliding(const Sphere2D& secondSphere) const;
-	Vector2D<float> PointOnLine(float positionX, float positionY) const;
+	glm::vec2 PointOnLine(float positionX, float positionY) const;
 
 public:
 
@@ -89,10 +88,9 @@ private:
 	float m_scale;
 	float m_length;
 	
-	Transform m_rotation;
-
-	Vector2D<float> m_startPoint;
-	Vector2D<float> m_endPoint;
+	glm::vec2 m_startPoint;
+	glm::vec2 m_endPoint;
+	glm::mat4 m_rotation;
 
 };
 

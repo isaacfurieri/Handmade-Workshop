@@ -10,9 +10,9 @@ MainCamera::MainCamera()
 
 #ifdef GAME_3D
 
-		m_camera.Position().Z = 5;
-		m_camera.Position().Y = 5;
-		m_camera.Position().X = 5;
+		m_camera.Position().x = 5;
+		m_camera.Position().y = 5;
+		m_camera.Position().z = 5;
 		m_camera.RotateY(-45);
 		m_camera.RotateX(30);
 		m_camera.SetVelocity(5.0f);
@@ -23,9 +23,9 @@ MainCamera::MainCamera()
 
 #ifdef GAME_2D
 
-		m_camera.Position().Z = 0;
-		m_camera.Position().X = (float)(-5 * TheScreen::Instance()->GetPixelsPerUnit());
-		m_camera.Position().Y = (float)(-5 * TheScreen::Instance()->GetPixelsPerUnit());
+		m_camera.Position().z = 0;
+		m_camera.Position().x = (float)(-5 * TheScreen::Instance()->GetPixelsPerUnit());
+		m_camera.Position().y = (float)(-5 * TheScreen::Instance()->GetPixelsPerUnit());
 		m_camera.SetVelocity(10.0f * TheScreen::Instance()->GetPixelsPerUnit());
 		m_camera.SetSensitivity(0.0f);
 		m_camera.IsFreeFlow() = false;
@@ -33,28 +33,30 @@ MainCamera::MainCamera()
 #endif
 
 	//disable mouse cursor so that it does not interfere when rotating the camera
-	TheInput::Instance()->SetMouseCursor(InputManager::CURSOR_OFF);
+	TheInput::Instance()->SetMouseCursorState(InputManager::OFF);
 
 }
 //------------------------------------------------------------------------------------------------------
-//function that reads key and mouse input and sets end of game flag accordingly 
+//function that updates the camera and reads key and mouse input  
 //------------------------------------------------------------------------------------------------------
 void MainCamera::Update()
 {
 
+	//set camera's position and orientation
+	m_camera.Update();
+
+	//set state of camera based on keys pressed which will 
+	//trigger the main game state to end if no longer active
 	m_isActive = CheckInput();
 
 }
 //------------------------------------------------------------------------------------------------------
-//function that resets modelview matrix and sets up camera view
+//function that sets view matrix accordingly
 //------------------------------------------------------------------------------------------------------
 bool MainCamera::Draw()
 {
 
-	TheScreen::Instance()->ModelViewMatrix() = Matrix4D::IDENTITY;
-
-	m_camera.Update();
-	m_camera.Draw();
+	Camera::ApplyMatrix();
 
 	return true;
 
@@ -124,8 +126,8 @@ bool MainCamera::CheckInput()
 	}
 
 	//set camera rotation values based on mouse motion values
-	m_camera.RotateX(TheInput::Instance()->GetMouseMotion().Y);
-	m_camera.RotateY(TheInput::Instance()->GetMouseMotion().X);
+	m_camera.RotateX((short)(TheInput::Instance()->GetMouseMotion().y));
+	m_camera.RotateY((short)(TheInput::Instance()->GetMouseMotion().x));
 
 	return true;
 

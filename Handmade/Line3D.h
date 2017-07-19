@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : April 2016
+  UPDATED : January 2017
 
   -----------------------------------------------------------------------------------------------
 
@@ -50,9 +50,9 @@
 #ifndef LINE_3D_H
 #define LINE_3D_H
 
+#include <glm.hpp>
 #include "Bound.h"
 #include "Quaternion.h"
-#include "Vector3D.h"
 
 class Sphere3D;
 
@@ -73,7 +73,7 @@ public:
 public:
 
 	bool IsColliding(const Sphere3D& secondSphere) const;
-	Vector3D<float> PointOnLine(float positionX, float positionY, float positionZ) const;
+	glm::vec3 PointOnLine(float positionX, float positionY, float positionZ) const;
 
 public:
 
@@ -87,8 +87,8 @@ private:
 
 	Quaternion m_rotation;
 
-	Vector3D<float> m_startPoint;
-	Vector3D<float> m_endPoint;
+	glm::vec3 m_startPoint;
+	glm::vec3 m_endPoint;
 
 };
 

@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : April 2016
+  UPDATED : January 2017
 
   -----------------------------------------------------------------------------------------------
 
@@ -15,10 +15,10 @@
   routine that reads keypresses and mouse motions to determine which way the camera will be moving
   and rotating. The Update() function will constantly call this routine and if it returns false it
   means the player pressed ESCAPE and wishes to quit, which will set the camera's m_active flag 
-  accordingly. The camera determines when the game state ends. The Draw() function will reset the 
-  modelview matrix and set up the camera accordingly. This should be done before each and every 
-  other game object is drawn on screen, meaning that this camera's Draw() routine should be called
-  before all other game objects are drawn. 
+  accordingly. The camera determines when the game state ends. The Draw() function will set the 
+  view matrix and set up the camera accordingly. This should be done before all game objects are 
+  drawn on screen, meaning that this camera's Draw() routine should be called before all other game 
+  objects are drawn. 
 
 */
 

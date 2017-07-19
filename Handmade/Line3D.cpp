@@ -47,22 +47,22 @@ void Line3D::SetRotation(Quaternion rotation)
 bool Line3D::IsColliding(const Sphere3D& secondSphere) const
 {
 
-	Vector3D<float> distanceFromLine;
+	glm::vec3 distanceFromLine;
 
 	//calculate the distance the sphere and point on line segment are apart from each other
 	//this makes use of inner function that calculates the point on line segment closest to sphere 
-	distanceFromLine = secondSphere.GetPosition() - PointOnLine(secondSphere.GetPosition().X, 
-						                                        secondSphere.GetPosition().Y, 
-		                                                        secondSphere.GetPosition().Z);
+	distanceFromLine = secondSphere.GetPosition() - PointOnLine(secondSphere.GetPosition().x, 
+						                                        secondSphere.GetPosition().y, 
+		                                                        secondSphere.GetPosition().z);
 
 	//return flag based on if line segment intersects with sphere
-	return (distanceFromLine.Length() <= secondSphere.GetRadius());
+	return (glm::length(distanceFromLine) <= secondSphere.GetRadius());
 
 }
 //------------------------------------------------------------------------------------------------------
 //function that determines point on line segment that is closest to position passed 
 //------------------------------------------------------------------------------------------------------
-Vector3D<float> Line3D::PointOnLine(float positionX, float positionY, float positionZ) const
+glm::vec3 Line3D::PointOnLine(float positionX, float positionY, float positionZ) const
 {
 
 	//variable to store normalized portion of line segment that point uses up
@@ -70,13 +70,13 @@ Vector3D<float> Line3D::PointOnLine(float positionX, float positionY, float posi
 
 	//first calculate distance vector between line segment's start and end point
 	//also create a position vector out of the position X, Y and Z values passed
-	Vector3D<float> distance = m_endPoint - m_startPoint;
-	Vector3D<float> tempPosition(positionX, positionY, positionZ);
+	glm::vec3 distance = m_endPoint - m_startPoint;
+	glm::vec3 tempPosition(positionX, positionY, positionZ);
 
 	//calculate the line segment portion using a dot
 	//product formula and distance vector created above
-	lineSegmentPortion = distance.DotProduct(tempPosition - m_startPoint) /
-		                 distance.DotProduct(distance);
+	lineSegmentPortion = glm::dot(distance, (tempPosition - m_startPoint)) /
+		                 glm::dot(distance, distance);
 
 	//if the line segment portion is zero or less the
 	//point closest to the sphere is the line's start point
@@ -97,8 +97,7 @@ Vector3D<float> Line3D::PointOnLine(float positionX, float positionY, float posi
 	//somewhere, so use another formula to calculate that point exactly
 	else
 	{
-		return
-		Vector3D<float>(m_startPoint + lineSegmentPortion * distance);
+		return (m_startPoint + lineSegmentPortion * distance);
 	}
 
 }
@@ -109,10 +108,10 @@ void Line3D::Update()
 {
 
 	//use the right vector to calculate line's end point below
-	Vector3D<float> rightAxis = Vector3D<float>::RIGHT;
+	glm::vec3 rightAxis = glm::vec3(1.0f, 0.0f, 0.0f); 
 
 	//transform the right vector based on how line segment is rotated
-	rightAxis = m_rotation.GetMatrix() * rightAxis * m_length * m_scale;
+	rightAxis = glm::vec3(m_rotation.GetMatrix() * glm::vec4(rightAxis, 1.0f)) * m_length * m_scale;
 
 	//the line segment's starting point is nothing more than its position and its
 	//end point is based on its start point with the rotated right axis added on
@@ -128,7 +127,7 @@ void Line3D::Draw()
 
 	//draw line based on start and end point as well as color set and remember that
 	//the start and end points already have translation, rotation and scale considered!! 
-	TheDebug::Instance()->DrawLine(m_startPoint.X, m_startPoint.Y, m_startPoint.Z,
-		                           m_endPoint.X, m_endPoint.Y, m_endPoint.Z, 4, m_color, 1);
+	TheDebug::Instance()->DrawLine(m_startPoint.x, m_startPoint.y, m_startPoint.z,
+		                           m_endPoint.x, m_endPoint.y, m_endPoint.z, 4, m_color, 1);
 
 }

@@ -12,7 +12,6 @@ Line2D::Line2D()
 	m_length = 0.0f;
 	m_color.A = 0.4f;
 	m_color = Color::MAGENTA;
-	m_rotation.Rotate(0);
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -36,7 +35,7 @@ void Line2D::SetLength(float length)
 //------------------------------------------------------------------------------------------------------
 //setter function that assigns rotation of line segment
 //------------------------------------------------------------------------------------------------------
-void Line2D::SetRotation(Transform rotation)
+void Line2D::SetRotation(glm::mat4& rotation)
 {
 
 	m_rotation = rotation;
@@ -48,21 +47,21 @@ void Line2D::SetRotation(Transform rotation)
 bool Line2D::IsColliding(const Sphere2D& secondSphere) const
 {
 
-	Vector2D<float> distanceFromLine;
+	glm::vec2 distanceFromLine;
 
 	//calculate the distance the sphere and point on line segment are apart from each other
 	//this makes use of inner function that calculates the point on line segment closest to sphere 
-	distanceFromLine = secondSphere.GetPosition().Convert2D() - 
-		               PointOnLine(secondSphere.GetPosition().X, secondSphere.GetPosition().Y);
+	distanceFromLine = glm::vec2(secondSphere.GetPosition()) - 
+		               PointOnLine(secondSphere.GetPosition().x, secondSphere.GetPosition().y);
 
 	//return flag based on if line segment intersects with sphere
-	return (distanceFromLine.Length() <= secondSphere.GetRadius());
+	return (glm::length(distanceFromLine) <= secondSphere.GetRadius());
 
 }
 //------------------------------------------------------------------------------------------------------
 //function that determines point on line segment that is closest to position passed 
 //------------------------------------------------------------------------------------------------------
-Vector2D<float> Line2D::PointOnLine(float positionX, float positionY) const
+glm::vec2 Line2D::PointOnLine(float positionX, float positionY) const
 {
 
 	//variable to store normalized portion of line segment that point uses up
@@ -70,13 +69,13 @@ Vector2D<float> Line2D::PointOnLine(float positionX, float positionY) const
 
 	//first calculate distance vector between line segment's start and end point
 	//also create a position vector out of the position X and Y values passed
-	Vector2D<float> distance = m_endPoint - m_startPoint;
-	Vector2D<float> tempPosition(positionX, positionY);
+	glm::vec2 distance = m_endPoint - m_startPoint;
+	glm::vec2 tempPosition(positionX, positionY);
 	
 	//calculate the line segment portion using a dot
 	//product formula and distance vector created above
-	lineSegmentPortion = distance.DotProduct(tempPosition - m_startPoint) / 
-		                 distance.DotProduct(distance);
+	lineSegmentPortion = glm::dot(distance, (tempPosition - m_startPoint)) / 
+		                 glm::dot(distance, distance);
 
 	//if the line segment portion is zero or less the
 	//point closest to the sphere is the line's start point
@@ -97,8 +96,7 @@ Vector2D<float> Line2D::PointOnLine(float positionX, float positionY) const
 	//somewhere, so use another formula to calculate that point exactly
 	else
 	{
-		return 
-		Vector2D<float>(m_startPoint + lineSegmentPortion * distance);
+		return (m_startPoint + lineSegmentPortion * distance);
 	}
 
 }
@@ -109,13 +107,13 @@ void Line2D::Update()
 {
 
 	//convert line segment's position to a 2D object so that the calculations below will work
-	Vector2D<float> position = m_position.Convert2D();
+	glm::vec2 position = glm::vec2(m_position);
 
 	//use the right vector to calculate line's end point below
-	Vector2D<float> rightAxis = Vector2D<float>::RIGHT;
+	glm::vec2 rightAxis = glm::vec2(1.0f, 0.0f);
 
 	//transform the right vector based on how line segment is rotated
-	rightAxis = m_rotation.GetMatrix() * rightAxis * m_length * m_scale;
+	rightAxis = glm::vec2(m_rotation * glm::vec4(rightAxis, 0.0f, 1.0f)) * m_length * m_scale;
 
 	//the line segment's starting point is nothing more than its position and its
 	//end point is based on its start point with the rotated right axis added on
@@ -132,7 +130,7 @@ void Line2D::Draw()
 	//draw line based on start and end point as well as color set and use a spacing of 1
 	//because the pixel scale value is already integrated when the line points are set earlier
 	//the start and end points already have translation, rotation and scale considered!! 
-	TheDebug::Instance()->DrawLine(m_startPoint.X, m_startPoint.Y, 0, 
-		                           m_endPoint.X, m_endPoint.Y, 0, 4, m_color, 1);
+	TheDebug::Instance()->DrawLine(m_startPoint.x, m_startPoint.y, 0, 
+		                           m_endPoint.x, m_endPoint.y, 0, 4, m_color, 1);
 
 }
