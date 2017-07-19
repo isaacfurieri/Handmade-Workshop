@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : March 2016
+  UPDATED : January 2017
 
   -----------------------------------------------------------------------------------------------
 
@@ -64,8 +64,8 @@
 #ifndef AABB_3D_H
 #define AABB_3D_H
 
+#include <glm.hpp>
 #include "Bound.h"
-#include "Vector3D.h"
 
 class OBB3D;
 class Sphere3D;
@@ -80,8 +80,8 @@ public :
 
 public:
 
-	Vector3D<float> GetScale()     const;
-	Vector3D<float> GetDimension() const;
+	glm::vec3 GetScale()     const;
+	glm::vec3 GetDimension() const;
 
 public:
 
@@ -93,7 +93,7 @@ public:
 	bool IsColliding(const OBB3D& secondBox) const;
 	bool IsColliding(const AABB3D& secondBox) const;
 	bool IsColliding(const Sphere3D& secondSphere) const;
-	Vector3D<float> PointOnBox(float positionX, float positionY, float positionZ) const;
+	glm::vec3 PointOnBox(float positionX, float positionY, float positionZ) const;
 
 public:
 
@@ -102,11 +102,11 @@ public:
 
 private:
 
-	Vector3D<float> m_min;
-	Vector3D<float> m_max;
-	Vector3D<float> m_scale;
-	Vector3D<float> m_dimension;
-	Vector3D<float> m_halfDimension;
+	glm::vec3 m_min;
+	glm::vec3 m_max;
+	glm::vec3 m_scale;
+	glm::vec3 m_dimension;
+	glm::vec3 m_halfDimension;
 
 };
 

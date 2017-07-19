@@ -10,7 +10,7 @@
 AABB3D::AABB3D()
 {
 
-	m_scale = 1;
+	m_scale = glm::vec3(1.0f);
 	m_color.A = 0.4f;
 	m_color = Color::RED;
 	
@@ -18,7 +18,7 @@ AABB3D::AABB3D()
 //------------------------------------------------------------------------------------------------------
 //getter function that returns scale of AABB
 //------------------------------------------------------------------------------------------------------
-Vector3D<float> AABB3D::GetScale() const
+glm::vec3 AABB3D::GetScale() const
 {
 
 	return m_scale;
@@ -27,7 +27,7 @@ Vector3D<float> AABB3D::GetScale() const
 //------------------------------------------------------------------------------------------------------
 //getter function that returns dimension of AABB
 //------------------------------------------------------------------------------------------------------
-Vector3D<float> AABB3D::GetDimension() const
+glm::vec3 AABB3D::GetDimension() const
 {
 
 	return m_dimension;
@@ -39,9 +39,9 @@ Vector3D<float> AABB3D::GetDimension() const
 void AABB3D::SetScale(float x, float y, float z)
 {
 
-	m_scale.X = x;
-	m_scale.Y = y;
-	m_scale.Z = z;
+	m_scale.x = x;
+	m_scale.y = y;
+	m_scale.z = z;
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -50,9 +50,9 @@ void AABB3D::SetScale(float x, float y, float z)
 void AABB3D::SetDimension(float width, float height, float depth)
 {
 
-	m_dimension.X = width;
-	m_dimension.Y = height;
-	m_dimension.Z = depth;
+	m_dimension.x = width;
+	m_dimension.y = height;
+	m_dimension.z = depth;
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -71,9 +71,9 @@ bool AABB3D::IsColliding(const OBB3D& secondBox) const
 bool AABB3D::IsColliding(const AABB3D& secondBox) const
 {
 
-	return ((m_max.X > secondBox.m_min.X && secondBox.m_max.X > m_min.X) &&
-		    (m_max.Y > secondBox.m_min.Y && secondBox.m_max.Y > m_min.Y) &&
-		    (m_max.Z > secondBox.m_min.Z && secondBox.m_max.Z > m_min.Z));
+	return ((m_max.x > secondBox.m_min.x && secondBox.m_max.x > m_min.x) &&
+		    (m_max.y > secondBox.m_min.y && secondBox.m_max.y > m_min.y) &&
+		    (m_max.z > secondBox.m_min.z && secondBox.m_max.z > m_min.z));
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -82,36 +82,36 @@ bool AABB3D::IsColliding(const AABB3D& secondBox) const
 bool AABB3D::IsColliding(const Sphere3D& secondSphere) const
 {
 
-	Vector3D<float> distanceFromBox;
+	glm::vec3 distanceFromBox;
 
 	//calculate the distance the sphere and point on box edge are apart from each other
 	//this makes use of inner function that calculates the point on box edge closest to sphere 
-	distanceFromBox = secondSphere.GetPosition() - PointOnBox(secondSphere.GetPosition().X,
-		                                                      secondSphere.GetPosition().Y, 
-															  secondSphere.GetPosition().Z);
+	distanceFromBox = secondSphere.GetPosition() - PointOnBox(secondSphere.GetPosition().x,
+		                                                      secondSphere.GetPosition().y, 
+															  secondSphere.GetPosition().z);
 
 	//return flag based on if box intersects with sphere
-	return (distanceFromBox.Length() <= secondSphere.GetRadius());
+	return (glm::length(distanceFromBox) <= secondSphere.GetRadius());
 
 }
 //------------------------------------------------------------------------------------------------------
 //function that determines point on box edge that is closest to position passed 
 //------------------------------------------------------------------------------------------------------
-Vector3D<float> AABB3D::PointOnBox(float positionX, float positionY, float positionZ) const
+glm::vec3 AABB3D::PointOnBox(float positionX, float positionY, float positionZ) const
 {
 
-	Vector3D<float> clampValue;
-	Vector3D<float> distanceFromSphere;
-	Vector3D<float> tempPosition(positionX, positionY);
+	glm::vec3 clampValue;
+	glm::vec3 distanceFromSphere;
+	glm::vec3 tempPosition(positionX, positionY, positionZ);
 
 	//first calculate distance between the box and position passed
 	distanceFromSphere = m_position - tempPosition;
 
 	//calculate the clamp value based on the distance vector 
 	//and the half dimension of the box using a min/max formula  
-	clampValue.X = std::max(-m_halfDimension.X, std::min(m_halfDimension.X, (distanceFromSphere.X)));
-	clampValue.Y = std::max(-m_halfDimension.Y, std::min(m_halfDimension.Y, (distanceFromSphere.Y)));
-	clampValue.Z = std::max(-m_halfDimension.Z, std::min(m_halfDimension.Z, (distanceFromSphere.Z)));
+	clampValue.x = std::max(-m_halfDimension.x, std::min(m_halfDimension.x, (distanceFromSphere.x)));
+	clampValue.y = std::max(-m_halfDimension.y, std::min(m_halfDimension.y, (distanceFromSphere.y)));
+	clampValue.z = std::max(-m_halfDimension.z, std::min(m_halfDimension.z, (distanceFromSphere.z)));
 
 	//the clamp value is used to determine the exact point on the 
 	//edge of the box that lines up with the passed position point
@@ -125,16 +125,16 @@ void AABB3D::Update()
 {
 
 	//first determine the half width, height and depth based on scale value  
-	m_halfDimension = m_dimension * m_scale / 2;
+	m_halfDimension = m_dimension * m_scale / 2.0f;
 
 	//calculate min and max X, Y and Z values based on 
 	//bound's centre position and its half dimension
-	m_min.X = m_position.X - m_halfDimension.X;
-	m_min.Y = m_position.Y - m_halfDimension.Y;
-	m_min.Z = m_position.Z - m_halfDimension.Z;
-	m_max.X = m_position.X + m_halfDimension.X;
-	m_max.Y = m_position.Y + m_halfDimension.Y;
-	m_max.Z = m_position.Z + m_halfDimension.Z;
+	m_min.x = m_position.x - m_halfDimension.x;
+	m_min.y = m_position.y - m_halfDimension.y;
+	m_min.z = m_position.z - m_halfDimension.z;
+	m_max.x = m_position.x + m_halfDimension.x;
+	m_max.y = m_position.y + m_halfDimension.y;
+	m_max.z = m_position.z + m_halfDimension.z;
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -144,6 +144,6 @@ void AABB3D::Draw()
 {
 
 	//draw bound based on dimension and color set 
-	TheDebug::Instance()->DrawCube3D(m_dimension.X, m_dimension.Y, m_dimension.Z, m_color);
+	TheDebug::Instance()->DrawCube3D(m_dimension.x, m_dimension.y, m_dimension.z, m_color);
 
 }

@@ -10,7 +10,7 @@
 AABB2D::AABB2D()
 {
 
-	m_scale = 1;
+	m_scale = glm::vec2(1.0f);
 	m_color.A = 0.4f;
 	m_color = Color::RED;
 	
@@ -18,7 +18,7 @@ AABB2D::AABB2D()
 //------------------------------------------------------------------------------------------------------
 //getter function that returns scale of AABB
 //------------------------------------------------------------------------------------------------------
-Vector2D<float> AABB2D::GetScale() const
+glm::vec2 AABB2D::GetScale() const
 {
 
 	return m_scale; 
@@ -27,7 +27,7 @@ Vector2D<float> AABB2D::GetScale() const
 //------------------------------------------------------------------------------------------------------
 //getter function that returns dimension of AABB
 //------------------------------------------------------------------------------------------------------
-Vector2D<float> AABB2D::GetDimension() const
+glm::vec2 AABB2D::GetDimension() const
 { 
 	
 	return m_dimension; 
@@ -39,8 +39,8 @@ Vector2D<float> AABB2D::GetDimension() const
 void AABB2D::SetScale(float x, float y)
 {
 
-	m_scale.X = x;
-	m_scale.Y = y;
+	m_scale.x = x;
+	m_scale.y = y;
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -49,8 +49,8 @@ void AABB2D::SetScale(float x, float y)
 void AABB2D::SetDimension(float width, float height)
 {
 
-	m_dimension.X = width;
-	m_dimension.Y = height;
+	m_dimension.x = width;
+	m_dimension.y = height;
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -69,8 +69,8 @@ bool AABB2D::IsColliding(const OBB2D& secondBox) const
 bool AABB2D::IsColliding(const AABB2D& secondBox) const
 {
 
-	return ((m_max.X > secondBox.m_min.X && secondBox.m_max.X > m_min.X) &&
-		    (m_max.Y > secondBox.m_min.Y && secondBox.m_max.Y > m_min.Y));
+	return ((m_max.x > secondBox.m_min.x && secondBox.m_max.x > m_min.x) &&
+		    (m_max.y > secondBox.m_min.y && secondBox.m_max.y > m_min.y));
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -79,38 +79,38 @@ bool AABB2D::IsColliding(const AABB2D& secondBox) const
 bool AABB2D::IsColliding(const Sphere2D& secondSphere) const
 {
 
-	Vector2D<float> distanceFromBox;
+	glm::vec2 distanceFromBox;
 
 	//calculate the distance the sphere and point on box edge are apart from each other
 	//this makes use of inner function that calculates the point on box edge closest to sphere 
-	distanceFromBox = secondSphere.GetPosition().Convert2D() - PointOnBox(secondSphere.GetPosition().X, 
-					                                                      secondSphere.GetPosition().Y);
+	distanceFromBox = glm::vec2(secondSphere.GetPosition()) - PointOnBox(secondSphere.GetPosition().x, 
+					                                                     secondSphere.GetPosition().y);
 
 	//return flag based on if box intersects with sphere
-	return (distanceFromBox.Length() <= secondSphere.GetRadius());
+	return (glm::length(distanceFromBox) <= secondSphere.GetRadius());
 
 }
 //------------------------------------------------------------------------------------------------------
 //function that determines point on box edge that is closest to position passed 
 //------------------------------------------------------------------------------------------------------
-Vector2D<float> AABB2D::PointOnBox(float positionX, float positionY) const
+glm::vec2 AABB2D::PointOnBox(float positionX, float positionY) const
 {
 
-	Vector2D<float> clampValue;
-	Vector2D<float> distanceFromSphere;
-	Vector2D<float> tempPosition(positionX, positionY);
+	glm::vec2 clampValue;
+	glm::vec2 distanceFromSphere;
+	glm::vec2 tempPosition(positionX, positionY);
 
 	//first calculate distance between the box and position passed
-	distanceFromSphere = m_position.Convert2D() - tempPosition;
+	distanceFromSphere = glm::vec2(m_position) - tempPosition;
 
 	//calculate the clamp value based on the distance vector 
 	//and the half dimension of the box using a min/max formula  
-	clampValue.X = std::max(-m_halfDimension.X, std::min(m_halfDimension.X, (distanceFromSphere.X)));
-	clampValue.Y = std::max(-m_halfDimension.Y, std::min(m_halfDimension.Y, (distanceFromSphere.Y)));
+	clampValue.x = std::max(-m_halfDimension.x, std::min(m_halfDimension.x, (distanceFromSphere.x)));
+	clampValue.y = std::max(-m_halfDimension.y, std::min(m_halfDimension.y, (distanceFromSphere.y)));
 
 	//the clamp value is used to determine the exact point on the 
 	//edge of the box that lines up with the passed position point
-	return m_position.Convert2D() - clampValue;
+	return glm::vec2(m_position) - clampValue;
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -120,14 +120,14 @@ void AABB2D::Update()
 {
 
 	//first determine the half width and height of bound based on scale value  
-	m_halfDimension = m_dimension * m_scale / 2;
+	m_halfDimension = m_dimension * m_scale / 2.0f;
 	
 	//calculate min and max X and Y values based on 
 	//bound's centre position and its half dimension
-	m_min.X = m_position.X - m_halfDimension.X;
-	m_min.Y = m_position.Y - m_halfDimension.Y;
-	m_max.X = m_position.X + m_halfDimension.X;
-	m_max.Y = m_position.Y + m_halfDimension.Y;
+	m_min.x = m_position.x - m_halfDimension.x;
+	m_min.y = m_position.y - m_halfDimension.y;
+	m_max.x = m_position.x + m_halfDimension.x;
+	m_max.y = m_position.y + m_halfDimension.y;
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -138,6 +138,6 @@ void AABB2D::Draw()
 
 	//draw bound based on dimension and color set and use a spacing of 1 because
 	//the pixel scale value is already integrated when the dimension is set earlier
-	TheDebug::Instance()->DrawCube2D(m_dimension.X, m_dimension.Y, m_color, 1);
+	TheDebug::Instance()->DrawCube2D(m_dimension.x, m_dimension.y, m_color, 1);
 
 }

@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : March 2016
+  UPDATED : January 2017
 
   -----------------------------------------------------------------------------------------------
 
@@ -66,8 +66,8 @@
 #ifndef AABB_2D_H
 #define AABB_2D_H
 
+#include <glm.hpp>
 #include "Bound.h"
-#include "Vector2D.h"
 
 class OBB2D;   
 class Sphere2D;
@@ -82,8 +82,8 @@ public :
 
 public :
 
-	Vector2D<float> GetScale()     const;
-	Vector2D<float> GetDimension() const;
+	glm::vec2 GetScale()     const;
+	glm::vec2 GetDimension() const;
 
 public :
 
@@ -95,7 +95,7 @@ public :
 	bool IsColliding(const OBB2D& secondBox) const;
 	bool IsColliding(const AABB2D& secondBox) const;
 	bool IsColliding(const Sphere2D& secondSphere) const;   
-	Vector2D<float> PointOnBox(float positionX, float positionY) const;
+	glm::vec2 PointOnBox(float positionX, float positionY) const;
 
 public :
 
@@ -104,11 +104,11 @@ public :
 
 private :
 
-	Vector2D<float> m_min;   
-	Vector2D<float> m_max;
-	Vector2D<float> m_scale; 
-	Vector2D<float> m_dimension;
-	Vector2D<float> m_halfDimension;
+	glm::vec2 m_min;   
+	glm::vec2 m_max;
+	glm::vec2 m_scale;
+	glm::vec2 m_dimension;
+	glm::vec2 m_halfDimension;
 	 
 };
 
