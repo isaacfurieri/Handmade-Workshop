@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : July 2016
+  UPDATED : April 2017
 
   -----------------------------------------------------------------------------------------------
 
@@ -16,8 +16,9 @@
   have been pressed and what state the mouse buttons are in, and these states can be queried from
   external code at any time.
 
-- Two enumerated types has been created to be used when storing the button states of the mouse 
-  buttons, and for setting the flag to show or hide the mouse cursor.
+- Three enumerated types have been created to be used when storing the button states of the mouse 
+  buttons, the mouse cursor state, and the SDL mouse cursor flag values, whose values all correspond
+  with SDL's numeric values for those specific mouse cursors.
 
 - The class variables store all the details of the mouse and keyboard and the m_isXClicked and 
   m_isKeyPressed variables store whether the X in the top right corner of the game window has been 
@@ -40,8 +41,9 @@
   object, but then dynamic casting is needed to set the dimension each time and that is expensive! 
   Templatizing could also work but the two functions are not exactly identical. Basic function 
   overriding seems to be the best solution here for now. (More TBA)  
-  The SetMouseCursor() routine will toggle the mouse cursor on or off so that it may be shown or hidden
-  respectively. 
+  There are two mouse cursor setter functions to set the type and state of the mouse cursor. Using 
+  these functions, a specific Windows OS mouse cursor can be created and the cursor may be enabled, 
+  disabled, shown or hidden
 
 - The Update() function is the core of the Input Manager class. It will process all SDL events that
   build up on the event queue and will store particular keyboard and mouse property values in the 
@@ -57,7 +59,6 @@
 #include "AABB2D.h"
 #include "Singleton.h"
 #include "Sphere2D.h"
-#include "Vector2D.h"
 
 class InputManager
 {
@@ -65,7 +66,8 @@ class InputManager
 public :
 
 	enum ButtonState { UP, DOWN };
-	enum CursorState { CURSOR_ON, CURSOR_OFF };
+	enum CursorState { ON = 1, OFF = 0, SHOW = 1, HIDE = 0 };
+	enum CursorType  { ARROW, IBEAM, WAIT, CROSSHAIR, WAIT_ARROW, NO = 10, HAND = 11 };
 
 public :
 
@@ -81,15 +83,17 @@ public :
 
 public :
 
+	glm::vec2 GetMousePosition();
+	glm::vec2 GetMouseMotion();
+	glm::vec2 GetMouseWheel();	
+	
 	ButtonState GetLeftButtonState();
 	ButtonState GetMiddleButtonState();
 	ButtonState GetRightButtonState();
 
-	Vector2D<Sint32> GetMousePosition();
-	Vector2D<Sint32> GetMouseMotion();
-	Vector2D<Sint32> GetMouseWheel();	
-	
-	void SetMouseCursor(CursorState mouseCursor);
+	void SetMousePosition(int x, int y);
+	void SetMouseCursorType(CursorType cursorType = ARROW);
+	void SetMouseCursorState(CursorState cursorEnabled = ON, CursorState cursorVisible = SHOW);
 
 public :
 
@@ -105,17 +109,18 @@ private :
 
 	bool m_isXClicked;
 	bool m_isKeyPressed;
-	
 	const Uint8* m_keyStates;
 
+	SDL_Cursor* m_cursor;
+
+	glm::vec2 m_mousePosition;
+	glm::vec2 m_mouseMotion;
+	glm::vec2 m_mouseWheel;
+	
 	ButtonState m_leftButtonState;
 	ButtonState m_middleButtonState;
 	ButtonState m_rightButtonState;
 
-	Vector2D<Sint32> m_mousePosition;
-	Vector2D<Sint32> m_mouseMotion;
-	Vector2D<Sint32> m_mouseWheel;
-	
 };
 
 typedef Singleton<InputManager> TheInput;

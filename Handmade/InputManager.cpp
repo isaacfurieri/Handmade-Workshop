@@ -7,10 +7,11 @@
 InputManager::InputManager()
 {
 
+	m_keyStates = 0;
 	m_isXClicked = false;
 	m_isKeyPressed = false;
-
-	m_keyStates = 0;
+	
+	m_cursor = nullptr;
 
 	m_leftButtonState = UP;
 	m_middleButtonState = UP;
@@ -55,8 +56,8 @@ bool InputManager::IsMouseColliding(const AABB2D& bound)
 
 	//set mouse cursor bounds of 1x1 based on mouse position
 	//flip Y axis as mouse coordinates run from top to bottom
-	tempBound.SetPosition(m_mousePosition.X,
-					      TheScreen::Instance()->GetScreenSize().Y - m_mousePosition.Y);
+	tempBound.SetPosition(m_mousePosition.x,
+					      TheScreen::Instance()->GetScreenSize().y - m_mousePosition.y);
 	tempBound.SetDimension(1, 1);
 	tempBound.Update();
 
@@ -75,13 +76,40 @@ bool InputManager::IsMouseColliding(const Sphere2D& bound)
 
 	//set mouse cursor radius of 1 based on mouse position
 	//flip Y axis as mouse coordinates run from top to bottom
-	tempBound.SetPosition(m_mousePosition.X,
-		                  TheScreen::Instance()->GetScreenSize().Y - m_mousePosition.Y);
+	tempBound.SetPosition(m_mousePosition.x,
+		                  TheScreen::Instance()->GetScreenSize().y - m_mousePosition.y);
 	tempBound.SetDimension(1);
 	tempBound.Update();
 
 	//return flag based on if mouse collides with bound
 	return tempBound.IsColliding(bound);
+
+}
+//------------------------------------------------------------------------------------------------------
+//getter function that returns position of mouse
+//------------------------------------------------------------------------------------------------------
+glm::vec2 InputManager::GetMousePosition()
+{
+
+	return m_mousePosition;
+
+}
+//------------------------------------------------------------------------------------------------------
+//getter function that returns motion value of mouse movement
+//------------------------------------------------------------------------------------------------------
+glm::vec2 InputManager::GetMouseMotion()
+{
+
+	return m_mouseMotion;
+
+}
+//------------------------------------------------------------------------------------------------------
+//getter function that returns motion value of mouse wheel movement
+//------------------------------------------------------------------------------------------------------
+glm::vec2 InputManager::GetMouseWheel()
+{
+
+	return m_mouseWheel;
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -112,39 +140,61 @@ InputManager::ButtonState InputManager::GetRightButtonState()
 
 }
 //------------------------------------------------------------------------------------------------------
-//getter function that returns position of mouse
+//setter function that places mouse cursor at passed position
 //------------------------------------------------------------------------------------------------------
-Vector2D<Sint32> InputManager::GetMousePosition()
+void InputManager::SetMousePosition(int x, int y)
 {
 
-	return m_mousePosition;
+	SDL_WarpMouseInWindow(TheScreen::Instance()->GetWindow(), x, y);
 
 }
 //------------------------------------------------------------------------------------------------------
-//getter function that returns motion value of mouse movement
+//setter function that creates a system mouse cursor 
 //------------------------------------------------------------------------------------------------------
-Vector2D<Sint32> InputManager::GetMouseMotion()
+void InputManager::SetMouseCursorType(CursorType cursorType)
 {
 
-	return m_mouseMotion;
+	//first destroy old cursor object from memory
+	SDL_FreeCursor(m_cursor);
+
+	//based on type of cursor value passed, create mouse cursor using SDL ID flag value 
+	m_cursor = SDL_CreateSystemCursor(SDL_SystemCursor(cursorType));
+	
+	//use cursor pointer to assign cursor to SDL
+	SDL_SetCursor(m_cursor);
 
 }
 //------------------------------------------------------------------------------------------------------
-//getter function that returns motion value of mouse wheel movement
+//setter function that enables, disables, shows or hides the mouse cursor
 //------------------------------------------------------------------------------------------------------
-Vector2D<Sint32> InputManager::GetMouseWheel()
+void InputManager::SetMouseCursorState(CursorState cursorEnabled, CursorState cursorVisible)
 {
 
-	return m_mouseWheel;
+	//if mouse cursor is enabled then check if it's visible  
+	//and display the cursor accordingly, and keep the mouse 
+	//cursor within the window border as long as it's enabled
+	if (cursorEnabled)
+	{
+		
+		if (cursorVisible)
+		{
+			SDL_ShowCursor(1);
+			SDL_SetRelativeMouseMode(SDL_FALSE);
+		}
+		else
+		{
+			SDL_ShowCursor(0);
+			SDL_SetRelativeMouseMode(SDL_FALSE);
+		}
 
-}
-//------------------------------------------------------------------------------------------------------
-//setter function that sets flag of mouse cursor to either display or hide it
-//------------------------------------------------------------------------------------------------------
-void InputManager::SetMouseCursor(CursorState mouseCursor)
-{
+	}
 
-	SDL_SetRelativeMouseMode((SDL_bool)mouseCursor);
+	//if mouse cursor is disabled then hide it and free it from the window border
+	else
+	{
+		SDL_ShowCursor(0);
+		SDL_SetRelativeMouseMode(SDL_TRUE);
+	}
 	
 }
 //------------------------------------------------------------------------------------------------------
@@ -173,10 +223,12 @@ void InputManager::Update()
 	m_isXClicked = false;
 
 	//reset mouse motion so that it's processed from scratch
-	m_mouseMotion = Vector2D<Sint32>::ZERO;
+	m_mouseMotion.x = 0.0f;
+	m_mouseMotion.y = 0.0f;
 
 	//reset mouse wheel so that it's processed from scratch
-	m_mouseWheel = Vector2D<Sint32>::ZERO;
+	m_mouseWheel.x = 0.0f;
+	m_mouseWheel.y = 0.0f;
 
 	//store state of keyboard in array
 	m_keyStates = SDL_GetKeyboardState(0);
@@ -215,18 +267,18 @@ void InputManager::Update()
 			//set the position and mouse motion value
 			case SDL_MOUSEMOTION :
 			{
-				m_mousePosition.X = events.motion.x;
-				m_mousePosition.Y = events.motion.y;
-				m_mouseMotion.X = events.motion.xrel;
-				m_mouseMotion.Y = events.motion.yrel;
+				m_mousePosition.x = (float)events.motion.x;
+				m_mousePosition.y = (float)events.motion.y;
+				m_mouseMotion.x = (float)events.motion.xrel;
+				m_mouseMotion.y = (float)events.motion.yrel;
 				break;
 			}
 
 			//the mouse wheel was moved 
 			case SDL_MOUSEWHEEL :
 			{
-				m_mouseWheel.X = events.wheel.x;
-				m_mouseWheel.Y = events.wheel.y;
+				m_mouseWheel.x = (float)events.wheel.x;
+				m_mouseWheel.y = (float)events.wheel.y;
 			}
 
 			//a mouse button was clicked or released
@@ -234,8 +286,8 @@ void InputManager::Update()
 			{
 				
 				//set position of mouse
-				m_mousePosition.X = events.motion.x;
-				m_mousePosition.Y = events.motion.y;
+				m_mousePosition.x = (float)events.motion.x;
+				m_mousePosition.y = (float)events.motion.y;
 				
 				//temporarily store button state for assigning below
 				ButtonState state = ((events.button.state == SDL_PRESSED) ? DOWN : UP);
