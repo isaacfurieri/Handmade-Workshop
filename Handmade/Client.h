@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : January 2016
+  UPDATED : June 2016
 
   -----------------------------------------------------------------------------------------------
 
@@ -19,8 +19,8 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-#include <SDL_net.h>
 #include <string>
+#include <SDL_net.h>
 
 class Client
 {
@@ -32,7 +32,16 @@ public:
 public:
 
 	bool Initialize();
+	
+	bool SendData(const std::string& data);
+	bool ReceiveData();
+
 	bool Connect(const std::string& serverName, int serverPort);
+	
+	
+	void ShutDown();
+
+	
 
 private:
 

@@ -86,11 +86,11 @@ void BufferManager::Destroy(BufferType bufferType, RemoveType removeType, const 
 {
 
 	//temp pointer which will reference specific buffer ID map
-	std::map<std::string, GLuint>* tempMap = 0; 
+	std::map<std::string, GLuint>* tempMap = nullptr;
 
-	//assign whichever buffer ID map needs to be removed from 
-	//to temp pointer so that when looping through the map later, 
-	//the pointer is used instead of looping through four different maps
+	//assign whichever VBO map needs to be removed from to the temp 
+	//pointer so that when looping through the map later, the pointer
+	//is used then instead of looping through four different maps
 	switch (bufferType)
 	{
 		case VERTEX_BUFFER  : tempMap = &m_vertexBufferIDMap; break;
@@ -99,38 +99,34 @@ void BufferManager::Destroy(BufferType bufferType, RemoveType removeType, const 
 		case TEXTURE_BUFFER : tempMap = &m_textureBufferIDMap; break;
 	}
 
-	//loop through entire VBO map in order 
-	//to remove a specific buffer or all buffers
-	for (auto it = tempMap->begin(); it != tempMap->end(); it++)
+	//if a single VBO needs to be removed, find it and free it from memory 
+	if (removeType == CUSTOM_BUFFER)
 	{
+		auto it = tempMap->find(mapIndex);
 
-		//if a flag is passed to remove a specific buffer
-		//check if map index is the buffer that needs to be removed
-		//and remove it from both OpenGL and the map
-		if (removeType == CUSTOM_BUFFER)
+		if (it == tempMap->end())
 		{
-			if (it->first == mapIndex)
-			{
-				glDeleteBuffers(1, &(it->second));
-				tempMap->erase(it);
-				break;
-			}
+			std::cout << "VBO not found." << std::endl;
 		}
 
-		//otherwise if a flag is passed to remove all buffers
-		//remove the buffer from OpenGL
-		else if (removeType == ALL_BUFFERS)
+		else
+		{
+			glDeleteBuffers(1, &(it->second));
+			tempMap->erase(it);
+		}
+	}
+
+	//otherwise loop through the entire map and remove all VBOs and clear the map
+	else if (removeType == ALL_BUFFERS)
+	{
+
+		for (auto it = tempMap->begin(); it != tempMap->end(); it++)
 		{
 			glDeleteBuffers(1, &(it->second));
 		}
 
-	}
-
-	//if all buffers have been removed from OpenGL, clear the 
-	//entire map in one go, because the IDs in the map still remain
-	if (removeType == ALL_BUFFERS)
-	{
 		tempMap->clear();
+
 	}
 
 }

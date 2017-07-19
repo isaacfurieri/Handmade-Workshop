@@ -3,7 +3,7 @@
 //------------------------------------------------------------------------------------------------------
 //getter function that returns position of bound
 //------------------------------------------------------------------------------------------------------
-Vector3D<float> Bound::GetPosition() const
+glm::vec3 Bound::GetPosition() const
 {
 
 	return m_position;
@@ -24,8 +24,8 @@ void Bound::SetColor(Color color)
 void Bound::SetPosition(float x, float y, float z)
 {
 
-	m_position.X = x;
-	m_position.Y = y;
-	m_position.Z = z;
+	m_position.x = x;
+	m_position.y = y;
+	m_position.z = z;
 
 }

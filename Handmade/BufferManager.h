@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : June 2016
+  UPDATED : February 2017
 
   -----------------------------------------------------------------------------------------------
 
@@ -37,6 +37,14 @@
 - An Output() routine is there for debug purposes only and will print to the console how many VBO
   IDs are currently stored in all the maps, as well as detailing each one.
 
+- Changes : Move all of the BufferManager code into the ShaderManager, so that we use less Singleton
+  classes. Keep the Buffer class, but this class will contain the std::vectors full of vertex, texture,
+  color, etc data. It will link to the ShaderManager so that it can link with the correct VBO and it will
+  also link to the correct attributes in the shaders. The Fill() routine should be inside the Buffer
+  class as well, and not in the manager class!
+  Suggestion : Should Sprite and Model be child classes of Buffer or is containment ok? I'm a little
+  undecided on this one!
+
 */
 
 #ifndef BUFFER_MANAGER_H
@@ -45,7 +53,7 @@
 #include <map>
 #include <string>
 #include <vector>
-#include <OpenGL.h>
+#include <glew.h>
 #include "Singleton.h"
 
 class BufferManager

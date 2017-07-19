@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : December 2015
+  UPDATED : January 2017
 
   -----------------------------------------------------------------------------------------------
 
@@ -53,7 +53,7 @@
 
 #include <string>
 #include <vector>
-#include <OpenGL.h>
+#include <glew.h>
 
 class Buffer
 {

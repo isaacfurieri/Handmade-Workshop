@@ -1,8 +1,42 @@
+#include <gtc\matrix_transform.hpp>
 #include "Camera.h"
+#include "Game.h"
 #include "ScreenManager.h"
-#include "TimeManager.h"
-#include "Transform.h"
+#include "ShaderManager.h"
 
+//------------------------------------------------------------------------------------------------------
+//static member variable initializations
+//------------------------------------------------------------------------------------------------------
+GLuint Camera::s_viewUniformID = 0;
+glm::mat4 Camera::s_viewMatrix;
+
+//------------------------------------------------------------------------------------------------------
+//static setter function that resets view matrix to the identity 
+//------------------------------------------------------------------------------------------------------
+void Camera::SetIdentity()
+{
+
+	s_viewMatrix = glm::mat4(1.0f);
+
+}
+//------------------------------------------------------------------------------------------------------
+//static function that sends camera's view matrix data to the vertex shader
+//------------------------------------------------------------------------------------------------------
+void Camera::ApplyMatrix()
+{
+
+	TheShader::Instance()->SetUniformMatrix(s_viewUniformID, &s_viewMatrix[0][0]);
+
+}
+//------------------------------------------------------------------------------------------------------
+//static setter function that assigns view matrix's shader uniform ID  
+//------------------------------------------------------------------------------------------------------
+void Camera::SetViewUniformID(std::string uniformID)
+{
+
+	s_viewUniformID = TheShader::Instance()->GetUniformID(uniformID.c_str());
+
+}
 //------------------------------------------------------------------------------------------------------
 //constructor that assigns all default values 
 //------------------------------------------------------------------------------------------------------
@@ -12,12 +46,13 @@ Camera::Camera()
 	m_freeFlow = false;
 	m_velocity = 0.0f;
 	m_sensitivity = 1.0f;
-	
-	m_upVector = Vector3D<double>::UP;
-	m_lookAtDirection = Vector3D<double>::FORWARD;
 
-	m_threshold.X = -0.90f;
-	m_threshold.Y = 0.90f;
+	m_threshold.x = -0.90f;
+	m_threshold.y = 0.90f;
+
+	m_lookAt = glm::vec3(0.0f, 0.0f, -1.0f);
+	m_upVector = glm::vec3(0.0f, 1.0f, 0.0f);
+	m_viewDirection = glm::vec3(0.0f, 0.0f, -1.0f);
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -32,19 +67,19 @@ bool& Camera::IsFreeFlow()
 //------------------------------------------------------------------------------------------------------
 //getter-setter function that returns position reference variable for camera 
 //------------------------------------------------------------------------------------------------------
-Vector3D<double>& Camera::Position()
+glm::vec3& Camera::Position()
 {
 
 	return m_position;
 
 }
 //------------------------------------------------------------------------------------------------------
-//getter function that returns "look at" direction vector of camera
+//getter function that returns viewing direction vector of camera
 //------------------------------------------------------------------------------------------------------
-Vector3D<double> Camera::GetLookAtDirection()
+glm::vec3 Camera::GetViewDirection()
 {
 
-	return m_lookAtDirection;
+	return m_viewDirection;
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -71,8 +106,19 @@ void Camera::SetSensitivity(float sensitivity)
 void Camera::SetThreshold(float min, float max)
 {
 
-	m_threshold.X = min;
-	m_threshold.Y = max;
+	m_threshold.x = min;
+	m_threshold.y = max;
+
+}
+//------------------------------------------------------------------------------------------------------
+//setter function that assigns initial viewing direction of camera
+//------------------------------------------------------------------------------------------------------
+void Camera::SetLookAt(float x, float y, float z)
+{
+
+	m_lookAt.x = x;
+	m_lookAt.y = y;
+	m_lookAt.z = z;
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -81,50 +127,30 @@ void Camera::SetThreshold(float min, float max)
 void Camera::Update()
 {
 
-	//temp rotation for assigning free flow or non-freeflow camera below
-	Quaternion tempRotation;
+	glm::mat4 tempRotation;
+	glm::mat4 totalRotation = m_rotationMatrixY * m_rotationMatrixX;
 	
-	//set camera to initially look forward in the negative Z-axis 
-	//this view will be transformed by the camera's rotation below
-	m_lookAtDirection = Vector3D<double>::FORWARD;
+	//calculate the camera's view direction vector by transforming 
+	//the initial viewing target based on camera's total rotation
+	m_viewDirection = glm::vec3(totalRotation * glm::vec4(m_lookAt, 1.0f));
 
 	//based on if camera is in freeflow or non-freeflow mode, set temp rotation to be used below
-	((m_freeFlow) ? tempRotation = m_totalRotation : tempRotation = m_totalRotationY);
+	//this will either be the total rotation based on X and Y rotations or only the Y rotation
+	((m_freeFlow) ? tempRotation = m_rotationMatrixY * m_rotationMatrixX
+		          : tempRotation = m_rotationMatrixY);
 
-	//calculate the camera's "look at" vector by transfroming it based on camera's rotation
-	//this essentially multiplies the total camera rotation by the forward vector 
-	m_lookAtDirection = m_totalRotation.Conjugate() * m_lookAtDirection;
-
-	//if the camera is set to move, calculate its position using the chosen quaternion rotation, 
+	//if the camera is set to move, calculate its position using the chosen rotation, 
 	//the direction the camera is moving in, the speed at which its moving and time
-	//the quaternion rotation's conjugate is used because we use inverse rotations for the camera, 
-	//because the camera's view of the world and the world itself are opposed 
-	if (m_moveDirection != Vector3D<double>::ZERO)
+	if (m_moveDirection != glm::vec3(0.0f))
 	{
-		m_position += tempRotation.Conjugate() * m_moveDirection * m_velocity *
-			          TheTime::Instance()->GetElapsedTimeSeconds();
+		
+		m_position += glm::vec3(tempRotation * glm::vec4(m_moveDirection, 1.0f)) * m_velocity *
+			          (float)TheGame::Instance()->GetElapsedTimeSeconds();
 	}
 
-}
-//------------------------------------------------------------------------------------------------------
-//function that applies camera position and rotation to the global modelview matrix
-//------------------------------------------------------------------------------------------------------
-void Camera::Draw()
-{
+	//update camera's view matrix
+	s_viewMatrix = glm::lookAt(m_position, m_position + m_viewDirection, m_upVector);
 
-	//translation variable to move the world into position
-	Transform translation;
-
-	//multiply modelview matrix by camera's total rotation quaternion
-	//here we apply the normal quaternion rotations to the world
-	TheScreen::Instance()->ModelViewMatrix() * m_totalRotation.GetMatrix();
-	
-	//move the world in the opposite direction because the world "moves around the camera"
-	translation.Translate((float)-m_position.X, (float)-m_position.Y, (float)-m_position.Z);
-
-	//apply translation transformation to modelview matrix
-	TheScreen::Instance()->ModelViewMatrix() * translation.GetMatrix();
-	
 }
 //------------------------------------------------------------------------------------------------------
 //function that stops camera from moving
@@ -132,7 +158,7 @@ void Camera::Draw()
 void Camera::Stop()
 {
 
-	m_moveDirection = Vector3D<double>::ZERO;
+	m_moveDirection = glm::vec3(0.0f);
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -141,7 +167,7 @@ void Camera::Stop()
 void Camera::MoveUp()
 {
 
-	m_moveDirection = Vector3D<double>::UP;
+	m_moveDirection = glm::vec3(0.0f, 1.0f, 0.0f);
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -150,7 +176,7 @@ void Camera::MoveUp()
 void Camera::MoveDown()
 {
 
-	m_moveDirection = Vector3D<double>::DOWN;
+	m_moveDirection = glm::vec3(0.0f, -1.0f, 0.0f);
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -159,7 +185,7 @@ void Camera::MoveDown()
 void Camera::MoveLeft()
 {
 
-	m_moveDirection = Vector3D<double>::LEFT;
+	m_moveDirection = glm::vec3(-1.0f, 0.0f, 0.0f);
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -168,7 +194,7 @@ void Camera::MoveLeft()
 void Camera::MoveRight()
 {
 
-	m_moveDirection = Vector3D<double>::RIGHT;
+	m_moveDirection = glm::vec3(1.0f, 0.0f, 0.0f);
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -177,7 +203,7 @@ void Camera::MoveRight()
 void Camera::MoveForward()
 {
 
-	m_moveDirection = Vector3D<double>::FORWARD;
+	m_moveDirection = glm::vec3(0.0f, 0.0f, -1.0f);
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -186,29 +212,7 @@ void Camera::MoveForward()
 void Camera::MoveBackward()
 {
 
-	m_moveDirection = Vector3D<double>::BACKWARD;
-
-}
-//------------------------------------------------------------------------------------------------------
-//function that controls rotation of camera around global Y axis
-//------------------------------------------------------------------------------------------------------
-void Camera::RotateY(short motionX)
-{
-
-	//generate a rotation angle based on mouse motion and rotation sensitivity
-	float angle = motionX * m_sensitivity;
-	
-	//create a temporary Y axis rotation using the angle calculated 
-	Quaternion tempRotation(angle, 0.0f, 1.0f, 0.0f);
-
-	//multiply the temporary rotation by the total rotation
-	//multiplying the quaternions in this order ensures global Y axis rotation
-	m_totalRotation = m_totalRotation * tempRotation;
-
-	//store a rotation that adds Y axis rotations only
-	//this will help with forward / backward / up / down movement in a non-free flowing camera
-	//it doesn't matter which order of multiplication is used since only the Y axis is needed	
-	m_totalRotationY = m_totalRotationY * tempRotation;
+	m_moveDirection = glm::vec3(0.0f, 0.0f, 1.0f);
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -222,17 +226,30 @@ void Camera::RotateX(short motionY)
 
 	//calculate the dot product between the "look at" vector and the up vector. This will give 
 	//us a value to determine how far up or down the X axis the camera is tilting
-	double dot = m_lookAtDirection.DotProduct(m_upVector);
+	double dot = glm::dot(m_viewDirection, m_upVector);
 
 	//if the camera is tilting upwards or downwards and only if it is between its allowed 
-	//threshold, then create a temporary X axis rotation using the angle calculated and 
-	//multiply the total rotation by the temporary rotation to ensure local X axis rotation
-	if ((motionY > 0 && dot >= m_threshold.X) || (motionY < 0 && dot <= m_threshold.Y))
+	//threshold, accumulate rotation matrix based on rotation created around X axis
+	if ((motionY > 0 && dot >= m_threshold.x) || (motionY < 0 && dot <= m_threshold.y))
 	{
-
-		Quaternion tempRotation(angle, 1.0f, 0.0f, 0.0f);
-		m_totalRotation = tempRotation * m_totalRotation;
-
+		m_rotationMatrixX = glm::rotate(m_rotationMatrixX,
+						    glm::radians(angle),
+							glm::vec3(-1.0f, 0.0f, 0.0f));
 	}
-	
+
+}
+//------------------------------------------------------------------------------------------------------
+//function that controls rotation of camera around global Y axis
+//------------------------------------------------------------------------------------------------------
+void Camera::RotateY(short motionX)
+{
+
+	//generate a rotation angle based on mouse motion and rotation sensitivity
+	float angle = motionX * m_sensitivity;
+
+	//accumulate rotation matrix based on rotation created around Y axis
+	m_rotationMatrixY = glm::rotate(m_rotationMatrixY,
+						glm::radians(angle),
+						glm::vec3(0.0f, -1.0f, 0.0f));
+
 }

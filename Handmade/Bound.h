@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : April 2016
+  UPDATED : January 2017
 
   -----------------------------------------------------------------------------------------------
 
@@ -43,8 +43,8 @@
 #ifndef BOUND_H
 #define BOUND_H
 
+#include <glm.hpp>
 #include "Color.h"
-#include "Vector3D.h"
 
 class Bound 
 {
@@ -56,7 +56,7 @@ public :
 
 public :
 
-	Vector3D<float> GetPosition() const;
+	glm::vec3 GetPosition() const;
 
 public :
 
@@ -71,7 +71,7 @@ public :
 protected :
 
 	Color m_color;
-	Vector3D<float> m_position;	
+	glm::vec3 m_position;	
 
 };
 

@@ -116,25 +116,25 @@ void Buffer::SetAttributeID(BufferType bufferType, const std::string& mapIndex)
 
 		case VERTEX_BUFFER:
 		{
-			m_vertexAttributeID = TheShader::Instance()->GetAttribute(mapIndex);
+			m_vertexAttributeID = TheShader::Instance()->GetAttributeID(mapIndex);
 			break;
 		}
 
 		case COLOR_BUFFER:
 		{
-			m_colorAttributeID = TheShader::Instance()->GetAttribute(mapIndex);
+			m_colorAttributeID = TheShader::Instance()->GetAttributeID(mapIndex);
 			break;
 		}
 
 		case NORMAL_BUFFER:
 		{
-			m_normalAttributeID = TheShader::Instance()->GetAttribute(mapIndex);
+			m_normalAttributeID = TheShader::Instance()->GetAttributeID(mapIndex);
 			break;
 		}
 
 		case TEXTURE_BUFFER:
 		{
-			m_textureAttributeID = TheShader::Instance()->GetAttribute(mapIndex);
+			m_textureAttributeID = TheShader::Instance()->GetAttributeID(mapIndex);
 			break;
 		}
 
