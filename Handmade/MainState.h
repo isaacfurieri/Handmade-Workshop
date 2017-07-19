@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : April 2016
+  UPDATED : January 2017
 
   -----------------------------------------------------------------------------------------------
 
@@ -24,11 +24,11 @@
 
 - The Draw() routine draws all the game objects in the vector, as long as they are active and 
   visible. It also draws the main camera before each game object in the loop. This is done because
-  the camera sets up the view of the modelview matrix and this needs to be done before each game
-  object is drawn on screen. Based on if the game is in 2D or 3D mode, the Draw() function also
-  sets up the projection to orthographic or perspective respectively. This is because in 3D mode the
-  projection temporarily changes to 2D for the HUD, so it needs to be reset to perspective. In 2D
-  mode it just remains orthographic.
+  the camera sets up the view matrix and this needs to be done before each game object is drawn on
+  screen. Based on if the game is in 2D or 3D mode, the Draw() function also sets up the projection
+  to orthographic or perspective respectively. This is because in 3D mode the projection temporarily
+  changes to 2D for the HUD, so it needs to be reset to perspective. In 2D mode it just remains 
+  orthographic.
 
 */
 
@@ -40,8 +40,8 @@
 #include "GameState.h"
 #include "Grid.h"
 #include "HUD.h"
+#include "HUDCamera.h"
 #include "MainCamera.h"
-#include "Sprite.h"
 
 class MainState : public GameState
 {
@@ -62,8 +62,10 @@ private :
 
 	HUD* m_HUD;
 	Grid* m_grid;
+	
+	HUDCamera* m_HUDCamera;
 	MainCamera* m_mainCamera;
-
+	
 	std::vector<GameObject*> m_gameObjects;
 
 };

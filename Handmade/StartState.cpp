@@ -1,3 +1,7 @@
+#include "Camera.h"
+#include "DebugManager.h"
+#include "GameObject.h"
+#include "ScreenManager.h"
 #include "ShaderManager.h"
 #include "StartState.h"
 
@@ -33,13 +37,46 @@ bool StartState::OnEnter()
 		return false;
 	}
 
+	//attach both shaders to the main shader program
+	TheShader::Instance()->Attach(ShaderManager::VERTEX_SHADER, "MAIN_VERTEX_SHADER");
+	TheShader::Instance()->Attach(ShaderManager::FRAGMENT_SHADER, "MAIN_FRAGMENT_SHADER");
+
+	//link main shader program
+	if (!TheShader::Instance()->Link())
+	{
+		return false;
+	}
+
+	//create 2D camera to view the splash images
+	m_HUDCamera = new HUDCamera();
+
 	//create both splash screen objects for state
-	m_APILogo = new SplashScreen("Sprites\\APIs.jpg");
-	m_handmadeLogo = new SplashScreen("Sprites\\Handmade.jpg");
+	m_APILogo = new SplashScreen("Assets\\Sprites\\APIs.jpg");
+	m_handmadeLogo = new SplashScreen("Assets\\Sprites\\Handmade.jpg");
 
 	//set second splash screen to inactive as 
 	//it only activates after the first one is done
 	m_APILogo->IsActive() = false;
+
+	//link camera's view matrix with vertex shader uniform ID
+	Camera::SetViewUniformID("viewMatrix");
+
+	//link global game object model matrix with vertex shader uniform ID
+	GameObject::SetModelUniformID("modelMatrix");
+
+	//link screen's projection matrix with vertex shader uniform ID
+	TheScreen::Instance()->SetProjectionUniformID("projectionMatrix");
+	
+	//if the game is in debug mode initialize the 
+	//debug manager and all of its components 
+#ifdef DEBUG
+
+	if (!TheDebug::Instance()->CreateBuffers())
+	{
+		return false;
+	}
+
+#endif
 
 	return true;
 
@@ -93,11 +130,13 @@ bool StartState::Draw()
 
 	if (m_handmadeLogo->IsActive())
 	{
+		m_HUDCamera->Draw();
 		m_handmadeLogo->Draw();
 	}
 
 	if (m_APILogo->IsActive())
 	{
+		m_HUDCamera->Draw();
 		m_APILogo->Draw();
 	}
 
@@ -107,12 +146,13 @@ bool StartState::Draw()
 
 }
 //------------------------------------------------------------------------------------------------------
-//function that destroys the two splash screen objects
+//function that destroys the two splash screen and camera objects
 //------------------------------------------------------------------------------------------------------
 void StartState::OnExit()
 {
 
 	delete m_handmadeLogo;
 	delete m_APILogo;
+	delete m_HUDCamera;
 
 }

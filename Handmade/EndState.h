@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : April 2016
+  UPDATED : January 2017
 
   -----------------------------------------------------------------------------------------------
 
@@ -22,6 +22,7 @@
 #define END_STATE_H
 
 #include "GameState.h"
+#include "HUDCamera.h"
 #include "SplashScreen.h"
 
 class EndState : public GameState
@@ -41,6 +42,7 @@ public:
 
 private:
 
+	HUDCamera* m_HUDCamera;
 	SplashScreen* m_endMessage;
 
 };

@@ -1,13 +1,16 @@
+#include "DebugManager.h"
 #include "EndState.h"
 #include "ShaderManager.h"
 
 //------------------------------------------------------------------------------------------------------
-//function that creates ending splash screen message for state
+//function that creates ending splash screen message and 2D camera for state
 //------------------------------------------------------------------------------------------------------
 bool EndState::OnEnter()
 {
  
-	m_endMessage = new SplashScreen("Sprites\\Credits.jpg");
+	m_HUDCamera = new HUDCamera();
+	m_endMessage = new SplashScreen("Assets\\Sprites\\Credits.jpg");
+	
 	return true;
 
 }
@@ -41,6 +44,7 @@ bool EndState::Draw()
 
 #ifdef RELEASE
 
+	m_HUDCamera->Draw();
 	m_endMessage->Draw();
 
 #endif
@@ -54,9 +58,19 @@ bool EndState::Draw()
 void EndState::OnExit()
 {
 
+	//if the game is in debug mode shutdown the
+	//debug manager and all of its components 
+#ifdef DEBUG
+
+	TheDebug::Instance()->DestroyBuffers();
+
+#endif
+
 	TheShader::Instance()->
 	Destroy(ShaderManager::VERTEX_SHADER, ShaderManager::CUSTOM_SHADER, "MAIN_VERTEX_SHADER");
 	TheShader::Instance()->
 	Destroy(ShaderManager::FRAGMENT_SHADER, ShaderManager::CUSTOM_SHADER, "MAIN_FRAGMENT_SHADER");
+
+	delete m_HUDCamera;
 
 }

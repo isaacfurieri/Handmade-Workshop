@@ -5,7 +5,7 @@
 #include "TextureManager.h"
 
 //------------------------------------------------------------------------------------------------------
-//function that creates the shaders, HUD VBOs and all the game objects for the state..
+//function that creates the shaders, HUD VBOs and all the game objects for the state
 //------------------------------------------------------------------------------------------------------
 bool MainState::OnEnter()
 {
@@ -16,12 +16,14 @@ bool MainState::OnEnter()
 
 #endif
 
-	//create the camera to control the main view
+	//create the main camera to control the main view
 	m_mainCamera = new MainCamera();
+
+	//create the 2D camera for HUDs and sprite objects
+	m_HUDCamera = new HUDCamera();
 
 	//create a heads-up display object
 	m_HUD = new HUD();
-
 
 	return true;
 
@@ -69,7 +71,7 @@ bool MainState::Draw()
 
 #endif
 
-	//first set up camera which resets modelview and camera (view)
+	//first set up camera which sets the view accordingly
 	m_mainCamera->Draw();
 
 #ifdef DEBUG
@@ -82,8 +84,6 @@ bool MainState::Draw()
 	//display them only if they are active and visible
 	for (auto it = m_gameObjects.begin(); it != m_gameObjects.end(); it++)
 	{
-		//set up camera view before each game object is drawn 
-		m_mainCamera->Draw();
 		
 		if ((*it)->IsActive() && (*it)->IsVisible())
 		{
@@ -91,7 +91,8 @@ bool MainState::Draw()
 		}
 	}
 
-	//display the heads-up display last
+	//set the 2D camera and render the heads-up display last
+	m_HUDCamera->Draw();
 	m_HUD->Draw();
 
 	return true;
@@ -114,7 +115,8 @@ void MainState::OnExit()
 
 	//destroy the HUD, camera and grid objects
 	delete m_HUD;
-	delete m_grid;
+	delete m_HUDCamera;
 	delete m_mainCamera;
-
+	delete m_grid;
+	
 }

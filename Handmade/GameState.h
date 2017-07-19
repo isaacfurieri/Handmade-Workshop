@@ -37,19 +37,19 @@ class GameState
 
 public:
 	
-	GameState()                            { m_isActive = false; }
-	virtual ~GameState()              = 0  {}
+	GameState() { m_isActive = false; }
+	virtual ~GameState() = 0 {}
 
 public:
 
-	bool& IsActive()                       { return m_isActive; }
+	bool& IsActive() { return m_isActive; }
 
 public:
 
-	virtual bool OnEnter()            = 0;
-	virtual bool Update()             = 0;
-	virtual bool Draw()               = 0;
-	virtual void OnExit()             = 0;
+	virtual bool OnEnter() = 0;
+	virtual bool Update() = 0;
+	virtual bool Draw() = 0;
+	virtual void OnExit() = 0;
 
 protected:
 
