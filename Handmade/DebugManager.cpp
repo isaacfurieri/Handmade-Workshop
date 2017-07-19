@@ -1,171 +1,16 @@
 #include <iostream>
 #include <string>
-#include <OpenGL.h>
+#include <glew.h>
+#include <glm.hpp>
+#include <gtc\matrix_transform.hpp>
 #include "BufferManager.h"
 #include "DebugManager.h"
+#include "GameObject.h"
 #include "ScreenManager.h"
 #include "ShaderManager.h"
 #include "Sprite.h"
 #include "TextureManager.h"
-#include "Transform.h"
 
-//------------------------------------------------------------------------------------------------------
-//function that activates Debug Manager shaders for debug rendering
-//------------------------------------------------------------------------------------------------------
-bool DebugManager::Enable()
-{
-
-	//attach both shaders to the main shader program
-	TheShader::Instance()->Attach(ShaderManager::VERTEX_SHADER, "DEBUG_VERTEX_SHADER");
-	TheShader::Instance()->Attach(ShaderManager::FRAGMENT_SHADER, "DEBUG_FRAGMENT_SHADER");
-
-	//link debug shader program
-	if (!TheShader::Instance()->Link())
-	{
-		return false;
-	}
-
-	return true;
-
-}
-//------------------------------------------------------------------------------------------------------
-//function that de-activates Debug Manager shaders for alternative rendering
-//------------------------------------------------------------------------------------------------------
-void DebugManager::Disable()
-{
-
-	TheShader::Instance()->Detach(ShaderManager::VERTEX_SHADER, "DEBUG_VERTEX_SHADER");
-	TheShader::Instance()->Detach(ShaderManager::FRAGMENT_SHADER, "DEBUG_FRAGMENT_SHADER");
-
-}
-//------------------------------------------------------------------------------------------------------
-//function that sets up the debug shaders, attributes and vertex buffer objects
-//------------------------------------------------------------------------------------------------------
-bool DebugManager::Initialize()
-{
-
-	//create debug vertex shader
-	if (!(TheShader::Instance()->Create(ShaderManager::VERTEX_SHADER, "DEBUG_VERTEX_SHADER")))
-	{
-		return false;
-	}
-	
-	//create debug fragment shader
-	if (!(TheShader::Instance()->Create(ShaderManager::FRAGMENT_SHADER, "DEBUG_FRAGMENT_SHADER")))
-	{
-		return false;
-	}
-
-	//compile debug vertex shader file and return false if compilation failed
-	if (!(TheShader::Instance()->
-		  Compile(ShaderManager::VERTEX_SHADER, "Shaders\\Debug.vert", "DEBUG_VERTEX_SHADER")))
-	{
-		return false;
-	}
-
-	//compile debug fragment shader file and return false if compilation failed
-	if (!(TheShader::Instance()->
-		  Compile(ShaderManager::FRAGMENT_SHADER, "Shaders\\Debug.frag", "DEBUG_FRAGMENT_SHADER")))
-	{
-		return false;
-	}
-	
-	//activate the debug shaders here before 
-	//they are used below for shader ID links
-	Enable();
-
-	//create vertex buffer objects for all debug objects' model's vertices to be stored
-	TheBuffer::Instance()->Create(BufferManager::VERTEX_BUFFER, "CUBE_VERTEX_BUFFER_3D");
-	TheBuffer::Instance()->Create(BufferManager::VERTEX_BUFFER, "SPHERE_VERTEX_BUFFER_3D");
-
-	//create vertex buffer objects for all debug objects' buffer's vertices to be stored
-	TheBuffer::Instance()->Create(BufferManager::VERTEX_BUFFER, "LINE_VERTEX_BUFFER");
-	TheBuffer::Instance()->Create(BufferManager::VERTEX_BUFFER, "GRID_VERTEX_BUFFER");
-	TheBuffer::Instance()->Create(BufferManager::VERTEX_BUFFER, "COORD_VERTEX_BUFFER");
-	TheBuffer::Instance()->Create(BufferManager::VERTEX_BUFFER, "VERTEX_VERTEX_BUFFER");
-	TheBuffer::Instance()->Create(BufferManager::VERTEX_BUFFER, "VECTOR_VERTEX_BUFFER");
-	TheBuffer::Instance()->Create(BufferManager::VERTEX_BUFFER, "CUBE_VERTEX_BUFFER_2D");
-	TheBuffer::Instance()->Create(BufferManager::VERTEX_BUFFER, "SPHERE_VERTEX_BUFFER_2D");
-	
-	//create vertex buffer objects for all debug objects' model's colors to be stored
-	TheBuffer::Instance()->Create(BufferManager::COLOR_BUFFER, "CUBE_COLOR_BUFFER_3D");
-	TheBuffer::Instance()->Create(BufferManager::COLOR_BUFFER, "SPHERE_COLOR_BUFFER_3D");
-
-	//create vertex buffer objects for all debug objects' buffer's colors to be stored
-	TheBuffer::Instance()->Create(BufferManager::COLOR_BUFFER, "LINE_COLOR_BUFFER");
-	TheBuffer::Instance()->Create(BufferManager::COLOR_BUFFER, "GRID_COLOR_BUFFER");
-	TheBuffer::Instance()->Create(BufferManager::COLOR_BUFFER, "COORD_COLOR_BUFFER");
-	TheBuffer::Instance()->Create(BufferManager::COLOR_BUFFER, "VERTEX_COLOR_BUFFER");
-	TheBuffer::Instance()->Create(BufferManager::COLOR_BUFFER, "VECTOR_COLOR_BUFFER");
-	TheBuffer::Instance()->Create(BufferManager::COLOR_BUFFER, "CUBE_COLOR_BUFFER_2D");
-	TheBuffer::Instance()->Create(BufferManager::COLOR_BUFFER, "SPHERE_COLOR_BUFFER_2D");
-
-	//link VBO and shader attributes to sphere model object and load sphere model data 
-	//no texture or normal data is associated with the models, therefore those fields are blank
-	//remember the VBOs are linked BEFORE the model data is loaded and filled into those VBOs
-	m_sphere3D.SetBufferID("SPHERE_VERTEX_BUFFER_3D", "SPHERE_COLOR_BUFFER_3D", "", "");
-	m_sphere3D.SetShaderAttribute("vertexIn", "colorIn", "", "");
-	m_sphere3D.LoadFromFile("Models\\Sphere.obj", "Models\\Sphere.mtl");
-
-	//link VBO and shader attributes to cube model object and load cube model data 
-	//no texture or normal data is associated with the models, therefore those fields are blank
-	//remember the VBOs are linked BEFORE the model data is loaded and filled into those VBOs
-	m_cube3D.SetBufferID("CUBE_VERTEX_BUFFER_3D", "CUBE_COLOR_BUFFER_3D", "", "");
-	m_cube3D.SetShaderAttribute("vertexIn", "colorIn", "", "");
-	m_cube3D.LoadFromFile("Models\\Cube.obj", "Models\\Cube.mtl");
-
-	//link line object with its vertex and color buffer 
-	//as well as its vertex and color shader attribute
-	m_lineBuffer.SetAttributeID(Buffer::VERTEX_BUFFER, "vertexIn");
-	m_lineBuffer.SetAttributeID(Buffer::COLOR_BUFFER, "colorIn");
-	m_lineBuffer.SetBufferID(Buffer::VERTEX_BUFFER, "LINE_VERTEX_BUFFER");
-	m_lineBuffer.SetBufferID(Buffer::COLOR_BUFFER, "LINE_COLOR_BUFFER");
-
-	//link grid object with its vertex and color buffer 
-	//as well as its vertex and color shader attribute
-	m_gridBuffer.SetAttributeID(Buffer::VERTEX_BUFFER, "vertexIn");
-	m_gridBuffer.SetAttributeID(Buffer::COLOR_BUFFER, "colorIn");
-	m_gridBuffer.SetBufferID(Buffer::VERTEX_BUFFER, "GRID_VERTEX_BUFFER");
-	m_gridBuffer.SetBufferID(Buffer::COLOR_BUFFER, "GRID_COLOR_BUFFER");
-		
-	//link coordinate system object with its vertex and color buffer 
-	//as well as its vertex and color shader attribute
-	m_coordBuffer.SetAttributeID(Buffer::VERTEX_BUFFER, "vertexIn");
-	m_coordBuffer.SetAttributeID(Buffer::COLOR_BUFFER, "colorIn");
-	m_coordBuffer.SetBufferID(Buffer::VERTEX_BUFFER, "COORD_VERTEX_BUFFER");
-	m_coordBuffer.SetBufferID(Buffer::COLOR_BUFFER, "COORD_COLOR_BUFFER");
-
-	//link vertex object with its vertex and color buffer
-	//as well as its vertex and color shader attribute
-	m_vertexBuffer.SetAttributeID(Buffer::VERTEX_BUFFER, "vertexIn");
-	m_vertexBuffer.SetAttributeID(Buffer::COLOR_BUFFER, "colorIn");
-	m_vertexBuffer.SetBufferID(Buffer::VERTEX_BUFFER, "VERTEX_VERTEX_BUFFER");
-	m_vertexBuffer.SetBufferID(Buffer::COLOR_BUFFER, "VERTEX_COLOR_BUFFER");
-
-	//link vector object with its vertex and color buffer 
-	//as well as its vertex and color shader attribute
-	m_vectorBuffer.SetAttributeID(Buffer::VERTEX_BUFFER, "vertexIn");
-	m_vectorBuffer.SetAttributeID(Buffer::COLOR_BUFFER, "colorIn");
-	m_vectorBuffer.SetBufferID(Buffer::VERTEX_BUFFER, "VECTOR_VERTEX_BUFFER");
-	m_vectorBuffer.SetBufferID(Buffer::COLOR_BUFFER, "VECTOR_COLOR_BUFFER");
-
-	//link cube object with its vertex and color buffer 
-	//as well as its vertex and color shader attribute
-	m_cubeBuffer2D.SetAttributeID(Buffer::VERTEX_BUFFER, "vertexIn");
-	m_cubeBuffer2D.SetAttributeID(Buffer::COLOR_BUFFER, "colorIn");
-	m_cubeBuffer2D.SetBufferID(Buffer::VERTEX_BUFFER, "CUBE_VERTEX_BUFFER_2D");
-	m_cubeBuffer2D.SetBufferID(Buffer::COLOR_BUFFER, "CUBE_COLOR_BUFFER_2D");
-
-	//link sphere object with its vertex and color buffer 
-	//as well as its vertex and color shader attribute
-	m_sphereBuffer2D.SetAttributeID(Buffer::VERTEX_BUFFER, "vertexIn");
-	m_sphereBuffer2D.SetAttributeID(Buffer::COLOR_BUFFER, "colorIn");
-	m_sphereBuffer2D.SetBufferID(Buffer::VERTEX_BUFFER, "SPHERE_VERTEX_BUFFER_2D");
-	m_sphereBuffer2D.SetBufferID(Buffer::COLOR_BUFFER, "SPHERE_COLOR_BUFFER_2D");
-
-	return true;
-
-}
 //------------------------------------------------------------------------------------------------------
 //function that checks for errors and displays them on screen
 //------------------------------------------------------------------------------------------------------
@@ -180,7 +25,7 @@ void DebugManager::CheckError()
 	switch (errorCode)
 	{
 
-		case GL_NO_ERROR: 
+		case GL_NO_ERROR:
 		{
 			std::cout << "SUCCESS : There are no errors!" << std::endl;
 			break;
@@ -238,93 +83,110 @@ void DebugManager::CheckError()
 
 }
 //------------------------------------------------------------------------------------------------------
-//function that aquires and displays graphics card extensions
+//function that sets up the debug VBOs and links all shader attributes
 //------------------------------------------------------------------------------------------------------
-void DebugManager::DisplayExtensions()
+bool DebugManager::CreateBuffers()
 {
 
-	//variables to store the total extension amount
-	//and each extension in string format
-	GLint totalExtensions;
-	std::vector<std::string> extensions;
+	//create vertex buffer objects for all debug objects' model's vertices to be stored
+	TheBuffer::Instance()->Create(BufferManager::VERTEX_BUFFER, "CUBE_VERTEX_BUFFER_3D");
+	TheBuffer::Instance()->Create(BufferManager::VERTEX_BUFFER, "SPHERE_VERTEX_BUFFER_3D");
 
-	//get total amount of extensions from OpenGL
-	glGetIntegerv(GL_NUM_EXTENSIONS, &totalExtensions);
+	//create vertex buffer objects for all debug objects' buffer's vertices to be stored
+	TheBuffer::Instance()->Create(BufferManager::VERTEX_BUFFER, "LINE_VERTEX_BUFFER");
+	TheBuffer::Instance()->Create(BufferManager::VERTEX_BUFFER, "GRID_VERTEX_BUFFER");
+	TheBuffer::Instance()->Create(BufferManager::VERTEX_BUFFER, "COORD_VERTEX_BUFFER");
+	TheBuffer::Instance()->Create(BufferManager::VERTEX_BUFFER, "VERTEX_VERTEX_BUFFER");
+	TheBuffer::Instance()->Create(BufferManager::VERTEX_BUFFER, "VECTOR_VERTEX_BUFFER");
+	TheBuffer::Instance()->Create(BufferManager::VERTEX_BUFFER, "CUBE_VERTEX_BUFFER_2D");
+	TheBuffer::Instance()->Create(BufferManager::VERTEX_BUFFER, "SPHERE_VERTEX_BUFFER_2D");
+	
+	//create vertex buffer objects for all debug objects' model's colors to be stored
+	TheBuffer::Instance()->Create(BufferManager::COLOR_BUFFER, "CUBE_COLOR_BUFFER_3D");
+	TheBuffer::Instance()->Create(BufferManager::COLOR_BUFFER, "SPHERE_COLOR_BUFFER_3D");
 
-	//loop through all extensions and store 
-	//each one in the vector container
-	for (GLint i = 0; i < totalExtensions; i++)
-	{
-		std::string temp = (const char*)glGetStringi(GL_EXTENSIONS, i);
-		extensions.push_back(temp);
-	}
+	//create vertex buffer objects for all debug objects' buffer's colors to be stored
+	TheBuffer::Instance()->Create(BufferManager::COLOR_BUFFER, "LINE_COLOR_BUFFER");
+	TheBuffer::Instance()->Create(BufferManager::COLOR_BUFFER, "GRID_COLOR_BUFFER");
+	TheBuffer::Instance()->Create(BufferManager::COLOR_BUFFER, "COORD_COLOR_BUFFER");
+	TheBuffer::Instance()->Create(BufferManager::COLOR_BUFFER, "VERTEX_COLOR_BUFFER");
+	TheBuffer::Instance()->Create(BufferManager::COLOR_BUFFER, "VECTOR_COLOR_BUFFER");
+	TheBuffer::Instance()->Create(BufferManager::COLOR_BUFFER, "CUBE_COLOR_BUFFER_2D");
+	TheBuffer::Instance()->Create(BufferManager::COLOR_BUFFER, "SPHERE_COLOR_BUFFER_2D");
 
-	//display all graphics card supported extensions on the console window 
-	system("cls");
-	std::cout << "---------------------------------------------------------------" << std::endl;
-	std::cout << "The following extensions are supported by your graphics card : " << std::endl;
-	std::cout << "---------------------------------------------------------------" << std::endl;
+	//link VBO and shader attributes to sphere model object and load sphere model data 
+	//no texture or normal data is associated with the models, therefore those fields are blank
+	//remember the VBOs are linked BEFORE the model data is loaded and filled into those VBOs
+	m_sphere3D.SetBufferID("SPHERE_VERTEX_BUFFER_3D", "SPHERE_COLOR_BUFFER_3D", "", "");
+	m_sphere3D.SetShaderAttribute("vertexIn", "colorIn", "", "");
+	m_sphere3D.LoadFromFile("Assets\\Models\\Sphere.obj", "Assets\\Models\\Sphere.mtl");
 
-	//loop through all extensions and display them
-	for (size_t j = 0; j < extensions.size(); j++)
-	{
-		std::cout << "Extension #" << j << " : " << extensions[j] << std::endl;
-	}
+	//link VBO and shader attributes to cube model object and load cube model data 
+	//no texture or normal data is associated with the models, therefore those fields are blank
+	//remember the VBOs are linked BEFORE the model data is loaded and filled into those VBOs
+	m_cube3D.SetBufferID("CUBE_VERTEX_BUFFER_3D", "CUBE_COLOR_BUFFER_3D", "", "");
+	m_cube3D.SetShaderAttribute("vertexIn", "colorIn", "", "");
+	m_cube3D.LoadFromFile("Assets\\Models\\Cube.obj", "Assets\\Models\\Cube.mtl");
+
+	//link line object with its vertex and color buffer 
+	//as well as its vertex and color shader attribute
+	m_lineBuffer.SetAttributeID(Buffer::VERTEX_BUFFER, "vertexIn");
+	m_lineBuffer.SetAttributeID(Buffer::COLOR_BUFFER, "colorIn");
+	m_lineBuffer.SetBufferID(Buffer::VERTEX_BUFFER, "LINE_VERTEX_BUFFER");
+	m_lineBuffer.SetBufferID(Buffer::COLOR_BUFFER, "LINE_COLOR_BUFFER");
+
+	//link grid object with its vertex and color buffer 
+	//as well as its vertex and color shader attribute
+	m_gridBuffer.SetAttributeID(Buffer::VERTEX_BUFFER, "vertexIn");
+	m_gridBuffer.SetAttributeID(Buffer::COLOR_BUFFER, "colorIn");
+	m_gridBuffer.SetBufferID(Buffer::VERTEX_BUFFER, "GRID_VERTEX_BUFFER");
+	m_gridBuffer.SetBufferID(Buffer::COLOR_BUFFER, "GRID_COLOR_BUFFER");
+		
+	//link coordinate system object with its vertex and color buffer 
+	//as well as its vertex and color shader attribute
+	m_coordBuffer.SetAttributeID(Buffer::VERTEX_BUFFER, "vertexIn");
+	m_coordBuffer.SetAttributeID(Buffer::COLOR_BUFFER, "colorIn");
+	m_coordBuffer.SetBufferID(Buffer::VERTEX_BUFFER, "COORD_VERTEX_BUFFER");
+	m_coordBuffer.SetBufferID(Buffer::COLOR_BUFFER, "COORD_COLOR_BUFFER");
+
+	//link vertex object with its vertex and color buffer
+	//as well as its vertex and color shader attribute
+	m_vertexBuffer.SetAttributeID(Buffer::VERTEX_BUFFER, "vertexIn");
+	m_vertexBuffer.SetAttributeID(Buffer::COLOR_BUFFER, "colorIn");
+	m_vertexBuffer.SetBufferID(Buffer::VERTEX_BUFFER, "VERTEX_VERTEX_BUFFER");
+	m_vertexBuffer.SetBufferID(Buffer::COLOR_BUFFER, "VERTEX_COLOR_BUFFER");
+
+	//link vector object with its vertex and color buffer 
+	//as well as its vertex and color shader attribute
+	m_vectorBuffer.SetAttributeID(Buffer::VERTEX_BUFFER, "vertexIn");
+	m_vectorBuffer.SetAttributeID(Buffer::COLOR_BUFFER, "colorIn");
+	m_vectorBuffer.SetBufferID(Buffer::VERTEX_BUFFER, "VECTOR_VERTEX_BUFFER");
+	m_vectorBuffer.SetBufferID(Buffer::COLOR_BUFFER, "VECTOR_COLOR_BUFFER");
+
+	//link cube object with its vertex and color buffer 
+	//as well as its vertex and color shader attribute
+	m_cubeBuffer2D.SetAttributeID(Buffer::VERTEX_BUFFER, "vertexIn");
+	m_cubeBuffer2D.SetAttributeID(Buffer::COLOR_BUFFER, "colorIn");
+	m_cubeBuffer2D.SetBufferID(Buffer::VERTEX_BUFFER, "CUBE_VERTEX_BUFFER_2D");
+	m_cubeBuffer2D.SetBufferID(Buffer::COLOR_BUFFER, "CUBE_COLOR_BUFFER_2D");
+
+	//link sphere object with its vertex and color buffer 
+	//as well as its vertex and color shader attribute
+	m_sphereBuffer2D.SetAttributeID(Buffer::VERTEX_BUFFER, "vertexIn");
+	m_sphereBuffer2D.SetAttributeID(Buffer::COLOR_BUFFER, "colorIn");
+	m_sphereBuffer2D.SetBufferID(Buffer::VERTEX_BUFFER, "SPHERE_VERTEX_BUFFER_2D");
+	m_sphereBuffer2D.SetBufferID(Buffer::COLOR_BUFFER, "SPHERE_COLOR_BUFFER_2D");
+
+	//get texture flag ID from fragment shader
+	m_textureFlagUniformID = TheShader::Instance()->GetUniformID("isTextured");
+
+	return true;
 
 }
 //------------------------------------------------------------------------------------------------------
-//function that aquires and displays OpenGL profile data
+//function that destroys all debug VBOs
 //------------------------------------------------------------------------------------------------------
-void DebugManager::DisplayGraphicsProfile()
-{
-
-	//create variables for storing OpenGL profile data and get the data from OpenGL
-	std::string vendor = (const char*)(glGetString(GL_VENDOR));
-	std::string renderer = (const char*)(glGetString(GL_RENDERER));
-	std::string versionGL = (const char*)(glGetString(GL_VERSION));
-	std::string versionGLSL = (const char*)(glGetString(GL_SHADING_LANGUAGE_VERSION));
-
-	//display all OpenGL profile data on the console window
-	system("cls");
-	std::cout << "--------------------------------------------------------------------" << std::endl;
-	std::cout << "Your graphics card profile is as follows : " << std::endl;
-	std::cout << "--------------------------------------------------------------------" << std::endl;
-	std::cout << "Graphics Card Vendor : " << vendor << std::endl;
-	std::cout << "Graphics Card Model : " << renderer << std::endl;
-	std::cout << "OpenGL Version : " << versionGL << std::endl;
-	std::cout << "GLSL Version : " << versionGLSL << std::endl;
-	
-	//display all OpenGL supported versions on the console window 
-	std::cout << "--------------------------------------------------------------------" << std::endl;
-	std::cout << "The following OpenGL contexts are currently available : " << std::endl;
-	std::cout << "--------------------------------------------------------------------" << std::endl;
-	
-	//call specific GLEW functions to check if OpenGL contexts are supported
-	//these outcomes are based on what OpenGL context was configured previously
-	if (GLEW_VERSION_1_1)   std::cout << "Version 1.1" << std::endl;
-	if (GLEW_VERSION_1_2)   std::cout << "Version 1.2" << std::endl;
-	if (GLEW_VERSION_1_2_1) std::cout << "Version 1.2.1" << std::endl;
-	if (GLEW_VERSION_1_3)   std::cout << "Version 1.3" << std::endl;
-	if (GLEW_VERSION_1_4)   std::cout << "Version 1.4" << std::endl;
-	if (GLEW_VERSION_1_5)   std::cout << "Version 1.5" << std::endl;
-	if (GLEW_VERSION_2_0)   std::cout << "Version 2.0" << std::endl;
-	if (GLEW_VERSION_2_1)   std::cout << "Version 2.1" << std::endl;
-	if (GLEW_VERSION_3_0)   std::cout << "Version 3.0" << std::endl;
-	if (GLEW_VERSION_3_1)   std::cout << "Version 3.1" << std::endl;
-	if (GLEW_VERSION_3_2)   std::cout << "Version 3.2" << std::endl;
-	if (GLEW_VERSION_3_3)   std::cout << "Version 3.3" << std::endl;
-	if (GLEW_VERSION_4_0)   std::cout << "Version 4.0" << std::endl;
-	if (GLEW_VERSION_4_1)   std::cout << "Version 4.1" << std::endl;
-	if (GLEW_VERSION_4_2)   std::cout << "Version 4.2" << std::endl;
-	if (GLEW_VERSION_4_3)   std::cout << "Version 4.3" << std::endl;
-	if (GLEW_VERSION_4_4)   std::cout << "Version 4.4" << std::endl;
-	if (GLEW_VERSION_4_5)   std::cout << "Version 4.5" << std::endl;
-
-}
-//------------------------------------------------------------------------------------------------------
-//function that destroys all VBOs and debug shaders
-//------------------------------------------------------------------------------------------------------
-void DebugManager::ShutDown()
+void DebugManager::DestroyBuffers()
 {
 	
 	//destroy vertex buffer objects for all debug objects' vertices
@@ -487,11 +349,8 @@ void DebugManager::DrawGrid3D(int size, float lineWidth)
 
 	}
 
-	//send projection and modelview matrix data to shader using shader uniform ID 
-	TheShader::Instance()->SetUniform(TheShader::Instance()->GetUniform("projectionMatrix"), 
-		                              TheScreen::Instance()->ProjectionMatrix().GetMatrixArray());
-	TheShader::Instance()->SetUniform(TheShader::Instance()->GetUniform("modelviewMatrix"), 
-		                              TheScreen::Instance()->ModelViewMatrix().GetMatrixArray());
+	//send texture flag to fragment shader
+	TheShader::Instance()->SetUniformData(m_textureFlagUniformID, false);
 
 	//draw grid object using shader
 	m_gridBuffer.DrawData(Buffer::LINES);
@@ -611,11 +470,8 @@ void DebugManager::DrawGrid2D(int size, float lineWidth, int pixelsPerUnit)
 
 	}
 
-	//send projection and modelview matrix data to shader using shader uniform ID 
-	TheShader::Instance()->SetUniform(TheShader::Instance()->GetUniform("projectionMatrix"),
-									  TheScreen::Instance()->ProjectionMatrix().GetMatrixArray());
-	TheShader::Instance()->SetUniform(TheShader::Instance()->GetUniform("modelviewMatrix"),
-									  TheScreen::Instance()->ModelViewMatrix().GetMatrixArray());
+	//send texture flag to fragment shader
+	TheShader::Instance()->SetUniformData(m_textureFlagUniformID, false);
 
 	//draw grid object using shader
 	m_gridBuffer.DrawData(Buffer::LINES);
@@ -689,16 +545,13 @@ void DebugManager::DrawCoordSystem3D(float size, float lineWidth)
 	m_coordBuffer.Colors().push_back(0.0f); m_coordBuffer.Colors().push_back(0.0f);
 	m_coordBuffer.Colors().push_back(1.0f); m_coordBuffer.Colors().push_back(0.0f);
 	m_coordBuffer.Colors().push_back(0.0f); m_coordBuffer.Colors().push_back(1.0f);
-	
-	//send projection and modelview matrix data to shader using shader uniform ID 
-	TheShader::Instance()->SetUniform(TheShader::Instance()->GetUniform("projectionMatrix"),
-									  TheScreen::Instance()->ProjectionMatrix().GetMatrixArray());
-	TheShader::Instance()->SetUniform(TheShader::Instance()->GetUniform("modelviewMatrix"),
-									  TheScreen::Instance()->ModelViewMatrix().GetMatrixArray());
 
 	//fill VBO with coordinate system vertex and color data
 	m_coordBuffer.FillData(Buffer::VERTEX_BUFFER);
 	m_coordBuffer.FillData(Buffer::COLOR_BUFFER);
+
+	//send texture flag to fragment shader
+	TheShader::Instance()->SetUniformData(m_textureFlagUniformID, false);
 
 	//draw coordinate system using shader
 	m_coordBuffer.DrawData(Buffer::LINES);
@@ -752,15 +605,12 @@ void DebugManager::DrawCoordSystem2D(float size, float lineWidth, int pixelsPerU
 	m_coordBuffer.Colors().push_back(0.0f); m_coordBuffer.Colors().push_back(0.0f);
 	m_coordBuffer.Colors().push_back(1.0f); m_coordBuffer.Colors().push_back(0.0f);
 
-	//send projection and modelview matrix data to shader using shader uniform ID 
-	TheShader::Instance()->SetUniform(TheShader::Instance()->GetUniform("projectionMatrix"),
-									  TheScreen::Instance()->ProjectionMatrix().GetMatrixArray());
-	TheShader::Instance()->SetUniform(TheShader::Instance()->GetUniform("modelviewMatrix"),
-									  TheScreen::Instance()->ModelViewMatrix().GetMatrixArray());
-
 	//fill VBO with coordinate system vertex and color data
 	m_coordBuffer.FillData(Buffer::VERTEX_BUFFER);
 	m_coordBuffer.FillData(Buffer::COLOR_BUFFER);
+
+	//send texture flag to fragment shader
+	TheShader::Instance()->SetUniformData(m_textureFlagUniformID, false);
 
 	//draw coordinate system using shader
 	m_coordBuffer.DrawData(Buffer::LINES);
@@ -773,31 +623,31 @@ void DebugManager::DrawCube3D(float width, float height, float depth, Color colo
 {
 
 	//variable to store scale transformation value 
-	Transform scale;
+	glm::mat4 scale;
 
-	//temporarily store modelview matrix to reassign it later after scaling transformation
-	//this is an early attempt of pushing / popping a matrix (change later on!) 
-	Matrix4D tempMatrix = TheScreen::Instance()->ModelViewMatrix();
+	//bookmark model matrix to create a temporary transformation
+	//so that we can scale the 3D cube accordingly and render it
+	GameObject::PushMatrix();
 
-	//assign scale value of cube based on dimensions passed and apply to modelview matrix
-	//by default the cube model will have been loaded in as a 1 x 1 x 1 cube
-	scale.Scale(width, height, depth);
-	TheScreen::Instance()->ModelViewMatrix() * scale.GetMatrix();
+		//assign scale value of cube based on dimensions passed and apply to model matrix
+	    //because by default the cube model will have been loaded in as a 1 x 1 x 1 cube
+		scale = glm::scale(scale, glm::vec3(width, height, depth));
+		GameObject::MultiplyMatrix(scale);
 
-	//send projection and modelview matrix data to shader using shader uniform ID 
-	TheShader::Instance()->SetUniform(TheShader::Instance()->GetUniform("projectionMatrix"),
-									  TheScreen::Instance()->ProjectionMatrix().GetMatrixArray());
-	TheShader::Instance()->SetUniform(TheShader::Instance()->GetUniform("modelviewMatrix"),
-									  TheScreen::Instance()->ModelViewMatrix().GetMatrixArray());
+		//send model matrix data to vertex shader
+		GameObject::ApplyMatrix();
 
-	//set color of cube based on color value passed
-	m_cube3D.SetColor(color);
-	
-	//draw the cube
-	m_cube3D.Draw();
+		//set color of cube based on color value passed
+		m_cube3D.SetColor(color);
 
-	//reset the modelview matrix back to the way it was before (popping)
-	TheScreen::Instance()->ModelViewMatrix() = tempMatrix;
+		//send texture flag to fragment shader
+		TheShader::Instance()->SetUniformData(m_textureFlagUniformID, false);
+
+		//draw the 3D cube
+		m_cube3D.Draw();
+
+	//remove temporary model matrix and go back to previous transformation
+	GameObject::PopMatrix();
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -808,7 +658,7 @@ void DebugManager::DrawCube2D(float width, float height, Color color, int pixels
 
 	//store the half dimensions to be used later 
 	//because all vertices are drawn around the centre position
-	Vector2D<float> halfDimension((width * pixelsPerUnit) / 2.0f, (height * pixelsPerUnit) / 2.0f);
+	glm::vec2 halfDimension((width * pixelsPerUnit) / 2.0f, (height * pixelsPerUnit) / 2.0f);
 
 	//clear the vertex and color data each time function is called 
 	//because different sized cubes may be requested
@@ -823,28 +673,28 @@ void DebugManager::DrawCube2D(float width, float height, Color color, int pixels
 	//add vertex data for cube 
 
 	//vertex data for vertex #1
-	m_cubeBuffer2D.Vertices().push_back(-halfDimension.X);
-	m_cubeBuffer2D.Vertices().push_back(halfDimension.Y);
+	m_cubeBuffer2D.Vertices().push_back(-halfDimension.x);
+	m_cubeBuffer2D.Vertices().push_back(halfDimension.y);
 
 	//vertex data for vertex #2
-	m_cubeBuffer2D.Vertices().push_back(halfDimension.X);
-	m_cubeBuffer2D.Vertices().push_back(halfDimension.Y);
+	m_cubeBuffer2D.Vertices().push_back(halfDimension.x);
+	m_cubeBuffer2D.Vertices().push_back(halfDimension.y);
 
 	//vertex data for vertex #3
-	m_cubeBuffer2D.Vertices().push_back(-halfDimension.X);
-	m_cubeBuffer2D.Vertices().push_back(-halfDimension.Y);
+	m_cubeBuffer2D.Vertices().push_back(-halfDimension.x);
+	m_cubeBuffer2D.Vertices().push_back(-halfDimension.y);
 
 	//vertex data for vertex #4
-	m_cubeBuffer2D.Vertices().push_back(-halfDimension.X);
-	m_cubeBuffer2D.Vertices().push_back(-halfDimension.Y);
+	m_cubeBuffer2D.Vertices().push_back(-halfDimension.x);
+	m_cubeBuffer2D.Vertices().push_back(-halfDimension.y);
 
 	//vertex data for vertex #5
-	m_cubeBuffer2D.Vertices().push_back(halfDimension.X);
-	m_cubeBuffer2D.Vertices().push_back(halfDimension.Y);
+	m_cubeBuffer2D.Vertices().push_back(halfDimension.x);
+	m_cubeBuffer2D.Vertices().push_back(halfDimension.y);
 
 	//vertex data for vertex #6
-	m_cubeBuffer2D.Vertices().push_back(halfDimension.X);
-	m_cubeBuffer2D.Vertices().push_back(-halfDimension.Y);
+	m_cubeBuffer2D.Vertices().push_back(halfDimension.x);
+	m_cubeBuffer2D.Vertices().push_back(-halfDimension.y);
 
 	//add color data for cube 
 
@@ -872,15 +722,12 @@ void DebugManager::DrawCube2D(float width, float height, Color color, int pixels
 	m_cubeBuffer2D.Colors().push_back(color.R); m_cubeBuffer2D.Colors().push_back(color.G);
 	m_cubeBuffer2D.Colors().push_back(color.B); m_cubeBuffer2D.Colors().push_back(color.A);
 
-	//send projection and modelview matrix data to shader using shader uniform ID 
-	TheShader::Instance()->SetUniform(TheShader::Instance()->GetUniform("projectionMatrix"),
-		                              TheScreen::Instance()->ProjectionMatrix().GetMatrixArray());
-	TheShader::Instance()->SetUniform(TheShader::Instance()->GetUniform("modelviewMatrix"),
-		                              TheScreen::Instance()->ModelViewMatrix().GetMatrixArray());
-
 	//fill VBO with cube vertex and color data
 	m_cubeBuffer2D.FillData(Buffer::VERTEX_BUFFER);
 	m_cubeBuffer2D.FillData(Buffer::COLOR_BUFFER);
+
+	//send texture flag to fragment shader
+	TheShader::Instance()->SetUniformData(m_textureFlagUniformID, false);
 
 	//draw cube using shader
 	m_cubeBuffer2D.DrawData(Buffer::TRIANGLES);
@@ -893,31 +740,31 @@ void DebugManager::DrawSphere3D(float radius, Color color)
 {
 
 	//variable to store scale transformation value 
-	Transform scale;
+	glm::mat4 scale;
 
-	//temporarily store modelview matrix to reassign it later after scaling transformation
-	//this is an early attempt of pushing / popping a matrix (change later on!) 
-	Matrix4D tempMatrix = TheScreen::Instance()->ModelViewMatrix();
+	//bookmark model matrix to create a temporary transformation
+	//so that we can scale the 3D sphere accordingly and render it
+	GameObject::PushMatrix();
 
-	//assign scale value of sphere based on radius passed and apply to modelview matrix
-	//by default the sphere model will have been loaded in with a radius of 1
-	scale.Scale(radius, radius, radius);
-	TheScreen::Instance()->ModelViewMatrix() * scale.GetMatrix();
+		//assign scale value of sphere based on radius passed and apply to model matrix
+		//because by default the sphere model will have been loaded in with a radius of 1
+		scale = glm::scale(scale, glm::vec3(radius, radius, radius));
+		GameObject::MultiplyMatrix(scale);
 
-	//send projection and modelview matrix data to shader using shader uniform ID 
-	TheShader::Instance()->SetUniform(TheShader::Instance()->GetUniform("projectionMatrix"),
-									  TheScreen::Instance()->ProjectionMatrix().GetMatrixArray());
-	TheShader::Instance()->SetUniform(TheShader::Instance()->GetUniform("modelviewMatrix"),
-									  TheScreen::Instance()->ModelViewMatrix().GetMatrixArray());
+		//send model matrix data to vertex shader
+		GameObject::ApplyMatrix();
 
-	//set color of sphere based on color value passed
-	m_sphere3D.SetColor(color);
-	
-	//draw the sphere
-	m_sphere3D.Draw();
+		//set color of sphere based on color value passed
+		m_sphere3D.SetColor(color);
 
-	//reset the modelview matrix back to the way it was before (popping)
-	TheScreen::Instance()->ModelViewMatrix() = tempMatrix;
+		//send texture flag to fragment shader
+		TheShader::Instance()->SetUniformData(m_textureFlagUniformID, false);
+
+		//draw the 3D sphere
+		m_sphere3D.Draw();
+
+	//remove temporary model matrix and go back to previous transformation
+	GameObject::PopMatrix();
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -928,7 +775,7 @@ void DebugManager::DrawSphere2D(float radius, Color color, int slices, int pixel
 
 	//vector that will generate values in a circular method 
 	//to create the vertices around the origin, forming a circle
-	Vector2D<double> tempVector; 
+	glm::vec2 tempVector; 
 	
 	//divide the circle into slices based on slices amount passed
 	//the more slices, the more detailed the sphere is drawn 
@@ -966,25 +813,23 @@ void DebugManager::DrawSphere2D(float radius, Color color, int slices, int pixel
 	for (int i = 0; i < slices + 1; i++)
 	{
 		
-		tempVector = Vector2D<double>::AngleToVector(tempAngle * (i + 1), radius * pixelsPerUnit);
-		
-		m_sphereBuffer2D.Vertices().push_back((GLfloat)tempVector.X);
-		m_sphereBuffer2D.Vertices().push_back((GLfloat)tempVector.Y);
+		tempVector.x = (float)(cos(glm::radians(tempAngle * (i + 1))) * radius * pixelsPerUnit);
+		tempVector.y = (float)(sin(glm::radians(tempAngle * (i + 1))) * radius * pixelsPerUnit);
+
+		m_sphereBuffer2D.Vertices().push_back((GLfloat)tempVector.x);
+		m_sphereBuffer2D.Vertices().push_back((GLfloat)tempVector.y);
 		
 		m_sphereBuffer2D.Colors().push_back(color.R); m_sphereBuffer2D.Colors().push_back(color.G);
 		m_sphereBuffer2D.Colors().push_back(color.B); m_sphereBuffer2D.Colors().push_back(color.A);
 
 	}
 
-	//send projection and modelview matrix data to shader using shader uniform ID 
-	TheShader::Instance()->SetUniform(TheShader::Instance()->GetUniform("projectionMatrix"),
-									  TheScreen::Instance()->ProjectionMatrix().GetMatrixArray());
-	TheShader::Instance()->SetUniform(TheShader::Instance()->GetUniform("modelviewMatrix"),
-									  TheScreen::Instance()->ModelViewMatrix().GetMatrixArray());
-
 	//fill VBO with sphere vertex and color data
 	m_sphereBuffer2D.FillData(Buffer::VERTEX_BUFFER);
 	m_sphereBuffer2D.FillData(Buffer::COLOR_BUFFER);
+
+	//send texture flag to fragment shader
+	TheShader::Instance()->SetUniformData(m_textureFlagUniformID, false);
 
 	//draw sphere using shader
 	m_sphereBuffer2D.DrawData(Buffer::TRIANGLE_FAN);
@@ -1031,16 +876,13 @@ void DebugManager::DrawVector(float x, float y, float z,
 	m_vectorBuffer.Colors().push_back(color.R); m_vectorBuffer.Colors().push_back(color.G);
 	m_vectorBuffer.Colors().push_back(color.B); m_vectorBuffer.Colors().push_back(color.A);
 	
-	//send projection and modelview matrix data to shader using shader uniform ID 
-	TheShader::Instance()->SetUniform(TheShader::Instance()->GetUniform("projectionMatrix"),
-									  TheScreen::Instance()->ProjectionMatrix().GetMatrixArray());
-	TheShader::Instance()->SetUniform(TheShader::Instance()->GetUniform("modelviewMatrix"),
-									  TheScreen::Instance()->ModelViewMatrix().GetMatrixArray());
-	
 	//fill VBO with vector vertex and color data
 	m_vectorBuffer.FillData(Buffer::VERTEX_BUFFER);
 	m_vectorBuffer.FillData(Buffer::COLOR_BUFFER);
 	
+	//send texture flag to fragment shader
+	TheShader::Instance()->SetUniformData(m_textureFlagUniformID, false);
+
 	//draw vector using shader
 	m_vectorBuffer.DrawData(Buffer::LINES);
 
@@ -1076,16 +918,13 @@ void DebugManager::DrawVertex(float x, float y, float z,
 	//color data for vertex point
 	m_vertexBuffer.Colors().push_back(color.R); m_vertexBuffer.Colors().push_back(color.G);
 	m_vertexBuffer.Colors().push_back(color.B); m_vertexBuffer.Colors().push_back(color.A);
-	
-	//send projection and modelview matrix data to shader using shader uniform ID 
-	TheShader::Instance()->SetUniform(TheShader::Instance()->GetUniform("projectionMatrix"),
-		                              TheScreen::Instance()->ProjectionMatrix().GetMatrixArray());
-	TheShader::Instance()->SetUniform(TheShader::Instance()->GetUniform("modelviewMatrix"),
-		                              TheScreen::Instance()->ModelViewMatrix().GetMatrixArray());
 
 	//fill VBO with vertex and color data for vertex point
 	m_vertexBuffer.FillData(Buffer::VERTEX_BUFFER);
 	m_vertexBuffer.FillData(Buffer::COLOR_BUFFER);
+
+	//send texture flag to fragment shader
+	TheShader::Instance()->SetUniformData(m_textureFlagUniformID, false);
 
 	//draw vertex using shader
 	m_vertexBuffer.DrawData(Buffer::POINTS);
@@ -1132,15 +971,12 @@ void DebugManager::DrawLine(float x1, float y1, float z1, float x2, float y2, fl
 	m_lineBuffer.Colors().push_back(color.R); m_lineBuffer.Colors().push_back(color.G);
 	m_lineBuffer.Colors().push_back(color.B); m_lineBuffer.Colors().push_back(color.A);
 
-	//send projection and modelview matrix data to shader using shader uniform ID 
-	TheShader::Instance()->SetUniform(TheShader::Instance()->GetUniform("projectionMatrix"),
-		                              TheScreen::Instance()->ProjectionMatrix().GetMatrixArray());
-	TheShader::Instance()->SetUniform(TheShader::Instance()->GetUniform("modelviewMatrix"),
-		                              TheScreen::Instance()->ModelViewMatrix().GetMatrixArray());
-
 	//fill VBO with vector vertex and color data
 	m_lineBuffer.FillData(Buffer::VERTEX_BUFFER);
 	m_lineBuffer.FillData(Buffer::COLOR_BUFFER);
+
+	//send texture flag to fragment shader
+	TheShader::Instance()->SetUniformData(m_textureFlagUniformID, false);
 
 	//draw line segment using shader
 	m_lineBuffer.DrawData(Buffer::LINES);

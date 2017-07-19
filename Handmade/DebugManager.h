@@ -6,15 +6,15 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : April 2016
+  UPDATED : January 2017
 
   -----------------------------------------------------------------------------------------------
 
-- This class offers debugging resources to help make life a little easier when working with
-  OpenGL. It contains routines to help display OpenGL and GLSL specifications, point out 
-  errors that might occur along the way, draw grids and coordinate systems to help visualize
-  objects in the dark, and also draw a set of basic shapes on screen to make things easier.
-  The Debug Manager has its own shaders linked to it. (Temporary!!) This class is a Singleton.
+- This class offers debugging resources to help make life a little easier when working with 
+  OpenGL. It contains routines to help display OpenGL and GLSL specifications, point out errors 
+  that might occur along the way, draw grids and coordinate systems to help visualize objects in
+  the dark, and also draw a set of basic shapes on screen to make things easier. This class is a
+  Singleton.
 
 - There are five buffer objects that will be used to draw the grid system, coordinate system,
   the 2D cube, 2D sphere and vectors. The buffers contain all the relevant data needed to render
@@ -26,22 +26,13 @@
   cube or sphere are scaled up, the texture will be scaled and at very high values will start to
   tear.
 
-- The Enable() and Disable() functions are designed to switch on and off the Debug Manager's
-  own shaders, so that any other external shaders can be used instead. The Debug Manager works
-  with its own shaders.
-
-- The Initialize() function will compile the debug shaders and set up the VBOs needed for all
-  rendering of debug objects. It will also link the buffer objects to their relevant VBOs and 
-  shader data. The ShutDown() routine will clear and destroy all VBO buffers. 
+- The CreateBuffers() function will set up the VBOs needed for all rendering of debug objects. It
+  will also link the buffer objects to their relevant VBOs and shader data. The DestroyBuffers()
+  routine will clear and destroy all VBO buffers. 
 
 - The function CheckError() will check for errors in OpenGL and use predefined constants to 
   display a friendly message on screen. Calling this function will return the first error that 
-  occured with OpenGL since this function was last called. 
-
-- The function DisplayExtensions() will display all extensions available to the programmer
-  based on their graphics card hardware. The DisplayGraphicsProfile() function helps with 
-  displaying OpenGL graphics and shader capabilities. It will show the programmer what graphics 
-  card type, manufacturer, OpenGL version and shader version is installed and supported. 
+  occured with OpenGL since this function was last called.  
 
 - There are a set of drawing routines to help display objects quickly on screen and assist with
   world orientation. All of these functions have a 2D and 3D version. One version could be used 
@@ -67,11 +58,13 @@
   shape to render and is good for drawing coordinate points. One could actually use the DrawCube()
   functions to render a point on screen, but then they would have to first be moved into position
   in the calling code. The DrawLine() function draws a 2D or 3D line segment using a passed starting
-  and ending point. This routine is much like a the DrawVector() routine, but for now they have been
-  kept separate for illustration. The DrawVector(), DrawVertex() and DrawLine() functions all have
-  2D and 3D built in, because creating separate routines for these simple geometric shapes was 
-  unnecessary. They all take in separate X, Y and Z parameters, because taking in specific Vector 
-  objects would mean either templatizing the functions or overloading them in various ways.
+  and ending point. The difference between this routine and the DrawVector() is that the latter will
+  render a line from the origin to the end point and the DrawLine() renders from a specific starting
+  point to the specified ending point.  
+  The DrawVector(), DrawVertex() and DrawLine() functions all have 2D and 3D built in, because 
+  creating separate routines for these simple geometric shapes was unnecessary. They all take in 
+  separate X, Y and Z parameters, because taking in specific vector objects would mean either 
+  templatizing the functions or overloading them in various ways.
 
 - Only the DrawGrid() routines have a static flag to fill the buffers only once. All other buffer 
   objects are filled each call as they may change over time. The grid will always stay the same. 
@@ -82,12 +75,11 @@
 #ifndef DEBUG_MANAGER_H
 #define DEBUG_MANAGER_H
 
+#include <glew.h>
 #include "Buffer.h"
 #include "Color.h"
 #include "Model.h"
 #include "Singleton.h"
-#include "Vector2D.h"
-#include "Vector3D.h"
 
 class DebugManager
 {
@@ -98,16 +90,9 @@ public:
 
 public :
 
-	bool Enable();
-	void Disable();
-
-public :
-
-	bool Initialize();
 	void CheckError();
-	void DisplayExtensions();
-	void DisplayGraphicsProfile();
-	void ShutDown();
+	bool CreateBuffers();
+	void DestroyBuffers();
 
 public :
 
@@ -146,6 +131,8 @@ private :
 	Buffer m_vectorBuffer;
 	Buffer m_cubeBuffer2D;
 	Buffer m_sphereBuffer2D;
+
+	GLuint m_textureFlagUniformID;
 	
 };
 
