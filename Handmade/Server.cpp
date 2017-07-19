@@ -11,6 +11,8 @@ Server::Server()
 	m_name = "";
 	m_socket = 0;
 
+	m_clientSocket = 0;
+
 }
 //------------------------------------------------------------------------------------------------------
 //function that initializes the network sub-system and creates the server
@@ -33,14 +35,8 @@ bool Server::Initialize()
 		return false;
 	}
 
-	//get name of server from IP
-	m_name = SDLNet_ResolveIP(&m_IP);
-
-	//debug output!!
-	std::cout << "Server " << "\"" <<  m_name << "\"" << " created successfully." << std::endl;
-
-	//create and open TCP server socket 
-	//this creates an interface for server to connect with clients
+	//open up socket connection using IP value created above which
+	//will create a connection between server and client sockets 
 	m_socket = SDLNet_TCP_Open(&m_IP);
 
 	//if server socket could not be opened, display error message and return false
@@ -50,31 +46,102 @@ bool Server::Initialize()
 		return false;
 	}
 
+	//get name of server from IP
+	m_name = SDLNet_ResolveIP(&m_IP);
+
+	//debug output!!
+	std::cout << "Server " << "\"" <<  m_name << "\"" << " created successfully." << std::endl;
+
 	return true;
 
 }
+
+//------------------------------------------------------------------------------------------------------
+//function that sends data in string form to client...
+//------------------------------------------------------------------------------------------------------
+bool Server::SendData(const std::string& data)
+{
+
+	//first check if there is a socket connection before sending 
+	//any data and display error message if there is no connection
+	if (!m_clientSocket)
+	{
+		std::cout << "No socket connection. Cannot send data to client." << std::endl;
+		return false;
+	}
+
+	//otherwise send data message via socket connection to client
+	//if returned value is less than data sent error message!
+	else
+	{
+		if (SDLNet_TCP_Send(m_clientSocket, data.c_str(), data.size() + 1) < (int)(data.size() + 1))
+		{
+			std::cout << "Error sending data to client.";
+			return false;
+		}
+
+		else
+		{
+			std::cout << "Data sent to client." << std::endl;
+		}
+	}
+
+	return true;
+
+}
+
+bool Server::ReceiveData()
+{
+
+	//..
+	char data[2000];
+
+	//first check if there is a socket connection before listening 
+	//for any data and display error message if there is no connection
+	if (!m_clientSocket)
+	{
+		std::cout << "No socket connection. Cannot receive data from client." << std::endl;
+		return false;
+	}
+
+	//otherwise listen for data message via socket connection from client
+	//if returned value is less than data sent error message!
+	else
+	{
+		if (SDLNet_TCP_Recv(m_clientSocket, data, 2000) <= 0)
+		{
+			std::cout << "Error receiving data from client." << std::endl;
+			return false;
+		}
+
+		else
+		{
+			std::cout << "Data received from client." << std::endl;
+			std::cout << data << std::endl;
+		}
+
+	}
+
+	return true;
+
+}
+
 //------------------------------------------------------------------------------------------------------
 //function that waits for a client to connect
 //------------------------------------------------------------------------------------------------------
 bool Server::Listen()
 {
 
-	//temporary client socket variable
-	TCPsocket tempClientSocket = 0;
-
-	//keep looping until a client connects
-	//when a client connects, their socket will be opened
-	while (!tempClientSocket)
+	//keep listening in on open socket for client until they connect
+	//if connection made store value in new socket variable
+	while (!m_clientSocket)
 	{
-		tempClientSocket = SDLNet_TCP_Accept(m_socket);
+		m_clientSocket = SDLNet_TCP_Accept(m_socket);
 		std::cout << "Waiting for client..." << std::endl;
 	}
 
 	//debug output!!
-	std::cout << "Client has connected!" << std::endl;
-
-	//add client socket to map
-	m_clientSocketMap["CLIENT_1"] = tempClientSocket;
+	std::cout << "Client has connected." << std::endl;
 
 	return true;
 
@@ -85,12 +152,9 @@ bool Server::Listen()
 void Server::ShutDown()
 {
 
-	//loop through all elements in map and close each socket
-	for (auto it = m_clientSocketMap.begin(); it != m_clientSocketMap.end(); it++)
-	{
-		SDLNet_TCP_Close(it->second);
-	}
-
+	//close down socket connection
+	SDLNet_TCP_Close(m_socket);
+	
 	//close down SDL networking sub-system
 	SDLNet_Quit();
 

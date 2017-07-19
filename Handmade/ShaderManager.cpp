@@ -8,38 +8,74 @@
 ShaderManager::ShaderManager()
 {
 
-	m_program = 0;
+	m_shaderProgramID = 0;
 	
+}
+//------------------------------------------------------------------------------------------------------
+//getter function that returns handle on shader program
+//------------------------------------------------------------------------------------------------------
+GLuint ShaderManager::GetShaderProgram()
+{
+
+	return m_shaderProgramID;
+
 }
 //------------------------------------------------------------------------------------------------------
 //getter function that returns the ID of a shader uniform variable based on name passed
 //------------------------------------------------------------------------------------------------------
-GLint ShaderManager::GetUniform(const std::string& name)
+GLint ShaderManager::GetUniformID(const std::string& name)
 {
 
-	return glGetUniformLocation(m_program, name.c_str());
+	return glGetUniformLocation(m_shaderProgramID, name.c_str());
 
 }
 //------------------------------------------------------------------------------------------------------
 //getter function that returns the ID of a shader attribute variable based on name passed
 //------------------------------------------------------------------------------------------------------
-GLint ShaderManager::GetAttribute(const std::string& name)
+GLint ShaderManager::GetAttributeID(const std::string& name)
 {
 
-	return glGetAttribLocation(m_program, name.c_str());
+	return glGetAttribLocation(m_shaderProgramID, name.c_str());
 
 }
 //------------------------------------------------------------------------------------------------------
-//setter function that sends data to a shader uniform variable based on ID passed
+//setter function that sends integer data to shader uniform variable based on ID passed
 //------------------------------------------------------------------------------------------------------
-void ShaderManager::SetUniform(GLint attributeID, GLfloat* data)
+void ShaderManager::SetUniformData(GLint attributeID, GLint data)
 {
 
-	glUniformMatrix4fv(attributeID, 1, GL_FALSE, data);
+	glUniform1i(attributeID, data);
 
 }
 //------------------------------------------------------------------------------------------------------
-//setter function that links data to a shader attribute variable based on ID passed
+//setter function that sends single floating point data to shader uniform variable based on ID passed
+//------------------------------------------------------------------------------------------------------
+void ShaderManager::SetUniformData(GLint attributeID, GLfloat data)
+{
+
+	glUniform1f(attributeID, data);
+
+}
+//------------------------------------------------------------------------------------------------------
+//setter function that sends array of floating point data to shader uniform variable based on ID passed
+//------------------------------------------------------------------------------------------------------
+void ShaderManager::SetUniformData(GLint attributeID, glm::vec3& data)
+{
+
+	glUniform3fv(attributeID, 1, &data.x);
+
+}
+//------------------------------------------------------------------------------------------------------
+//setter function that sends matrix data to shader uniform variable based on ID passed
+//------------------------------------------------------------------------------------------------------
+void ShaderManager::SetUniformMatrix(GLint attributeID, GLfloat* matrix)
+{
+
+	glUniformMatrix4fv(attributeID, 1, GL_FALSE, matrix);
+
+}
+//------------------------------------------------------------------------------------------------------
+//setter function that links data to shader attribute variable based on ID passed
 //------------------------------------------------------------------------------------------------------
 void ShaderManager::SetAttribute(GLint attributeID, GLint componentSize)
 {
@@ -72,11 +108,11 @@ bool ShaderManager::Initialize()
 {
 
 	//create main shader program object
-	m_program = glCreateProgram();
+	m_shaderProgramID = glCreateProgram();
 
 	//if an error occured a large unsigned int will be returned 
 	//which is converted into a -1 in signed int terms
-	if (m_program == -1)
+	if (m_shaderProgramID == -1)
 	{
 		std::cout << "Shader program could not be created." << std::endl;
 		return false;
@@ -165,7 +201,7 @@ void ShaderManager::Attach(ShaderType shaderType, const std::string& mapIndex)
 	}
 
 	//attach shader object using specific storage map
-	glAttachShader(m_program, (*tempMap)[mapIndex]);
+	glAttachShader(m_shaderProgramID, (*tempMap)[mapIndex]);
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -272,13 +308,13 @@ bool ShaderManager::Link()
 	GLint linkResult = 0;
 
 	//link entire shader program with all its shader objects
-	glLinkProgram(m_program);
+	glLinkProgram(m_shaderProgramID);
 
 	//activate main shader program
-	glUseProgram(m_program);
+	glUseProgram(m_shaderProgramID);
 
 	//request linking error code for error checking
-	glGetProgramiv(m_program, GL_LINK_STATUS, &linkResult);
+	glGetProgramiv(m_shaderProgramID, GL_LINK_STATUS, &linkResult);
 
 	//there is no check for link success because when linking is performed 
 	//multiple times, that will display too many messages on the console screen
@@ -294,7 +330,7 @@ bool ShaderManager::Link()
 		std::cout << "Linking : FAIL" << std::endl;
 		std::cout << "---------------------------------------------------------------" << std::endl;
 
-		glGetProgramInfoLog(m_program, 1000, &length, error);
+		glGetProgramInfoLog(m_shaderProgramID, 1000, &length, error);
 		std::cout << error << std::endl;
 		std::cout << "---------------------------------------------------------------" << std::endl;
 
@@ -323,7 +359,7 @@ void ShaderManager::Detach(ShaderType shaderType, const std::string& mapIndex)
 	}
 
 	//detach shader object using specific storage map
-	glDetachShader(m_program, (*tempMap)[mapIndex]);
+	glDetachShader(m_shaderProgramID, (*tempMap)[mapIndex]);
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -333,50 +369,46 @@ void ShaderManager::Destroy(ShaderType shaderType, RemoveType removeType, const 
 {
 
 	//temp pointer which will reference specific shader ID map
-	std::map<std::string, GLuint>* tempMap = 0;
+	std::map<std::string, GLuint>* tempMap = nullptr;
 
-	//assign whichever shader ID map needs to be removed from 
-	//to temp pointer so that when looping through the map later, 
-	//the pointer is used instead of looping through three different maps
+	//assign whichever shader map needs to be removed from to the temp 
+	//pointer so that when looping through the map later, the pointer
+	//is used then instead of looping through three different maps
 	switch (shaderType)
 	{
-		case VERTEX_SHADER   : tempMap = &m_vertexShaderIDMap; break;
-		case FRAGMENT_SHADER : tempMap = &m_fragmentShaderIDMap; break;
-		case GEOMETRY_SHADER : tempMap = &m_geometryShaderIDMap; break;
+		case VERTEX_SHADER: tempMap = &m_vertexShaderIDMap; break;
+		case FRAGMENT_SHADER: tempMap = &m_fragmentShaderIDMap; break;
+		case GEOMETRY_SHADER: tempMap = &m_geometryShaderIDMap; break;
 	}
 
-	//loop through entire shader ID map in order 
-	//to remove a specific shader ID or all shader IDs
-	for (auto it = tempMap->begin(); it != tempMap->end(); it++)
+	//if a single shader file needs to be removed, find it and free it from memory 
+	if (removeType == CUSTOM_SHADER)
 	{
+		auto it = tempMap->find(mapIndex);
 
-		//if a flag is passed to remove a specific shader ID
-		//check if map index is the shader that needs to be removed
-		//and remove it from both OpenGL and the map
-		if (removeType == CUSTOM_SHADER)
+		if (it == tempMap->end())
 		{
-			if (it->first == mapIndex)
-			{
-				glDeleteShader(it->second);
-				tempMap->erase(it);
-				break;
-			}
+			std::cout << "Shader ID not found." << std::endl;
 		}
 
-		//otherwise if a flag is passed to remove all shader IDs
-		//remove the shader from OpenGL
-		else if (removeType == ALL_SHADERS)
+		else
+		{
+			glDeleteShader(it->second);
+			tempMap->erase(it);
+		}
+	}
+
+	//otherwise loop through the entire map and remove all shader data and clear the map
+	else if (removeType == ALL_SHADERS)
+	{
+
+		for (auto it = tempMap->begin(); it != tempMap->end(); it++)
 		{
 			glDeleteShader(it->second);
 		}
 
-	}
-
-	//if all shader IDs have been removed from OpenGL, clear the 
-	//entire map in one go, because the IDs in the map still remain
-	if (removeType == ALL_SHADERS)
-	{
 		tempMap->clear();
+
 	}
 
 }
@@ -386,8 +418,8 @@ void ShaderManager::Destroy(ShaderType shaderType, RemoveType removeType, const 
 void ShaderManager::ShutDown()
 {
 
-	glDeleteProgram(m_program);
-	m_program = 0;
+	glDeleteProgram(m_shaderProgramID);
+	m_shaderProgramID = 0;
 
 }
 //------------------------------------------------------------------------------------------------------

@@ -57,28 +57,28 @@ double Quaternion::GetAngle()
 //------------------------------------------------------------------------------------------------------
 //getter function that sets the Matrix4D object accordingly and returns it
 //------------------------------------------------------------------------------------------------------
-Matrix4D& Quaternion::GetMatrix()
+glm::mat4& Quaternion::GetMatrix()
 {
 
-	m_matrix[0] = (float)(1.0f - 2.0f * (Y * Y + Z * Z));
-	m_matrix[1] = (float)(2.0f * (X * Y + Z * W));
-	m_matrix[2] = (float)(2.0f * (X * Z - Y * W));
-	m_matrix[3] = 0.0f;
+	m_matrix[0][0] = (float)(1.0f - 2.0f * (Y * Y + Z * Z));
+	m_matrix[0][1] = (float)(2.0f * (X * Y + Z * W));
+	m_matrix[0][2] = (float)(2.0f * (X * Z - Y * W));
+	m_matrix[0][3] = 0.0f;
 
-	m_matrix[4] = (float)(2.0f * (X * Y - Z * W));
-	m_matrix[5] = (float)(1.0f - 2.0f * (X * X + Z * Z));
-	m_matrix[6] = (float)(2.0f * (Z * Y + X * W));
-	m_matrix[7] = 0.0f;
+	m_matrix[1][0] = (float)(2.0f * (X * Y - Z * W));
+	m_matrix[1][1] = (float)(1.0f - 2.0f * (X * X + Z * Z));
+	m_matrix[1][2] = (float)(2.0f * (Z * Y + X * W));
+	m_matrix[1][3] = 0.0f;
 
-	m_matrix[8] = (float)(2.0f * (X * Z + Y * W));
-	m_matrix[9] = (float)(2.0f * (Y * Z - X * W));
-	m_matrix[10] = (float)(1.0f - 2.0f * (X * X + Y * Y));
-	m_matrix[11] = 0.0f;
+	m_matrix[2][0] = (float)(2.0f * (X * Z + Y * W));
+	m_matrix[2][1] = (float)(2.0f * (Y * Z - X * W));
+	m_matrix[2][2] = (float)(1.0f - 2.0f * (X * X + Y * Y));
+	m_matrix[2][3] = 0.0f;
 
-	m_matrix[12] = 0.0f;
-	m_matrix[13] = 0.0f;
-	m_matrix[14] = 0.0f;
-	m_matrix[15] = 1.0f;
+	m_matrix[3][0] = 0.0f;
+	m_matrix[3][1] = 0.0f;
+	m_matrix[3][2] = 0.0f;
+	m_matrix[3][3] = 1.0f;
 
 	return m_matrix;
 
@@ -86,13 +86,13 @@ Matrix4D& Quaternion::GetMatrix()
 //------------------------------------------------------------------------------------------------------
 //getter function that returns the axis portion of the Quaternion object
 //------------------------------------------------------------------------------------------------------
-Vector3D<double> Quaternion::GetAxis()
+glm::vec3 Quaternion::GetAxis()
 {
 
 	//first create a temporary vector based on XYZ components 
 	//of quaternion and then return a normalised version of that
-	Vector3D<double> temp(X, Y, Z);
-	return temp.Normalise();
+	glm::vec3 temp(X, Y, Z);
+	return glm::normalize(temp);
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -150,15 +150,15 @@ Quaternion Quaternion::operator*(const Quaternion& rhs)
 //------------------------------------------------------------------------------------------------------
 //function that multiplies a Quaternion object by a Vector3D object
 //------------------------------------------------------------------------------------------------------
-Vector3D<double> Quaternion::operator*(const Vector3D<double>& rhs)
+glm::vec3 Quaternion::operator*(const glm::vec3& rhs)
 {
 
 	//create a temporary vector and store the passed vector in there
-	Vector3D<double> temp = rhs;
+	glm::vec3 temp = rhs;
 	
 	//if temp vector is null, return it because
 	//a null vector is useless to use
-	if(temp == 0)
+	if(temp == glm::vec3(0.0f))
 	{
 		return temp;
 	}
@@ -166,7 +166,7 @@ Vector3D<double> Quaternion::operator*(const Vector3D<double>& rhs)
 	//otherwise normalise it first before use
 	//it is best to work with normalised vector values
 	//so that there are no shearing artefacts
-	temp = temp.Normalise();
+	temp = glm::normalize(temp);
 
 	//create two quaternion objects, the first one is for disguising 
 	//the passed vector as a quaternion object. The second one is used
@@ -176,16 +176,16 @@ Vector3D<double> Quaternion::operator*(const Vector3D<double>& rhs)
 
 	//assign the XYZ components of the passed vector and set the W to 0
 	vectorQuaternion.W = 0.0f;
-	vectorQuaternion.X = temp.X;
-	vectorQuaternion.Y = temp.Y;
-	vectorQuaternion.Z = temp.Z;
+	vectorQuaternion.X = temp.x;
+	vectorQuaternion.Y = temp.y;
+	vectorQuaternion.Z = temp.z;
 			
 	//calculate the result quaternion using a formula
 	resultQuaternion = (*this) * vectorQuaternion * Conjugate();
 
 	//create a new vector by changing the resulting quaternion back
 	//to a normalised vector representation, and return that
-	return(Vector3D<double>(resultQuaternion.X, resultQuaternion.Y, resultQuaternion.Z));
+	return(glm::vec3(resultQuaternion.X, resultQuaternion.Y, resultQuaternion.Z));
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -272,14 +272,14 @@ void Quaternion::SetAngleAxis(double angle, double x, double y, double z)
 
 	//create temporary vector based on XYZ values passed and 
 	//normalise it so that the resulting quaternion will be normalised
-	Vector3D<double> temp(x, y, z);
-	temp = temp.Normalise();
+	glm::vec3 temp(x, y, z);
+	temp = glm::normalize(temp);
 
 	//assign WXYZ components using a formula and temporary vector
 	W = cosThetaOverTwo;
-	X = temp.X * sinThetaOverTwo;
-	Y = temp.Y * sinThetaOverTwo;
-	Z = temp.Z * sinThetaOverTwo;
+	X = temp.x * sinThetaOverTwo;
+	Y = temp.y * sinThetaOverTwo;
+	Z = temp.z * sinThetaOverTwo;
 
 }
 //------------------------------------------------------------------------------------------------------

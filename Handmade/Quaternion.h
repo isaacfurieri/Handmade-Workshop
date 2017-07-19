@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : November 2015
+  UPDATED : January 2017
 
   -----------------------------------------------------------------------------------------------
 
@@ -56,8 +56,7 @@
 #ifndef QUATERNION_H
 #define QUATERNION_H
 
-#include "Matrix4D.h"
-#include "Vector3D.h"
+#include <glm.hpp>
 
 class Quaternion
 {
@@ -76,8 +75,8 @@ public :
 public :
 
 	double GetAngle(); 
-	Matrix4D& GetMatrix();
-	Vector3D<double> GetAxis(); 
+	glm::mat4& GetMatrix();
+	glm::vec3 GetAxis();
 	
 public :
 
@@ -88,7 +87,7 @@ public:
 
 	Quaternion& operator=(const QuaternionType rhs);
 	Quaternion operator*(const Quaternion& rhs); 
-	Vector3D<double> operator*(const Vector3D<double>& rhs); 
+	glm::vec3 operator*(const glm::vec3& rhs); 
 
 public :
 
@@ -115,7 +114,7 @@ public :
 
 private :
 
-	Matrix4D m_matrix;
+	glm::mat4 m_matrix;
 	
 };
 

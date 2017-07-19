@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : November 2015
+  UPDATED : February 2017
 
   -----------------------------------------------------------------------------------------------
 
@@ -21,10 +21,11 @@
   cleared. The ShaderType enum is there for letting the manager class know what type of shader it 
   will de dealing with.
 
-- The four getters and setters allow access to the different shader variables. There are two 
-  getter routines for aquiring the IDs of the uniform and attribute variables from inside the 
-  shaders. There are also two setter functions that allow data to be linked / sent to a the 
-  shader uniform and attribute variables. The two setter functions are temporary solutions!!
+- The getters and setters allow access to the different shader variables. There are two getter 
+  routines for aquiring the IDs of the uniform and attribute variables from inside the shaders. 
+  There are also a few setter functions that allow data to be sent to the shader uniform and 
+  attribute variables. Some of these routines are overloaded so that different types of data can
+  be sent to the shaders. 
   
 - The main functions in the class allow for the main shader program to be created and initialised
   as well as allowing various shaders to be created, compiled, linked, attached, destroyed etc.
@@ -44,7 +45,8 @@
 
 #include <map>
 #include <string>
-#include <OpenGL.h>
+#include <glew.h>
+#include <glm.hpp>
 #include "Singleton.h"
 
 class ShaderManager
@@ -61,9 +63,14 @@ public:
 
 public:
 
-	GLint GetUniform(const std::string& name);
-	GLint GetAttribute(const std::string& name);
-	void SetUniform(GLint attributeID, GLfloat* data);
+	GLuint GetShaderProgram();
+	GLint GetUniformID(const std::string& name);
+	GLint GetAttributeID(const std::string& name);
+	
+	void SetUniformData(GLint attributeID, GLint data);
+	void SetUniformData(GLint attributeID, GLfloat data);
+	void SetUniformData(GLint attributeID, glm::vec3& data);
+	void SetUniformMatrix(GLint attributeID, GLfloat* matrix);
 	void SetAttribute(GLint attributeID, GLint componentSize);
 
 public:
@@ -100,7 +107,7 @@ private:
 
 private:
 
-	GLint m_program;
+	GLint m_shaderProgramID;
 
 	std::map<std::string, GLuint> m_vertexShaderIDMap;
 	std::map<std::string, GLuint> m_fragmentShaderIDMap;

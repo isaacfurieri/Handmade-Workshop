@@ -6,22 +6,26 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : January 2016
+  UPDATED : June 2016
 
   -----------------------------------------------------------------------------------------------
 
--
--
--
+- cannot create dot notation form for host because IP.host value is 0!!
+
+- separate client socket. the main socket created is used to listen in on incoming connections.
+  after a connection is made a new socket is created and used to send/recive messages! 
+
+- did not create a network manager class because there is not much to manage, therefore rather
+  created networking as a component.
+
 
 */
 
 #ifndef SERVER_H
 #define SERVER_H
 
-#include <SDL_net.h>
-#include <map>
 #include <string>
+#include <SDL_net.h>
 
 class Server
 {
@@ -33,17 +37,22 @@ public :
 public:
 
 	bool Initialize();
+
+	bool SendData(const std::string& data);
+	bool ReceiveData();
+
 	bool Listen();
+	
 	void ShutDown();
 
 private :
 
 	int m_port;
 	std::string m_name;
-	std::map<std::string, TCPsocket> m_clientSocketMap;
-
+	
 	IPaddress m_IP;
 	TCPsocket m_socket;
+	TCPsocket m_clientSocket;
 	
 };
 
