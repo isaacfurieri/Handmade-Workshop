@@ -3,8 +3,6 @@
 #include "Model.h"
 #include "TextureManager.h"
 #include "Tools.h"
-#include "Vector2D.h"
-#include "Vector3D.h"
 
 //------------------------------------------------------------------------------------------------------
 //constructor that assigns all default values 
@@ -106,10 +104,10 @@ bool Model::LoadFromFile(const std::string& OBJfilename, const std::string& MTLf
 	std::vector<std::string> subStrings;
 	std::vector<std::string> subNumbers;
 
-	std::vector<Vector3D<GLuint>> tempFaces;
-	std::vector<Vector2D<GLfloat>> tempUVs;
-	std::vector<Vector3D<GLfloat>> tempVertices;
-	std::vector<Vector3D<GLfloat>> tempNormals;
+	std::vector<glm::vec3> tempFaces;
+	std::vector<glm::vec2> tempUVs;
+	std::vector<glm::vec3> tempVertices;
+	std::vector<glm::vec3> tempNormals;
 
 	//-----------------------------------------------------------------------------------------------------
 	//OBJ FILE
@@ -150,9 +148,9 @@ bool Model::LoadFromFile(const std::string& OBJfilename, const std::string& MTLf
 		if (subStrings[0] == "v" || subStrings[0] == "vn")
 		{
 
-			Vector3D<GLfloat> v((GLfloat)(atof(subStrings[1].c_str())),
-				                (GLfloat)(atof(subStrings[2].c_str())),
-				                (GLfloat)(atof(subStrings[3].c_str())));
+			glm::vec3 v((GLfloat)(atof(subStrings[1].c_str())),
+				        (GLfloat)(atof(subStrings[2].c_str())),
+				        (GLfloat)(atof(subStrings[3].c_str())));
 
 			if (subStrings[0] == "v")  tempVertices.push_back(v);
 			if (subStrings[0] == "vn") tempNormals.push_back(v);
@@ -163,8 +161,8 @@ bool Model::LoadFromFile(const std::string& OBJfilename, const std::string& MTLf
 		if (subStrings[0] == "vt")
 		{
 
-			Vector2D<GLfloat> UVs((GLfloat)(atof(subStrings[1].c_str())),
-				                  (GLfloat)(atof(subStrings[2].c_str())));
+			glm::vec2 UVs((GLfloat)(atof(subStrings[1].c_str())),
+				          (GLfloat)(atof(subStrings[2].c_str())));
 
 			tempUVs.push_back(UVs);
 
@@ -181,9 +179,9 @@ bool Model::LoadFromFile(const std::string& OBJfilename, const std::string& MTLf
 				//break each face substring into three face numeric values
 				ParseString(subStrings[i], subNumbers, '/');
 
-				Vector3D<GLuint> v(atoi(subNumbers[0].c_str()) - 1,
-					               atoi(subNumbers[1].c_str()) - 1,
-					               atoi(subNumbers[2].c_str()) - 1);
+				glm::vec3 v(atoi(subNumbers[0].c_str()) - 1,
+					        atoi(subNumbers[1].c_str()) - 1,
+					        atoi(subNumbers[2].c_str()) - 1);
 
 				tempFaces.push_back(v);
 				subNumbers.clear();
@@ -257,16 +255,16 @@ bool Model::LoadFromFile(const std::string& OBJfilename, const std::string& MTLf
 		{
 
 			//create temporary vector to hold converted float values
-			Vector4D<GLfloat> K;
+			glm::vec4 K;
 
-			K.X = (GLfloat)(atof(subStrings[1].c_str()));
-			K.Y = (GLfloat)(atof(subStrings[2].c_str()));
-			K.Z = (GLfloat)(atof(subStrings[3].c_str()));
+			K.x = (GLfloat)(atof(subStrings[1].c_str()));
+			K.y = (GLfloat)(atof(subStrings[2].c_str()));
+			K.z = (GLfloat)(atof(subStrings[3].c_str()));
 
 			//if the alpha value is included, add it
 			if (subStrings.size() == 5)
 			{
-				K.W = (GLfloat)(atof(subStrings[4].c_str()));
+				K.w = (GLfloat)(atof(subStrings[4].c_str()));
 			}
 
 			//based on what material property is being set, assign appropriate values
@@ -300,18 +298,18 @@ bool Model::LoadFromFile(const std::string& OBJfilename, const std::string& MTLf
 	{
 
 		//add all vertex data
-		m_buffer.Vertices().push_back(tempVertices[it->X].X);
-		m_buffer.Vertices().push_back(tempVertices[it->X].Y);
-		m_buffer.Vertices().push_back(tempVertices[it->X].Z);
+		m_buffer.Vertices().push_back(tempVertices[(unsigned int)it->x].x);
+		m_buffer.Vertices().push_back(tempVertices[(unsigned int)it->x].y);
+		m_buffer.Vertices().push_back(tempVertices[(unsigned int)it->x].z);
 
 		//add all texture coordinate data
-		m_buffer.Textures().push_back(tempUVs[it->Y].X);
-		m_buffer.Textures().push_back(tempUVs[it->Y].Y);
+		m_buffer.Textures().push_back(tempUVs[(unsigned int)it->y].x);
+		m_buffer.Textures().push_back(tempUVs[(unsigned int)it->y].y);
 
 		//add all normal data
-		m_buffer.Normals().push_back(tempNormals[it->Z].X);
-		m_buffer.Normals().push_back(tempNormals[it->Z].Y);
-		m_buffer.Normals().push_back(tempNormals[it->Z].Z);
+		m_buffer.Normals().push_back(tempNormals[(unsigned int)it->z].x);
+		m_buffer.Normals().push_back(tempNormals[(unsigned int)it->z].y);
+		m_buffer.Normals().push_back(tempNormals[(unsigned int)it->z].z);
 
 		//add all color data
 		//should be based on MTL material colors (fix later!)

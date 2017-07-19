@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : July 2016
+  UPDATED : January 2017
 
   -----------------------------------------------------------------------------------------------
 
@@ -73,10 +73,9 @@
 #ifndef OBB_2D_H
 #define OBB_2D_H
 
+#include <glm.hpp>
 #include "AABB2D.h"
 #include "Bound.h"
-#include "Transform.h"
-#include "Vector2D.h"
 
 class Sphere2D;
 
@@ -91,7 +90,7 @@ public :
 public :
 
 	void SetScale(float x, float y);
-	void SetRotation(Transform rotation);
+	void SetRotation(glm::mat4& rotation);
 	void SetDimension(float width, float height);
 
 public :
@@ -99,7 +98,7 @@ public :
 	bool IsColliding(const OBB2D& secondBox) const;
 	bool IsColliding(const AABB2D& secondBox) const;
 	bool IsColliding(const Sphere2D& secondSphere) const;  
-	Vector2D<float> PointOnBox(float positionX, float positionY) const;
+	glm::vec2 PointOnBox(float positionX, float positionY) const;
 
 public :
 
@@ -112,13 +111,12 @@ private :
 
 private :
 
-	Transform m_rotation;
-
-	Vector2D<float> m_scale;
-	Vector2D<float> m_dimension;
-	Vector2D<float> m_upAxis;
-	Vector2D<float> m_rightAxis;
-	Vector2D<float> m_corners[4];
+	glm::vec2 m_scale;
+	glm::vec2 m_dimension;
+	glm::vec2 m_upAxis;
+	glm::vec2 m_rightAxis;
+	glm::vec2 m_corners[4];
+	glm::mat4 m_rotation;
 
 };
 

@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : February 2016
+  UPDATED : January 2017
 
   -----------------------------------------------------------------------------------------------
 
@@ -46,6 +46,8 @@
 - The Model class implementation is slightly different to the Sprite class counterpart. There are
   a few changes that still need to be made later on!
 
+- This class will be updated soon!
+
 */
 
 #ifndef MODEL_H
@@ -54,11 +56,10 @@
 #include <map>
 #include <string>
 #include <vector>
-#include <OpenGL.h>
+#include <glew.h>
+#include <glm.hpp>
 #include "Buffer.h"
 #include "Color.h"
-#include "Vector3D.h"
-#include "Vector4D.h"
 
 //------------------------------------------------------------------------------------------------------
 //struct to store all material data for the model
@@ -67,10 +68,10 @@
 struct Material
 {
 
-	Vector4D<GLfloat> ambient;
-	Vector4D<GLfloat> diffuse;
-	Vector4D<GLfloat> specular;
-	Vector4D<GLfloat> emission;
+	glm::vec4 ambient;
+	glm::vec4 diffuse;
+	glm::vec4 specular;
+	glm::vec4 emission;
 
 	GLuint illum;
 	GLfloat shininess;
@@ -89,7 +90,7 @@ struct Material
 
 struct Face
 {
-	Vector3D<GLuint> vertexArray[3];
+	glm::vec3 vertexArray[3];
 };
 
 //------------------------------------------------------------------------------------------------------

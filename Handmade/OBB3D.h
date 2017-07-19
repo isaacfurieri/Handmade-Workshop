@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : July 2016
+  UPDATED : January 2017
 
   -----------------------------------------------------------------------------------------------
 
@@ -71,10 +71,10 @@
 #ifndef OBB_3D_H
 #define OBB_3D_H
 
+#include <glm.hpp>
 #include "AABB3D.h"
 #include "Bound.h"
 #include "Quaternion.h"
-#include "Vector3D.h"
 
 class Sphere3D;
 
@@ -97,7 +97,7 @@ public:
 	bool IsColliding(const OBB3D& secondBox) const;
 	bool IsColliding(const AABB3D& secondBox) const;
 	bool IsColliding(const Sphere3D& secondSphere) const;
-	Vector3D<float> PointOnBox(float positionX, float positionY, float positionZ) const;
+	glm::vec3 PointOnBox(float positionX, float positionY, float positionZ) const;
 
 public:
 
@@ -110,14 +110,14 @@ private:
 
 private:
 
-	Quaternion m_rotation;
+	glm::vec3 m_scale;
+	glm::vec3 m_dimension;
+	glm::vec3 m_upAxis;
+	glm::vec3 m_rightAxis;
+	glm::vec3 m_forwardAxis;
+	glm::vec3 m_corners[8];
 
-	Vector3D<float> m_scale;
-	Vector3D<float> m_dimension;
-	Vector3D<float> m_upAxis;
-	Vector3D<float> m_rightAxis;
-	Vector3D<float> m_forwardAxis;
-	Vector3D<float> m_corners[8];
+	Quaternion m_rotation;
 
 };
 

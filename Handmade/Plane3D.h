@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : April 2016
+  UPDATED : January 2017
 
   -----------------------------------------------------------------------------------------------
 
@@ -57,9 +57,9 @@
 #ifndef PLANE_3D_H
 #define PLANE_3D_H
 
+#include <glm.hpp>
 #include "Bound.h"
 #include "Quaternion.h"
-#include "Vector3D.h"
 
 class Sphere3D;
 
@@ -97,7 +97,7 @@ private:
 	float m_distanceFromOrigin;
 
 	Quaternion m_rotation;
-	Vector3D<float> m_normal;
+	glm::vec3 m_normal;
 	
 };
 

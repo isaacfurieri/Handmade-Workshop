@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : April 2016
+  UPDATED : January 2017
 
   -----------------------------------------------------------------------------------------------
 
@@ -59,9 +59,8 @@
 #ifndef PLANE_2D_H
 #define PLANE_2D_H
 
+#include <glm.hpp>
 #include "Bound.h"
-#include "Transform.h"
-#include "Vector2D.h"
 
 class Sphere2D;
 
@@ -79,7 +78,7 @@ public:
 
 public:
 
-	void SetRotation(Transform rotation);
+	void SetRotation(glm::mat4& rotation);
 
 public:
 
@@ -96,11 +95,10 @@ private:
 	float m_sideOfPlane;
 	float m_distanceFromOrigin;
 	
-	Transform m_rotation;
-
-	Vector2D<float> m_normal;
-	Vector2D<float> m_point_1;
-	Vector2D<float> m_point_2;
+	glm::vec2 m_normal;
+	glm::vec2 m_point_1;
+	glm::vec2 m_point_2;
+	glm::mat4 m_rotation;
 
 };
 

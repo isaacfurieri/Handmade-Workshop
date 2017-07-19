@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : December 2015
+  UPDATED : January 2017
 
   -----------------------------------------------------------------------------------------------
 
@@ -46,7 +46,7 @@
 #ifndef PHYSICS_H
 #define PHYSICS_H
 
-#include "Vector3D.h"
+#include <glm.hpp>
 
 const double GRAVITY = 1.0000000000667;
 
@@ -55,10 +55,8 @@ class Physics
 
 public :
 
-	static Vector3D<double> GravityForce(double mass_1, double mass_2, Vector3D<double> distance);
-	static Vector3D<double> TorqueForce(Vector3D<double> force, 
-		                                Vector3D<double> contactPosition, 
-										Vector3D<double> centreOfMass);
+	static glm::vec3 GravityForce(double mass_1, double mass_2, glm::vec3 distance);
+	static glm::vec3 TorqueForce(glm::vec3 force, glm::vec3 contactPosition, glm::vec3 centreOfMass);
 
 public :
 
@@ -71,10 +69,10 @@ public :
 
 public :
 
-	Vector3D<double>& Force();
-	Vector3D<double>& Torque();
-	Vector3D<double>& Position();
-	Vector3D<double>& Velocity();
+	glm::vec3& Force();
+	glm::vec3& Torque();
+	glm::vec3& Position();
+	glm::vec3& Velocity();
 
 public :
 
@@ -93,11 +91,11 @@ private :
 	double m_angVelocity;
 	double m_angAcceleration;
 
-	Vector3D<double> m_force;
-	Vector3D<double> m_torque;
-	Vector3D<double> m_position;
-	Vector3D<double> m_velocity;
-	Vector3D<double> m_acceleration;
+	glm::vec3 m_force;
+	glm::vec3 m_torque;
+	glm::vec3 m_position;
+	glm::vec3 m_velocity;
+	glm::vec3 m_acceleration;
 
 };
 

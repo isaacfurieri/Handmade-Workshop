@@ -1,27 +1,27 @@
+#include <gtx\norm.hpp>
+#include "Game.h"
 #include "Physics.h"
-#include "TimeManager.h"
 
 //------------------------------------------------------------------------------------------------------
 //static function that calculates gravitational force using a formula 
 //------------------------------------------------------------------------------------------------------
-Vector3D<double> Physics::GravityForce(double mass_1, double mass_2, Vector3D<double> distance)
+glm::vec3 Physics::GravityForce(double mass_1, double mass_2, glm::vec3 distance)
 {
 
 	//the formula uses scalar values, so first the scalar value is calculated
 	//and then applied to the normalised distance value passed, to retain direction
-	double gravityForce = (GRAVITY * mass_1 * mass_2) / distance.LengthSquared();
-	return distance.Normalise() * gravityForce;
+	double gravityForce = (GRAVITY * mass_1 * mass_2) / glm::length2(distance);
+	return glm::normalize(distance) * (float)gravityForce;
 	
 }
 //------------------------------------------------------------------------------------------------------
 //static function that calculates torque force using a formula 
 //------------------------------------------------------------------------------------------------------
-Vector3D<double> Physics::TorqueForce(Vector3D<double> force, Vector3D<double> contactPosition,
-	                                  Vector3D<double> centreOfMass)
+glm::vec3 TorqueForce(glm::vec3 force, glm::vec3 contactPosition, glm::vec3 centreOfMass)
 {
 
 	//the result produces a vector, used for the rotation axis and torque magnitude
-	return force.CrossProduct(centreOfMass - contactPosition);
+	return glm::cross(force, (centreOfMass - contactPosition));
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -58,7 +58,7 @@ double& Physics::AngVelocity()
 //------------------------------------------------------------------------------------------------------
 //getter-setter function that returns reference to force variable 
 //------------------------------------------------------------------------------------------------------
-Vector3D<double>& Physics::Force()
+glm::vec3& Physics::Force()
 {
 
 	return m_force;
@@ -67,7 +67,7 @@ Vector3D<double>& Physics::Force()
 //------------------------------------------------------------------------------------------------------
 //getter-setter function that returns reference to torque variable 
 //------------------------------------------------------------------------------------------------------
-Vector3D<double>& Physics::Torque()
+glm::vec3& Physics::Torque()
 {
 
 	return m_torque;
@@ -76,7 +76,7 @@ Vector3D<double>& Physics::Torque()
 //------------------------------------------------------------------------------------------------------
 //getter-setter function that returns reference to position variable 
 //------------------------------------------------------------------------------------------------------
-Vector3D<double>& Physics::Position()
+glm::vec3& Physics::Position()
 {
 
 	return m_position;
@@ -85,7 +85,7 @@ Vector3D<double>& Physics::Position()
 //------------------------------------------------------------------------------------------------------
 //getter-setter function that returns reference to velocity variable 
 //------------------------------------------------------------------------------------------------------
-Vector3D<double>& Physics::Velocity()
+glm::vec3& Physics::Velocity()
 {
 
 	return m_velocity;
@@ -118,23 +118,23 @@ void Physics::Update()
 	//variables for storing old velocity values for 
 	//both displacement and rotational calculations below
 	double oldVel = 0.0;
-	Vector3D<double> oldVelocity;
+	glm::vec3 oldVelocity;
 
 	//calculate the movement and rotational acceleration
 	//the latter uses the torque vector's magnitude for scalar calculations below
-	m_acceleration = (m_force / m_mass);
-	m_angAcceleration = m_torque.Length() / m_angMass;
+	if(m_mass > 0.0) m_acceleration = (m_force / (float)m_mass);
+	if(m_angMass > 0.0) m_angAcceleration = glm::length(m_torque) / m_angMass;
 
 	//calculate the new position using Euler Integration
 	//this formula is frame independent and uses time for accurate calculations
 	oldVelocity = m_velocity;
-	m_velocity += m_acceleration * TheTime::Instance()->GetElapsedTimeSeconds();
-	m_position += (m_velocity + oldVelocity) * 0.5 * TheTime::Instance()->GetElapsedTimeSeconds();
+	m_velocity += m_acceleration * (float)TheGame::Instance()->GetElapsedTimeSeconds();
+	m_position += (m_velocity + oldVelocity) * 0.5f * (float)TheGame::Instance()->GetElapsedTimeSeconds();
 
 	//calculate the new rotational angle using Euler Integration
 	//this formula is frame independent and uses time for accurate calculations	
 	oldVel = m_angVelocity;
-	m_angVelocity += m_angAcceleration * TheTime::Instance()->GetElapsedTimeSeconds();
-	m_angle += (m_angVelocity + oldVel) * 0.5 * TheTime::Instance()->GetElapsedTimeSeconds();
+	m_angVelocity += m_angAcceleration * TheGame::Instance()->GetElapsedTimeSeconds();
+	m_angle += (m_angVelocity + oldVel) * 0.5 * TheGame::Instance()->GetElapsedTimeSeconds();
 
 }
