@@ -8,6 +8,12 @@
 bool Grid::Draw()
 {
 
+	//reset model matrix so that grid renders in global world origin position
+	GameObject::SetIdentity();
+
+	//send model matrix data to vertex shader 
+	GameObject::ApplyMatrix();
+
 #ifdef GAME_3D
 
 		TheDebug::Instance()->DrawGrid3D(25, 1);
