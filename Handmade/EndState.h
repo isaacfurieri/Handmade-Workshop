@@ -43,7 +43,7 @@ public:
 private:
 
 	HUDCamera* m_HUDCamera;
-	SplashScreen* m_endMessage;
+	SplashScreen* m_splashScreen;
 
 };
 

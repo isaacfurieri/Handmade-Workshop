@@ -9,7 +9,7 @@ bool EndState::OnEnter()
 {
  
 	m_HUDCamera = new HUDCamera();
-	m_endMessage = new SplashScreen("Assets\\Sprites\\Credits.jpg");
+	m_splashScreen = new SplashScreen("Assets\\Sprites\\SplashScreen_3.png");
 	
 	return true;
 
@@ -28,8 +28,8 @@ bool EndState::Update()
 
 #ifdef RELEASE
 
-	m_endMessage->Update();
-	m_isActive = m_endMessage->IsActive();
+	m_splashScreen->Update();
+	m_isActive = m_splashScreen->IsActive();
 
 #endif
 
@@ -45,7 +45,7 @@ bool EndState::Draw()
 #ifdef RELEASE
 
 	m_HUDCamera->Draw();
-	m_endMessage->Draw();
+	m_splashScreen->Draw();
 
 #endif
 
@@ -71,6 +71,7 @@ void EndState::OnExit()
 	TheShader::Instance()->
 	Destroy(ShaderManager::FRAGMENT_SHADER, ShaderManager::CUSTOM_SHADER, "MAIN_FRAGMENT_SHADER");
 
+	delete m_splashScreen;
 	delete m_HUDCamera;
 
 }

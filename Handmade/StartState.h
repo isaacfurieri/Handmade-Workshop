@@ -45,8 +45,8 @@ public:
 private:
 
 	HUDCamera* m_HUDCamera;
-	SplashScreen* m_APILogo;
-	SplashScreen* m_handmadeLogo;
+	SplashScreen* m_splashScreen_1;
+	SplashScreen* m_splashScreen_2;
 	
 };
 

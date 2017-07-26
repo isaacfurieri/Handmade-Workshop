@@ -51,12 +51,12 @@ bool StartState::OnEnter()
 	m_HUDCamera = new HUDCamera();
 
 	//create both splash screen objects for state
-	m_APILogo = new SplashScreen("Assets\\Sprites\\APIs.jpg");
-	m_handmadeLogo = new SplashScreen("Assets\\Sprites\\Handmade.jpg");
+	m_splashScreen_1 = new SplashScreen("Assets\\Sprites\\SplashScreen_1.png");
+	m_splashScreen_2 = new SplashScreen("Assets\\Sprites\\SplashScreen_2.png");
 
 	//set second splash screen to inactive as 
 	//it only activates after the first one is done
-	m_APILogo->IsActive() = false;
+	m_splashScreen_2->IsActive() = false;
 
 	//link camera's view matrix with vertex shader uniform ID
 	Camera::SetViewUniformID("viewMatrix");
@@ -96,23 +96,23 @@ bool StartState::Update()
 #ifdef RELEASE
 
 	//if first splash screen is active then update it
-	if (m_handmadeLogo->IsActive())
+	if (m_splashScreen_1->IsActive())
 	{
-		m_handmadeLogo->Update();
+		m_splashScreen_1->Update();
 	}
 
 	//otherwise activate second splash screen so that it can start updating
 	else
 	{
-		m_APILogo->IsActive() = true;
+		m_splashScreen_2->IsActive() = true;
 	}
 
 	//if second splash screen is active then update it and monitor its active 
 	//state so that game state deactivates as soon as second splash screen is done
-	if (m_APILogo->IsActive())
+	if (m_splashScreen_2->IsActive())
 	{
-		m_APILogo->Update();
-		m_isActive = m_APILogo->IsActive();
+		m_splashScreen_2->Update();
+		m_isActive = m_splashScreen_2->IsActive();
 	}
 
 #endif
@@ -128,16 +128,16 @@ bool StartState::Draw()
 
 #ifdef RELEASE
 
-	if (m_handmadeLogo->IsActive())
+	if (m_splashScreen_1->IsActive())
 	{
 		m_HUDCamera->Draw();
-		m_handmadeLogo->Draw();
+		m_splashScreen_1->Draw();
 	}
 
-	if (m_APILogo->IsActive())
+	if (m_splashScreen_2->IsActive())
 	{
 		m_HUDCamera->Draw();
-		m_APILogo->Draw();
+		m_splashScreen_2->Draw();
 	}
 
 #endif
@@ -151,8 +151,8 @@ bool StartState::Draw()
 void StartState::OnExit()
 {
 
-	delete m_handmadeLogo;
-	delete m_APILogo;
+	delete m_splashScreen_2;
+	delete m_splashScreen_1;
 	delete m_HUDCamera;
 
 }
