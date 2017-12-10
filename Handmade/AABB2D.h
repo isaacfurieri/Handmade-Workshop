@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : January 2017
+  UPDATED : December 2017
 
   -----------------------------------------------------------------------------------------------
 

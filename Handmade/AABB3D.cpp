@@ -11,8 +11,7 @@ AABB3D::AABB3D()
 {
 
 	m_scale = glm::vec3(1.0f);
-	m_color.A = 0.4f;
-	m_color = Color::RED;
+	m_color = glm::vec4(1.0f, 0.0f, 0.0f, 0.4f);
 	
 }
 //------------------------------------------------------------------------------------------------------
@@ -144,6 +143,7 @@ void AABB3D::Draw()
 {
 
 	//draw bound based on dimension and color set 
-	TheDebug::Instance()->DrawCube3D(m_dimension.x, m_dimension.y, m_dimension.z, m_color);
+	TheDebug::Instance()->DrawCube3D(m_dimension.x, m_dimension.y, m_dimension.z, 
+		                             m_color.r, m_color.g, m_color.b, m_color.a);
 
 }

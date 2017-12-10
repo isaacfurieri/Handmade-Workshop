@@ -1,6 +1,9 @@
+#include <iostream>
 #include "Buffer.h"
-#include "BufferManager.h"
-#include "ShaderManager.h"
+#include "PipelineManager.h"
+
+//this allocated space remains in memory until the application ends
+std::map<std::string, BufferID>* Buffer::s_bufferIDMap = new std::map<std::string, BufferID>;
 
 //------------------------------------------------------------------------------------------------------
 //constructor that assigns all defaults
@@ -8,219 +11,199 @@
 Buffer::Buffer()
 {
 
-	m_vertexBufferID = 0;
-	m_colorBufferID = 0;
-	m_normalBufferID = 0;
-	m_textureBufferID = 0;
+	m_ID.vaoID = 0;
+	m_ID.eboID = 0;
+	m_ID.vboID[VERTEX_BUFFER] = 0;
+	m_ID.vboID[COLOR_BUFFER] = 0;
+	m_ID.vboID[NORMAL_BUFFER] = 0;
+	m_ID.vboID[TEXTURE_BUFFER] = 0;
 
-	m_vertexAttributeID = 0;
-	m_colorAttributeID = 0;
-	m_normalAttributeID = 0;
-	m_textureAttributeID = 0;
-
-	m_vertexComponentSize = XYZ;
-	m_colorComponentSize = RGB;
-	m_normalComponentSize = XYZ;
-	m_textureComponentSize = UV;
+	m_ID.hasEBO = false;
+	m_ID.totalVertices = 0;
 
 }
 //------------------------------------------------------------------------------------------------------
-//getter-setter function that returns reference to vector of vertices 
+//setter function that sets thickness of primitive line for rendering
 //------------------------------------------------------------------------------------------------------
-std::vector<GLfloat>& Buffer::Vertices()
+void Buffer::SetLineWidth(GLfloat lineWidth)
 {
 
-	return m_vertices;
+	glLineWidth(lineWidth);
 
 }
 //------------------------------------------------------------------------------------------------------
-//getter-setter function that returns reference to vector of colors 
+//setter function that sets size of primitive vertex for rendering
 //------------------------------------------------------------------------------------------------------
-std::vector<GLfloat>& Buffer::Colors()
+void Buffer::SetPointSize(GLfloat pointSize)
 {
 
-	return m_colors;
+	glPointSize(pointSize);
 
 }
 //------------------------------------------------------------------------------------------------------
-//getter-setter function that returns reference to vector of normals 
+//setter function that assigns buffer IDs based on index value passed
 //------------------------------------------------------------------------------------------------------
-std::vector<GLfloat>& Buffer::Normals()
+void Buffer::SetBuffers(const std::string& bufferID)
 {
 
-	return m_normals;
+	std::cout << "Setting buffers to : " << "\"" << bufferID << "\"" << std::endl;
 
-}
-//------------------------------------------------------------------------------------------------------
-//getter-setter function that returns reference to vector of texture coordinates 
-//------------------------------------------------------------------------------------------------------
-std::vector<GLfloat>& Buffer::Textures()
-{
+	//first check if buffer ID exists in map and if not display
+	//error message, otherwise go ahead and assign the buffer ID
 
-	return m_textures;
+	auto it = s_bufferIDMap->find(bufferID);
 
-}
-//------------------------------------------------------------------------------------------------------
-//setter function that assigns OpenGL VBO ID value to buffer object
-//------------------------------------------------------------------------------------------------------
-void Buffer::SetBufferID(BufferType bufferType, const std::string& mapIndex)
-{
-
-	//based on which type of VBO ID needs to be assigned get the ID 
-	//from the Buffer Manager based on index value passed and assign it 
-	switch (bufferType)
+	if (it == s_bufferIDMap->end())
 	{
+		std::cout << "Buffer IDs not found. Please enter a valid ID." << std::endl;
+		std::cout << "---------------------------------------------------------------" << std::endl;
+	}
 
-		case VERTEX_BUFFER:
-		{
-			m_vertexBufferID = TheBuffer::Instance()->
-							   GetBufferID(BufferManager::VERTEX_BUFFER, mapIndex);
-			break;
-		}
-
-		case COLOR_BUFFER:
-		{
-			m_colorBufferID = TheBuffer::Instance()->
-					          GetBufferID(BufferManager::COLOR_BUFFER, mapIndex);
-			break;
-		}
-
-		case NORMAL_BUFFER:
-		{
-			m_normalBufferID = TheBuffer::Instance()->
-					           GetBufferID(BufferManager::NORMAL_BUFFER, mapIndex);
-			break;
-		}
-
-		case TEXTURE_BUFFER:
-		{
-			m_textureBufferID = TheBuffer::Instance()->
-					            GetBufferID(BufferManager::TEXTURE_BUFFER, mapIndex);
-			break;
-		}
-
+	else
+	{
+		m_ID = it->second;
+		std::cout << "Buffer IDs assigned successfully." << std::endl;
+		std::cout << "---------------------------------------------------------------" << std::endl;
 	}
 
 }
 //------------------------------------------------------------------------------------------------------
-//setter function that assigns shader attribute ID value to buffer object
+//function that creates a VAO, VBOs and an EBO and stores the ID in buffer map 
 //------------------------------------------------------------------------------------------------------
-void Buffer::SetAttributeID(BufferType bufferType, const std::string& mapIndex)
+bool Buffer::CreateBuffers(const std::string& bufferID, GLsizei totalVertices, bool hasEBO)
 {
 
-	//based on which type of shader attribute ID needs to be assigned get the ID 
-	//from the Shader Manager based on index value passed and assign it 
-	//the correct shaders need to be attached and linked before using them here!
-	switch (bufferType)
+	std::cout << "Creating buffers in graphics memory : " << "\"" << bufferID << "\"" << std::endl;
+
+	//first check if buffer ID exists in map and if it does display error message
+	//and halt creation because we don't want to replace the existing buffers
+	if (s_bufferIDMap->find(bufferID) != s_bufferIDMap->end())
 	{
-
-		case VERTEX_BUFFER:
-		{
-			m_vertexAttributeID = TheShader::Instance()->GetAttributeID(mapIndex);
-			break;
-		}
-
-		case COLOR_BUFFER:
-		{
-			m_colorAttributeID = TheShader::Instance()->GetAttributeID(mapIndex);
-			break;
-		}
-
-		case NORMAL_BUFFER:
-		{
-			m_normalAttributeID = TheShader::Instance()->GetAttributeID(mapIndex);
-			break;
-		}
-
-		case TEXTURE_BUFFER:
-		{
-			m_textureAttributeID = TheShader::Instance()->GetAttributeID(mapIndex);
-			break;
-		}
-
+		std::cout << "Buffers already created in graphics memory." << std::endl;
+		std::cout << "---------------------------------------------------------------" << std::endl;
+		return false;
 	}
+
+	//otherwise go ahead and create an ID for the VAO, VBOs and EBO and store in map
+
+	glGenVertexArrays(1, &m_ID.vaoID);
+	glGenBuffers(4, m_ID.vboID);
+	glGenBuffers(1, &m_ID.eboID);
+
+	m_ID.hasEBO = hasEBO;
+	m_ID.totalVertices = totalVertices;
+
+	(*s_bufferIDMap)[bufferID] = m_ID;
+
+	std::cout << "Buffers created successfully."<< std::endl;
+	std::cout << "---------------------------------------------------------------" << std::endl;
+
+	return true;
 
 }
 //------------------------------------------------------------------------------------------------------
-//setter function that assigns vertex, color, normal and texture data component size
+//function that associates VAO with EBO
 //------------------------------------------------------------------------------------------------------
-void Buffer::SetComponentSize(BufferType bufferType, ComponentSize componentSize)
+void Buffer::BindEBO()
 {
 
-	//based on which type of component needs to be assigned, 
-	//assign the correct one using the value passed
-	switch (bufferType)
-	{
+	glBindVertexArray(m_ID.vaoID);
 
-		case VERTEX_BUFFER:
-		{
-			m_vertexComponentSize = componentSize;
-			break;
-		}
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ID.eboID);
 
-		case COLOR_BUFFER:
-		{
-			m_colorComponentSize = componentSize;
-			break;
-		}
-
-		case NORMAL_BUFFER:
-		{
-			m_normalComponentSize = componentSize;
-			break;
-		}
-
-		case TEXTURE_BUFFER:
-		{
-			m_textureComponentSize = componentSize;
-			break;
-		}
-
-	}
+	glBindVertexArray(0);
 
 }
 //------------------------------------------------------------------------------------------------------
-//function that adds buffer object's data to the OpenGL VBO 
+//function that associates VAO with VBO based on passed VBO type 
 //------------------------------------------------------------------------------------------------------
-void Buffer::FillData(BufferType bufferType)
+void Buffer::BindVBO(VBOType vboType, const std::string& vertAttrib,
+					 ComponentSize componentSize, DataType dataType)
 {
 
-	//based on which type of VBO needs to be filled send 
-	//the Buffer Manager all the data that needs to be added to the VBO 
-	switch (bufferType)
-	{
+	//assign correct data type to enum based on type passed
+	//we need to send a GL enumerated type to the function below 
+	GLenum type = (dataType == FLOAT) ? GL_FLOAT : GL_UNSIGNED_INT;
 
-		case VERTEX_BUFFER:
-		{
-			TheBuffer::Instance()->Fill(m_vertexBufferID, m_vertices);
-			break;
-		}
+	//bind VAO with either the vertex, color, normal or texture VBO
+	//here we also link the VBOs with their respective shader attributes
+	glBindVertexArray(m_ID.vaoID);
+	
+		glBindBuffer(GL_ARRAY_BUFFER, m_ID.vboID[vboType]);
+		glVertexAttribPointer(ThePipeline::Instance()->GetShaderAttribute(vertAttrib), 
+			                  componentSize, type, GL_FALSE, 0, 0);
+		glEnableVertexAttribArray(ThePipeline::Instance()->GetShaderAttribute(vertAttrib));
 
-		case COLOR_BUFFER:
-		{
-			TheBuffer::Instance()->Fill(m_colorBufferID, m_colors);
-			break;
-		}
-
-		case NORMAL_BUFFER:
-		{
-			TheBuffer::Instance()->Fill(m_normalBufferID, m_normals);
-			break;
-		}
-
-		case TEXTURE_BUFFER:
-		{
-			TheBuffer::Instance()->Fill(m_textureBufferID, m_textures);
-			break;
-		}
-
-	}
+	glBindVertexArray(0);
 
 }
 //------------------------------------------------------------------------------------------------------
-//function that sends all the vertex, color, normal and texture coord buffer data to the shader
+//function that fills EBO with index data 
 //------------------------------------------------------------------------------------------------------
-void Buffer::DrawData(DrawMode drawMode)
+void Buffer::FillEBO(const GLuint* data, GLsizeiptr size, FillType fillType)
+{
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ID.eboID);
+	fillType == STATIC_FILL ? glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, GL_STATIC_DRAW)
+							: glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, GL_DYNAMIC_DRAW);
+
+}
+//------------------------------------------------------------------------------------------------------
+//function that fills VBO with unsigned integer data 
+//------------------------------------------------------------------------------------------------------
+void Buffer::FillVBO(VBOType vboType, const GLuint* data, GLsizeiptr size, FillType fillType)
+{
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_ID.vboID[vboType]);
+	fillType == STATIC_FILL ? glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW)
+							: glBufferData(GL_ARRAY_BUFFER, size, data, GL_DYNAMIC_DRAW);
+
+}
+//------------------------------------------------------------------------------------------------------
+//function that fills VBO with float data 
+//------------------------------------------------------------------------------------------------------
+void Buffer::FillVBO(VBOType vboType, const GLfloat* data, GLsizeiptr size, FillType fillType)
+{
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_ID.vboID[vboType]);
+	fillType == STATIC_FILL ? glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW)
+							: glBufferData(GL_ARRAY_BUFFER, size, data, GL_DYNAMIC_DRAW);
+
+}
+//------------------------------------------------------------------------------------------------------
+//function that adds index data to EBO at index position passed 
+//------------------------------------------------------------------------------------------------------
+void Buffer::AppendEBO(const GLuint* data, GLsizeiptr size, GLuint offset)
+{
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ID.eboID);
+	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, size, data);
+
+}
+//------------------------------------------------------------------------------------------------------
+//function that adds unsigned integer data to VBO at index position passed 
+//------------------------------------------------------------------------------------------------------
+void Buffer::AppendVBO(VBOType vboType, const GLuint* data, GLsizeiptr size, GLuint offset)
+{
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_ID.vboID[vboType]);
+	glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
+
+}
+//------------------------------------------------------------------------------------------------------
+//function that adds float data to VBO at index position passed 
+//------------------------------------------------------------------------------------------------------
+void Buffer::AppendVBO(VBOType vboType, const GLfloat* data, GLsizeiptr size, GLuint offset)
+{
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_ID.vboID[vboType]);
+	glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
+
+}
+//------------------------------------------------------------------------------------------------------
+//function that sends all buffer data to the vertex shader 
+//------------------------------------------------------------------------------------------------------
+void Buffer::Draw(DrawMode drawMode)
 {
 
 	//variable to store OpenGL drawing mode 
@@ -230,60 +213,103 @@ void Buffer::DrawData(DrawMode drawMode)
 	//based on draw mode passed set OpenGL draw mode
 	switch (drawMode)
 	{
-		case LINES:        { mode = GL_LINES; break; }
-		case LINE_LOOP:    { mode = GL_LINE_LOOP; break; }
-		case POINTS:       { mode = GL_POINTS; break; }
-		case TRIANGLES:    { mode = GL_TRIANGLES; break; }
+		case LINES:        { mode = GL_LINES;        break; }
+		case LINE_LOOP:    { mode = GL_LINE_LOOP;    break; }
+		case POINTS:       { mode = GL_POINTS;       break; }
+		case TRIANGLES:    { mode = GL_TRIANGLES;    break; }
 		case TRIANGLE_FAN: { mode = GL_TRIANGLE_FAN; break; }
 	}
 
-	//enable both VBO and shader attribute associated with vertex data of buffer object
-	//link shader vertex attribute with the VBO buffer data as well
-	TheBuffer::Instance()->Enable(m_vertexBufferID);
-	TheShader::Instance()->EnableAttribute(m_vertexAttributeID);
-	TheShader::Instance()->SetAttribute(m_vertexAttributeID, m_vertexComponentSize);
-	
-	//first check if there is any color data associated with buffer object
-	//enable both VBO and shader attribute associated with color data of buffer object
-	//link shader color attribute with the VBO buffer data as well
-	if (m_colors.size() > 0)
+	//bind VAO and render everything based on if there are indices or not
+	glBindVertexArray(m_ID.vaoID);
+
+		(m_ID.hasEBO) ? glDrawElements(mode, m_ID.totalVertices, GL_UNSIGNED_INT, 0)
+				      : glDrawArrays(mode, 0, m_ID.totalVertices);
+
+	glBindVertexArray(0);
+
+}
+//------------------------------------------------------------------------------------------------------
+//function that unloads all OpenGL buffer IDs from memory
+//------------------------------------------------------------------------------------------------------
+void Buffer::DestroyBuffers()
+{
+
+	std::cout << "Unloading all buffers from memory." << std::endl;
+
+	//loop through entire buffer map in order to remove all buffer IDs
+	for (auto it = s_bufferIDMap->begin(); it != s_bufferIDMap->end(); it++)
 	{
-		TheBuffer::Instance()->Enable(m_colorBufferID);
-		TheShader::Instance()->EnableAttribute(m_colorAttributeID);
-		TheShader::Instance()->SetAttribute(m_colorAttributeID, m_colorComponentSize);
+		glDeleteVertexArrays(1, &(it->second.vaoID));
+		glDeleteBuffers(4, it->second.vboID);
+		glDeleteBuffers(1, &(it->second.eboID));
 	}
 
-	//first check if there is any normal data associated with buffer object
-	//enable both VBO and shader attribute associated with normal data of buffer object
-	//link shader normal attribute with the VBO buffer data as well
-	if (m_normals.size() > 0)
+	//clear the buffer ID map
+	s_bufferIDMap->clear();
+
+	std::cout << "---------------------------------------------------------------" << std::endl;
+
+}
+//------------------------------------------------------------------------------------------------------
+//function that unloads a specific OpenGL buffer ID from memory
+//------------------------------------------------------------------------------------------------------
+void Buffer::DestroyBuffers(const std::string& bufferID)
+{
+
+	std::cout << "Unloading buffers : " << "\"" << bufferID << "\"" << std::endl;
+
+	//check if buffer ID exists in map and if not display error message
+	//otherwise remove that specific buffer ID and remove map element
+	auto it = s_bufferIDMap->find(bufferID);
+
+	if (it == s_bufferIDMap->end())
 	{
-		TheBuffer::Instance()->Enable(m_normalBufferID);
-		TheShader::Instance()->EnableAttribute(m_normalAttributeID);
-		TheShader::Instance()->SetAttribute(m_normalAttributeID, m_normalComponentSize);
+		std::cout << "Buffer IDs not found. Please enter a valid ID." << std::endl;
+		std::cout << "---------------------------------------------------------------" << std::endl;
 	}
 
-	//first check if there is any texture coordinate data associated with buffer object
-	//enable both VBO and shader attribute associated with texture data of buffer object
-	//link shader texture coordinate attribute with the VBO buffer data as well
-	if (m_textures.size() > 0)
+	else
 	{
-		TheBuffer::Instance()->Enable(m_textureBufferID);
-		TheShader::Instance()->EnableAttribute(m_textureAttributeID);
-		TheShader::Instance()->SetAttribute(m_textureAttributeID, m_textureComponentSize);
+		glDeleteVertexArrays(1, &(it->second.vaoID));
+		glDeleteBuffers(4, it->second.vboID);
+		glDeleteBuffers(1, &(it->second.eboID));
+
+		s_bufferIDMap->erase(it);
+
+		std::cout << "Buffers unloaded successfully." << std::endl;
+		std::cout << "---------------------------------------------------------------" << std::endl;
 	}
 
-	//pass all vertex, color, normal and texture coordinate 
-	//data to shader to be drawn on screen, using the draw mode set earlier. 
-	glDrawArrays(mode, 0, m_vertices.size() / m_vertexComponentSize);
+}
+//------------------------------------------------------------------------------------------------------
+//function that displays total size of buffer ID map with details (FOR DEBUG ONLY)
+//------------------------------------------------------------------------------------------------------
+void Buffer::Output()
+{
 
-	//disable all shader attributes
-	TheShader::Instance()->DisableAttribute(m_vertexAttributeID);
-	TheShader::Instance()->DisableAttribute(m_colorAttributeID);
-	TheShader::Instance()->DisableAttribute(m_normalAttributeID);
-	TheShader::Instance()->DisableAttribute(m_textureAttributeID);
+	//clear the console window for a fresh display
+	system("cls");
 
-	//unbind VBO so that there are no left over links
-	TheBuffer::Instance()->Disable();
+	//display total amount of buffer IDs stored in map
+	std::cout << "---------------------------------------------------------------" << std::endl;
+	std::cout << "Size of Buffer ID Map : " << s_bufferIDMap->size() << std::endl;
+	std::cout << "---------------------------------------------------------------" << std::endl;
+
+	//loop through map and display each buffer detailing its OpenGL IDs and tag name
+	for (auto it = s_bufferIDMap->begin(); it != s_bufferIDMap->end(); it++)
+	{
+		std::cout << "\"" << it->first << "\"" << std::endl;
+
+		std::cout << "VAO (ID " << it->second.vaoID << ")" << std::endl;
+		std::cout << "VBO (IDs " << it->second.vboID[VERTEX_BUFFER] << ", "  
+							     << it->second.vboID[COLOR_BUFFER] << ", " 
+							     << it->second.vboID[NORMAL_BUFFER] << ", "
+							     << it->second.vboID[TEXTURE_BUFFER] << ")" << std::endl;
+		std::cout << "EBO (ID " << it->second.eboID << ")" << std::endl;
+		std::cout << (it->second.hasEBO ? "This buffer has an EBO" : "No EBO") << std::endl;
+		std::cout << it->second.totalVertices << " total vertices" << std::endl;
+		std::cout << "---------------------------------------------------------------" << std::endl;
+	}
 
 }

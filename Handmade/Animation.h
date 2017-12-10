@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : January 2017
+  UPDATED : December 2017
 
   -----------------------------------------------------------------------------------------------
 
@@ -23,7 +23,7 @@
   object first needs to render its explosion animation before its removed from memory.
 
 - Because the texture index value is calculated differently here than in the Sprite base class, the 
-  Draw() function is overriden. There are a few other checks inside the Draw() routine that check
+  Update() function is overriden. There are a few other checks inside the Draw() routine that check
   whether the animation loops or not. Sometimes an animation will loop endlessly (like a player's 
   walk cycle) or just loop once (like an explosion). When the animation is set to loop only once,
   the first texture cell in the animation has to come around again before the animation is finally
@@ -43,17 +43,16 @@ class Animation : public Sprite
 public:
 
 	Animation();
-	virtual ~Animation() {}
 
 public:
 
 	bool IsAnimationDead();
 	bool& IsAnimationLooping();
-	void SetAnimationVelocity(float velocity);
+	void SetAnimationVelocity(GLfloat velocity);
 	
 public:
 
-	virtual void Draw();
+	void Update();
 
 protected:
 
@@ -62,7 +61,7 @@ protected:
 	bool m_isAnimationLooping;
 	
 	double m_timeElapsed;
-	float m_animationVelocity;
+	GLfloat m_animationVelocity;
 
 };
 

@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : January 2017
+  UPDATED : December 2017
 
   -----------------------------------------------------------------------------------------------
 
@@ -43,8 +43,8 @@
 #ifndef BOUND_H
 #define BOUND_H
 
+#include <glew.h>
 #include <glm.hpp>
-#include "Color.h"
 
 class Bound 
 {
@@ -60,8 +60,8 @@ public :
 
 public :
 
-	void SetColor(Color color);
-	void SetPosition(float x, float y, float z = 0);
+	void SetPosition(GLfloat x, GLfloat y, GLfloat z = 0);
+	void SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
 
 public :
 
@@ -70,7 +70,7 @@ public :
 
 protected :
 
-	Color m_color;
+	glm::vec4 m_color;
 	glm::vec3 m_position;	
 
 };

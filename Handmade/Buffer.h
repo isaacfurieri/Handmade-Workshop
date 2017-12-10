@@ -6,107 +6,96 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : January 2017
+  UPDATED : December 2017
 
   -----------------------------------------------------------------------------------------------
 
-- This buffer class is designed to contain all vertex, color, normal and texture coordinate data
-  that is needed to render something on screen. It contains vector containers to store the actual
-  data, four VBO buffer IDs to link to the OpenGL VBOs related to the data, and four shader 
-  attribute IDs to link to the shader variables. The OpenGL VBO IDs will be used to bind the correct
-  VBO and fill it with data before using it. The shader attribute IDs are needed to bind each vertex,
-  color, normal and texture data with the correct shader variable when drawing. The VBO and shader
-  attribute IDs are requested from the Buffer and Shader Manager respectively. This class can be
-  used on its own or within another class like the Sprite or Model class to represent their data.
+- This buffer class is designed to contain the VAO, vertex, color, normal and texture VBO, and 
+  EBO IDs all in one place. Ideally every game object or any generic object in the client code
+  can use this class as a component to store the buffer IDs. It is through these IDs that the 
+  OpenGL buffers in VRAM are used to store all vertex, color, etc data for each object, 3D
+  model, etc in the scene. 
+
+- Buffers are meant to be created once only and stored in the given map. If that same buffer is
+  required by another object, instead of creating it again, we simply use SetBuffers() to set an
+  existing buffer to the object. This models around the Flyweight pattern a little bit. When
+  buffers are created or set, the m_ID variable is assigned the IDs of that buffer.
+
+- There are functions to create the buffers, bind them together and fill them with data. Buffers
+  may also be appended so that existing VBOs have data added on to the ends. 
   
-- Three enum data types have been created to make drawing and accessing VBOs easier. The DrawMode 
-  enum is used for passing the rendering style to the DrawData() routine. The BufferType enum is
-  for accessing and using the correct VBO, and the ComponentSize enum is an easy way to pass the
-  vertex component size to the shader when linking the data.
-
-- Four getter/setter combo functions have been created to return references of the four vector 
-  containers that contain all the vertex, color, normal and texture coordinate data. This makes
-  accessing and assigning the containers easier in the calling client code.
-
-- The SetBufferID() and SetAttributeID() routines are used to assign the OpenGL VBO buffer IDs and
-  shader attribute IDs respectively to the buffer object. These IDs are requested from the Buffer
-  and Shader Manager respectively. The SetComponentSize() routine is there to set the vertex, 
-  color, normal and texture coordinate data component size before sending data to the shader. For
-  instance a vertex component could comprise of X and Y for 2D or X, Y and Z for 3D. Colors can be 
-  RGB or RGBA. Using the ComponentSize enum type the component types have already been setup for 
-  ease of use.
-
-- The FillData() routine will fill the relevant VBOs with data via the Buffer Manager, and the
-  DrawData() function enable the vertex, color, normal and texture coordinate OpenGL VBO buffers
-  and shader attributes before using them to send data to the shaders to be rendered. 
-
-- The Buffer class makes full use of the Buffer and Shader Manager classes, keeping all raw OpenGL
-  code in the manager classes instead of in here. This class is intended to act as a link between 
-  the Buffer and Shader Manager, the shaders and the client code. It's a helper tool to minimize 
-  the load in the client code and will most likely reside inside the Model or Sprite classes. 
-  (More on this later!!)
-
 */
 
 #ifndef BUFFER_H
 #define BUFFER_H
 
+#include <map>
 #include <string>
 #include <vector>
 #include <glew.h>
+
+struct BufferID
+{
+	bool hasEBO;
+	GLuint vaoID;
+	GLuint vboID[4];
+	GLuint eboID;
+	GLsizei totalVertices;
+};
 
 class Buffer
 {
 
 public:
 
-	enum DrawMode      { LINES, LINE_LOOP, POINTS, TRIANGLES, TRIANGLE_FAN };
-	enum BufferType    { VERTEX_BUFFER, COLOR_BUFFER, NORMAL_BUFFER, TEXTURE_BUFFER };
-	enum ComponentSize { XY = 2, XYZ = 3, RGB = 3, RGBA = 4, UV = 2 };
+	enum DataType       { FLOAT, U_INT };
+	enum FillType       { STATIC_FILL, DYNAMIC_FILL };
+	enum ComponentSize  { XY = 2, XYZ = 3, RGB = 3, RGBA = 4, UV = 2 };
+	enum DrawMode       { LINES, LINE_LOOP, POINTS, TRIANGLES, TRIANGLE_FAN };
+	enum VBOType        { VERTEX_BUFFER, COLOR_BUFFER, NORMAL_BUFFER, TEXTURE_BUFFER };
 
 public:
 
 	Buffer();
 
-public :
+public:
 
-	std::vector<GLfloat>& Vertices();
-	std::vector<GLfloat>& Colors();
-	std::vector<GLfloat>& Normals();
-	std::vector<GLfloat>& Textures();
+	void SetLineWidth(GLfloat lineWidth);
+	void SetPointSize(GLfloat pointSize);
+	void SetBuffers(const std::string& bufferID);
 
 public:
 
-	void SetBufferID(BufferType bufferType, const std::string& mapIndex);
-	void SetAttributeID(BufferType bufferType, const std::string& mapIndex);
-	void SetComponentSize(BufferType bufferType, ComponentSize componentSize);
+	bool CreateBuffers(const std::string& bufferID, GLsizei totalVertices = 0, bool hasEBO = false);
 
-public :
+	void BindEBO();
+	void BindVBO(VBOType vboType, const std::string& vertAttrib,
+		         ComponentSize componentSize, DataType dataType);
 
-	void FillData(BufferType bufferType);
-	void DrawData(DrawMode drawMode);
+	void FillEBO(const GLuint* data, GLsizeiptr size, FillType fillType = STATIC_FILL);
+	void FillVBO(VBOType vboType, const GLuint* data, GLsizeiptr size, FillType fillType = STATIC_FILL);
+	void FillVBO(VBOType vboType, const GLfloat* data, GLsizeiptr size, FillType fillType = STATIC_FILL);
+
+	void AppendEBO(const GLuint* data, GLsizeiptr size, GLuint offset);
+	void AppendVBO(VBOType vboType, const GLuint* data, GLsizeiptr size, GLuint offset);
+	void AppendVBO(VBOType vboType, const GLfloat* data, GLsizeiptr size, GLuint offset);
+
+	void Draw(DrawMode drawMode);
+
+	void DestroyBuffers();
+	void DestroyBuffers(const std::string& bufferID);
+
+public:
+
+	void Output();
 
 private:
 
-	GLuint m_vertexBufferID;
-	GLuint m_colorBufferID;
-	GLuint m_normalBufferID;
-	GLuint m_textureBufferID;
+	static std::map<std::string, BufferID>* s_bufferIDMap;
 
-	GLint m_vertexAttributeID;
-	GLint m_colorAttributeID;
-	GLint m_normalAttributeID;
-	GLint m_textureAttributeID;
+private:
 
-	std::vector<GLfloat> m_vertices;
-	std::vector<GLfloat> m_colors;
-	std::vector<GLfloat> m_normals;
-	std::vector<GLfloat> m_textures;
-
-	ComponentSize m_vertexComponentSize;
-	ComponentSize m_colorComponentSize;
-	ComponentSize m_normalComponentSize;
-	ComponentSize m_textureComponentSize;
+	BufferID m_ID;
 
 };
 
