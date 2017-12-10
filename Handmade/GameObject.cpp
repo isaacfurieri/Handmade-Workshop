@@ -1,10 +1,10 @@
+#include <gtc\matrix_transform.hpp>
 #include "GameObject.h"
-#include "ShaderManager.h"
+#include "PipelineManager.h"
+#include "ScreenManager.h"
 
-//------------------------------------------------------------------------------------------------------
-//static member variable initializations
-//------------------------------------------------------------------------------------------------------
-GLuint GameObject::s_modelUniformID = 0;
+glm::mat3 GameObject::s_normalMatrix;
+glm::mat4 GameObject::s_textureMatrix;
 std::vector<glm::mat4> GameObject::s_modelMatrix;
 
 //------------------------------------------------------------------------------------------------------
@@ -40,39 +40,76 @@ void GameObject::PopMatrix()
 
 }
 //------------------------------------------------------------------------------------------------------
-//static function that sends game object's model matrix data to the vertex shader
+//static function that sends all game object's main properties to shaders
 //------------------------------------------------------------------------------------------------------
-void GameObject::ApplyMatrix()
+void GameObject::SendToShader(bool isLit, bool isTextured)
 {
 
-	TheShader::Instance()->SetUniformMatrix(s_modelUniformID, &s_modelMatrix.back()[0][0]);
+	//pass lighting flag to fragment shader 
+	ThePipeline::Instance()->SendUniformData("isLit", (GLint)isLit);
+
+	//pass texturing flag to fragment shader 
+	ThePipeline::Instance()->SendUniformData("isTextured", (GLint)isTextured);
+
+	//convert model matrix to 3x3 and invert it for normals to use in shader
+	s_normalMatrix = glm::inverse(glm::mat3(s_modelMatrix.back()));
+
+	//send model matrix to vertex shader
+	ThePipeline::Instance()->SendUniformData("modelMatrix", s_modelMatrix.back());
+
+	//send normal matrix to vertex shader (transposed)
+	ThePipeline::Instance()->SendUniformData("normMatrix", s_normalMatrix, true);
+
+	//send texture matrix to vertex shader
+	ThePipeline::Instance()->SendUniformData("texMatrix", s_textureMatrix);
 
 }
 //------------------------------------------------------------------------------------------------------
-//static setter function that assigns model matrix's shader uniform ID  
+//static function that applies passed translation values to model matrix
 //------------------------------------------------------------------------------------------------------
-void GameObject::SetModelUniformID(std::string uniformID)
+void GameObject::Translate(GLfloat x, GLfloat y, GLfloat z)
 {
 
-	s_modelUniformID = TheShader::Instance()->GetUniformID(uniformID.c_str());
+	s_modelMatrix.back() = glm::translate(s_modelMatrix.back(), glm::vec3(x, y, z));
 
 }
 //------------------------------------------------------------------------------------------------------
-//static function that transforms model matrix with passed quaternion rotation 
+//static function that applies passed quaternion rotation to model matrix
 //------------------------------------------------------------------------------------------------------
-void GameObject::MultiplyMatrix(Quaternion& quaternion)
+void GameObject::Rotate(Quaternion& quaternion)
 {
 
 	s_modelMatrix.back() = s_modelMatrix.back() * quaternion.GetMatrix();
 
 }
 //------------------------------------------------------------------------------------------------------
-//static function that transforms model matrix with passed matrix transformation 
+//static function that applies passed euler angle values to model matrix
 //------------------------------------------------------------------------------------------------------
-void GameObject::MultiplyMatrix(glm::mat4& transformation)
+void GameObject::Rotate(GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
 {
 
-	s_modelMatrix.back() = s_modelMatrix.back() * transformation;
+	s_modelMatrix.back() = glm::rotate(s_modelMatrix.back(), glm::radians(angle), glm::vec3(x, y, z));
+
+}
+//------------------------------------------------------------------------------------------------------
+//static function that applies passed scale values to model matrix
+//------------------------------------------------------------------------------------------------------
+void GameObject::Scale(GLfloat x, GLfloat y, GLfloat z)
+{
+
+	s_modelMatrix.back() = glm::scale(s_modelMatrix.back(), glm::vec3(x, y, z));
+
+}
+//------------------------------------------------------------------------------------------------------
+//static function that applies passed scale values to texture matrix
+//------------------------------------------------------------------------------------------------------
+void GameObject::ScaleUV(GLfloat x, GLfloat y)
+{
+
+	s_textureMatrix = glm::mat4(1.0f);
+
+	//scale texture matrix based on scale factor set (if any) 
+	s_textureMatrix = glm::scale(s_textureMatrix, glm::vec3(x, y, 1.0f));
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -81,9 +118,11 @@ void GameObject::MultiplyMatrix(glm::mat4& transformation)
 GameObject::GameObject()
 {
 
+	m_isLit = false;
 	m_isAlive = true;
 	m_isActive = true;
 	m_isVisible = true;
+	m_isTextured = false;
 
 	m_tag = "";
 	m_priority = 0;	
@@ -95,6 +134,15 @@ GameObject::GameObject()
 	{
 		s_modelMatrix.push_back(glm::mat4(1.0f));
 	}
+
+}
+//------------------------------------------------------------------------------------------------------
+//predicate function that returns flag reference
+//------------------------------------------------------------------------------------------------------
+bool& GameObject::IsLit()
+{
+
+	return m_isLit;
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -122,6 +170,15 @@ bool& GameObject::IsVisible()
 {
 
 	return m_isVisible;
+
+}
+//------------------------------------------------------------------------------------------------------
+//predicate function that returns flag reference
+//------------------------------------------------------------------------------------------------------
+bool& GameObject::IsTextured()
+{
+
+	return m_isTextured;
 
 }
 //------------------------------------------------------------------------------------------------------

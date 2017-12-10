@@ -2,8 +2,8 @@
 #include "DebugManager.h"
 #include "Game.h"
 #include "InputManager.h"
+#include "PipelineManager.h"
 #include "ScreenManager.h"
-#include "ShaderManager.h"
 
 //------------------------------------------------------------------------------------------------------
 //constructor that assigns all default values
@@ -11,120 +11,37 @@
 Game::Game()
 {
 
-	m_elapsedTime = 0;
-	m_activeGameState = 0;
-	m_gameStates.reserve(5);
-
-}
-//------------------------------------------------------------------------------------------------------
-//getter function that returns time elapsed in hours
-//------------------------------------------------------------------------------------------------------
-double Game::GetElapsedTimeHours()
-{
-
-	return (double)m_elapsedTime / 3600000;
-
-}
-//------------------------------------------------------------------------------------------------------
-//getter function that returns time elapsed in minutes
-//------------------------------------------------------------------------------------------------------
-double Game::GetElapsedTimeMinutes()
-{
-
-	return (double)m_elapsedTime / 60000;
-
-}
-//------------------------------------------------------------------------------------------------------
-//getter function that returns time elapsed in seconds
-//------------------------------------------------------------------------------------------------------
-double Game::GetElapsedTimeSeconds()
-{
-	
-	return (double)m_elapsedTime / 1000;
-
-}
-//------------------------------------------------------------------------------------------------------
-//getter function that returns time elapsed in milliseconds
-//------------------------------------------------------------------------------------------------------
-int Game::GetElapsedTimeMilliseconds()
-{
-
-	return m_elapsedTime;
-
-}
-//------------------------------------------------------------------------------------------------------
-//getter function that returns total time passed in hours
-//------------------------------------------------------------------------------------------------------
-double Game::GetTotalTimeHours()
-{
-
-	return (double)SDL_GetTicks() / 3600000;
-
-}
-//------------------------------------------------------------------------------------------------------
-//getter function that returns total time passed in minutes
-//------------------------------------------------------------------------------------------------------
-double Game::GetTotalTimeMinutes()
-{
-
-	return (double)SDL_GetTicks() / 60000;
-
-}
-//------------------------------------------------------------------------------------------------------
-//getter function that returns total time passed in seconds
-//------------------------------------------------------------------------------------------------------
-double Game::GetTotalTimeSeconds()
-{
-
-	return (double)SDL_GetTicks() / 1000;
+	m_endGame = false;
 
 }
 //------------------------------------------------------------------------------------------------------
 //getter function that returns total time passed in milliseconds
 //------------------------------------------------------------------------------------------------------
-int Game::GetTotalTimeMilliseconds()
+int Game::GetTotalTime()
 {
 
 	return SDL_GetTicks();
 
 }
 //------------------------------------------------------------------------------------------------------
-//function that adds a game state to the end of the vector  
+//getter function that returns time elapsed in milliseconds
 //------------------------------------------------------------------------------------------------------
-void Game::AddGameState(GameState* gameState)
+int Game::GetElapsedTime()
 {
 
-	m_gameStates.push_back(gameState);
-
-}
-//------------------------------------------------------------------------------------------------------
-//function that removes a game state from the middle of the vector based on index value passed 
-//------------------------------------------------------------------------------------------------------
-void Game::RemoveGameState(int index)
-{
-
-	m_gameStates.erase(m_gameStates.begin() + index);
-
-}
-//------------------------------------------------------------------------------------------------------
-//getter function that returns address of active game state
-//------------------------------------------------------------------------------------------------------
-GameState* Game::GetActiveGameState()
-{
-
-	return m_activeGameState;
+	return m_elapsedTime;
 
 }
 //------------------------------------------------------------------------------------------------------
 //function that initializes all other managers of the game
 //------------------------------------------------------------------------------------------------------
-bool Game::Initialize(std::string name, int screenWidth, int screenHeight, 
-	                  int pixelScaleValue, bool fullscreen)
+bool Game::Initialize(std::string name, int screenWidth, int screenHeight,
+	                  int pixelsPerUnit, bool fullscreen)
 {
 
-	//initialise game screen with passed values and return false if error occured
-	if(!(TheScreen::Instance()->
-		 Initialize(name.c_str(), screenWidth, screenHeight, pixelScaleValue, 3, 0, true, fullscreen)))
+	//initialise game screen with passed values 
+	if (!(TheScreen::Instance()->
+		Initialize(name.c_str(), screenWidth, screenHeight, pixelsPerUnit, 4, 0, true, fullscreen)))
 	{
 		return false;
 	}
@@ -135,13 +52,27 @@ bool Game::Initialize(std::string name, int screenWidth, int screenHeight,
 		return false;
 	}
 
-	//initialize shader manager and return false if error occured
-	if (!TheShader::Instance()->Initialize())
-	{
-		return false;
-	}
-
 	return true;
+
+}
+//------------------------------------------------------------------------------------------------------
+//function that loads and adds a game state to the front of the queue (for temporary states)
+//------------------------------------------------------------------------------------------------------
+void Game::AddState(GameState* state)
+{
+
+	state->OnEnter();
+	m_gameStates.push_front(state);
+
+}
+//------------------------------------------------------------------------------------------------------
+//function that loads and adds a game state to the back of the queue (for new states)
+//------------------------------------------------------------------------------------------------------
+void Game::ChangeState(GameState* state)
+{
+
+	state->OnEnter();
+	m_gameStates.push_back(state);
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -150,31 +81,18 @@ bool Game::Initialize(std::string name, int screenWidth, int screenHeight,
 bool Game::Run()
 {
 
-	//run game indefinately until no more game states are 
-	//available at which point the game loop will break
-	while (1)
+	GameState* state;
+
+	//main game loop!
+	while (!m_endGame)
 	{
 
-		//if there are no game states available break out of loop
-		if (m_gameStates.size() == 0)
-		{
-			break;
-		}
+		//current active state is always the front one
+		state = m_gameStates.front();
 
-		//otherwise assign game state to active game state pointer
-		m_activeGameState = *(m_gameStates.end() - 1);
-
-		//set the state's active flag to enable main loop below 
-		m_activeGameState->IsActive() = true;
-
-		//call the active game state's start up tasks
-		if (!(m_activeGameState->OnEnter()))
-		{
-			return false;
-		}
-
-		//keep looping while current game state is active
-		while (m_activeGameState->IsActive())
+		//update and render all objects while the current state is active
+		//each state will flag itself as inactive after which the loop breaks
+		while (state->IsActive())
 		{
 
 			//save time value to mark the start of the frame
@@ -184,25 +102,19 @@ bool Game::Run()
 			TheAudio::Instance()->Update();
 
 			//update screen by clearing OpenGL frame buffer
-			TheScreen::Instance()->Update();
-		
+			TheScreen::Instance()->ClearScreen();
+
 			//update input handling by listening for input events
 			TheInput::Instance()->Update();
 
-			//update components in active game state
-			if (!m_activeGameState->Update())
-			{
-				return false;
-			}
+			//update the currently active state
+			state->Update();
 
-			//draw components in active game state
-			if (!m_activeGameState->Draw())
-			{
-				return false;
-			}
+			//render the currently active state
+			state->Draw();
 
 			//draw screen by swapping OpenGL frame buffer
-			TheScreen::Instance()->Draw();
+			TheScreen::Instance()->SwapBuffer();
 
 			//calculate time value passed for one frame call
 			//if vsync is on this value should be around 16ms
@@ -210,14 +122,16 @@ bool Game::Run()
 
 		}
 
-		//call the active game state's shutdown tasks
-		m_activeGameState->OnExit();
-	
-		//reset active game state pointer and
-		//remove game state from vector container
-		m_activeGameState = 0;
-		m_gameStates.pop_back();
-		
+		//if game state is also flagged as dead  
+		//then completely remove all of its objects
+		if (!state->IsAlive())
+		{
+			RemoveState();
+		}
+
+		//the main game loop will run as long there are game states available
+		m_endGame = m_gameStates.empty();
+
 	}
 
 	return true;
@@ -229,13 +143,22 @@ bool Game::Run()
 void Game::ShutDown()
 {
 
-	//close down shader manager 
-	TheShader::Instance()->ShutDown();
-
 	//close down FMOD audio sub-system 
 	TheAudio::Instance()->ShutDown();
 
 	//close down game screen 
 	TheScreen::Instance()->ShutDown();
+
+}
+//------------------------------------------------------------------------------------------------------
+//function that unloads and removes the front-most game state from the queue
+//------------------------------------------------------------------------------------------------------
+void Game::RemoveState()
+{
+
+	m_gameStates.front()->OnExit();
+
+	delete m_gameStates.front();
+	m_gameStates.pop_front();
 
 }

@@ -1,7 +1,17 @@
 #include "DebugManager.h"
 #include "EndState.h"
-#include "ShaderManager.h"
+#include "PipelineManager.h"
 
+//------------------------------------------------------------------------------------------------------
+//constructor that assigns all default values
+//------------------------------------------------------------------------------------------------------
+EndState::EndState(GameState* state) : GameState(state)
+{
+
+	m_HUDCamera = nullptr;
+	m_splashScreen = nullptr;
+
+}
 //------------------------------------------------------------------------------------------------------
 //function that creates ending splash screen message and 2D camera for state
 //------------------------------------------------------------------------------------------------------
@@ -10,6 +20,7 @@ bool EndState::OnEnter()
  
 	m_HUDCamera = new HUDCamera();
 	m_splashScreen = new SplashScreen("Assets\\Sprites\\SplashScreen_3.png");
+	m_splashScreen->Create();
 	
 	return true;
 
@@ -20,16 +31,18 @@ bool EndState::OnEnter()
 bool EndState::Update()
 {
 
+	//if in debug mode, go straight through and end the state
+	//because we don't want to bother with ending screens
 #ifdef DEBUG
 
-	m_isActive = false;
+	m_isActive = m_isAlive = false;
 
 #endif
 
 #ifdef RELEASE
 
 	m_splashScreen->Update();
-	m_isActive = m_splashScreen->IsActive();
+	m_isActive = m_isAlive = m_splashScreen->IsActive();
 
 #endif
 
@@ -62,15 +75,15 @@ void EndState::OnExit()
 	//debug manager and all of its components 
 #ifdef DEBUG
 
-	TheDebug::Instance()->DestroyBuffers();
+	TheDebug::Instance()->DestroyDebugObjects();
 
 #endif
 
-	TheShader::Instance()->
-	Destroy(ShaderManager::VERTEX_SHADER, ShaderManager::CUSTOM_SHADER, "MAIN_VERTEX_SHADER");
-	TheShader::Instance()->
-	Destroy(ShaderManager::FRAGMENT_SHADER, ShaderManager::CUSTOM_SHADER, "MAIN_FRAGMENT_SHADER");
+	ThePipeline::Instance()->DetachShaders();
+	ThePipeline::Instance()->DestroyShaders();
+	ThePipeline::Instance()->DestroyProgram();
 
+	m_splashScreen->Destroy();
 	delete m_splashScreen;
 	delete m_HUDCamera;
 

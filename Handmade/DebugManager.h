@@ -6,69 +6,47 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : January 2017
+  UPDATED : December 2017
 
   -----------------------------------------------------------------------------------------------
 
 - This class offers debugging resources to help make life a little easier when working with 
-  OpenGL. It contains routines to help display OpenGL and GLSL specifications, point out errors 
-  that might occur along the way, draw grids and coordinate systems to help visualize objects in
-  the dark, and also draw a set of basic shapes on screen to make things easier. This class is a
-  Singleton.
+  OpenGL. It contains routines to help display OpenGL errors in a more detailed manner, as well
+  as draw grids and coordinate systems, to help visualize objects in the dark. There are also 
+  a set of functions that will render some basic shapes, lines and vectors on screen to make
+  things easier to visualize. This class is a Singleton and even though it's a controversial
+  design pattern, it makes the most sense to use here, as this class and its helper routines 
+  need to be accessed and used anywhere. Furthermore, we only ever need one of these helper 
+  classes.
 
-- There are five buffer objects that will be used to draw the grid system, coordinate system,
-  the 2D cube, 2D sphere and vectors. The buffers contain all the relevant data needed to render
-  the objects, and they are individually set up along the way before being drawn. For the 3D
-  cube and 3D sphere, the model class is used to represent them because their vertices are not
-  drawn manually, but instead loaded in from a file. The 2D cube and 2D sphere might then have
-  been sprites, but then we would need sprite images or textures of geometric shapes, which
-  proved unnecessary since there is no debug shader support for textures. Furthermore if the
-  cube or sphere are scaled up, the texture will be scaled and at very high values will start to
-  tear.
+- Since this class can be called accessed from anywhere, it is relatively easy to simply create
+  a line or shape on screen when desired. Furthermore, when visualizing collision bounds, the 
+  cube, sphere and lines come in useful and are called into from the collision classes.
 
-- The CreateBuffers() function will set up the VBOs needed for all rendering of debug objects. It
-  will also link the buffer objects to their relevant VBOs and shader data. The DestroyBuffers()
-  routine will clear and destroy all VBO buffers. 
+- For each helper function that renders a basic shape, there is a 2D and a 3D version available
+  because there are some specific things being done in either mode. If only one version is used 
+  then there might arise an issue with too many if-else statements. All 2D versions have a pixel
+  per unit parameter that represents how many pixels each OpenGL unit of measurement will 
+  represent. Remember in 2D mode the rendering is measured in pixels, but the object's size
+  measurements are mostly in units. Granted, overall there is still a lot of repetition going 
+  on, however I am still working on ways to improve this class and its member functions. 
+  Another thing to note is that even though 2D coordinates are measured in pixels, we still work
+  with units when passing data to the DrawLine2D() or DrawVector2D() functions, because it is 
+  easier to work with units when rendering primitive shapes and lines on a grid. 
 
-- The function CheckError() will check for errors in OpenGL and use predefined constants to 
-  display a friendly message on screen. Calling this function will return the first error that 
-  occured with OpenGL since this function was last called.  
+- For the 3D cube and 3D sphere, the model class is used to represent them because their 
+  vertices are not drawn manually, but instead loaded in from a file. The 2D cube and 2D sphere
+  could have been sprites, but then we would need sprite images or textures of geometric shapes,
+  which is not really ideal for a basic shape. Furthermore if the 2D cube or sphere are scaled 
+  up, the texture will be scaled and at very high values will start to tear.
 
-- There are a set of drawing routines to help display objects quickly on screen and assist with
-  world orientation. All of these functions have a 2D and 3D version. One version could be used 
-  instead but then there might arise an issue with too many if-else statements. All 2D versions
-  have a pixel parameter that represents how many pixels each unit will represent. Remember
-  in 2D mode the rendering is measured in pixels, but the object's size measurements are mostly 
-  in units. 
-  
-- The DrawGrid() functions display a custom sized grid in world space. This allows the programmer
-  to orient their objects around in world space and make things easier to work with instead of 
-  working in a dark 2D or 3D world.
-  The DrawCoordSystem() routines display a XY or XYZ colored axis to further assist with object
-  orientation. The coordinate system is intended to help draw the global world and local object 
-  coordinate system, which can help visualise things when many transformations are being made. 
-  The DrawCube() and DrawSphere() functions will manually render a shape in 2D or 3D mode. In 2D
-  mode these routines will manually create and render a cube or sphere, and their 3D counterparts
-  will use a loaded model object to represent a cube or sphere in 3D space. Drawing a 3D cube or 
-  sphere manually was just too much hassle. 
-  
-- The DrawVector() routine will render a custom sized 2D or 3D vector on screen, based on the 
-  position defined in the client code. The DrawVertex() function will render a basic vertex point
-  on screen, exactly where specified by the points passed to the function. This is the simplest 
-  shape to render and is good for drawing coordinate points. One could actually use the DrawCube()
-  functions to render a point on screen, but then they would have to first be moved into position
-  in the calling code. The DrawLine() function draws a 2D or 3D line segment using a passed starting
-  and ending point. The difference between this routine and the DrawVector() is that the latter will
-  render a line from the origin to the end point and the DrawLine() renders from a specific starting
-  point to the specified ending point.  
-  The DrawVector(), DrawVertex() and DrawLine() functions all have 2D and 3D built in, because 
-  creating separate routines for these simple geometric shapes was unnecessary. They all take in 
-  separate X, Y and Z parameters, because taking in specific vector objects would mean either 
-  templatizing the functions or overloading them in various ways.
+- The big difference between the DrawVector() and DrawLine() functions is that the former will
+  render a displacement from a (0,0) origin, based on client transformations. The latter will
+  draw a line segment from the given starting point to the given ending point. These points in
+  space are also dependant on client transformations.
 
-- Only the DrawGrid() routines have a static flag to fill the buffers only once. All other buffer 
-  objects are filled each call as they may change over time. The grid will always stay the same. 
-  (Temporary!!)
+- Future improvements include adding a "Logging/Messaging" system in here that displays error
+  and warning messages on the console. 
 
 */
 
@@ -77,7 +55,6 @@
 
 #include <glew.h>
 #include "Buffer.h"
-#include "Color.h"
 #include "Model.h"
 #include "Singleton.h"
 
@@ -91,27 +68,52 @@ public:
 public :
 
 	void CheckError();
-	bool CreateBuffers();
-	void DestroyBuffers();
+	bool CreateDebugObjects(GLint size);
+	void DestroyDebugObjects();
 
 public :
 
-	void DrawGrid3D(int size, float lineWidth);
-	void DrawGrid2D(int size, float lineWidth, int pixelsPerUnit);
+	void DrawGrid2D(GLfloat lineWidth = 2.0f);
+	void DrawGrid3D(GLfloat lineWidth = 2.0f);
 	
-	void DrawCoordSystem3D(float size, float lineWidth);
-	void DrawCoordSystem2D(float size, float lineWidth, int pixelsPerUnit);
+	void DrawCoordSystem2D(GLfloat size, GLfloat lineWidth = 5.0f);
+	void DrawCoordSystem3D(GLfloat size, GLfloat lineWidth = 5.0f);
+		
+	void DrawCube2D(GLfloat width, GLfloat height,
+	  	            GLfloat r = 1.0f, GLfloat g = 1.0f, GLfloat b = 1.0f, GLfloat a = 1.0f);
+
+	void DrawCube3D(GLfloat width, GLfloat height, GLfloat depth, 
+		            GLfloat r = 1.0f, GLfloat g = 1.0f, GLfloat b = 1.0f, GLfloat a = 1.0f);
 	
-	void DrawCube3D(float width, float height, float depth, Color color);
-	void DrawCube2D(float width, float height, Color color, int pixelsPerUnit);
+	void DrawSphere2D(GLfloat radius, GLfloat r = 1.0f, GLfloat g = 1.0f, 
+		              GLfloat b = 1.0f, GLfloat a = 1.0f, GLint slices = 10);
 
-	void DrawSphere3D(float radius, Color color);
-	void DrawSphere2D(float radius, Color color, int slices, int pixelsPerUnit);
+	void DrawSphere3D(GLfloat radius, GLfloat r = 1.0f, GLfloat g = 1.0f, 
+		              GLfloat b = 1.0f, GLfloat a = 1.0f);
+	
+	void DrawVector2D(GLfloat x, GLfloat y, GLfloat lineWidth = 2.0f,
+					  GLfloat r = 1.0f, GLfloat g = 1.0f, GLfloat b = 1.0f);
 
-	void DrawVector(float x, float y, float z, float lineWidth, Color color, int pixelsPerUnit = 1);
-	void DrawVertex(float x, float y, float z, float pointSize, Color color, int pixelsPerUnit = 1);
-	void DrawLine(float x1, float y1, float z1,
-	              float x2, float y2, float z2, float lineWidth, Color color, int pixelsPerUnit = 1);
+	void DrawVector3D(GLfloat x, GLfloat y, GLfloat z, GLfloat lineWidth = 2.0f, 
+		              GLfloat r = 1.0f, GLfloat g = 1.0f, GLfloat b = 1.0f);
+	
+	void DrawVertex2D(GLfloat x, GLfloat y, GLfloat pointSize = 10.0f,
+					  GLfloat r = 1.0f, GLfloat g = 1.0f, GLfloat b = 1.0f);
+
+	void DrawVertex3D(GLfloat x, GLfloat y, GLfloat z, GLfloat pointSize = 10.0f,
+					  GLfloat r = 1.0f, GLfloat g = 1.0f, GLfloat b = 1.0f);
+
+	void DrawLine2D(GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2,
+					GLfloat lineWidth = 2.0f, GLfloat r = 1.0f, GLfloat g = 1.0f, GLfloat b = 1.0f);
+
+	void DrawLine3D(GLfloat x1, GLfloat y1, GLfloat z1,
+		            GLfloat x2, GLfloat y2, GLfloat z2, GLfloat lineWidth = 2.0f, 
+		            GLfloat r = 1.0f, GLfloat g = 1.0f, GLfloat b = 1.0f);
+
+private:
+
+	void CreateGrid2D(GLint size);
+	void CreateGrid3D(GLint size);
 
 private:
 
@@ -125,14 +127,13 @@ private :
 	Model m_sphere3D;
 	
 	Buffer m_lineBuffer;
-	Buffer m_gridBuffer;
+	Buffer m_gridBuffer2D;
+	Buffer m_gridBuffer3D;
 	Buffer m_coordBuffer;
 	Buffer m_vertexBuffer;
 	Buffer m_vectorBuffer;
 	Buffer m_cubeBuffer2D;
 	Buffer m_sphereBuffer2D;
-
-	GLuint m_textureFlagUniformID;
 	
 };
 

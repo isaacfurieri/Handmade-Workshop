@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : February 2017
+  UPDATED : December 2017
 
   -----------------------------------------------------------------------------------------------
 
@@ -25,10 +25,9 @@
 - There are a few static variables and functions which were added to allow global access to the
   game object's main properties, that belong to the game object. Of these is the model matrix, 
   because we only need one matrix to represent the object's transformation. This works similar to
-  the way the old fixed function OpenGL controlled model matrices. The other variable is the ID
-  that monitors the vertex shader's model matrix uniform, to which the model matrix is passed to.
-  The static functions allow for the model matrix to be reset to the identity, transformed 
-  accordingly and passed to the vertex shader. 
+  the way the old fixed function OpenGL controlled model matrices. The static functions allow for
+  the model matrix to be reset to the identity, transformed accordingly and passed to the vertex
+  shader. 
   There is also a PushMatrix() and PopMatrix() routine, which works similar to the old fixed 
   function OpenGL, that allows the global model matrix to be temporarily "bookmarked" so that
   temporary transformations may be applied (push) afterwhich we can revert back to the older 
@@ -45,6 +44,11 @@
   function is intended for all transformations to be applied to the internal model matrix, as well
   as components and other objects being drawn.
 
+- The Create() and Destroy() functions are there so we can manually set up the game object's 
+  components. This prevents issues when creating game objects globally or statically because then
+  if we were to set up the components in the ctor, some 3rd party libraries that we depend on may
+  not have been loaded in time, causing a crash!
+
 */
 
 #ifndef GAME_OBJECT_H
@@ -52,7 +56,6 @@
 
 #include <glew.h>
 #include <glm.hpp>
-#include <gtc\matrix_transform.hpp>
 #include <string>
 #include <vector>
 #include "Quaternion.h"
@@ -65,14 +68,18 @@ public:
 	static void SetIdentity();
 	static void PushMatrix();
 	static void PopMatrix();
-	static void ApplyMatrix();
-	static void SetModelUniformID(std::string uniformID);
-	static void MultiplyMatrix(Quaternion& quaternion);
-	static void MultiplyMatrix(glm::mat4& transformation);
+	static void SendToShader(bool isLit, bool isTextured);
+
+	static void Translate(GLfloat x, GLfloat y, GLfloat z);
+	static void Rotate(Quaternion& quaternion);
+	static void Rotate(GLfloat angle, GLfloat x, GLfloat y, GLfloat z);
+	static void Scale(GLfloat x, GLfloat y, GLfloat z);
+	static void ScaleUV(GLfloat x, GLfloat y);
 
 private:
 
-	static GLuint s_modelUniformID;
+	static glm::mat3 s_normalMatrix;
+	static glm::mat4 s_textureMatrix;
 	static std::vector<glm::mat4> s_modelMatrix;
 
 public :
@@ -82,9 +89,11 @@ public :
 
 public :
 
+	bool& IsLit();
 	bool& IsAlive();
 	bool& IsActive();
 	bool& IsVisible();
+	bool& IsTextured();
 
 public :
 
@@ -92,22 +101,25 @@ public :
 	unsigned int GetPriority();
 	void SetTag(std::string tag);
 	void SetPriority(unsigned int priority);
-	
-public :
 
+public:
+
+	virtual bool Create() = 0;
 	virtual void Update() = 0;
-	virtual bool Draw() = 0;
+	virtual void Draw() = 0;
+	virtual void Destroy() = 0;
 
 protected :
 
+	bool m_isLit;
 	bool m_isAlive;
 	bool m_isActive;
 	bool m_isVisible;
+	bool m_isTextured;
 
 	std::string m_tag;
 	unsigned int m_priority;
 
-	glm::mat4 m_transform;
 	Quaternion m_rotation;
 
 };

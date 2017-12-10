@@ -6,20 +6,20 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : February 2016
+  UPDATED : December 2017
 
   -----------------------------------------------------------------------------------------------
 
 - This class encapsulates a game state that will exist within the game. A game state can be 
   anything like a play state, pause state, menu state, etc and will contain all the game
   specific code specific to that state. Every game state needs to be instantiated as a 
-  sub-class of this abstract base class. There is only a header file for this class as there
-  was no need to create a (.cpp) for only two code statements. Ideally, the instantiated game
-  states will be created and controlled inside the Game class.
+  sub-class of this abstract base class. Ideally, the instantiated game states will be created
+  and controlled inside the Game class, which serves as the game state machine.
   
 - The main flag variable m_isActive will keep track if the game state is currently active or not. 
   As long as its active, its overriden Update() and Draw() routines will constantly be called until
-  the state is set as not active, at which point the state will close down.  
+  the state is set as not active, at which point the state will close down. As soon as the state
+  is flagged as not alive, it will be removed by the state machine.
   
 - The OnEnter() routine is called when the state is activated and this function will load all 
   resources from file, instantiate the game objects for that state and do all start up tasks for the
@@ -36,13 +36,14 @@ class GameState
 {
 
 public:
-	
-	GameState() { m_isActive = false; }
+
+	GameState(GameState* state);
 	virtual ~GameState() = 0 {}
 
 public:
 
-	bool& IsActive() { return m_isActive; }
+	bool& IsAlive();
+	bool& IsActive();
 
 public:
 
@@ -53,7 +54,9 @@ public:
 
 protected:
 
+	bool m_isAlive;
 	bool m_isActive;
+	GameState* m_previousState;
 
 };
 
