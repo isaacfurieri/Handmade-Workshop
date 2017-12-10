@@ -1,20 +1,27 @@
-#include "BufferManager.h"
+#include "DebugManager.h"
+#include "EndState.h"
+#include "InputManager.h"
+#include "Game.h"
 #include "MainState.h"
+#include "PipelineManager.h"
 #include "ScreenManager.h"
-#include "ShaderManager.h"
-#include "TextureManager.h"
 
 //------------------------------------------------------------------------------------------------------
-//function that creates the shaders, HUD VBOs and all the game objects for the state
+//constructor that assigns all default values
+//------------------------------------------------------------------------------------------------------
+MainState::MainState(GameState* state) : GameState(state)
+{
+
+	m_HUD = nullptr;
+	m_HUDCamera = nullptr;
+	m_mainCamera = nullptr;
+
+}
+//------------------------------------------------------------------------------------------------------
+//function that creates the cameras and HUD objects
 //------------------------------------------------------------------------------------------------------
 bool MainState::OnEnter()
 {
-
-#ifdef DEBUG
-
-	m_grid = new Grid();
-
-#endif
 
 	//create the main camera to control the main view
 	m_mainCamera = new MainCamera();
@@ -24,6 +31,7 @@ bool MainState::OnEnter()
 
 	//create a heads-up display object
 	m_HUD = new HUD();
+	m_HUD->Create();
 
 	return true;
 
@@ -34,12 +42,18 @@ bool MainState::OnEnter()
 bool MainState::Update()
 {
 
+	//store keyboard key states in a temp variable for processing below
+	const Uint8* keyState = TheInput::Instance()->GetKeyStates();
+
 	//update main camera
 	m_mainCamera->Update();
 
-	//if camera has received flag to end state then
-	//set game state active flag based on camera flag 
-	m_isActive = m_mainCamera->IsActive();
+	//if ESCAPE key was pressed, return flag to end game 
+	if (keyState[SDL_SCANCODE_ESCAPE])
+	{
+		m_isActive = m_isAlive = false;
+		TheGame::Instance()->ChangeState(new EndState(this));
+	}
 
 	//loop through all game objects in vector and update them only if they are active
 	for (auto it = m_gameObjects.begin(); it != m_gameObjects.end(); it++)
@@ -50,6 +64,9 @@ bool MainState::Update()
 		}
 	}	
 
+	//ADD YOUR CODE HERE...
+	//...
+
 	return true;
 
 }
@@ -59,9 +76,20 @@ bool MainState::Update()
 bool MainState::Draw()
 {
 
+	//first set up camera which sets the view accordingly
+	//make sure this is called BEFORE displaying the grid
+	m_mainCamera->Draw();
+
 #ifdef GAME_3D
 
 	TheScreen::Instance()->Set3DScreen(60.0f, 0.1f, 1000.0f);
+
+#ifdef DEBUG
+
+	TheDebug::Instance()->DrawGrid3D();
+	TheDebug::Instance()->DrawCoordSystem3D(15.0f);
+
+#endif
 	
 #endif
 
@@ -69,14 +97,12 @@ bool MainState::Draw()
 
 	TheScreen::Instance()->Set2DScreen(ScreenManager::BOTTOM_LEFT);
 
-#endif
-
-	//first set up camera which sets the view accordingly
-	m_mainCamera->Draw();
-
 #ifdef DEBUG
 
-	m_grid->Draw();
+	TheDebug::Instance()->DrawGrid2D();
+	TheDebug::Instance()->DrawCoordSystem2D(15.0f);
+
+#endif
 
 #endif
 
@@ -84,16 +110,22 @@ bool MainState::Draw()
 	//display them only if they are active and visible
 	for (auto it = m_gameObjects.begin(); it != m_gameObjects.end(); it++)
 	{
-		
 		if ((*it)->IsActive() && (*it)->IsVisible())
 		{
 			(*it)->Draw();
 		}
 	}
 
+	//ADD YOUR CODE HERE...
+	//...
+
+#ifdef DEBUG
+
 	//set the 2D camera and render the heads-up display last
 	m_HUDCamera->Draw();
 	m_HUD->Draw();
+
+#endif
 
 	return true;
 
@@ -104,6 +136,12 @@ bool MainState::Draw()
 void MainState::OnExit()
 {
 
+	//destroy the HUD, camera and grid objects
+	m_HUD->Destroy();
+	delete m_HUD;
+	delete m_HUDCamera;
+	delete m_mainCamera;
+
 	//loop through all game objects in vector and remove them from memory
 	for (auto it = m_gameObjects.begin(); it != m_gameObjects.end(); it++)
 	{
@@ -113,10 +151,4 @@ void MainState::OnExit()
 	//clear the game object vector
 	m_gameObjects.clear();
 
-	//destroy the HUD, camera and grid objects
-	delete m_HUD;
-	delete m_HUDCamera;
-	delete m_mainCamera;
-	delete m_grid;
-	
 }

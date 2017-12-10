@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : January 2017
+  UPDATED : December 2017
 
   -----------------------------------------------------------------------------------------------
 
@@ -22,10 +22,7 @@
 #include <SDL.h>  
 
 #include <string>
-#include "EndState.h"
 #include "Game.h"
-#include "GameState.h"
-#include "MainState.h"
 #include "StartState.h"
 
 //screen width and height values
@@ -44,36 +41,24 @@ int pixelsPerUnit = 50;
 int main(int argc, char* args[])
 {
 
-	//variables that reference all states of game 
-	GameState* startState;
-	GameState* mainState;
-	GameState* endState;
-
 	//initialize game with name, width and height accordingly
-	//set last parameter to true for fullscreen mode!
-	TheGame::Instance()->Initialize(gameName, screenWidth, screenHeight, pixelsPerUnit, false);
+	//set the last parameter to "true" for fullscreen mode!
+	if (!(TheGame::Instance()->Initialize(gameName, screenWidth, screenHeight, pixelsPerUnit)))
+	{
+		return 0;
+	}
 
-	//create all states for game 
-	startState = new StartState();
-	mainState = new MainState();
-	endState = new EndState();
+	//create the first state to be used in the game
+	TheGame::Instance()->AddState(new StartState(nullptr));
 
-	//add game states to vector container in reverse order 
-	//because they will be executed from the back of the vector
-	TheGame::Instance()->AddGameState(endState);
-	TheGame::Instance()->AddGameState(mainState);
-	TheGame::Instance()->AddGameState(startState);
-	
-	//run game
-	TheGame::Instance()->Run();
+	//run the game
+	if (!TheGame::Instance()->Run())
+	{
+		return 0;
+	}
 
 	//close down game
 	TheGame::Instance()->ShutDown();
-
-	//destroy all game states
-	delete endState;
-	delete mainState;
-	delete startState;
 	
 	//end application
 	return 0;

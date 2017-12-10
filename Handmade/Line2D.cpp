@@ -10,8 +10,7 @@ Line2D::Line2D()
 
 	m_scale = 1.0f;
 	m_length = 0.0f;
-	m_color.A = 0.4f;
-	m_color = Color::MAGENTA;
+	m_color = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -130,7 +129,7 @@ void Line2D::Draw()
 	//draw line based on start and end point as well as color set and use a spacing of 1
 	//because the pixel scale value is already integrated when the line points are set earlier
 	//the start and end points already have translation, rotation and scale considered!! 
-	TheDebug::Instance()->DrawLine(m_startPoint.x, m_startPoint.y, 0, 
-		                           m_endPoint.x, m_endPoint.y, 0, 4, m_color, 1);
+	TheDebug::Instance()->DrawLine2D(m_startPoint.x, m_startPoint.y, 
+		                             m_endPoint.x, m_endPoint.y, 4, m_color.r, m_color.g, m_color.b);
 
 }

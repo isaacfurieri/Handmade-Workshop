@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : January 2017
+  UPDATED : December 2017
 
   -----------------------------------------------------------------------------------------------
 
@@ -38,7 +38,6 @@
 #include <vector>
 #include "GameObject.h"
 #include "GameState.h"
-#include "Grid.h"
 #include "HUD.h"
 #include "HUDCamera.h"
 #include "MainCamera.h"
@@ -48,7 +47,7 @@ class MainState : public GameState
 
 public:
 
-	MainState()          {}
+	MainState(GameState* state);
 	virtual ~MainState() {}
 
 public:
@@ -61,8 +60,6 @@ public:
 private :
 
 	HUD* m_HUD;
-	Grid* m_grid;
-	
 	HUDCamera* m_HUDCamera;
 	MainCamera* m_mainCamera;
 	

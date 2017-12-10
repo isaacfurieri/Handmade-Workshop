@@ -42,31 +42,6 @@ MainCamera::MainCamera()
 void MainCamera::Update()
 {
 
-	//set camera's position and orientation
-	m_camera.Update();
-
-	//set state of camera based on keys pressed which will 
-	//trigger the main game state to end if no longer active
-	m_isActive = CheckInput();
-
-}
-//------------------------------------------------------------------------------------------------------
-//function that sets view matrix accordingly
-//------------------------------------------------------------------------------------------------------
-bool MainCamera::Draw()
-{
-
-	Camera::ApplyMatrix();
-
-	return true;
-
-}
-//------------------------------------------------------------------------------------------------------
-//function that reads keypresses and mouse motion
-//------------------------------------------------------------------------------------------------------
-bool MainCamera::CheckInput()
-{
-
 	//store keyboard key states in a temp variable for processing below
 	const Uint8* keyState = TheInput::Instance()->GetKeyStates();
 
@@ -74,12 +49,6 @@ bool MainCamera::CheckInput()
 	if (!(TheInput::Instance()->IsKeyPressed()))
 	{
 		m_camera.Stop();
-	}
-
-	//if ESCAPE key was pressed, return flag to end game 
-	if (keyState[SDL_SCANCODE_ESCAPE])
-	{
-		return false;
 	}
 
 	//if Q is pressed move camera up
@@ -94,26 +63,25 @@ bool MainCamera::CheckInput()
 		m_camera.MoveDown();
 	}
 
-
-//if game is in 3D mode check for forward and backward movement
-//in 2D mode this is not necessary as there is no depth!
+	//if game is in 3D mode check for forward and backward movement
+	//in 2D mode this is not necessary as there is no depth!
 #ifdef GAME_3D
 
-		//if W is pressed move camera forwards
-		if (keyState[SDL_SCANCODE_W])
-		{
-			m_camera.MoveForward();
-		}
+	//if W is pressed move camera forwards
+	if (keyState[SDL_SCANCODE_W])
+	{
+		m_camera.MoveForward();
+	}
 
-		//if S is pressed move camera backwards
-		else if (keyState[SDL_SCANCODE_S])
-		{
-			m_camera.MoveBackward();
-		}
+	//if S is pressed move camera backwards
+	else if (keyState[SDL_SCANCODE_S])
+	{
+		m_camera.MoveBackward();
+	}
 
 #endif
 
-    //if A is pressed move camera left
+	//if A is pressed move camera left
 	if (keyState[SDL_SCANCODE_A])
 	{
 		m_camera.MoveLeft();
@@ -129,6 +97,16 @@ bool MainCamera::CheckInput()
 	m_camera.RotateX((short)(TheInput::Instance()->GetMouseMotion().y));
 	m_camera.RotateY((short)(TheInput::Instance()->GetMouseMotion().x));
 
-	return true;
+	//set camera's position and orientation
+	m_camera.Update();
 
+}
+//------------------------------------------------------------------------------------------------------
+//function that sets view matrix accordingly
+//------------------------------------------------------------------------------------------------------
+void MainCamera::Draw()
+{
+
+	Camera::SendToShader();
+	
 }

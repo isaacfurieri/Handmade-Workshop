@@ -5,12 +5,10 @@
 //------------------------------------------------------------------------------------------------------
 //function that resets and applies a simple identity matrix
 //------------------------------------------------------------------------------------------------------
-bool HUDCamera::Draw()
+void HUDCamera::Draw()
 {
 
 	Camera::SetIdentity();
-	Camera::ApplyMatrix();
-
-	return true;
+	Camera::SendToShader();
 
 }

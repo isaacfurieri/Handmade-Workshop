@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : January 2017
+  UPDATED : December 2017
 
   -----------------------------------------------------------------------------------------------
 
@@ -22,24 +22,25 @@
 #include <glew.h>
 #include "GameObject.h"
 #include "Sprite.h"
+#include "Texture.h"
 
 class HUD : public GameObject
 {
 
 public:
 
-	HUD();
-	virtual ~HUD();
+	virtual ~HUD() {}
 
 public:
 
-	virtual void Update()  {}
-	virtual bool Draw();
+	virtual bool Create();
+	virtual void Update() {}
+	virtual void Draw();
+	virtual void Destroy();
 
 private :
 
 	Sprite m_sprite;
-	GLuint m_textureFlagUniformID;
 
 };
 
