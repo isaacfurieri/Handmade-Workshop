@@ -1,48 +1,58 @@
 #include "Camera.h"
 #include "DebugManager.h"
+#include "Game.h"
 #include "GameObject.h"
+#include "MainState.h"
+#include "PipelineManager.h"
 #include "ScreenManager.h"
-#include "ShaderManager.h"
 #include "StartState.h"
 
+//------------------------------------------------------------------------------------------------------
+//constructor that assigns all default values
+//------------------------------------------------------------------------------------------------------
+StartState::StartState(GameState* state) : GameState(state)
+{
+
+	m_HUDCamera = nullptr;
+	m_splashScreen_1 = nullptr;
+	m_splashScreen_2 = nullptr;
+
+}
 //------------------------------------------------------------------------------------------------------
 //function that creates the main shaders for the entire game
 //------------------------------------------------------------------------------------------------------
 bool StartState::OnEnter()
 {
 
-	//create vertex shader for main program and return false if there are errors
-	if (!(TheShader::Instance()->Create(ShaderManager::VERTEX_SHADER, "MAIN_VERTEX_SHADER")))
+	//create shader program for the main shaders
+	if (!(ThePipeline::Instance()->CreateProgram()))
 	{
 		return false;
 	}
 
-	//create fragment shader for main program and return false if there are errors
-	if (!(TheShader::Instance()->Create(ShaderManager::FRAGMENT_SHADER, "MAIN_FRAGMENT_SHADER")))
+	//create vertex and fragment shader objects for main program
+	if (!(ThePipeline::Instance()->CreateShaders()))
 	{
 		return false;
 	}
 
-	//compile vertex shader for main program and return false if there are errors
-	if (!(TheShader::Instance()->Compile(ShaderManager::VERTEX_SHADER,
-		                                 "Shaders\\Main.vert", "MAIN_VERTEX_SHADER")))
+	//compile vertex shader for main program 
+	if(!(ThePipeline::Instance()->CompileShader(PipelineManager::VERTEX_SHADER, "Shaders\\Main.vert")))
 	{
 		return false;
 	}
 
-	//compile fragment shader for main program and return false if there are errors
-	if (!(TheShader::Instance()->Compile(ShaderManager::FRAGMENT_SHADER,
-		                                 "Shaders\\Main.frag", "MAIN_FRAGMENT_SHADER")))
+	//compile fragment shader for main program 
+	if(!(ThePipeline::Instance()->CompileShader(PipelineManager::FRAGMENT_SHADER, "Shaders\\Main.frag")))
 	{
 		return false;
 	}
 
 	//attach both shaders to the main shader program
-	TheShader::Instance()->Attach(ShaderManager::VERTEX_SHADER, "MAIN_VERTEX_SHADER");
-	TheShader::Instance()->Attach(ShaderManager::FRAGMENT_SHADER, "MAIN_FRAGMENT_SHADER");
+	ThePipeline::Instance()->AttachShaders(); 
 
 	//link main shader program
-	if (!TheShader::Instance()->Link())
+	if (!ThePipeline::Instance()->LinkProgram())
 	{
 		return false;
 	}
@@ -53,25 +63,20 @@ bool StartState::OnEnter()
 	//create both splash screen objects for state
 	m_splashScreen_1 = new SplashScreen("Assets\\Sprites\\SplashScreen_1.png");
 	m_splashScreen_2 = new SplashScreen("Assets\\Sprites\\SplashScreen_2.png");
+	
+	//create the buffers for the sprite images
+	m_splashScreen_1->Create();
+	m_splashScreen_2->Create();
 
 	//set second splash screen to inactive as 
 	//it only activates after the first one is done
 	m_splashScreen_2->IsActive() = false;
-
-	//link camera's view matrix with vertex shader uniform ID
-	Camera::SetViewUniformID("viewMatrix");
-
-	//link global game object model matrix with vertex shader uniform ID
-	GameObject::SetModelUniformID("modelMatrix");
-
-	//link screen's projection matrix with vertex shader uniform ID
-	TheScreen::Instance()->SetProjectionUniformID("projectionMatrix");
 	
 	//if the game is in debug mode initialize the 
-	//debug manager and all of its components 
+	//debug manager and all of its debug objects 
 #ifdef DEBUG
 
-	if (!TheDebug::Instance()->CreateBuffers())
+	if (!TheDebug::Instance()->CreateDebugObjects(15))
 	{
 		return false;
 	}
@@ -87,9 +92,12 @@ bool StartState::OnEnter()
 bool StartState::Update()
 {
 
+	//if in debug mode, go straight through to the main state
+	//because we don't want to bother with menus and start screens
 #ifdef DEBUG
 
-	m_isActive = false;
+	m_isActive = m_isAlive = false;
+	TheGame::Instance()->ChangeState(new MainState(this));
 
 #endif
 
@@ -112,7 +120,13 @@ bool StartState::Update()
 	if (m_splashScreen_2->IsActive())
 	{
 		m_splashScreen_2->Update();
-		m_isActive = m_splashScreen_2->IsActive();
+		m_isActive = m_isAlive = m_splashScreen_2->IsActive();
+	}
+
+	//load up next state as soon as this one is done with all the splash screens
+	if (!m_isAlive)
+	{
+		TheGame::Instance()->ChangeState(new MainState(this));
 	}
 
 #endif
@@ -150,6 +164,9 @@ bool StartState::Draw()
 //------------------------------------------------------------------------------------------------------
 void StartState::OnExit()
 {
+
+	m_splashScreen_1->Destroy();
+	m_splashScreen_2->Destroy();
 
 	delete m_splashScreen_2;
 	delete m_splashScreen_1;

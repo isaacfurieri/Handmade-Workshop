@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : January 2017
+  UPDATED : December 2017
 
   -----------------------------------------------------------------------------------------------
 
@@ -18,23 +18,21 @@
   spritesheet by using the text's ASCII values. Each character in the string text can be spaced
   out as well.
 
-- Because the texture index value is calculated differently here than in the Sprite base class, the
-  Draw() function is overriden. Furthermore the Text class loops through all letters in the text
-  string, therefore an inner loop is used in the Draw() routine.
+- There is a local version of Create() because the Text class will generate its own set of VBOs, 
+  by first creating some empty ones. This is because we never know at the start how large the buffers
+  should be as text is very dynamic. There will be multiple sprites for each word, ie one sprite for
+  every letter in the text string. Whereas the Sprite and Animation classes only create a single 
+  sprite object that is textured and colored, the Text class creates multiple sprites. 
 
-- There is a local version of CreateVertices() because the Text class will generate its own set of
-  vertices, as there will be multiple sprites for each word, ie one sprite for every letter in the
-  text string. Whereas the Sprite and Animation classes only create a single sprite object that is
-  textured and colored, the Text class creates multiple sprites. The CreateVertices() function will
-  be called multiple times from within the Draw() routine, once for each character in the string 
-  text. 
+- The SetText() function does most of the workload in that it fills all the VBOs with the vertices,
+  colors and textures based on the current text string. This is ideally only called once to prevent
+  cost, but if the text is constantly changing (like a score) then it needs to be called each time.
 
 */
 
 #ifndef TEXT_H
 #define TEXT_H
 
-#include <string>
 #include "Sprite.h"
 
 class Text : public Sprite
@@ -43,25 +41,20 @@ class Text : public Sprite
 public :
 
 	Text();
-	virtual ~Text() {}
-
+	
 public :
 
 	void SetText(const std::string& text);
-	void SetCharSpace(float charSpace);
+	void SetCharSpace(GLfloat charSpace);
 	
-public :
+public:
 
-	virtual void Draw();
+	bool Create(const std::string bufferID);
 
-private :
-
-	void CreateVertices(int characterIndex);
-	
 private :
 	
 	std::string m_text;
-	float m_charSpace;
+	GLfloat m_charSpace;
 
 };
 

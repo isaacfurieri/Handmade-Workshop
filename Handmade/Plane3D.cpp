@@ -11,9 +11,7 @@ Plane3D::Plane3D()
 	m_size = 500.0f;
 	m_sideOfPlane = 0.0f;
 	m_distanceFromOrigin = 0.0f;
-
-	m_color.A = 0.4f;
-	m_color = Color::BLUE;
+	m_color = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -97,6 +95,7 @@ void Plane3D::Draw()
 
 	//draw large cube with no height based on size and color set to create a flat surface
 	//the cube transforms based on translation and rotation set in client code!!
-	TheDebug::Instance()->DrawCube3D(m_size, 0.001f, m_size, m_color);
+	TheDebug::Instance()->DrawCube3D(m_size, 0.001f, m_size, 
+		                             m_color.r, m_color.g, m_color.b, m_color.a);
 
 }

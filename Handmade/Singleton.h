@@ -6,17 +6,14 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : November 2015
+  UPDATED : December 2017
 
   -----------------------------------------------------------------------------------------------
 
-- This is a Singleton template class.
-
-- It will instantiate another class of any type and allow access to it via the Instance() member 
-  function.
-
-- The constructor, copy constructor and assignment operator all need to be private so that this
-  class cannot be individually instantiated.
+- This is a Singleton template class. It will instantiate another class of any type and allow 
+  access to it via the Instance() member function. The constructor, copy constructor and 
+  assignment operator all need to be private so that this class cannot be individually 
+  instantiated.
 
 */
 
@@ -45,20 +42,9 @@ private:
 template <class T> T* Singleton<T>::Instance()
 {
 
-	//declare a pointer to the object and assign it NULL value
-	//this will happen only once, ie - the first iteration of this function
-	static T* s_singletonObject = 0;
-
-	//check if pointer is NULL, and if it is, instantiate the object
-	if (!s_singletonObject)
-	{
-		s_singletonObject = new T();
-	}
-
-	//alternatively just return the address
-	return s_singletonObject;
+	static T* singletonObject = new T();
+	return singletonObject;
 
 }
 
 #endif
-

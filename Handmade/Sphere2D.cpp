@@ -10,8 +10,7 @@ Sphere2D::Sphere2D()
 
 	m_scale = 1.0f;
 	m_radius = 0.0f;
-	m_color.A = 0.4f;
-	m_color = Color::GREEN;
+	m_color = glm::vec4(0.0f, 1.0f, 0.0f, 0.4f);
 	
 }
 //------------------------------------------------------------------------------------------------------
@@ -111,6 +110,6 @@ void Sphere2D::Draw()
 	
 	//draw bound based on dimension and color set and use a spacing of 1 because
 	//the pixel scale value is already integrated when the dimension is set earlier
-	TheDebug::Instance()->DrawSphere2D(m_dimension, m_color, 40, 1);
+	TheDebug::Instance()->DrawSphere2D(m_dimension, m_color.r, m_color.g, m_color.b, m_color.a, 10);
 
 }

@@ -1,6 +1,5 @@
-#include "BufferManager.h"
+#include "PipelineManager.h"
 #include "Sprite.h"
-#include "TextureManager.h"
 
 //------------------------------------------------------------------------------------------------------
 //constructor that assigns all default values
@@ -8,38 +7,12 @@
 Sprite::Sprite()
 {
 
-	//set flag to false by default
-	m_isSpriteCreated = false;
-
-	//assign ID to a default 0
-	m_textureID = 0;
-
-	//assign texture index to first sprite cell by default 
-	m_textureIndex = 0;
-
-	//set texture color to a default white color
-	m_color = Color::WHITE;
-
-	//set sprite to be static by default
 	m_spriteType = STATIC;
+	m_isSpriteSampled = false;
 
 	//assign texture dimension to 1 by default
 	//this assumes the sprite's texture contains 1 image
-	m_textureDimension.x = 1.0f;
-	m_textureDimension.y = 1.0f;
-
-	//set the component sizes for the sprite object's vertex and color data
-	m_buffer.SetComponentSize(Buffer::VERTEX_BUFFER, Buffer::XY);
-	m_buffer.SetComponentSize(Buffer::COLOR_BUFFER, Buffer::RGBA);
-
-}
-//------------------------------------------------------------------------------------------------------
-//getter-setter function that returns color reference
-//------------------------------------------------------------------------------------------------------
-Color& Sprite::SpriteColor()
-{
-
-	return m_color;
+	m_textureDimension = glm::vec2(1.0f);
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -52,250 +25,176 @@ void Sprite::SetSpriteType(SpriteType spritetype)
 
 }
 //------------------------------------------------------------------------------------------------------
-//setter function that assigns specific position of image cell in texture
+//function that assigns buffers to sprite based on buffer ID passed
 //------------------------------------------------------------------------------------------------------
-void Sprite::SetTextureCell(int column, int row)
+void Sprite::SetBuffer(const std::string& bufferID)
 {
 
-	m_textureCell.x = (float)column;
-	m_textureCell.y = (float)row;
+	m_buffer.SetBuffers(bufferID);
+
+}
+//------------------------------------------------------------------------------------------------------
+//function that sets texture to sprite based on texture ID passed
+//------------------------------------------------------------------------------------------------------
+void Sprite::SetTexture(const std::string& textureID)
+{
+
+	m_texture.SetTexture(textureID);
+
+}
+//------------------------------------------------------------------------------------------------------
+//setter function that assigns specific color of sprite
+//------------------------------------------------------------------------------------------------------
+void Sprite::SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
+{
+
+	//data that represents passed color for quad image
+	GLfloat colors[] = { r, g, b, a,
+						 r, g, b, a,
+						 r, g, b, a,
+						 r, g, b, a  };
+
+	//fill color buffer with passed color data
+	m_buffer.FillVBO(Buffer::COLOR_BUFFER, colors, sizeof(colors), Buffer::DYNAMIC_FILL);
+
+}
+//------------------------------------------------------------------------------------------------------
+//setter function that assigns specific position of image cell in texture
+//------------------------------------------------------------------------------------------------------
+void Sprite::SetTextureCell(GLuint column, GLuint row)
+{
+
+	m_textureCell = glm::vec2(column, row);
 
 }
 //------------------------------------------------------------------------------------------------------
 //setter function that assigns dimension of texture
 //------------------------------------------------------------------------------------------------------
-void Sprite::SetTextureDimension(int column, int row)
+void Sprite::SetTextureDimension(GLuint column, GLuint row)
 {
 
-	m_textureDimension.x = (float)column;
-	m_textureDimension.y = (float)row;
+	m_textureDimension = glm::vec2(column, row);
 
 }
 //------------------------------------------------------------------------------------------------------
-//setter function that assigns texture image ID to sprite based on index value passed
+//function that creates and fills all buffers with vertex and color data 
 //------------------------------------------------------------------------------------------------------
-void Sprite::SetTextureID(const std::string& mapIndex)
+bool Sprite::Create(const std::string bufferID)
 {
 
-	m_textureID = TheTexture::Instance()->GetTextureID(mapIndex);
+	//create VAO, VBOs and EBO and if there is an error
+	//it means the buffer has already been created in memory
+	if (!m_buffer.CreateBuffers(bufferID, 6, true))
+	{
+		return false;
+	}
+
+	//data that represents vertices for sprite image
+	//they are whole number values since a pixel is whole
+	GLuint vertices[] = { 0, 1, 0,
+						  1, 1, 0,
+						  1, 0, 0,
+						  0, 0, 0 };
+
+	//data that represents colors for quad image
+	GLfloat colors[] = { 1.0f, 1.0f, 1.0f, 1.0f,
+						 1.0f, 1.0f, 1.0f, 1.0f,
+						 1.0f, 1.0f, 1.0f, 1.0f,
+						 1.0f, 1.0f, 1.0f, 1.0f  };
+
+	//data that represents texture coordinates for quad image
+	GLfloat UVs[] = { 0.0f, 0.0f,
+					  1.0f, 0.0f,
+					  1.0f, 1.0f,
+					  0.0f, 1.0f };
+
+	//data that represents indeces for quad image
+	GLuint indices[] = { 0, 1, 3,
+						 3, 1, 2 };
+
+	//bind EBO and all VBOs and shader attributes together with VAO
+	m_buffer.BindEBO();
+	m_buffer.BindVBO(Buffer::VERTEX_BUFFER, "vertexIn", Buffer::XYZ, Buffer::U_INT);
+	m_buffer.BindVBO(Buffer::COLOR_BUFFER, "colorIn", Buffer::RGBA, Buffer::FLOAT);
+	m_buffer.BindVBO(Buffer::TEXTURE_BUFFER, "textureIn", Buffer::UV, Buffer::FLOAT);
+
+	//fill vertex and color VBOs with data 
+	m_buffer.FillEBO(indices, sizeof(indices));
+	m_buffer.FillVBO(Buffer::VERTEX_BUFFER, vertices, sizeof(vertices), Buffer::STATIC_FILL);
+	m_buffer.FillVBO(Buffer::COLOR_BUFFER, colors, sizeof(colors), Buffer::DYNAMIC_FILL);
+	m_buffer.FillVBO(Buffer::TEXTURE_BUFFER, UVs, sizeof(UVs), Buffer::DYNAMIC_FILL);
+
+	return true;
 
 }
 //------------------------------------------------------------------------------------------------------
-//setter function that assigns size of sprite
+//function that destroys all buffer objects
 //------------------------------------------------------------------------------------------------------
-void Sprite::SetSpriteDimension(float width, float height)
+void Sprite::Destroy(const std::string bufferID)
 {
 
-	m_spriteDimension.x = width;
-	m_spriteDimension.y = height;
+	m_buffer.DestroyBuffers(bufferID);
 
 }
 //------------------------------------------------------------------------------------------------------
-//setter function that assigns VBO IDs based on ID names passed
+//function that loads in texture file for sprite
 //------------------------------------------------------------------------------------------------------
-void Sprite::SetBufferID(const std::string& vertexID, const std::string& colorID,
-				         const std::string& textureID)
+bool Sprite::LoadTexture(const std::string& filename, const std::string textureID)
 {
 
-	m_buffer.SetBufferID(Buffer::VERTEX_BUFFER, vertexID);
-	m_buffer.SetBufferID(Buffer::COLOR_BUFFER, colorID);
-	m_buffer.SetBufferID(Buffer::TEXTURE_BUFFER, textureID);
+	return m_texture.Load(filename, textureID);
 
 }
 //------------------------------------------------------------------------------------------------------
-//setter function that assigns shader attribute IDs based on attribute names passed
+//function that unloads texture file for sprite
 //------------------------------------------------------------------------------------------------------
-void Sprite::SetShaderAttribute(const std::string& vertexAttr, const std::string& colorAttr, 
-	                            const std::string& textureAttr)
+void Sprite::UnloadTexture(const std::string textureID)
 {
 
-	m_buffer.SetAttributeID(Buffer::VERTEX_BUFFER, vertexAttr);
-	m_buffer.SetAttributeID(Buffer::COLOR_BUFFER, colorAttr);
-	m_buffer.SetAttributeID(Buffer::TEXTURE_BUFFER, textureAttr);
+	m_texture.Unload(textureID);
 
 }
 //------------------------------------------------------------------------------------------------------
-//function that creates and draws the actual sprite on screen
+//function that samples the sprite with the correct texture or texture "cel"
+//------------------------------------------------------------------------------------------------------
+void Sprite::Update()
+{
+
+	//only if sprite is set to change or if it needs to be initially 
+	//sampled then call the necessary functions to "cut out" the sprite 
+	if (m_spriteType == DYNAMIC || (m_spriteType == STATIC && !m_isSpriteSampled))
+	{
+
+		//calculate the width and height of each cell relative to the entire texture 
+		//this gives us a normalized dimension value for each "cell" in the sprite sheet
+		glm::vec2 cellDimension(1.0f / m_textureDimension.x, 1.0f / m_textureDimension.y);
+
+		//take the desired cell to "cut out" and multiply it by the cell's dimension value
+		//this gives us a normalized texture coordinate value that is out "starting point" 
+		glm::vec2 texCoordOrigin = m_textureCell * cellDimension;
+
+		//create new UV data that for our texture coordinates
+		GLfloat UVs[] = { texCoordOrigin.x,                   texCoordOrigin.y,
+						  texCoordOrigin.x + cellDimension.x, texCoordOrigin.y,
+						  texCoordOrigin.x + cellDimension.x, texCoordOrigin.y + cellDimension.y,
+						  texCoordOrigin.x,                   texCoordOrigin.y + cellDimension.y };
+
+		//fill texture VBO with new UV data 
+		m_buffer.FillVBO(Buffer::TEXTURE_BUFFER, UVs, sizeof(UVs), Buffer::DYNAMIC_FILL);
+
+		//set flag so that static sprites are not created again
+		m_isSpriteSampled = true;
+
+	}	
+
+}
+//------------------------------------------------------------------------------------------------------
+//function that binds the sprite texture and sends all buffer data to shader
 //------------------------------------------------------------------------------------------------------
 void Sprite::Draw()
 {
 
-	//aquire index value of specific texture cell to "cut out" using a basic formula 
-	m_textureIndex = (int)((m_textureCell.y * m_textureDimension.x) + m_textureCell.x);
-
-	//only if sprite is set to change or if it needs to be initially 
-	//created then call the necessary functions to create the sprite 
-	if (m_spriteType == DYNAMIC || (m_spriteType == STATIC && !m_isSpriteCreated))
-	{
-
-		//clear all buffer data from vectors
-		ClearBufferData();
-
-		//create the vertex, texture and color buffer data
-		CreateVertices();
-		CreateTexCoords();
-		CreateColors();
-
-		//fill the VBOs with the buffer data
-		FillBuffers();
-
-		//set flag so that static sprites are not created again
-		m_isSpriteCreated = true;
-
-	}
-
-	//create and draw the sprite
-	CreateSprite();
-
-}
-//------------------------------------------------------------------------------------------------------
-//function that fills VBO buffers with vertex, texture and color data
-//------------------------------------------------------------------------------------------------------
-void Sprite::FillBuffers()
-{
-
-	m_buffer.FillData(Buffer::COLOR_BUFFER);
-	m_buffer.FillData(Buffer::VERTEX_BUFFER);
-	m_buffer.FillData(Buffer::TEXTURE_BUFFER);
-
-}
-//------------------------------------------------------------------------------------------------------
-//function that clears the vertex, texture and color buffer data for new use
-//------------------------------------------------------------------------------------------------------
-void Sprite::ClearBufferData()
-{
-
-	m_buffer.Colors().clear();
-	m_buffer.Vertices().clear();
-	m_buffer.Textures().clear();
-
-}
-//------------------------------------------------------------------------------------------------------
-//function that binds the texture, and sends sprite data to shaders 
-//------------------------------------------------------------------------------------------------------
-void Sprite::CreateSprite()
-{
-
-	//bind texture with sprite based on texture ID
-	TheTexture::Instance()->Enable(m_textureID);
-
-	//send sprite data to shaders
-	m_buffer.DrawData(Buffer::TRIANGLES);
-
-	//unbind texture so that there are no left over links
-	TheTexture::Instance()->Disable();
-
-}
-//------------------------------------------------------------------------------------------------------
-//function that adds color data to buffer object's color vector
-//------------------------------------------------------------------------------------------------------
-void Sprite::CreateColors()
-{
-
-	//color data for vertex #1
-	m_buffer.Colors().push_back(m_color.R); m_buffer.Colors().push_back(m_color.G);
-	m_buffer.Colors().push_back(m_color.B); m_buffer.Colors().push_back(m_color.A);
-
-	//color data for vertex #2
-	m_buffer.Colors().push_back(m_color.R); m_buffer.Colors().push_back(m_color.G);
-	m_buffer.Colors().push_back(m_color.B); m_buffer.Colors().push_back(m_color.A);
-
-	//color data for vertex #3
-	m_buffer.Colors().push_back(m_color.R); m_buffer.Colors().push_back(m_color.G);
-	m_buffer.Colors().push_back(m_color.B); m_buffer.Colors().push_back(m_color.A);
-
-	//color data for vertex #4
-	m_buffer.Colors().push_back(m_color.R); m_buffer.Colors().push_back(m_color.G);
-	m_buffer.Colors().push_back(m_color.B); m_buffer.Colors().push_back(m_color.A);
-
-	//color data for vertex #5
-	m_buffer.Colors().push_back(m_color.R); m_buffer.Colors().push_back(m_color.G);
-	m_buffer.Colors().push_back(m_color.B); m_buffer.Colors().push_back(m_color.A);
-
-	//color data for vertex #6
-	m_buffer.Colors().push_back(m_color.R); m_buffer.Colors().push_back(m_color.G);
-	m_buffer.Colors().push_back(m_color.B); m_buffer.Colors().push_back(m_color.A);
-
-}
-//------------------------------------------------------------------------------------------------------
-//function that adds vertex data to buffer object's vertex vector
-//------------------------------------------------------------------------------------------------------
-void Sprite::CreateVertices()
-{
-
-	//sprite vertices are based on centre position of sprite
-	//therefore we have to halve the width and height dimensions first
-	glm::vec2 halfDimension(m_spriteDimension.x / 2.0f, m_spriteDimension.y / 2.0f);
-
-	//vertex data for vertex #1
-	m_buffer.Vertices().push_back(-halfDimension.x);
-	m_buffer.Vertices().push_back(halfDimension.y);
-
-	//vertex data for vertex #2
-	m_buffer.Vertices().push_back(halfDimension.x);
-	m_buffer.Vertices().push_back(halfDimension.y);
-
-	//vertex data for vertex #3
-	m_buffer.Vertices().push_back(-halfDimension.x);
-	m_buffer.Vertices().push_back(-halfDimension.y);
-
-	//vertex data for vertex #4
-	m_buffer.Vertices().push_back(-halfDimension.x);
-	m_buffer.Vertices().push_back(-halfDimension.y);
-
-	//vertex data for vertex #5
-	m_buffer.Vertices().push_back(halfDimension.x);
-	m_buffer.Vertices().push_back(halfDimension.y);
-
-	//vertex data for vertex #6
-	m_buffer.Vertices().push_back(halfDimension.x);
-	m_buffer.Vertices().push_back(-halfDimension.y);
-
-}
-//------------------------------------------------------------------------------------------------------
-//function that adds texture coordinate data to buffer object's texture coordinate vector
-//------------------------------------------------------------------------------------------------------
-void Sprite::CreateTexCoords()
-{
-
-	//variable for temporary texture coordinates
-	glm::vec2 texCoord;
-
-	//calculate fractional X and Y texture dimension value based on texture dimension
-	//this fractional value is needed to keep texture UVs between 0 and 1
-	glm::vec2 oneOverDimension(1.0f / m_textureDimension.x, 1.0f / m_textureDimension.y);
-
-	//use modulo and divide with the texture index 
-	//to get exact cell block XY coordinates to "cut out"
-	texCoord.x = (float)(m_textureIndex % (int)m_textureDimension.x);
-	texCoord.y = (float)(m_textureIndex / (int)m_textureDimension.x);
-
-	//multiply the texture coordinate result by 
-	//oneOverDimension to get a value between 0 and 1
-	texCoord *= oneOverDimension;
-	
-	//texture coordinate data for vertex #1
-	m_buffer.Textures().push_back(texCoord.x);
-	m_buffer.Textures().push_back(texCoord.y);
-
-	//texture coordinate data for vertex #2
-	m_buffer.Textures().push_back(texCoord.x + oneOverDimension.x);
-	m_buffer.Textures().push_back(texCoord.y);
-
-	//texture coordinate data for vertex #3
-	m_buffer.Textures().push_back(texCoord.x);
-	m_buffer.Textures().push_back(texCoord.y + oneOverDimension.y);
-
-	//texture coordinate data for vertex #4
-	m_buffer.Textures().push_back(texCoord.x);
-	m_buffer.Textures().push_back(texCoord.y + oneOverDimension.y);
-
-	//texture coordinate data for vertex #5
-	m_buffer.Textures().push_back(texCoord.x + oneOverDimension.x);
-	m_buffer.Textures().push_back(texCoord.y);
-
-	//texture coordinate data for vertex #6
-	m_buffer.Textures().push_back(texCoord.x + oneOverDimension.x);
-	m_buffer.Textures().push_back(texCoord.y + oneOverDimension.y);
+	m_texture.Bind();
+	m_buffer.Draw(Buffer::TRIANGLES);
 
 }

@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : January 2017
+  UPDATED : December 2017
 
   -----------------------------------------------------------------------------------------------
 
@@ -38,18 +38,21 @@ public :
 public:
 
 	SplashScreen(std::string filename);
-	virtual ~SplashScreen();
+	virtual ~SplashScreen() {}
 
 public:
 
+	virtual bool Create();
 	virtual void Update();
-	virtual bool Draw();
+	virtual void Draw();
+	virtual void Destroy(); 
 
 private:
 
 	Fade m_fade;
+	GLfloat m_alpha;
 	Sprite m_sprite;
-	GLuint m_textureFlagUniformID;
+	std::string m_filename;
 
 };
 

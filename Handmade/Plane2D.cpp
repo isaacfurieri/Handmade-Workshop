@@ -10,9 +10,7 @@ Plane2D::Plane2D()
 
 	m_sideOfPlane = 0.0f;
 	m_distanceFromOrigin = 0.0f;
-
-	m_color.A = 0.4f;
-	m_color = Color::BLUE;
+	m_color = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -95,7 +93,7 @@ void Plane2D::Draw()
 	//draw line based on plane points and color set and use a spacing of 1 because 
 	//the pixel scale value is already integrated when the plane points are set earlier
 	//the plane points already have translation, rotation and scale considered!! 
-	TheDebug::Instance()->DrawLine(m_point_1.x, m_point_1.y, 0,
-		                           m_point_2.x, m_point_2.y, 0, 4, m_color, 1);
+	TheDebug::Instance()->DrawLine2D(m_point_1.x, m_point_1.y, m_point_2.x, m_point_2.y, 4, 
+		                             m_color.r, m_color.g, m_color.b);
 
 }

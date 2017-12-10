@@ -6,7 +6,7 @@
   and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
   you wish with this code - it is there for all!
 
-  UPDATED : April 2017
+  UPDATED : December 2017
 
   -----------------------------------------------------------------------------------------------
 
@@ -62,7 +62,6 @@
 #include <glm.hpp>
 #include <SDL.h>
 #include <SDL_syswm.h>
-#include "Color.h"
 #include "Singleton.h"
 
 class ScreenManager
@@ -70,6 +69,7 @@ class ScreenManager
 
 public :
 
+	enum VSyncState      { VSYNC_OFF, VSYNC_ON };
 	enum ScreenOrigin2D  { TOP_LEFT, BOTTOM_LEFT };
 
 public:
@@ -78,29 +78,31 @@ public:
 
 public :
 
-	int GetPixelsPerUnit();
+	GLint GetPixelsPerUnit();
 	HWND GetWindowHandle();
 	SDL_Window* GetWindow();
 	glm::vec2 GetScreenSize();
 
 public :
 
-	void SetClearColor(Color& color);
-	void SetProjectionUniformID(std::string uniformID);
-	void SetViewport(int x, int y, int width, int height);
+	bool SetVerticalSync(VSyncState vsyncState);
+	void SetViewport(GLint x, GLint y, GLint width, GLint height);
+	void SetClearColor(GLfloat r = 1.0f, GLfloat g = 1.0f, 
+		               GLfloat b = 1.0f, GLfloat a = 1.0f);
+
 	void Set2DScreen(ScreenOrigin2D screenOrigin);
-	void Set3DScreen(float fieldOfView, float nearClip, float farClip);
+	void Set3DScreen(GLfloat fieldOfView, GLfloat nearClip, GLfloat farClip);
 	
 public:
 
-	bool Initialize(const char* windowTitle, int width = 1024, int height = 768, int pixelsPerUnit = 0,
-		            int major = 3, int minor = 3, bool compatibleContext = false, bool fullscreen = false);
+	bool Initialize(const char* windowTitle, GLint width = 1024, GLint height = 768, GLint pixelsPerUnit = 1,
+		            GLint major = 4, GLint minor = 0, bool compatibleContext = false, bool fullscreen = false);
 	
 	void DisplayExtensions();
 	void DisplayGraphicsProfile();
 	
-	void Update();
-	void Draw();
+	void ClearScreen();
+	void SwapBuffer();
 
 	void ShutDown();
 
@@ -112,15 +114,14 @@ private:
 
 private :
 
-	int m_width;
-	int m_height;
-	int m_pixelsPerUnit;
+	GLint m_width;
+	GLint m_height;
+	GLint m_pixelsPerUnit;
 
 	HWND m_windowHandle;
 	SDL_Window* m_window;
 	SDL_GLContext m_context;
 	
-	GLuint m_projectionUniformID;
 	glm::mat4 m_projectionMatrix;
 	
 };

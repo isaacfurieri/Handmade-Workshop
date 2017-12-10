@@ -10,11 +10,7 @@ OBB2D::OBB2D()
 {
 
 	m_scale = glm::vec2(1.0f);
-	
-	m_color.R = 1.0f;
-	m_color.G = 0.5f;
-	m_color.B = 0.0f;
-	m_color.A = 0.4f;
+	m_color = glm::vec4(1.0f, 0.5f, 0.0f, 0.4f);
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -193,7 +189,8 @@ void OBB2D::Draw()
 
 	//draw bound based on dimension and color set and use a spacing of 1 because
 	//the pixel scale value is already integrated when the dimension is set earlier
-	TheDebug::Instance()->DrawCube2D(m_dimension.x, m_dimension.y, m_color, 1);
+	TheDebug::Instance()->DrawCube2D(m_dimension.x, m_dimension.y, 
+		                             m_color.r, m_color.g, m_color.b, m_color.a);
 
 }
 //------------------------------------------------------------------------------------------------------

@@ -1,8 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <gtc\matrix_transform.hpp>
+#include "PipelineManager.h"
 #include "ScreenManager.h"
-#include "ShaderManager.h"
 
 //------------------------------------------------------------------------------------------------------
 //constructor that assigns all default values 
@@ -16,15 +16,13 @@ ScreenManager::ScreenManager()
 	
 	m_windowHandle = 0;
 	m_window = nullptr;
-	m_context = 0;
-
-	m_projectionUniformID = 0;
+	m_context = nullptr;
 	
 }
 //------------------------------------------------------------------------------------------------------
 //getter function that returns pixel scale value
 //------------------------------------------------------------------------------------------------------
-int ScreenManager::GetPixelsPerUnit()
+GLint ScreenManager::GetPixelsPerUnit()
 {
 
 	return m_pixelsPerUnit;
@@ -58,30 +56,36 @@ glm::vec2 ScreenManager::GetScreenSize()
 
 }
 //------------------------------------------------------------------------------------------------------
-//setter function that assigns a pre-defined color value for clearing the screen
+//setter function that switches VSYNC on/off
 //------------------------------------------------------------------------------------------------------
-void ScreenManager::SetClearColor(Color& color)
+bool ScreenManager::SetVerticalSync(VSyncState vsyncState)
 {
 
-	glClearColor(color.R, color.G, color.B, color.A);
+	if (SDL_GL_SetSwapInterval((int)vsyncState) == -1)
+	{
+		std::cout << "Vertical sync not supported." << std::endl;
+		return false;
+	}
 
-}
-//------------------------------------------------------------------------------------------------------
-//setter function that assigns projection matrix's shader uniform ID  
-//------------------------------------------------------------------------------------------------------
-void ScreenManager::SetProjectionUniformID(std::string uniformID)
-{
-
-	m_projectionUniformID = TheShader::Instance()->GetUniformID(uniformID.c_str());
+	return true;
 
 }
 //------------------------------------------------------------------------------------------------------
 //setter function that sets up rectangular viewport section of screen 
 //------------------------------------------------------------------------------------------------------
-void ScreenManager::SetViewport(int x, int y, int width, int height)
+void ScreenManager::SetViewport(GLint x, GLint y, GLint width, GLint height)
 {
 
 	glViewport(x, y, width, height);
+
+}
+//------------------------------------------------------------------------------------------------------
+//setter function that assigns a pre-defined color value for clearing the screen
+//------------------------------------------------------------------------------------------------------
+void ScreenManager::SetClearColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
+{
+
+	glClearColor(r, g, b, a);
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -108,14 +112,14 @@ void ScreenManager::Set2DScreen(ScreenOrigin2D screenOrigin)
 		m_projectionMatrix = glm::ortho(0.0f, (float)m_width, 0.0f, (float)m_height);
 	}
 
-	//send projection matrix to vertex shader
-	TheShader::Instance()->SetUniformMatrix(m_projectionUniformID, &m_projectionMatrix[0][0]);
+	//send projection matrix to shader
+	ThePipeline::Instance()->SendUniformData("projMatrix", m_projectionMatrix);
 
 }
 //------------------------------------------------------------------------------------------------------
 //setter function that creates a 3D perspective projection 
 //------------------------------------------------------------------------------------------------------
-void ScreenManager::Set3DScreen(float fieldOfView, float nearClip, float farClip)
+void ScreenManager::Set3DScreen(GLfloat fieldOfView, GLfloat nearClip, GLfloat farClip)
 {
 
 	//enable Z-buffering so that vertices
@@ -123,20 +127,20 @@ void ScreenManager::Set3DScreen(float fieldOfView, float nearClip, float farClip
 	glEnable(GL_DEPTH_TEST);
 
 	//determine the aspect ratio based on width and height of screen
-	float aspectRatio = (float)m_width / (float)m_height;
+	GLfloat aspectRatio = (GLfloat)m_width / (GLfloat)m_height;
 
 	//create a 3D perspective projection using passed FOV angle, aspect ratio and clipping planes
 	m_projectionMatrix = glm::perspective(glm::radians(fieldOfView), aspectRatio, nearClip, farClip);
 
-	//send projection matrix to vertex shader
-	TheShader::Instance()->SetUniformMatrix(m_projectionUniformID, &m_projectionMatrix[0][0]);
+	//send projection matrix to shader
+	ThePipeline::Instance()->SendUniformData("projMatrix", m_projectionMatrix);
 
 }
 //------------------------------------------------------------------------------------------------------
 //function that initializes the screen including the SDL, OpenGL and GLEW subsystems   
 //------------------------------------------------------------------------------------------------------
-bool ScreenManager::Initialize(const char* windowTitle, int width, int height, int pixelsPerUnit,
-							   int major, int minor, bool compatibleContext, bool fullscreen)
+bool ScreenManager::Initialize(const char* windowTitle, GLint width, GLint height, GLint pixelsPerUnit,
+	                           GLint major, GLint minor, bool compatibleContext, bool fullscreen)
 {
 
 	//initialize SDL subsystem by enabling the entire SDL package
@@ -205,10 +209,10 @@ bool ScreenManager::Initialize(const char* windowTitle, int width, int height, i
 	//aquire main window data from SDL created game window
 	SDL_GetWindowWMInfo(m_window, &systemInfo);
 
-	//set GLEW flag to combat potential errors for core mode
+	//initialize GLEW with full support for beta extensions
+	//and if it fails, display error message and return false
 	glewExperimental = GL_TRUE;
 
-	//initialize GLEW and if it fails, display error message and return false
 	if (glewInit() != GLEW_OK)
 	{
 		std::cout << "GLEW could not be initialized.";
@@ -247,32 +251,21 @@ bool ScreenManager::Initialize(const char* windowTitle, int width, int height, i
 void ScreenManager::DisplayExtensions()
 {
 
-	//variables to store the total extension amount
-	//and each extension in string format
+	//variable to store total amount of supported extensions 
 	GLint totalExtensions;
-	std::vector<std::string> extensions;
 
-	//get total amount of extensions from OpenGL
+	//get total number of extensions supported by our graphics card
 	glGetIntegerv(GL_NUM_EXTENSIONS, &totalExtensions);
 
-	//loop through all extensions and store 
-	//each one in the vector container
-	for (GLint i = 0; i < totalExtensions; i++)
-	{
-		std::string temp = (const char*)glGetStringi(GL_EXTENSIONS, i);
-		extensions.push_back(temp);
-	}
-
-	//display all graphics card supported extensions on the console window 
-	system("cls");
 	std::cout << "---------------------------------------------------------------" << std::endl;
-	std::cout << "The following extensions are supported by your graphics card : " << std::endl;
+	std::cout << "The following extensions are supported by your graphics card:  " << std::endl;
 	std::cout << "---------------------------------------------------------------" << std::endl;
 
 	//loop through all extensions and display them
-	for (size_t j = 0; j < extensions.size(); j++)
+	for (GLint i = 0; i < totalExtensions; i++)
 	{
-		std::cout << "Extension #" << j << " : " << extensions[j] << std::endl;
+		std::cout << "Extension #" << i + 1 << " : "
+			      << (const char*)glGetStringi(GL_EXTENSIONS, i) << std::endl;
 	}
 
 }
@@ -282,53 +275,28 @@ void ScreenManager::DisplayExtensions()
 void ScreenManager::DisplayGraphicsProfile()
 {
 
-	//create variables for storing OpenGL profile data and get the data from OpenGL
-	std::string vendor = (const char*)(glGetString(GL_VENDOR));
-	std::string renderer = (const char*)(glGetString(GL_RENDERER));
-	std::string versionGL = (const char*)(glGetString(GL_VERSION));
-	std::string versionGLSL = (const char*)(glGetString(GL_SHADING_LANGUAGE_VERSION));
+	std::cout << "---------------------------------------------------------------" << std::endl;
+	std::cout << "Your graphics card profile is as follows:                      " << std::endl;
+	std::cout << "---------------------------------------------------------------" << std::endl;
 
-	//display all OpenGL profile data on the console window
-	system("cls");
-	std::cout << "--------------------------------------------------------------------" << std::endl;
-	std::cout << "Your graphics card profile is as follows : " << std::endl;
-	std::cout << "--------------------------------------------------------------------" << std::endl;
-	std::cout << "Graphics Card Vendor : " << vendor << std::endl;
-	std::cout << "Graphics Card Model : " << renderer << std::endl;
-	std::cout << "OpenGL Version : " << versionGL << std::endl;
-	std::cout << "GLSL Version : " << versionGLSL << std::endl;
+	//display the manufacturer of the graphics hardware
+	std::cout << "Graphics Card Vendor : " << (const char*)(glGetString(GL_VENDOR)) << std::endl;
 
-	//display all OpenGL supported versions on the console window 
-	std::cout << "--------------------------------------------------------------------" << std::endl;
-	std::cout << "The following OpenGL contexts are currently available : " << std::endl;
-	std::cout << "--------------------------------------------------------------------" << std::endl;
+	//display the make and model of the graphics card
+	std::cout << "Graphics Card Model  : " << (const char*)(glGetString(GL_RENDERER)) << std::endl;
 
-	//call specific GLEW functions to check if OpenGL contexts are supported
-	//these outcomes are based on what OpenGL context was configured previously
-	if (GLEW_VERSION_1_1)   std::cout << "Version 1.1" << std::endl;
-	if (GLEW_VERSION_1_2)   std::cout << "Version 1.2" << std::endl;
-	if (GLEW_VERSION_1_2_1) std::cout << "Version 1.2.1" << std::endl;
-	if (GLEW_VERSION_1_3)   std::cout << "Version 1.3" << std::endl;
-	if (GLEW_VERSION_1_4)   std::cout << "Version 1.4" << std::endl;
-	if (GLEW_VERSION_1_5)   std::cout << "Version 1.5" << std::endl;
-	if (GLEW_VERSION_2_0)   std::cout << "Version 2.0" << std::endl;
-	if (GLEW_VERSION_2_1)   std::cout << "Version 2.1" << std::endl;
-	if (GLEW_VERSION_3_0)   std::cout << "Version 3.0" << std::endl;
-	if (GLEW_VERSION_3_1)   std::cout << "Version 3.1" << std::endl;
-	if (GLEW_VERSION_3_2)   std::cout << "Version 3.2" << std::endl;
-	if (GLEW_VERSION_3_3)   std::cout << "Version 3.3" << std::endl;
-	if (GLEW_VERSION_4_0)   std::cout << "Version 4.0" << std::endl;
-	if (GLEW_VERSION_4_1)   std::cout << "Version 4.1" << std::endl;
-	if (GLEW_VERSION_4_2)   std::cout << "Version 4.2" << std::endl;
-	if (GLEW_VERSION_4_3)   std::cout << "Version 4.3" << std::endl;
-	if (GLEW_VERSION_4_4)   std::cout << "Version 4.4" << std::endl;
-	if (GLEW_VERSION_4_5)   std::cout << "Version 4.5" << std::endl;
+	//display the current OpenGL version and mode set
+	std::cout << "OpenGL Version       : " << (const char*)(glGetString(GL_VERSION)) << std::endl;
+
+	//display which GLSL version is supported by the graphics card
+	std::cout << "GLSL Version         : " << (const char*)(glGetString(GL_SHADING_LANGUAGE_VERSION))
+		      << std::endl;
 
 }
 //------------------------------------------------------------------------------------------------------
 //function that clears the frame buffer
 //------------------------------------------------------------------------------------------------------
-void ScreenManager::Update()
+void ScreenManager::ClearScreen()
 {
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -337,7 +305,7 @@ void ScreenManager::Update()
 //------------------------------------------------------------------------------------------------------
 //function that swaps the frame buffer
 //------------------------------------------------------------------------------------------------------
-void ScreenManager::Draw()
+void ScreenManager::SwapBuffer()
 {
 
 	SDL_GL_SwapWindow(m_window);
