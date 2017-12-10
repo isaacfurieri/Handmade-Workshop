@@ -17,7 +17,7 @@ glm::vec3 Physics::GravityForce(double mass_1, double mass_2, glm::vec3 distance
 //------------------------------------------------------------------------------------------------------
 //static function that calculates torque force using a formula 
 //------------------------------------------------------------------------------------------------------
-glm::vec3 TorqueForce(glm::vec3 force, glm::vec3 contactPosition, glm::vec3 centreOfMass)
+glm::vec3 Physics::TorqueForce(glm::vec3 force, glm::vec3 contactPosition, glm::vec3 centreOfMass)
 {
 
 	//the result produces a vector, used for the rotation axis and torque magnitude
@@ -128,13 +128,13 @@ void Physics::Update()
 	//calculate the new position using Euler Integration
 	//this formula is frame independent and uses time for accurate calculations
 	oldVelocity = m_velocity;
-	m_velocity += m_acceleration * (float)TheGame::Instance()->GetElapsedTimeSeconds();
-	m_position += (m_velocity + oldVelocity) * 0.5f * (float)TheGame::Instance()->GetElapsedTimeSeconds();
+	m_velocity += m_acceleration * ((float)TheGame::Instance()->GetElapsedTime() / 1000);
+	m_position += (m_velocity + oldVelocity) * 0.5f * ((float)TheGame::Instance()->GetElapsedTime() / 1000);
 
 	//calculate the new rotational angle using Euler Integration
 	//this formula is frame independent and uses time for accurate calculations	
 	oldVel = m_angVelocity;
-	m_angVelocity += m_angAcceleration * TheGame::Instance()->GetElapsedTimeSeconds();
-	m_angle += (m_angVelocity + oldVel) * 0.5 * TheGame::Instance()->GetElapsedTimeSeconds();
+	m_angVelocity += m_angAcceleration * TheGame::Instance()->GetElapsedTime() / 1000;
+	m_angle += (m_angVelocity + oldVel) * 0.5 * TheGame::Instance()->GetElapsedTime() / 1000;
 
 }
