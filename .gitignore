@@ -1,8 +1,6 @@
 
 #main stuff not needed to build project
-Handmade.VC.db
-Handmade.VC.VC.opendb
-.vs/Handmade/v14/.suo
+.vs
 
 #all photoshop assets
 Handmade/Assets/PSD
