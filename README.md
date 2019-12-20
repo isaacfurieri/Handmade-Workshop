@@ -10,4 +10,4 @@ Twitter : @KarstensCorner
 
 Thank you for your support!
 
-©2018 Karsten Vermeulen
+Â©2018 Karsten Vermeulen
