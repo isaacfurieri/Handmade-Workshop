@@ -16,7 +16,7 @@ Please note, that this project is __not__ _open source_ and therefore has no lic
 
 If you like _Handmade_, and wish to show your support, if you have any questions about the project, or if you just want to reach out, please find me on the following channels: 
 
-<a href="http://www.karstenvermeulen.com" target="blank"> <img width="50" height="50" src="http://www.karstenvermeulen.com/images/main/logo.png"> </img> </a> <a href="https://www.facebook.com/KarstensCorner" target="blank"> <img width="50" height="50" src="http://www.karstenvermeulen.com/images/link-buttons/facebook.png"> </img> </a> <a href="https://twitter.com/KarstensCorner" target="blank"> <img width="50" height="50" src="http://www.karstenvermeulen.com/images/link-buttons/twitter.png"> </img> </a> <a href="https://uk.linkedin.com/in/karstenvermeulen" target="blank"> <img width="50" height="50" src="http://www.karstenvermeulen.com/images/link-buttons/linkedin.png" class="linkButton"> </img> </a>                                         
+<a href="http://www.karstenvermeulen.com"> <img width="50" height="50" src="http://www.karstenvermeulen.com/images/main/logo.png"> </img> </a> <a href="https://www.facebook.com/KarstensCorner"> <img width="50" height="50" src="http://www.karstenvermeulen.com/images/link-buttons/facebook.png"> </img> </a> <a href="https://twitter.com/KarstensCorner"> <img width="50" height="50" src="http://www.karstenvermeulen.com/images/link-buttons/twitter.png"> </img> </a> <a href="https://uk.linkedin.com/in/karstenvermeulen"> <img width="50" height="50" src="http://www.karstenvermeulen.com/images/link-buttons/linkedin.png" class="linkButton"> </img> </a>                                         
 
 #### Thank you for your support!
 
