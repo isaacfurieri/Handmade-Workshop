@@ -43,7 +43,7 @@
 #ifndef BOUND_H
 #define BOUND_H
 
-#include <glew.h>
+#include "glad.h"
 #include <glm.hpp>
 
 class Bound 

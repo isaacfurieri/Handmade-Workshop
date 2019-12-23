@@ -67,7 +67,7 @@
 #define CAMERA_H
 
 #include <string>
-#include <glew.h>
+#include "glad.h"
 #include <glm.hpp>
 
 class Camera

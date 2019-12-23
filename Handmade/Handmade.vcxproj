@@ -187,6 +187,7 @@
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="GameState.cpp" />
+    <ClCompile Include="glad.c" />
     <ClCompile Include="HUDCamera.cpp" />
     <ClCompile Include="DebugManager.cpp" />
     <ClCompile Include="EndState.cpp" />

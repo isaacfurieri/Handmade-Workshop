@@ -211,12 +211,19 @@ bool ScreenManager::Initialize(const char* windowTitle, GLint width, GLint heigh
 
 	//initialize GLEW with full support for beta extensions
 	//and if it fails, display error message and return false
-	glewExperimental = GL_TRUE;
+	/*glewExperimental = GL_TRUE;
 
 	if (glewInit() != GLEW_OK)
 	{
 		std::cout << "GLEW could not be initialized.";
 		return false;
+	}*/
+
+	if (!gladLoadGL())
+	{
+		std::cout << "Failed to initialize GLAD" << std::endl;
+		system("pause");
+		return 0;
 	}
 
 	//enable vertical syncing so that screen monitor and frame buffer refresh rate are synchronized 

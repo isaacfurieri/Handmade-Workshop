@@ -20,7 +20,7 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
-#include <glew.h>
+#include "glad.h"
 #include <glm.hpp>
 
 class Material

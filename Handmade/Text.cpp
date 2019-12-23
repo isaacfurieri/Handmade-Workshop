@@ -1,4 +1,3 @@
-#include <glew.h>
 #include "ScreenManager.h"
 #include "PipelineManager.h"
 #include "Text.h"

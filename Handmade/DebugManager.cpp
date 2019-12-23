@@ -1,6 +1,5 @@
 #include <iostream>
 #include <string>
-#include <glew.h>
 #include <glm.hpp>
 #include "DebugManager.h"
 #include "GameObject.h"
@@ -69,11 +68,11 @@ void DebugManager::CheckError()
 			break;
 		}
 
-		case GL_TABLE_TOO_LARGE:
+		/*case GL_TABLE_TOO_LARGE:
 		{
 			std::cout << "ERROR : Table too large." << std::endl;
 			break;
-		}
+		}*/
 
 	}
 

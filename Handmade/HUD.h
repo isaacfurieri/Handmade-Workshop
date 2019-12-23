@@ -19,7 +19,7 @@
 #ifndef HUD_H
 #define HUD_H
 
-#include <glew.h>
+#include "glad.h"
 #include "GameObject.h"
 #include "Sprite.h"
 #include "Texture.h"
