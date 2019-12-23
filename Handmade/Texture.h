@@ -38,7 +38,7 @@
 
 #include <map>
 #include <string>
-#include <glew.h>
+#include "glad.h"
 
 class Texture
 {

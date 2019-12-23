@@ -40,7 +40,7 @@
 #define SPRITE_H
 
 #include <string>
-#include <glew.h>
+#include "glad.h"
 #include <glm.hpp>
 #include "Buffer.h"
 #include "Texture.h"

@@ -53,7 +53,7 @@
 #ifndef DEBUG_MANAGER_H
 #define DEBUG_MANAGER_H
 
-#include <glew.h>
+#include "glad.h"
 #include "Buffer.h"
 #include "Model.h"
 #include "Singleton.h"

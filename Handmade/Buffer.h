@@ -32,7 +32,7 @@
 #include <map>
 #include <string>
 #include <vector>
-#include <glew.h>
+#include "glad.h"
 
 struct BufferID
 {

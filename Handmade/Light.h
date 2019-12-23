@@ -23,7 +23,7 @@
 #ifndef LIGHT_H
 #define LIGHT_H
 
-#include <glew.h>
+#include "glad.h"
 #include <glm.hpp>
 #include "Buffer.h"
 

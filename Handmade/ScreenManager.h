@@ -58,7 +58,7 @@
 #define SCREEN_MANAGER_H
 
 #include <string>
-#include <glew.h>
+#include "glad.h"
 #include <glm.hpp>
 #include <SDL.h>
 #include <SDL_syswm.h>

@@ -24,7 +24,6 @@
 #define SPLASH_SCREEN_H
 
 #include <string>
-#include <glew.h>
 #include "GameObject.h"
 #include "Sprite.h"
 

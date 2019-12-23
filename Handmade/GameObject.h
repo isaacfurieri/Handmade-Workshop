@@ -54,7 +54,7 @@
 #ifndef GAME_OBJECT_H
 #define GAME_OBJECT_H
 
-#include <glew.h>
+#include "glad.h"
 #include <glm.hpp>
 #include <string>
 #include <vector>
