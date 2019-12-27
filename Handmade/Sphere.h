@@ -52,50 +52,47 @@
 
 */
 
-#ifndef SPHERE_3D_H
-#define SPHERE_3D_H
+#ifndef SPHERE_H
+#define SPHERE_H
 
-#include "AABB3D.h"
-#include "Bound.h"
-#include "Line3D.h"
-#include "OBB3D.h"
-#include "Plane3D.h"
+#include "AABB.h"
 
-class Sphere3D : public Bound
+class Sphere
 {
-
-public :
-
-	Sphere3D();
-	virtual ~Sphere3D()  {}
 
 public:
 
+	Sphere();
+	
+public:
+
 	float GetRadius() const;
+    float GetRadiusScaled() const;
+    const glm::vec3& GetPosition() const;
 
 public:
 
 	void SetScale(float scale);
-	void SetDimension(float dimension);
+    void SetRadius(float radius);
 
 public:
 
-	bool IsColliding(const OBB3D& secondBox) const;
-	bool IsColliding(const AABB3D& secondBox) const;
-	bool IsColliding(const Line3D& secondLine) const;
-	bool IsColliding(const Plane3D& secondPlane) const;
-	bool IsColliding(const Sphere3D& secondSphere) const;
+	bool IsColliding(const AABB& secondBox) const;
+	bool IsColliding(const Sphere& secondSphere) const;
 
-public :
+public:
 
-	virtual void Update();
-	virtual void Draw();
+	void Update();
+	void Draw();
 
-private :
+private:
 
 	float m_scale;
 	float m_radius;
-	float m_dimension;
+    float m_radiusScaled;
+    
+    glm::vec4 m_color;
+    glm::vec3 m_position;
 
 };
 

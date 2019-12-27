@@ -1,23 +1,27 @@
 #include <algorithm>
-#include "AABB3D.h"
+#include "AABB.h"
 #include "DebugManager.h"
-#include "OBB3D.h"
-#include "Sphere3D.h"
+#include "Sphere.h"
 
 //------------------------------------------------------------------------------------------------------
 //constructor that assigns all default values
 //------------------------------------------------------------------------------------------------------
-AABB3D::AABB3D()
+AABB::AABB()
 {
 
+	m_min = glm::vec3(0.0f);
+	m_max = glm::vec3(0.0f);
 	m_scale = glm::vec3(1.0f);
+	m_position = glm::vec3(0.0f);
+	m_dimension = glm::vec3(1.0f);
+	m_halfDimension = glm::vec3(0.5f);
 	m_color = glm::vec4(1.0f, 0.0f, 0.0f, 0.4f);
 	
 }
 //------------------------------------------------------------------------------------------------------
 //getter function that returns scale of AABB
 //------------------------------------------------------------------------------------------------------
-glm::vec3 AABB3D::GetScale() const
+glm::vec3 AABB::GetScale() const
 {
 
 	return m_scale;
@@ -26,7 +30,7 @@ glm::vec3 AABB3D::GetScale() const
 //------------------------------------------------------------------------------------------------------
 //getter function that returns dimension of AABB
 //------------------------------------------------------------------------------------------------------
-glm::vec3 AABB3D::GetDimension() const
+glm::vec3 AABB::GetDimension() const
 {
 
 	return m_dimension;
@@ -35,7 +39,7 @@ glm::vec3 AABB3D::GetDimension() const
 //------------------------------------------------------------------------------------------------------
 //setter function that assigns scale of AABB
 //------------------------------------------------------------------------------------------------------
-void AABB3D::SetScale(float x, float y, float z)
+void AABB::SetScale(float x, float y, float z)
 {
 
 	m_scale.x = x;
@@ -46,7 +50,7 @@ void AABB3D::SetScale(float x, float y, float z)
 //------------------------------------------------------------------------------------------------------
 //setter function that assigns dimensions of AABB
 //------------------------------------------------------------------------------------------------------
-void AABB3D::SetDimension(float width, float height, float depth)
+void AABB::SetDimension(float width, float height, float depth)
 {
 
 	m_dimension.x = width;
@@ -55,19 +59,9 @@ void AABB3D::SetDimension(float width, float height, float depth)
 
 }
 //------------------------------------------------------------------------------------------------------
-//function that checks if AABB collides with a OBB object
-//------------------------------------------------------------------------------------------------------
-bool AABB3D::IsColliding(const OBB3D& secondBox) const
-{
-
-	//make use of OBB's box-box collision function
-	return (secondBox.IsColliding(*this));
-
-}
-//------------------------------------------------------------------------------------------------------
 //function that checks if AABB collides with another AABB object
 //------------------------------------------------------------------------------------------------------
-bool AABB3D::IsColliding(const AABB3D& secondBox) const
+bool AABB::IsColliding(const AABB& secondBox) const
 {
 
 	return ((m_max.x > secondBox.m_min.x && secondBox.m_max.x > m_min.x) &&
@@ -78,7 +72,7 @@ bool AABB3D::IsColliding(const AABB3D& secondBox) const
 //------------------------------------------------------------------------------------------------------
 //function that checks if AABB collides with a sphere object
 //------------------------------------------------------------------------------------------------------
-bool AABB3D::IsColliding(const Sphere3D& secondSphere) const
+bool AABB::IsColliding(const Sphere& secondSphere) const
 {
 
 	glm::vec3 distanceFromBox;
@@ -96,21 +90,21 @@ bool AABB3D::IsColliding(const Sphere3D& secondSphere) const
 //------------------------------------------------------------------------------------------------------
 //function that determines point on box edge that is closest to position passed 
 //------------------------------------------------------------------------------------------------------
-glm::vec3 AABB3D::PointOnBox(float positionX, float positionY, float positionZ) const
+glm::vec3 AABB::PointOnBox(float positionX, float positionY, float positionZ) const
 {
 
 	glm::vec3 clampValue;
-	glm::vec3 distanceFromSphere;
-	glm::vec3 tempPosition(positionX, positionY, positionZ);
+	glm::vec3 distanceFromObject;
+	glm::vec3 position(positionX, positionY, positionZ);
 
-	//first calculate distance between the box and position passed
-	distanceFromSphere = m_position - tempPosition;
+	//first calculate distance between the box's position and passed position
+	distanceFromObject = m_position - position;
 
-	//calculate the clamp value based on the distance vector 
-	//and the half dimension of the box using a min/max formula  
-	clampValue.x = std::max(-m_halfDimension.x, std::min(m_halfDimension.x, (distanceFromSphere.x)));
-	clampValue.y = std::max(-m_halfDimension.y, std::min(m_halfDimension.y, (distanceFromSphere.y)));
-	clampValue.z = std::max(-m_halfDimension.z, std::min(m_halfDimension.z, (distanceFromSphere.z)));
+	//now clamp the distance vector between the half dimensions 
+	//the half dimensions already have the scale factor included
+	clampValue.x = glm::clamp(distanceFromObject.x, -m_halfDimension.x, m_halfDimension.x);
+	clampValue.y = glm::clamp(distanceFromObject.y, -m_halfDimension.y, m_halfDimension.y);
+	clampValue.z = glm::clamp(distanceFromObject.z, -m_halfDimension.z, m_halfDimension.z);
 
 	//the clamp value is used to determine the exact point on the 
 	//edge of the box that lines up with the passed position point
@@ -120,7 +114,7 @@ glm::vec3 AABB3D::PointOnBox(float positionX, float positionY, float positionZ) 
 //------------------------------------------------------------------------------------------------------
 //function that calculates min and max values of AABB for collision purposes
 //------------------------------------------------------------------------------------------------------
-void AABB3D::Update()
+void AABB::Update()
 {
 
 	//first determine the half width, height and depth based on scale value  
@@ -139,11 +133,11 @@ void AABB3D::Update()
 //------------------------------------------------------------------------------------------------------
 //function that renders a AABB box 
 //------------------------------------------------------------------------------------------------------
-void AABB3D::Draw()
+void AABB::Draw()
 {
 
 	//draw bound based on dimension and color set 
-	TheDebug::Instance()->DrawCube3D(m_dimension.x, m_dimension.y, m_dimension.z, 
-		                             m_color.r, m_color.g, m_color.b, m_color.a);
+	//TheDebug::Instance()->DrawCube3D(m_dimension.x, m_dimension.y, m_dimension.z, 
+		                           //  m_color.r, m_color.g, m_color.b, m_color.a);
 
 }

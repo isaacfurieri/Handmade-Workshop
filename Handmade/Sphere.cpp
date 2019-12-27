@@ -1,59 +1,67 @@
 #include <algorithm>
 #include "DebugManager.h"
-#include "Sphere3D.h"
+#include "Sphere.h"
 
 //------------------------------------------------------------------------------------------------------
 //constructor that assigns all default values
 //------------------------------------------------------------------------------------------------------
-Sphere3D::Sphere3D()
+Sphere::Sphere()
 {
 
 	m_scale = 1.0f;
-	m_radius = 0.0f;
+	m_radius = 1.0f;
+	m_radiusScaled = 1.0f;
+	m_position = glm::vec3(0.0f);
 	m_color = glm::vec4(0.0f, 1.0f, 0.0f, 0.4f);
 
 }
 //------------------------------------------------------------------------------------------------------
 //getter function that returns radius of sphere
 //------------------------------------------------------------------------------------------------------
-float Sphere3D::GetRadius() const
+float Sphere::GetRadius() const
 {
 
 	return m_radius;
 
 }
 //------------------------------------------------------------------------------------------------------
+//getter function that returns scaled radius of sphere
+//------------------------------------------------------------------------------------------------------
+float Sphere::GetRadiusScaled() const
+{
+
+	return m_radiusScaled;
+
+}
+
+const glm::vec3& Sphere::GetPosition() const
+{
+	
+	return m_position;
+
+}
+//------------------------------------------------------------------------------------------------------
 //setter function that assigns scale of sphere
 //------------------------------------------------------------------------------------------------------
-void Sphere3D::SetScale(float scale)
+void Sphere::SetScale(float scale)
 {
 
 	m_scale = scale;
 
 }
 //------------------------------------------------------------------------------------------------------
-//setter function that assigns dimension of sphere
+//setter function that assigns radius of sphere
 //------------------------------------------------------------------------------------------------------
-void Sphere3D::SetDimension(float dimension)
+void Sphere::SetRadius(float radius)
 {
 
-	m_dimension = dimension;
-
-}
-//------------------------------------------------------------------------------------------------------
-//function that checks if sphere collides with a OBB object
-//------------------------------------------------------------------------------------------------------
-bool Sphere3D::IsColliding(const OBB3D& secondBox) const
-{
-
-	//make use of OBB's box-sphere collision function
-	return (secondBox.IsColliding(*this));
+	m_radius = radius;
 
 }
 //------------------------------------------------------------------------------------------------------
 //function that checks if sphere collides with a AABB object
 //------------------------------------------------------------------------------------------------------
-bool Sphere3D::IsColliding(const AABB3D& secondBox) const
+bool Sphere::IsColliding(const AABB& secondBox) const
 {
 
 	//make use of AABB's box-sphere collision function
@@ -61,29 +69,9 @@ bool Sphere3D::IsColliding(const AABB3D& secondBox) const
 
 }
 //------------------------------------------------------------------------------------------------------
-//function that checks if sphere collides with a line segment
-//------------------------------------------------------------------------------------------------------
-bool Sphere3D::IsColliding(const Line3D& secondLine) const
-{
-
-	//make use of Line3D's line-sphere collision function
-	return (secondLine.IsColliding(*this));
-
-}
-//------------------------------------------------------------------------------------------------------
-//function that checks if sphere collides with a plane
-//------------------------------------------------------------------------------------------------------
-bool Sphere3D::IsColliding(const Plane3D& secondPlane) const
-{
-
-	//make use of Plane3D's plane-sphere collision function
-	return (secondPlane.IsColliding(*this));
-
-}
-//------------------------------------------------------------------------------------------------------
 //function that checks if sphere collides with another sphere object
 //------------------------------------------------------------------------------------------------------
-bool Sphere3D::IsColliding(const Sphere3D& secondSphere) const
+bool Sphere::IsColliding(const Sphere& secondSphere) const
 {
 
 	//first calculate distance between both spheres and store that temporarily
@@ -97,19 +85,19 @@ bool Sphere3D::IsColliding(const Sphere3D& secondSphere) const
 //------------------------------------------------------------------------------------------------------
 //function that calculates radius value of sphere based on scale for collision purposes
 //------------------------------------------------------------------------------------------------------
-void Sphere3D::Update()
+void Sphere::Update()
 {
 
-	m_radius = m_dimension * m_scale;
+	m_radiusScaled = m_radius * m_scale;
 
 }
 //------------------------------------------------------------------------------------------------------
 //function that renders a sphere 
 //------------------------------------------------------------------------------------------------------
-void Sphere3D::Draw()
+void Sphere::Draw()
 {
 
 	//draw bound based on dimension and color set 
-	TheDebug::Instance()->DrawSphere3D(m_dimension, m_color.r, m_color.g, m_color.b, m_color.a);
+	//TheDebug::Instance()->DrawSphere(m_dimension, m_color.r, m_color.g, m_color.b, m_color.a);
 
 }

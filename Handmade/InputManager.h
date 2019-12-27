@@ -55,10 +55,9 @@
 #ifndef INPUT_MANAGER_H
 #define INPUT_MANAGER_H
 
+#include <glm.hpp>
 #include <SDL.h>
-#include "AABB2D.h"
 #include "Singleton.h"
-#include "Sphere2D.h"
 
 class InputManager
 {
@@ -78,8 +77,8 @@ public :
 	bool IsXClicked();
 	bool IsKeyPressed();
 	const Uint8* GetKeyStates();
-	bool IsMouseColliding(const AABB2D& bound);
-	bool IsMouseColliding(const Sphere2D& bound);
+	//bool IsMouseColliding(const AABB2D& bound);
+	//bool IsMouseColliding(const Sphere2D& bound);
 
 public :
 

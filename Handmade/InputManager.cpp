@@ -48,43 +48,43 @@ const Uint8* InputManager::GetKeyStates()
 //------------------------------------------------------------------------------------------------------
 //predicate function that checks if mouse cursor collides with passed box bound
 //------------------------------------------------------------------------------------------------------
-bool InputManager::IsMouseColliding(const AABB2D& bound)
-{
-
-	//create a temporary bounding box to represent mouse cursor
-	AABB2D tempBound;
-
-	//set mouse cursor bounds of 1x1 based on mouse position
-	//flip Y axis as mouse coordinates run from top to bottom
-	tempBound.SetPosition(m_mousePosition.x,
-					      TheScreen::Instance()->GetScreenSize().y - m_mousePosition.y);
-	tempBound.SetDimension(1, 1);
-	tempBound.Update();
-
-	//return flag based on if mouse collides with bound
-	return tempBound.IsColliding(bound);
-
-}
+//bool InputManager::IsMouseColliding(const AABB2D& bound)
+//{
+//
+//	//create a temporary bounding box to represent mouse cursor
+//	AABB2D tempBound;
+//
+//	//set mouse cursor bounds of 1x1 based on mouse position
+//	//flip Y axis as mouse coordinates run from top to bottom
+//	tempBound.SetPosition(m_mousePosition.x,
+//					      TheScreen::Instance()->GetScreenSize().y - m_mousePosition.y);
+//	tempBound.SetDimension(1, 1);
+//	tempBound.Update();
+//
+//	//return flag based on if mouse collides with bound
+//	return tempBound.IsColliding(bound);
+//
+//}
 //------------------------------------------------------------------------------------------------------
 //predicate function that checks if mouse cursor collides with passed sphere bound
 //------------------------------------------------------------------------------------------------------
-bool InputManager::IsMouseColliding(const Sphere2D& bound)
-{
-
-	//create a temporary sphere bound to represent mouse cursor
-	Sphere2D tempBound;
-
-	//set mouse cursor radius of 1 based on mouse position
-	//flip Y axis as mouse coordinates run from top to bottom
-	tempBound.SetPosition(m_mousePosition.x,
-		                  TheScreen::Instance()->GetScreenSize().y - m_mousePosition.y);
-	tempBound.SetDimension(1);
-	tempBound.Update();
-
-	//return flag based on if mouse collides with bound
-	return tempBound.IsColliding(bound);
-
-}
+//bool InputManager::IsMouseColliding(const Sphere2D& bound)
+//{
+//
+//	//create a temporary sphere bound to represent mouse cursor
+//	Sphere2D tempBound;
+//
+//	//set mouse cursor radius of 1 based on mouse position
+//	//flip Y axis as mouse coordinates run from top to bottom
+//	tempBound.SetPosition(m_mousePosition.x,
+//		                  TheScreen::Instance()->GetScreenSize().y - m_mousePosition.y);
+//	tempBound.SetDimension(1);
+//	tempBound.Update();
+//
+//	//return flag based on if mouse collides with bound
+//	return tempBound.IsColliding(bound);
+//
+//}
 //------------------------------------------------------------------------------------------------------
 //getter function that returns position of mouse
 //------------------------------------------------------------------------------------------------------

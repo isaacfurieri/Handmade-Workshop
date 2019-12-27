@@ -61,23 +61,20 @@
 
 */
 
-#ifndef AABB_3D_H
-#define AABB_3D_H
+#ifndef AABB_H
+#define AABB_H
 
 #include <glm.hpp>
-#include "Bound.h"
 
-class OBB3D;
-class Sphere3D;
+class Sphere;
 
-class AABB3D : public Bound
+class AABB
 {
 
-public :
+public:
 
-	AABB3D();
-	virtual ~AABB3D()  {}
-
+	AABB();
+	
 public:
 
 	glm::vec3 GetScale()     const;
@@ -90,21 +87,22 @@ public:
 
 public:
 
-	bool IsColliding(const OBB3D& secondBox) const;
-	bool IsColliding(const AABB3D& secondBox) const;
-	bool IsColliding(const Sphere3D& secondSphere) const;
+	bool IsColliding(const AABB& secondBox) const;
+	bool IsColliding(const Sphere& secondSphere) const;
 	glm::vec3 PointOnBox(float positionX, float positionY, float positionZ) const;
 
 public:
 
-	virtual void Update();
-	virtual void Draw();
+	void Update();
+	void Draw();
 
 private:
 
 	glm::vec3 m_min;
 	glm::vec3 m_max;
 	glm::vec3 m_scale;
+    glm::vec4 m_color;
+    glm::vec3 m_position;
 	glm::vec3 m_dimension;
 	glm::vec3 m_halfDimension;
 
