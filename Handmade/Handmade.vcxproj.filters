@@ -89,34 +89,7 @@
     <ClInclude Include="Audio.h">
       <Filter>Header Files\Components\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="AABB2D.h">
-      <Filter>Header Files\Components\Collision</Filter>
-    </ClInclude>
     <ClInclude Include="AABB3D.h">
-      <Filter>Header Files\Components\Collision</Filter>
-    </ClInclude>
-    <ClInclude Include="Bound.h">
-      <Filter>Header Files\Components\Collision</Filter>
-    </ClInclude>
-    <ClInclude Include="Line2D.h">
-      <Filter>Header Files\Components\Collision</Filter>
-    </ClInclude>
-    <ClInclude Include="Line3D.h">
-      <Filter>Header Files\Components\Collision</Filter>
-    </ClInclude>
-    <ClInclude Include="OBB2D.h">
-      <Filter>Header Files\Components\Collision</Filter>
-    </ClInclude>
-    <ClInclude Include="OBB3D.h">
-      <Filter>Header Files\Components\Collision</Filter>
-    </ClInclude>
-    <ClInclude Include="Plane2D.h">
-      <Filter>Header Files\Components\Collision</Filter>
-    </ClInclude>
-    <ClInclude Include="Plane3D.h">
-      <Filter>Header Files\Components\Collision</Filter>
-    </ClInclude>
-    <ClInclude Include="Sphere2D.h">
       <Filter>Header Files\Components\Collision</Filter>
     </ClInclude>
     <ClInclude Include="Sphere3D.h">
@@ -214,34 +187,7 @@
     <ClCompile Include="Audio.cpp">
       <Filter>Source Files\Components\Audio</Filter>
     </ClCompile>
-    <ClCompile Include="AABB2D.cpp">
-      <Filter>Source Files\Components\Collision</Filter>
-    </ClCompile>
     <ClCompile Include="AABB3D.cpp">
-      <Filter>Source Files\Components\Collision</Filter>
-    </ClCompile>
-    <ClCompile Include="Bound.cpp">
-      <Filter>Source Files\Components\Collision</Filter>
-    </ClCompile>
-    <ClCompile Include="Line2D.cpp">
-      <Filter>Source Files\Components\Collision</Filter>
-    </ClCompile>
-    <ClCompile Include="Line3D.cpp">
-      <Filter>Source Files\Components\Collision</Filter>
-    </ClCompile>
-    <ClCompile Include="OBB2D.cpp">
-      <Filter>Source Files\Components\Collision</Filter>
-    </ClCompile>
-    <ClCompile Include="OBB3D.cpp">
-      <Filter>Source Files\Components\Collision</Filter>
-    </ClCompile>
-    <ClCompile Include="Plane2D.cpp">
-      <Filter>Source Files\Components\Collision</Filter>
-    </ClCompile>
-    <ClCompile Include="Plane3D.cpp">
-      <Filter>Source Files\Components\Collision</Filter>
-    </ClCompile>
-    <ClCompile Include="Sphere2D.cpp">
       <Filter>Source Files\Components\Collision</Filter>
     </ClCompile>
     <ClCompile Include="Sphere3D.cpp">
