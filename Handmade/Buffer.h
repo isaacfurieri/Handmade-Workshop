@@ -1,33 +1,30 @@
-/*
-
-  All code has been written by Karsten Vermeulen and may be used freely by anyone. It is by no
-  means perfect and there is certainly room for improvement in some parts. As a whole, the code
-  has been created as part of an engine for the purposes of educating other fellow programmers,
-  and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
-  you wish with this code - it is there for all!
-
-  UPDATED : December 2017
-
-  -----------------------------------------------------------------------------------------------
-
-- This buffer class is designed to contain the VAO, vertex, color, normal and texture VBO, and 
-  EBO IDs all in one place. Ideally every game object or any generic object in the client code
-  can use this class as a component to store the buffer IDs. It is through these IDs that the 
-  OpenGL buffers in VRAM are used to store all vertex, color, etc data for each object, 3D
-  model, etc in the scene. 
-
-- Buffers are meant to be created once only and stored in the given map. If that same buffer is
-  required by another object, instead of creating it again, we simply use SetBuffers() to set an
-  existing buffer to the object. This models around the Flyweight pattern a little bit. When
-  buffers are created or set, the m_ID variable is assigned the IDs of that buffer.
-
-- There are functions to create the buffers, bind them together and fill them with data. Buffers
-  may also be appended so that existing VBOs have data added on to the ends. 
-  
-*/
-
 #ifndef BUFFER_H
 #define BUFFER_H
+
+/*==============================================================================================#
+|                                                                                               |
+| All code has been written by Karsten Vermeulen as part of the 'Handmade' game engine, for the |
+| purposes of educating other fellow programmers, programming students and anyone else wishing  |
+| to learn about game development, C++ and OOP. The engine, class design and overall structure  |
+| is by no means perfect and there is certainly room for improvement. Feel free to use, copy,   |
+| break, update and do as you wish with this code - it is there, free, for all!                 |
+|																							    |
+| Designed to teach. Made from scratch. Built by hand.							                |
+|																							    |
+#===============================================================================================#
+|																								|
+| If you like 'Handmade', and wish to show your support, if you have any questions about the    |
+| project, or if you just want to reach out, please find me on the following channels:          |
+|																						        |
+| Web: http://www.karstenvermeulen.com														    |
+| Facebook: https://www.facebook.com/KarstensCorner								                |
+| Twitter: https://twitter.com/KarstensCorner													|
+| LinkedIn: https://www.linkedin.com/in/karstenvermeulen                                        |
+| GitHub: https://github.com/djkarstenv									                        |
+|                                                                                               |
+#===============================================================================================#
+| 'Buffer' source files last updated in December 2019									        |
+#==============================================================================================*/
 
 #include <map>
 #include <string>

@@ -1,27 +1,30 @@
-/*
-
-  All code has been written by Karsten Vermeulen and may be used freely by anyone. It is by no
-  means perfect and there is certainly room for improvement in some parts. As a whole, the code
-  has been created as part of an engine for the purposes of educating other fellow programmers,
-  and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
-  you wish with this code - it is there for all!
-
-  UPDATED : December 2017
-
-  -----------------------------------------------------------------------------------------------
-
-- This game object represents and draws a 2D splash screen which is used in the Start State to
-  display the game engine logo and the API logos used in the engine. It is also used in the End
-  State to display any last minute contact info. The main component is the Sprite, which is used
-  to represent the 2D image and draw it on screen. The fade variable monitors whether the image 
-  is fading in or out, which is used to determine when to deactivate the image, ie as soon as it
-  has faded out again. The constructor takes a string parameter to load in the correct splash
-  image to be used.
-
-*/
-
 #ifndef SPLASH_SCREEN_H
 #define SPLASH_SCREEN_H
+
+/*==============================================================================================#
+|                                                                                               |
+| All code has been written by Karsten Vermeulen as part of the 'Handmade' game engine, for the |
+| purposes of educating other fellow programmers, programming students and anyone else wishing  |
+| to learn about game development, C++ and OOP. The engine, class design and overall structure  |
+| is by no means perfect and there is certainly room for improvement. Feel free to use, copy,   |
+| break, update and do as you wish with this code - it is there, free, for all!                 |
+|																							    |
+| Designed to teach. Made from scratch. Built by hand.							                |
+|																							    |
+#===============================================================================================#
+|																								|
+| If you like 'Handmade', and wish to show your support, if you have any questions about the    |
+| project, or if you just want to reach out, please find me on the following channels:          |
+|																						        |
+| Web: http://www.karstenvermeulen.com														    |
+| Facebook: https://www.facebook.com/KarstensCorner								                |
+| Twitter: https://twitter.com/KarstensCorner													|
+| LinkedIn: https://www.linkedin.com/in/karstenvermeulen                                        |
+| GitHub: https://github.com/djkarstenv									                        |
+|                                                                                               |
+#===============================================================================================#
+| 'SplashScreen' source files last updated in December 2019								        |
+#==============================================================================================*/
 
 #include <string>
 #include "GameObject.h"

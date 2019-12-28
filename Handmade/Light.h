@@ -1,27 +1,30 @@
-/*
-
-  All code has been written by Karsten Vermeulen and may be used freely by anyone. It is by no
-  means perfect and there is certainly room for improvement in some parts. As a whole, the code
-  has been created as part of an engine for the purposes of educating other fellow programmers,
-  and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
-  you wish with this code - it is there for all!
-
-  UPDATED : December 2017
-
-  -----------------------------------------------------------------------------------------------
-
-- This class encapsulates a light component in the game world. It comprises of all lighting 
-  properties that will affect the lighting calculations in the fragment shader. The light itself
-  can also be drawn and this is for debug purposes to see where the light is in the scene. In
-  particular the Create(), Update(), Draw() and Destroy() functions are for DEBUG only and are
-  there to create and render an actual "light bulb" in the scene. The SendToShader() function
-  passes all the light properties to the fragment shader to be processed to light up the scene
-  accordingly.
-
-*/
-
 #ifndef LIGHT_H
 #define LIGHT_H
+
+/*==============================================================================================#
+|                                                                                               |
+| All code has been written by Karsten Vermeulen as part of the 'Handmade' game engine, for the |
+| purposes of educating other fellow programmers, programming students and anyone else wishing  |
+| to learn about game development, C++ and OOP. The engine, class design and overall structure  |
+| is by no means perfect and there is certainly room for improvement. Feel free to use, copy,   |
+| break, update and do as you wish with this code - it is there, free, for all!                 |
+|																							    |
+| Designed to teach. Made from scratch. Built by hand.				    		                |
+|																							    |
+#===============================================================================================#
+|																								|
+| If you like 'Handmade', and wish to show your support, if you have any questions about the    |
+| project, or if you just want to reach out, please find me on the following channels:          |
+|																						        |
+| Web: http://www.karstenvermeulen.com														    |
+| Facebook: https://www.facebook.com/KarstensCorner								                |
+| Twitter: https://twitter.com/KarstensCorner													|
+| LinkedIn: https://www.linkedin.com/in/karstenvermeulen                                        |
+| GitHub: https://github.com/djkarstenv									                        |
+|                                                                                               |
+#===============================================================================================#
+| 'Light' source files last updated in December 2019									        |
+#==============================================================================================*/
 
 #include "glad.h"
 #include <glm.hpp>

@@ -1,27 +1,30 @@
-/*
-
-  All code has been written by Karsten Vermeulen and may be used freely by anyone. It is by no
-  means perfect and there is certainly room for improvement in some parts. As a whole, the code
-  has been created as part of an engine for the purposes of educating other fellow programmers,
-  and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
-  you wish with this code - it is there for all!
-
-  UPDATED : December 2017
-
-  -----------------------------------------------------------------------------------------------
-
-- This game state monitors the beginning state of the game. Things like menu's, start up screens,
-  splash screens, etc are intended to be used here. This particular state consists of two 
-  SplashScreen objects, which will draw two splash screen images before the Main State begins. It 
-  will wait for one splash screen image to fade in and out before the next one becomes active.
-  The OnEnter() function will create and compile the main game's vertex and fragment shaders as 
-  well. These shaders are then only destroyed in the End State's OnExit() function so that they
-  remain active throughout the program.
-
-*/
-
 #ifndef START_STATE_H
 #define START_STATE_H
+
+/*==============================================================================================#
+|                                                                                               |
+| All code has been written by Karsten Vermeulen as part of the 'Handmade' game engine, for the |
+| purposes of educating other fellow programmers, programming students and anyone else wishing  |
+| to learn about game development, C++ and OOP. The engine, class design and overall structure  |
+| is by no means perfect and there is certainly room for improvement. Feel free to use, copy,   |
+| break, update and do as you wish with this code - it is there, free, for all!                 |
+|																							    |
+| Designed to teach. Made from scratch. Built by hand.							                |
+|																							    |
+#===============================================================================================#
+|																								|
+| If you like 'Handmade', and wish to show your support, if you have any questions about the    |
+| project, or if you just want to reach out, please find me on the following channels:          |
+|																						        |
+| Web: http://www.karstenvermeulen.com														    |
+| Facebook: https://www.facebook.com/KarstensCorner								                |
+| Twitter: https://twitter.com/KarstensCorner													|
+| LinkedIn: https://www.linkedin.com/in/karstenvermeulen                                        |
+| GitHub: https://github.com/djkarstenv									                        |
+|                                                                                               |
+#===============================================================================================#
+| 'StartState' source files last updated in December 2019								        |
+#==============================================================================================*/
 
 #include "GameState.h"
 #include "HUDCamera.h"

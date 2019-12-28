@@ -1,42 +1,27 @@
-/*
-
-  All code has been written by Karsten Vermeulen and may be used freely by anyone. It is by no
-  means perfect and there is certainly room for improvement in some parts. As a whole, the code
-  has been created as part of an engine for the purposes of educating other fellow programmers,
-  and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
-  you wish with this code - it is there for all!
-
-  UPDATED : December 2017
-
-  -----------------------------------------------------------------------------------------------
-
-- This class represents a 3D model that can be loaded from an OBJ and MTL file and then rendered
-  on screen. Any 3rd party 3D modelling application can be used to produce a OBJ/MTL file combo,
-  which will be read in by the class and all values stored accordingly. The OBJ file should store
-  all the raw model vertex, texture coordinate and normal data, which will be read in, filtered
-  and stored in the class' properties variables. The MTL file should have all the lighting and
-  material data needed for the model which will also be stored and used correctly. The model's
-  accompanying texture needs to be separately loaded and assigned to the model's texture ID.
-
-- The setter functions will set the specific properties of the model. The SetBuffer() function 
-  is able to link the model's internal buffer with the correct vertex, color and texture VBO.
-  The SetTexture() routine is used to assign an OpenGL texture ID to the model object. This ID
-  is requested from the Texture class.
-
-- All the raw model data loading occurs in the LoadModel() routine, where each line of text
-  in the OBJ and MTL files are read and filtered. Based on what tokens precede the lines of text,
-  the function will convert and store all the values accordingly. The raw data after being sorted
-  is then stored in the internal buffer's data vectors before being sent to the respective VBOs
-  to be filled. 
-
-- The Model class implementation is slightly different to the Sprite class counterpart. There are
-  a few changes that still need to be made later on!
-
-- PLEASE NOTE : Current support for MTL files is temporarily halted and this model class ONLY
-  loads in the OBJ files. More on this later! There are many improvements still being done to this
-  class...
-
-*/
+/*==============================================================================================#
+|                                                                                               |
+| All code has been written by Karsten Vermeulen as part of the 'Handmade' game engine, for the |
+| purposes of educating other fellow programmers, programming students and anyone else wishing  |
+| to learn about game development, C++ and OOP. The engine, class design and overall structure  |
+| is by no means perfect and there is certainly room for improvement. Feel free to use, copy,   |
+| break, update and do as you wish with this code - it is there, free, for all!                 |
+|																							    |
+| Designed to teach. Made from scratch. Built by hand.							                |
+|																							    |
+#===============================================================================================#
+|																								|
+| If you like 'Handmade', and wish to show your support, if you have any questions about the    |
+| project, or if you just want to reach out, please find me on the following channels:          |
+|																						        |
+| Web: http://www.karstenvermeulen.com														    |
+| Facebook: https://www.facebook.com/KarstensCorner								                |
+| Twitter: https://twitter.com/KarstensCorner													|
+| LinkedIn: https://www.linkedin.com/in/karstenvermeulen                                        |
+| GitHub: https://github.com/djkarstenv									                        |
+|                                                                                               |
+#===============================================================================================#
+| 'Model' source files last updated in December 2019					    			        |
+#==============================================================================================*/
 
 #ifndef MODEL_H
 #define MODEL_H
