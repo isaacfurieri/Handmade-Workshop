@@ -1,5 +1,5 @@
 #include "Material.h"
-#include "PipelineManager.h"
+#include "Shader.h"
 
 //------------------------------------------------------------------------------------------------------
 //constructor that assigns all default values 
@@ -55,9 +55,9 @@ void Material::SetSpecular(GLfloat r, GLfloat g, GLfloat b)
 void Material::SendToShader()
 {
 
-	ThePipeline::Instance()->SendUniformData("material.ambient", m_ambient);
-	ThePipeline::Instance()->SendUniformData("material.diffuse", m_diffuse);
-	ThePipeline::Instance()->SendUniformData("material.specular", m_specular);
-	ThePipeline::Instance()->SendUniformData("material.shininess", m_shininess);
+	Shader::Instance()->SendUniformData("material.ambient", m_ambient);
+	Shader::Instance()->SendUniformData("material.diffuse", m_diffuse);
+	Shader::Instance()->SendUniformData("material.specular", m_specular);
+	Shader::Instance()->SendUniformData("material.shininess", m_shininess);
 
 }

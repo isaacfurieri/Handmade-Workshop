@@ -1,6 +1,6 @@
 #include "HUDCamera.h"
-#include "InputManager.h"
-#include "ScreenManager.h"
+#include "Input.h"
+#include "Screen.h"
 
 //------------------------------------------------------------------------------------------------------
 //function that resets and applies a simple identity matrix

@@ -2,6 +2,16 @@
 #include "AudioManager.h"
 
 //------------------------------------------------------------------------------------------------------
+//static function that will create an instance of this Screen object and return its address
+//------------------------------------------------------------------------------------------------------
+AudioManager* AudioManager::Instance()
+{
+
+	static AudioManager* audioObject = new AudioManager();
+	return audioObject;
+
+}
+//------------------------------------------------------------------------------------------------------
 //constructor that assigns all default values
 //------------------------------------------------------------------------------------------------------
 AudioManager::AudioManager()

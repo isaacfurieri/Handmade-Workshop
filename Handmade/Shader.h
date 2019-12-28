@@ -1,5 +1,5 @@
-#ifndef GAME_H
-#define GAME_H
+#ifndef SHADER_H
+#define SHADER_H
 
 /*==============================================================================================#
 |                                                                                               |
@@ -23,53 +23,74 @@
 | GitHub: https://github.com/djkarstenv									                        |
 |                                                                                               |
 #===============================================================================================#
-| 'Game' source files last updated in December 2019								                |
+| 'Shader' source files last updated in December 2019							       	        |
 #==============================================================================================*/
 
-#include <deque>
 #include <string>
-#include "GameState.h"
+#include "glad.h"
+#include <glm.hpp>
 
-class Game
+class Shader
 {
 
 public:
 
-	static Game* Instance();
+	enum RenderType { POLYGON_MODE, FULL_SHADE };
+	enum ShaderType { VERTEX_SHADER, FRAGMENT_SHADER };
+	
+public:
+
+	static Shader* Instance();
 
 public:
 
-	int GetTotalTime();
-	int GetElapsedTime();
+	void SetRenderType(RenderType renderType);
+	GLuint GetShaderAttribute(const std::string& vertAttrib);
+	
+public:
+
+	bool SendUniformData(const std::string& uniform, GLint intData);
+	bool SendUniformData(const std::string& uniform, GLuint uintData);
+	bool SendUniformData(const std::string& uniform, GLfloat floatData);
+	bool SendUniformData(const std::string& uniform, const glm::vec2& vec2Data);
+	bool SendUniformData(const std::string& uniform, const glm::vec3& vec3Data);
+	bool SendUniformData(const std::string& uniform, const glm::vec4& vec4Data);
+	
+	bool SendUniformData(const std::string& uniform, 
+		                 const glm::mat3& matrix3x3, bool transposed = false);
+	bool SendUniformData(const std::string& uniform, 
+		                 const glm::mat4& matrix4x4, bool transposed = false);
+
+	bool SendAttributeData(const std::string& attribute, GLfloat floatData);
+	bool SendAttributeData(const std::string& attribute, const glm::vec2& vec2Data);
+	bool SendAttributeData(const std::string& attribute, const glm::vec3& vec3Data);
+	bool SendAttributeData(const std::string& attribute, const glm::vec4& vec4Data);
 
 public:
 
-	bool Initialize(std::string name, int screenWidth, int screenHeight, 
-		            int pixelsPerUnit = 1, bool fullscreen = false);
+	bool CreateProgram();
+	bool CreateShaders();
+
+	bool CompileShader(ShaderType shaderType, const std::string& filename);
+	void AttachShaders();
+	bool LinkProgram();
 	
-	void AddState(GameState* state);
-	void ChangeState(GameState* state);
-
-	bool Run();
-	void ShutDown();
-
+	void DetachShaders();
+	void DestroyShaders();
+	void DestroyProgram();
 
 private:
 
-	Game();
-	Game(const Game&);
-	Game& operator=(const Game&);
+	Shader();
+	Shader(const Shader&);
+	Shader& operator=(Shader&);
 
 private:
 
-	void RemoveState();
+	GLuint m_shaderProgramID;
+	GLuint m_vertexShaderID;
+	GLuint m_fragmentShaderID;
 
-private:
-
-	bool m_endGame;
-	int m_elapsedTime;
-	std::deque<GameState*> m_gameStates;
-	
 };
 
 #endif

@@ -1,5 +1,5 @@
-#ifndef GAME_H
-#define GAME_H
+#ifndef INPUT_H
+#define INPUT_H
 
 /*==============================================================================================#
 |                                                                                               |
@@ -23,53 +23,73 @@
 | GitHub: https://github.com/djkarstenv									                        |
 |                                                                                               |
 #===============================================================================================#
-| 'Game' source files last updated in December 2019								                |
+| 'Input' source files last updated in December 2019								            |
 #==============================================================================================*/
 
-#include <deque>
-#include <string>
-#include "GameState.h"
+#include <glm.hpp>
+#include <SDL.h>
 
-class Game
+class Input
 {
 
 public:
 
-	static Game* Instance();
+	enum ButtonState { UP, DOWN };
+	enum CursorState { ON = 1, OFF = 0, SHOW = 1, HIDE = 0 };
+	enum CursorType  { ARROW, IBEAM, WAIT, CROSSHAIR, WAIT_ARROW, NO = 10, HAND = 11 };
 
 public:
 
-	int GetTotalTime();
-	int GetElapsedTime();
+    static Input* Instance();
 
 public:
 
-	bool Initialize(std::string name, int screenWidth, int screenHeight, 
-		            int pixelsPerUnit = 1, bool fullscreen = false);
+	bool IsXClicked();
+	bool IsKeyPressed();
+	const Uint8* GetKeyStates();
+	//bool IsMouseColliding(const AABB2D& bound);
+	//bool IsMouseColliding(const Sphere2D& bound);
+
+public:
+
+	glm::vec2 GetMousePosition();
+	glm::vec2 GetMouseMotion();
+	glm::vec2 GetMouseWheel();	
 	
-	void AddState(GameState* state);
-	void ChangeState(GameState* state);
+	ButtonState GetLeftButtonState();
+	ButtonState GetMiddleButtonState();
+	ButtonState GetRightButtonState();
 
-	bool Run();
-	void ShutDown();
+	void SetMousePosition(int x, int y);
+	void SetMouseCursorType(CursorType cursorType = ARROW);
+	void SetMouseCursorState(CursorState cursorEnabled = ON, CursorState cursorVisible = SHOW);
 
+public:
 
-private:
-
-	Game();
-	Game(const Game&);
-	Game& operator=(const Game&);
-
-private:
-
-	void RemoveState();
+	void Update();
 
 private:
 
-	bool m_endGame;
-	int m_elapsedTime;
-	std::deque<GameState*> m_gameStates;
+	Input();
+	Input(const Input&);
+	Input& operator=(const Input&);
+
+private:
+
+	bool m_isXClicked;
+	bool m_isKeyPressed;
+	const Uint8* m_keyStates;
+
+	SDL_Cursor* m_cursor;
+
+	glm::vec2 m_mousePosition;
+	glm::vec2 m_mouseMotion;
+	glm::vec2 m_mouseWheel;
 	
+	ButtonState m_leftButtonState;
+	ButtonState m_middleButtonState;
+	ButtonState m_rightButtonState;
+
 };
 
 #endif

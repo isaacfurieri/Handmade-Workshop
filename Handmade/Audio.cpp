@@ -129,7 +129,7 @@ void Audio::SetLoopCount(Loop loopType, Loop loopCount)
 void Audio::SetAudioData(const std::string& mapIndex, AudioManager::AudioType audioType)
 {
 
-	m_audioData = TheAudio::Instance()->GetAudioData(audioType, mapIndex);
+	m_audioData = AudioManager::Instance()->GetAudioData(audioType, mapIndex);
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -183,7 +183,7 @@ bool Audio::Play()
 	//then use the audio manager to play the audio sound, as we don't want multiple sounds playing! 
 	if (!m_channel || (GetPosition() == 0))
 	{
-		TheAudio::Instance()->
+		AudioManager::Instance()->
 		GetAudioSystem()->playSound(m_audioData, m_channelGroup, false, &m_channel);
 	}
 

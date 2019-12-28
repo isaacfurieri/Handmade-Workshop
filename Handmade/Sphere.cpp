@@ -1,5 +1,5 @@
 #include <algorithm>
-#include "DebugManager.h"
+#include "Debug.h"
 #include "Sphere.h"
 
 //------------------------------------------------------------------------------------------------------

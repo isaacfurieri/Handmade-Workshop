@@ -1,12 +1,22 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include "PipelineManager.h"
+#include "Shader.h"
 
+//------------------------------------------------------------------------------------------------------
+//static function that will create an instance of this Screen object and return its address
+//------------------------------------------------------------------------------------------------------
+Shader* Shader::Instance()
+{
+
+	static Shader* shaderObject = new Shader();
+	return shaderObject;
+
+}
 //------------------------------------------------------------------------------------------------------
 //constructor that assigns all default values 
 //------------------------------------------------------------------------------------------------------
-PipelineManager::PipelineManager()
+Shader::Shader()
 {
 
 	m_shaderProgramID = 0;
@@ -17,7 +27,7 @@ PipelineManager::PipelineManager()
 //------------------------------------------------------------------------------------------------------
 //setter function that toggles shading of geometry between polygons and full shading
 //------------------------------------------------------------------------------------------------------
-void PipelineManager::SetRenderType(RenderType renderType)
+void Shader::SetRenderType(RenderType renderType)
 {
 
 	glPolygonMode(GL_FRONT_AND_BACK, renderType == POLYGON_MODE ? GL_LINE : GL_FILL);
@@ -26,7 +36,7 @@ void PipelineManager::SetRenderType(RenderType renderType)
 //------------------------------------------------------------------------------------------------------
 //getter function that returns shader vertex attribute ID
 //------------------------------------------------------------------------------------------------------
-GLuint PipelineManager::GetShaderAttribute(const std::string& vertAttrib)
+GLuint Shader::GetShaderAttribute(const std::string& vertAttrib)
 {
 
 	return glGetAttribLocation(m_shaderProgramID, vertAttrib.c_str());
@@ -35,7 +45,7 @@ GLuint PipelineManager::GetShaderAttribute(const std::string& vertAttrib)
 //------------------------------------------------------------------------------------------------------
 //function that sends uniform data to shader (INT)
 //------------------------------------------------------------------------------------------------------
-bool PipelineManager::SendUniformData(const std::string& uniform, GLint intData)
+bool Shader::SendUniformData(const std::string& uniform, GLint intData)
 {
 
 	glUniform1i(glGetUniformLocation(m_shaderProgramID, uniform.c_str()), intData);
@@ -45,7 +55,7 @@ bool PipelineManager::SendUniformData(const std::string& uniform, GLint intData)
 //------------------------------------------------------------------------------------------------------
 //function that sends uniform data to shader (UNSIGNED INT)
 //------------------------------------------------------------------------------------------------------
-bool PipelineManager::SendUniformData(const std::string& uniform, GLuint uintData)
+bool Shader::SendUniformData(const std::string& uniform, GLuint uintData)
 {
 
 	glUniform1ui(glGetUniformLocation(m_shaderProgramID, uniform.c_str()), uintData);
@@ -55,7 +65,7 @@ bool PipelineManager::SendUniformData(const std::string& uniform, GLuint uintDat
 //------------------------------------------------------------------------------------------------------
 //function that sends uniform data to shader (FLOAT)
 //------------------------------------------------------------------------------------------------------
-bool PipelineManager::SendUniformData(const std::string& uniform, GLfloat floatData)
+bool Shader::SendUniformData(const std::string& uniform, GLfloat floatData)
 {
 
 	glUniform1f(glGetUniformLocation(m_shaderProgramID, uniform.c_str()), floatData);
@@ -65,7 +75,7 @@ bool PipelineManager::SendUniformData(const std::string& uniform, GLfloat floatD
 //------------------------------------------------------------------------------------------------------
 //function that sends uniform data to shader (VEC2)
 //------------------------------------------------------------------------------------------------------
-bool PipelineManager::SendUniformData(const std::string& uniform, const glm::vec2& vec2Data)
+bool Shader::SendUniformData(const std::string& uniform, const glm::vec2& vec2Data)
 {
 
 	glUniform2fv(glGetUniformLocation(m_shaderProgramID, uniform.c_str()), 1, &vec2Data.x);
@@ -75,7 +85,7 @@ bool PipelineManager::SendUniformData(const std::string& uniform, const glm::vec
 //------------------------------------------------------------------------------------------------------
 //function that sends uniform data to shader (VEC3)
 //------------------------------------------------------------------------------------------------------
-bool PipelineManager::SendUniformData(const std::string& uniform, const glm::vec3& vec3Data)
+bool Shader::SendUniformData(const std::string& uniform, const glm::vec3& vec3Data)
 {
 
 	glUniform3fv(glGetUniformLocation(m_shaderProgramID, uniform.c_str()), 1, &vec3Data.x);
@@ -85,7 +95,7 @@ bool PipelineManager::SendUniformData(const std::string& uniform, const glm::vec
 //------------------------------------------------------------------------------------------------------
 //function that sends uniform data to shader (VEC4)
 //------------------------------------------------------------------------------------------------------
-bool PipelineManager::SendUniformData(const std::string& uniform, const glm::vec4& vec4Data)
+bool Shader::SendUniformData(const std::string& uniform, const glm::vec4& vec4Data)
 {
 
 	glUniform4fv(glGetUniformLocation(m_shaderProgramID, uniform.c_str()), 1, &vec4Data.x);
@@ -95,7 +105,7 @@ bool PipelineManager::SendUniformData(const std::string& uniform, const glm::vec
 //------------------------------------------------------------------------------------------------------
 //function that sends uniform data to shader (3x3 MATRIX)
 //------------------------------------------------------------------------------------------------------
-bool PipelineManager::SendUniformData(const std::string& uniform, 
+bool Shader::SendUniformData(const std::string& uniform, 
 	                                  const glm::mat3& matrix3x3, bool transposed)
 {
 
@@ -107,7 +117,7 @@ bool PipelineManager::SendUniformData(const std::string& uniform,
 //------------------------------------------------------------------------------------------------------
 //function that sends uniform data to shader (4x4 MATRIX)
 //------------------------------------------------------------------------------------------------------
-bool PipelineManager::SendUniformData(const std::string& uniform, 
+bool Shader::SendUniformData(const std::string& uniform, 
 	                                  const glm::mat4& matrix4x4, bool transposed)
 {
 
@@ -119,7 +129,7 @@ bool PipelineManager::SendUniformData(const std::string& uniform,
 //------------------------------------------------------------------------------------------------------
 //function that sends attribute data to vertex shader (FLOAT)
 //------------------------------------------------------------------------------------------------------
-bool PipelineManager::SendAttributeData(const std::string& attribute, GLfloat floatData)
+bool Shader::SendAttributeData(const std::string& attribute, GLfloat floatData)
 {
 
 	glVertexAttrib1f(glGetUniformLocation(m_shaderProgramID, attribute.c_str()), floatData);
@@ -129,7 +139,7 @@ bool PipelineManager::SendAttributeData(const std::string& attribute, GLfloat fl
 //------------------------------------------------------------------------------------------------------
 //function that sends attribute data to vertex shader (VEC2)
 //------------------------------------------------------------------------------------------------------
-bool PipelineManager::SendAttributeData(const std::string& attribute, const glm::vec2& vec2Data)
+bool Shader::SendAttributeData(const std::string& attribute, const glm::vec2& vec2Data)
 {
 
 	glVertexAttrib2f(glGetUniformLocation(m_shaderProgramID, attribute.c_str()), vec2Data.x, vec2Data.y);
@@ -139,7 +149,7 @@ bool PipelineManager::SendAttributeData(const std::string& attribute, const glm:
 //------------------------------------------------------------------------------------------------------
 //function that sends attribute data to vertex shader (VEC3)
 //------------------------------------------------------------------------------------------------------
-bool PipelineManager::SendAttributeData(const std::string& attribute, const glm::vec3& vec3Data)
+bool Shader::SendAttributeData(const std::string& attribute, const glm::vec3& vec3Data)
 {
 
 	glVertexAttrib3f(glGetUniformLocation(m_shaderProgramID, attribute.c_str()), 
@@ -150,7 +160,7 @@ bool PipelineManager::SendAttributeData(const std::string& attribute, const glm:
 //------------------------------------------------------------------------------------------------------
 //function that sends attribute data to vertex shader (VEC4)
 //------------------------------------------------------------------------------------------------------
-bool PipelineManager::SendAttributeData(const std::string& attribute, const glm::vec4& vec4Data)
+bool Shader::SendAttributeData(const std::string& attribute, const glm::vec4& vec4Data)
 {
 
 	glVertexAttrib4f(glGetUniformLocation(m_shaderProgramID, attribute.c_str()), 
@@ -161,7 +171,7 @@ bool PipelineManager::SendAttributeData(const std::string& attribute, const glm:
 //------------------------------------------------------------------------------------------------------
 //function that creates the main shader program
 //------------------------------------------------------------------------------------------------------
-bool PipelineManager::CreateProgram()
+bool Shader::CreateProgram()
 {
 
 	//create main shader program object
@@ -181,7 +191,7 @@ bool PipelineManager::CreateProgram()
 //------------------------------------------------------------------------------------------------------
 //function that creates a vertex and fragment shader object
 //------------------------------------------------------------------------------------------------------
-bool PipelineManager::CreateShaders()
+bool Shader::CreateShaders()
 {
 		
 	//create a OpenGL shader ID for the vertex and fragment shader
@@ -210,7 +220,7 @@ bool PipelineManager::CreateShaders()
 //------------------------------------------------------------------------------------------------------
 //function that reads in the shader source code and compiles it
 //------------------------------------------------------------------------------------------------------
-bool PipelineManager::CompileShader(ShaderType shaderType, const std::string& filename)
+bool Shader::CompileShader(ShaderType shaderType, const std::string& filename)
 {
 
 	//variables for file handling, source code 
@@ -303,7 +313,7 @@ bool PipelineManager::CompileShader(ShaderType shaderType, const std::string& fi
 //------------------------------------------------------------------------------------------------------
 //function that attaches the vertex and fragment shader object to the main shader program 
 //------------------------------------------------------------------------------------------------------
-void PipelineManager::AttachShaders()
+void Shader::AttachShaders()
 {
 
 	glAttachShader(m_shaderProgramID, m_vertexShaderID);
@@ -313,7 +323,7 @@ void PipelineManager::AttachShaders()
 //------------------------------------------------------------------------------------------------------
 //function that links entire program together
 //------------------------------------------------------------------------------------------------------
-bool PipelineManager::LinkProgram()
+bool Shader::LinkProgram()
 {
 
 	//variable to store link error code
@@ -354,7 +364,7 @@ bool PipelineManager::LinkProgram()
 //------------------------------------------------------------------------------------------------------
 //function that detaches the vertex and fragment shader object from the main shader program
 //------------------------------------------------------------------------------------------------------
-void PipelineManager::DetachShaders()
+void Shader::DetachShaders()
 {
 
 	glDetachShader(m_shaderProgramID, m_vertexShaderID);
@@ -364,7 +374,7 @@ void PipelineManager::DetachShaders()
 //------------------------------------------------------------------------------------------------------
 //function that unloads the vertex and fragment shader IDs from memory
 //------------------------------------------------------------------------------------------------------
-void PipelineManager::DestroyShaders()
+void Shader::DestroyShaders()
 {
 
 	glDeleteShader(m_vertexShaderID);
@@ -374,7 +384,7 @@ void PipelineManager::DestroyShaders()
 //------------------------------------------------------------------------------------------------------
 //function that destroys shader program 
 //------------------------------------------------------------------------------------------------------
-void PipelineManager::DestroyProgram()
+void Shader::DestroyProgram()
 {
 
 	glDeleteProgram(m_shaderProgramID);

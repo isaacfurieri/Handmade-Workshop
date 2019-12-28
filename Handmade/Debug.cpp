@@ -1,15 +1,25 @@
 #include <iostream>
 #include <string>
 #include <glm.hpp>
-#include "DebugManager.h"
+#include "Debug.h"
 #include "GameObject.h"
-#include "PipelineManager.h"
-#include "ScreenManager.h"
+#include "Shader.h"
+#include "Screen.h"
 
+//------------------------------------------------------------------------------------------------------
+//static function that will create an instance of this Screen object and return its address
+//------------------------------------------------------------------------------------------------------
+Debug* Debug::Instance()
+{
+
+	static Debug* debugObject = new Debug();
+	return debugObject;
+
+}
 //------------------------------------------------------------------------------------------------------
 //function that checks for OpenGL errors and displays meaningful custom error messages on screen
 //------------------------------------------------------------------------------------------------------
-void DebugManager::CheckError()
+void Debug::CheckError()
 {
 
 	//query OpenGL for errors which will return the first 
@@ -80,7 +90,7 @@ void DebugManager::CheckError()
 //------------------------------------------------------------------------------------------------------
 //function that creates the debug VBOs, loads models and links all shader attributes
 //------------------------------------------------------------------------------------------------------
-bool DebugManager::CreateDebugObjects(GLint size)
+bool Debug::CreateDebugObjects(GLint size)
 {
 
 	if (!m_cube3D.LoadModel("Assets\\Models\\Cube.obj", "CUBE_3D"))
@@ -140,7 +150,7 @@ bool DebugManager::CreateDebugObjects(GLint size)
 //------------------------------------------------------------------------------------------------------
 //function that destroys all debug VBOs and unloads all model files
 //------------------------------------------------------------------------------------------------------
-void DebugManager::DestroyDebugObjects()
+void Debug::DestroyDebugObjects()
 {
 	
 	m_sphereBuffer2D.DestroyBuffers("SPHERE_2D");
@@ -158,7 +168,7 @@ void DebugManager::DestroyDebugObjects()
 //------------------------------------------------------------------------------------------------------
 //function that draws a square 2D grid to help orient objects in world space
 //------------------------------------------------------------------------------------------------------
-void DebugManager::DrawGrid2D(GLfloat lineWidth)
+void Debug::DrawGrid2D(GLfloat lineWidth)
 {
 
 	//reset model matrix to identity since the grid is likely
@@ -178,7 +188,7 @@ void DebugManager::DrawGrid2D(GLfloat lineWidth)
 //------------------------------------------------------------------------------------------------------
 //function that draws a square 3D grid to help orient objects in world space
 //------------------------------------------------------------------------------------------------------
-void DebugManager::DrawGrid3D(GLfloat lineWidth)
+void Debug::DrawGrid3D(GLfloat lineWidth)
 {
 
 	//reset model matrix to identity since the grid is likely
@@ -198,12 +208,12 @@ void DebugManager::DrawGrid3D(GLfloat lineWidth)
 //------------------------------------------------------------------------------------------------------
 //function that draws a X and Y coordinate system to help orient objects in world space
 //------------------------------------------------------------------------------------------------------
-void DebugManager::DrawCoordSystem2D(GLfloat size, GLfloat lineWidth)
+void Debug::DrawCoordSystem2D(GLfloat size, GLfloat lineWidth)
 {
 
 	//this value determines how many pixels there are between 
 	//each unit because in 2D mode we are working in pixels
-	int pixelsPerUnit = TheScreen::Instance()->GetPixelsPerUnit();
+	int pixelsPerUnit = Screen::Instance()->GetPixelsPerUnit();
 
 	//data that represents vertices for XY axis lines
 	GLfloat vertices[] = { -size * pixelsPerUnit, 0, size * pixelsPerUnit, 0,      //X axis
@@ -234,7 +244,7 @@ void DebugManager::DrawCoordSystem2D(GLfloat size, GLfloat lineWidth)
 //------------------------------------------------------------------------------------------------------
 //function that draws a X, Y and Z coordinate system to help orient objects in world space
 //------------------------------------------------------------------------------------------------------
-void DebugManager::DrawCoordSystem3D(GLfloat size, GLfloat lineWidth)
+void Debug::DrawCoordSystem3D(GLfloat size, GLfloat lineWidth)
 {
 
 	//data that represents vertices for XYZ axis lines
@@ -268,12 +278,12 @@ void DebugManager::DrawCoordSystem3D(GLfloat size, GLfloat lineWidth)
 //------------------------------------------------------------------------------------------------------
 //function that draws a 2D cube based on width and height passed
 //------------------------------------------------------------------------------------------------------
-void DebugManager::DrawCube2D(GLfloat width, GLfloat height, GLfloat r, GLfloat g, GLfloat b, GLfloat a)
+void Debug::DrawCube2D(GLfloat width, GLfloat height, GLfloat r, GLfloat g, GLfloat b, GLfloat a)
 {
 
 	//this value determines how many pixels there are between 
 	//each unit because in 2D mode we are working in pixels
-	int pixelsPerUnit = TheScreen::Instance()->GetPixelsPerUnit();
+	int pixelsPerUnit = Screen::Instance()->GetPixelsPerUnit();
 
 	//data that represents vertices for quad image
 	GLfloat vertices[] = { 0, height * pixelsPerUnit,                        //top left
@@ -306,7 +316,7 @@ void DebugManager::DrawCube2D(GLfloat width, GLfloat height, GLfloat r, GLfloat 
 //------------------------------------------------------------------------------------------------------
 //function that draws a 3D cube based on width, height and depth passed
 //------------------------------------------------------------------------------------------------------
-void DebugManager::DrawCube3D(GLfloat width, GLfloat height, GLfloat depth,
+void Debug::DrawCube3D(GLfloat width, GLfloat height, GLfloat depth,
 	                          GLfloat r, GLfloat g, GLfloat b, GLfloat a)
 {
 
@@ -337,7 +347,7 @@ void DebugManager::DrawCube3D(GLfloat width, GLfloat height, GLfloat depth,
 //------------------------------------------------------------------------------------------------------
 //function that draws a 2D sphere on screen
 //------------------------------------------------------------------------------------------------------
-void DebugManager::DrawSphere2D(GLfloat radius, GLfloat r, GLfloat g, 
+void Debug::DrawSphere2D(GLfloat radius, GLfloat r, GLfloat g, 
 	                            GLfloat b, GLfloat a, GLint slices)
 {
 
@@ -352,7 +362,7 @@ void DebugManager::DrawSphere2D(GLfloat radius, GLfloat r, GLfloat g,
 
 	//this value determines how many pixels there are between 
 	//each unit because in 2D mode we are working in pixels
-	int pixelsPerUnit = TheScreen::Instance()->GetPixelsPerUnit();
+	int pixelsPerUnit = Screen::Instance()->GetPixelsPerUnit();
 
 	//because we are using a triangle fan for rendering, we need a starting
 	//vertex point. Set starting vertex to 0, which will be relative to where
@@ -399,7 +409,7 @@ void DebugManager::DrawSphere2D(GLfloat radius, GLfloat r, GLfloat g,
 //------------------------------------------------------------------------------------------------------
 //function that draws a 3D sphere 
 //------------------------------------------------------------------------------------------------------
-void DebugManager::DrawSphere3D(GLfloat radius, GLfloat r, GLfloat g, GLfloat b, GLfloat a)
+void Debug::DrawSphere3D(GLfloat radius, GLfloat r, GLfloat g, GLfloat b, GLfloat a)
 {
 
 	//bookmark model matrix to create a temporary transformation
@@ -429,13 +439,13 @@ void DebugManager::DrawSphere3D(GLfloat radius, GLfloat r, GLfloat g, GLfloat b,
 //------------------------------------------------------------------------------------------------------
 //function that draws a 2D vector 
 //------------------------------------------------------------------------------------------------------
-void DebugManager::DrawVector2D(GLfloat x, GLfloat y, GLfloat lineWidth,
+void Debug::DrawVector2D(GLfloat x, GLfloat y, GLfloat lineWidth,
 								GLfloat r, GLfloat g, GLfloat b)
 {
 
 	//this value determines how many pixels there are between 
 	//each unit because in 2D mode we are working in pixels	
-	int pixelsPerUnit = TheScreen::Instance()->GetPixelsPerUnit();
+	int pixelsPerUnit = Screen::Instance()->GetPixelsPerUnit();
 
 	//data for vertex and color of vector which starts at an origin point based on
 	//the client's transformations and extends out at a size based on values passed in
@@ -463,7 +473,7 @@ void DebugManager::DrawVector2D(GLfloat x, GLfloat y, GLfloat lineWidth,
 //------------------------------------------------------------------------------------------------------
 //function that draws a 3D vector 
 //------------------------------------------------------------------------------------------------------
-void DebugManager::DrawVector3D(GLfloat x, GLfloat y, GLfloat z,
+void Debug::DrawVector3D(GLfloat x, GLfloat y, GLfloat z,
 							    GLfloat lineWidth, GLfloat r, GLfloat g, GLfloat b)
 {
 
@@ -493,13 +503,13 @@ void DebugManager::DrawVector3D(GLfloat x, GLfloat y, GLfloat z,
 //------------------------------------------------------------------------------------------------------
 //function that draws a 2D vertex point
 //------------------------------------------------------------------------------------------------------
-void DebugManager::DrawVertex2D(GLfloat x, GLfloat y, GLfloat pointSize,
+void Debug::DrawVertex2D(GLfloat x, GLfloat y, GLfloat pointSize,
 							    GLfloat r, GLfloat g, GLfloat b)
 {
 
 	//this value determines how many pixels there are between 
 	//each unit because in 2D mode we are working in pixels	
-	int pixelsPerUnit = TheScreen::Instance()->GetPixelsPerUnit();
+	int pixelsPerUnit = Screen::Instance()->GetPixelsPerUnit();
 
 	//vertex and color data for a simple dot on the screen which 
 	//renders at an origin point based on the client's transformations 
@@ -527,7 +537,7 @@ void DebugManager::DrawVertex2D(GLfloat x, GLfloat y, GLfloat pointSize,
 //------------------------------------------------------------------------------------------------------
 //function that draws a 3D vertex point
 //------------------------------------------------------------------------------------------------------
-void DebugManager::DrawVertex3D(GLfloat x, GLfloat y, GLfloat z, 
+void Debug::DrawVertex3D(GLfloat x, GLfloat y, GLfloat z, 
 	                            GLfloat pointSize, GLfloat r, GLfloat g, GLfloat b)
 {
 
@@ -557,13 +567,13 @@ void DebugManager::DrawVertex3D(GLfloat x, GLfloat y, GLfloat z,
 //------------------------------------------------------------------------------------------------------
 //function that draws a 2D or 3D line segment
 //------------------------------------------------------------------------------------------------------
-void DebugManager::DrawLine2D(GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2,
+void Debug::DrawLine2D(GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2,
 							  GLfloat lineWidth, GLfloat r, GLfloat g, GLfloat b)
 {
 
 	//this value determines how many pixels there are between 
 	//each unit because in 2D mode we are working in pixels	
-	int pixelsPerUnit = TheScreen::Instance()->GetPixelsPerUnit();
+	int pixelsPerUnit = Screen::Instance()->GetPixelsPerUnit();
 
 	//data for vertex and color of vector which starts and ends at
 	//specified point passed in and is based on client transformations
@@ -593,7 +603,7 @@ void DebugManager::DrawLine2D(GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2,
 //------------------------------------------------------------------------------------------------------
 //function that draws a 3D line segment
 //------------------------------------------------------------------------------------------------------
-void DebugManager::DrawLine3D(GLfloat x1, GLfloat y1, GLfloat z1, GLfloat x2, GLfloat y2, GLfloat z2, 
+void Debug::DrawLine3D(GLfloat x1, GLfloat y1, GLfloat z1, GLfloat x2, GLfloat y2, GLfloat z2, 
 	                          GLfloat lineWidth, GLfloat r, GLfloat g, GLfloat b)
 {
 
@@ -623,7 +633,7 @@ void DebugManager::DrawLine3D(GLfloat x1, GLfloat y1, GLfloat z1, GLfloat x2, GL
 //------------------------------------------------------------------------------------------------------
 //function that creates a 2D grid and all its buffers
 //------------------------------------------------------------------------------------------------------
-void DebugManager::CreateGrid2D(GLint size)
+void Debug::CreateGrid2D(GLint size)
 {
 
 	//the offsets will add up and keep track of how
@@ -654,7 +664,7 @@ void DebugManager::CreateGrid2D(GLint size)
 
 	//this value determines how many pixels there are between 
 	//each unit because in 2D mode we are working in pixels
-	int pixelsPerUnit = TheScreen::Instance()->GetPixelsPerUnit();
+	int pixelsPerUnit = Screen::Instance()->GetPixelsPerUnit();
 
 	//now we create the grid one quadrant at a time	and fill each vertex and
 	//color VBO with the line's vertex and color data accordingly. The offset
@@ -769,7 +779,7 @@ void DebugManager::CreateGrid2D(GLint size)
 //------------------------------------------------------------------------------------------------------
 //function that creates a 3D grid and all its buffers
 //------------------------------------------------------------------------------------------------------
-void DebugManager::CreateGrid3D(GLint size)
+void Debug::CreateGrid3D(GLint size)
 {
 
 	//the offset will add up and keep track of 

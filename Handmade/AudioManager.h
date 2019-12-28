@@ -45,7 +45,6 @@
 #include <map>
 #include <string>
 #include <fmod.hpp>
-#include "Singleton.h"
 
 class AudioManager
 {
@@ -54,26 +53,26 @@ public:
 
 	enum RemoveType { CUSTOM_AUDIO, ALL_AUDIO };
 	enum AudioType  { SFX_AUDIO, MUSIC_AUDIO, VOICE_AUDIO };
-	
+
 public:
 
-	friend class Singleton<AudioManager>;
+    static AudioManager* Instance();
 
-public :
+public:
 
 	FMOD::System* GetAudioSystem();
 	FMOD::Sound* GetAudioData(AudioType audioType, const std::string& mapIndex);
 
-public :
+public:
 
 	bool Initialize();
 	bool LoadFromFile(const std::string& filename, AudioType audioType, const std::string& mapIndex);
 
-public :
+public:
 
 	void Update();
 	
-public :
+public:
 
 	void UnloadFromMemory(AudioType audioType, RemoveType removeType, const std::string& mapIndex = "");
 	void ShutDown();
@@ -97,7 +96,5 @@ private :
 	std::map<std::string, FMOD::Sound*> m_voiceDataMap;	
 
 };
-
-typedef Singleton<AudioManager> TheAudio;
 
 #endif

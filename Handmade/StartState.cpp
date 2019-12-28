@@ -1,10 +1,10 @@
 #include "Camera.h"
-#include "DebugManager.h"
+#include "Debug.h"
 #include "Game.h"
 #include "GameObject.h"
 #include "MainState.h"
-#include "PipelineManager.h"
-#include "ScreenManager.h"
+#include "Shader.h"
+#include "Screen.h"
 #include "StartState.h"
 
 //------------------------------------------------------------------------------------------------------
@@ -25,34 +25,34 @@ bool StartState::OnEnter()
 {
 
 	//create shader program for the main shaders
-	if (!(ThePipeline::Instance()->CreateProgram()))
+	if (!(Shader::Instance()->CreateProgram()))
 	{
 		return false;
 	}
 
 	//create vertex and fragment shader objects for main program
-	if (!(ThePipeline::Instance()->CreateShaders()))
+	if (!(Shader::Instance()->CreateShaders()))
 	{
 		return false;
 	}
 
 	//compile vertex shader for main program 
-	if(!(ThePipeline::Instance()->CompileShader(PipelineManager::VERTEX_SHADER, "Shaders\\Main.vert")))
+	if(!(Shader::Instance()->CompileShader(Shader::VERTEX_SHADER, "Shaders\\Main.vert")))
 	{
 		return false;
 	}
 
 	//compile fragment shader for main program 
-	if(!(ThePipeline::Instance()->CompileShader(PipelineManager::FRAGMENT_SHADER, "Shaders\\Main.frag")))
+	if(!(Shader::Instance()->CompileShader(Shader::FRAGMENT_SHADER, "Shaders\\Main.frag")))
 	{
 		return false;
 	}
 
 	//attach both shaders to the main shader program
-	ThePipeline::Instance()->AttachShaders(); 
+	Shader::Instance()->AttachShaders();
 
 	//link main shader program
-	if (!ThePipeline::Instance()->LinkProgram())
+	if (!Shader::Instance()->LinkProgram())
 	{
 		return false;
 	}
@@ -76,7 +76,7 @@ bool StartState::OnEnter()
 	//debug manager and all of its debug objects 
 #ifdef DEBUG
 
-	if (!TheDebug::Instance()->CreateDebugObjects(15))
+	if (!Debug::Instance()->CreateDebugObjects(15))
 	{
 		return false;
 	}
@@ -97,7 +97,7 @@ bool StartState::Update()
 #ifdef DEBUG
 
 	m_isActive = m_isAlive = false;
-	TheGame::Instance()->ChangeState(new MainState(this));
+	Game::Instance()->ChangeState(new MainState(this));
 
 #endif
 

@@ -1,10 +1,10 @@
-#include "DebugManager.h"
+#include "Debug.h"
 #include "EndState.h"
-#include "InputManager.h"
+#include "Input.h"
 #include "Game.h"
 #include "MainState.h"
-#include "PipelineManager.h"
-#include "ScreenManager.h"
+#include "Shader.h"
+#include "Screen.h"
 
 //------------------------------------------------------------------------------------------------------
 //constructor that assigns all default values
@@ -43,7 +43,7 @@ bool MainState::Update()
 {
 
 	//store keyboard key states in a temp variable for processing below
-	const Uint8* keyState = TheInput::Instance()->GetKeyStates();
+	const Uint8* keyState = Input::Instance()->GetKeyStates();
 
 	//update main camera
 	m_mainCamera->Update();
@@ -52,7 +52,7 @@ bool MainState::Update()
 	if (keyState[SDL_SCANCODE_ESCAPE])
 	{
 		m_isActive = m_isAlive = false;
-		TheGame::Instance()->ChangeState(new EndState(this));
+		Game::Instance()->ChangeState(new EndState(this));
 	}
 
 	//loop through all game objects in vector and update them only if they are active
@@ -82,12 +82,12 @@ bool MainState::Draw()
 
 #ifdef GAME_3D
 
-	TheScreen::Instance()->Set3DScreen(60.0f, 0.1f, 1000.0f);
+	Screen::Instance()->Set3DScreen(60.0f, 0.1f, 1000.0f);
 
 #ifdef DEBUG
 
-	TheDebug::Instance()->DrawGrid3D();
-	TheDebug::Instance()->DrawCoordSystem3D(15.0f);
+	Debug::Instance()->DrawGrid3D();
+	Debug::Instance()->DrawCoordSystem3D(15.0f);
 
 #endif
 	

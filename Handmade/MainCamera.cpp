@@ -1,6 +1,6 @@
-#include "InputManager.h"
+#include "Input.h"
 #include "MainCamera.h"
-#include "ScreenManager.h"
+#include "Screen.h"
 
 //------------------------------------------------------------------------------------------------------
 //constructor that assigns all camera default properties based on game setting 
@@ -33,7 +33,7 @@ MainCamera::MainCamera()
 #endif
 
 	//disable mouse cursor so that it does not interfere when rotating the camera
-	TheInput::Instance()->SetMouseCursorState(InputManager::OFF);
+	Input::Instance()->SetMouseCursorState(Input::OFF);
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -43,10 +43,10 @@ void MainCamera::Update()
 {
 
 	//store keyboard key states in a temp variable for processing below
-	const Uint8* keyState = TheInput::Instance()->GetKeyStates();
+	const Uint8* keyState = Input::Instance()->GetKeyStates();
 
 	//if a key has been released, stop the camera from moving
-	if (!(TheInput::Instance()->IsKeyPressed()))
+	if (!(Input::Instance()->IsKeyPressed()))
 	{
 		m_camera.Stop();
 	}
@@ -94,8 +94,8 @@ void MainCamera::Update()
 	}
 
 	//set camera rotation values based on mouse motion values
-	m_camera.RotateX((short)(TheInput::Instance()->GetMouseMotion().y));
-	m_camera.RotateY((short)(TheInput::Instance()->GetMouseMotion().x));
+	m_camera.RotateX((short)(Input::Instance()->GetMouseMotion().y));
+	m_camera.RotateY((short)(Input::Instance()->GetMouseMotion().x));
 
 	//set camera's position and orientation
 	m_camera.Update();

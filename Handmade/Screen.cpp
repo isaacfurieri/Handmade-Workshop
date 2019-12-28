@@ -1,13 +1,23 @@
 #include <iostream>
 #include <vector>
 #include <gtc\matrix_transform.hpp>
-#include "PipelineManager.h"
-#include "ScreenManager.h"
+#include "Shader.h"
+#include "Screen.h"
 
+//------------------------------------------------------------------------------------------------------
+//static function that will create an instance of this Screen object and return its address
+//------------------------------------------------------------------------------------------------------
+Screen* Screen::Instance()
+{
+
+	static Screen* screenObject = new Screen();
+	return screenObject;
+
+}
 //------------------------------------------------------------------------------------------------------
 //constructor that assigns all default values 
 //------------------------------------------------------------------------------------------------------
-ScreenManager::ScreenManager()
+Screen::Screen()
 {
 
 	m_width = 0;
@@ -22,7 +32,7 @@ ScreenManager::ScreenManager()
 //------------------------------------------------------------------------------------------------------
 //getter function that returns pixel scale value
 //------------------------------------------------------------------------------------------------------
-GLint ScreenManager::GetPixelsPerUnit()
+GLint Screen::GetPixelsPerUnit()
 {
 
 	return m_pixelsPerUnit;
@@ -31,7 +41,7 @@ GLint ScreenManager::GetPixelsPerUnit()
 //------------------------------------------------------------------------------------------------------
 //getter function that returns Windows handle of SDL game window
 //------------------------------------------------------------------------------------------------------
-HWND ScreenManager::GetWindowHandle()
+HWND Screen::GetWindowHandle()
 {
 
 	return m_windowHandle;
@@ -40,7 +50,7 @@ HWND ScreenManager::GetWindowHandle()
 //------------------------------------------------------------------------------------------------------
 //getter function that returns SDL game window
 //------------------------------------------------------------------------------------------------------
-SDL_Window* ScreenManager::GetWindow()
+SDL_Window* Screen::GetWindow()
 {
 
 	return m_window;
@@ -49,7 +59,7 @@ SDL_Window* ScreenManager::GetWindow()
 //------------------------------------------------------------------------------------------------------
 //getter function that creates screen size vector and returns it
 //------------------------------------------------------------------------------------------------------
-glm::vec2 ScreenManager::GetScreenSize()
+glm::vec2 Screen::GetScreenSize()
 {
 
 	return glm::vec2(m_width, m_height);
@@ -58,7 +68,7 @@ glm::vec2 ScreenManager::GetScreenSize()
 //------------------------------------------------------------------------------------------------------
 //setter function that switches VSYNC on/off
 //------------------------------------------------------------------------------------------------------
-bool ScreenManager::SetVerticalSync(VSyncState vsyncState)
+bool Screen::SetVerticalSync(VSyncState vsyncState)
 {
 
 	if (SDL_GL_SetSwapInterval((int)vsyncState) == -1)
@@ -73,7 +83,7 @@ bool ScreenManager::SetVerticalSync(VSyncState vsyncState)
 //------------------------------------------------------------------------------------------------------
 //setter function that sets up rectangular viewport section of screen 
 //------------------------------------------------------------------------------------------------------
-void ScreenManager::SetViewport(GLint x, GLint y, GLint width, GLint height)
+void Screen::SetViewport(GLint x, GLint y, GLint width, GLint height)
 {
 
 	glViewport(x, y, width, height);
@@ -82,7 +92,7 @@ void ScreenManager::SetViewport(GLint x, GLint y, GLint width, GLint height)
 //------------------------------------------------------------------------------------------------------
 //setter function that assigns a pre-defined color value for clearing the screen
 //------------------------------------------------------------------------------------------------------
-void ScreenManager::SetClearColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
+void Screen::SetClearColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
 {
 
 	glClearColor(r, g, b, a);
@@ -91,7 +101,7 @@ void ScreenManager::SetClearColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
 //------------------------------------------------------------------------------------------------------
 //setter function that creates a 2D orthographic projection 
 //------------------------------------------------------------------------------------------------------
-void ScreenManager::Set2DScreen(ScreenOrigin2D screenOrigin)
+void Screen::Set2DScreen(ScreenOrigin2D screenOrigin)
 {
 
 	//disable Z-buffering because in
@@ -113,13 +123,13 @@ void ScreenManager::Set2DScreen(ScreenOrigin2D screenOrigin)
 	}
 
 	//send projection matrix to shader
-	ThePipeline::Instance()->SendUniformData("projMatrix", m_projectionMatrix);
+	//ThePipeline::Instance()->SendUniformData("projMatrix", m_projectionMatrix);
 
 }
 //------------------------------------------------------------------------------------------------------
 //setter function that creates a 3D perspective projection 
 //------------------------------------------------------------------------------------------------------
-void ScreenManager::Set3DScreen(GLfloat fieldOfView, GLfloat nearClip, GLfloat farClip)
+void Screen::Set3DScreen(GLfloat fieldOfView, GLfloat nearClip, GLfloat farClip)
 {
 
 	//enable Z-buffering so that vertices
@@ -133,13 +143,13 @@ void ScreenManager::Set3DScreen(GLfloat fieldOfView, GLfloat nearClip, GLfloat f
 	m_projectionMatrix = glm::perspective(glm::radians(fieldOfView), aspectRatio, nearClip, farClip);
 
 	//send projection matrix to shader
-	ThePipeline::Instance()->SendUniformData("projMatrix", m_projectionMatrix);
+	//ThePipeline::Instance()->SendUniformData("projMatrix", m_projectionMatrix);
 
 }
 //------------------------------------------------------------------------------------------------------
 //function that initializes the screen including the SDL, OpenGL and GLEW subsystems   
 //------------------------------------------------------------------------------------------------------
-bool ScreenManager::Initialize(const char* windowTitle, GLint width, GLint height, GLint pixelsPerUnit,
+bool Screen::Initialize(const char* windowTitle, GLint width, GLint height, GLint pixelsPerUnit,
 	                           GLint major, GLint minor, bool compatibleContext, bool fullscreen)
 {
 
@@ -255,7 +265,7 @@ bool ScreenManager::Initialize(const char* windowTitle, GLint width, GLint heigh
 //------------------------------------------------------------------------------------------------------
 //function that aquires and displays graphics card extensions
 //------------------------------------------------------------------------------------------------------
-void ScreenManager::DisplayExtensions()
+void Screen::DisplayExtensions()
 {
 
 	//variable to store total amount of supported extensions 
@@ -279,7 +289,7 @@ void ScreenManager::DisplayExtensions()
 //------------------------------------------------------------------------------------------------------
 //function that aquires and displays OpenGL profile data
 //------------------------------------------------------------------------------------------------------
-void ScreenManager::DisplayGraphicsProfile()
+void Screen::DisplayGraphicsProfile()
 {
 
 	std::cout << "---------------------------------------------------------------" << std::endl;
@@ -303,7 +313,7 @@ void ScreenManager::DisplayGraphicsProfile()
 //------------------------------------------------------------------------------------------------------
 //function that clears the frame buffer
 //------------------------------------------------------------------------------------------------------
-void ScreenManager::ClearScreen()
+void Screen::ClearScreen()
 {
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -312,7 +322,7 @@ void ScreenManager::ClearScreen()
 //------------------------------------------------------------------------------------------------------
 //function that swaps the frame buffer
 //------------------------------------------------------------------------------------------------------
-void ScreenManager::SwapBuffer()
+void Screen::SwapBuffer()
 {
 
 	SDL_GL_SwapWindow(m_window);
@@ -321,7 +331,7 @@ void ScreenManager::SwapBuffer()
 //------------------------------------------------------------------------------------------------------
 //function that closes down SDL, OpenGL and destroys the game window
 //------------------------------------------------------------------------------------------------------
-void ScreenManager::ShutDown()
+void Screen::ShutDown()
 {
 
 	//free OpenGL context

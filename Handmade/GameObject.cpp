@@ -1,7 +1,7 @@
 #include <gtc\matrix_transform.hpp>
 #include "GameObject.h"
-#include "PipelineManager.h"
-#include "ScreenManager.h"
+#include "Shader.h"
+#include "Screen.h"
 
 glm::mat3 GameObject::s_normalMatrix;
 glm::mat4 GameObject::s_textureMatrix;
@@ -46,22 +46,22 @@ void GameObject::SendToShader(bool isLit, bool isTextured)
 {
 
 	//pass lighting flag to fragment shader 
-	ThePipeline::Instance()->SendUniformData("isLit", (GLint)isLit);
+	Shader::Instance()->SendUniformData("isLit", (GLint)isLit);
 
 	//pass texturing flag to fragment shader 
-	ThePipeline::Instance()->SendUniformData("isTextured", (GLint)isTextured);
+	Shader::Instance()->SendUniformData("isTextured", (GLint)isTextured);
 
 	//convert model matrix to 3x3 and invert it for normals to use in shader
 	s_normalMatrix = glm::inverse(glm::mat3(s_modelMatrix.back()));
 
 	//send model matrix to vertex shader
-	ThePipeline::Instance()->SendUniformData("modelMatrix", s_modelMatrix.back());
+	Shader::Instance()->SendUniformData("modelMatrix", s_modelMatrix.back());
 
 	//send normal matrix to vertex shader (transposed)
-	ThePipeline::Instance()->SendUniformData("normMatrix", s_normalMatrix, true);
+	Shader::Instance()->SendUniformData("normMatrix", s_normalMatrix, true);
 
 	//send texture matrix to vertex shader
-	ThePipeline::Instance()->SendUniformData("texMatrix", s_textureMatrix);
+	Shader::Instance()->SendUniformData("texMatrix", s_textureMatrix);
 
 }
 //------------------------------------------------------------------------------------------------------

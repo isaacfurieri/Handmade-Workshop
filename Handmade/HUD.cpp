@@ -1,7 +1,7 @@
-#include "DebugManager.h"
+#include "Debug.h"
 #include "HUD.h"
-#include "ScreenManager.h"
-#include "PipelineManager.h"
+#include "Screen.h"
+#include "Shader.h"
 
 //------------------------------------------------------------------------------------------------------
 //function that creates sprite buffers and loads the HUD image
@@ -23,12 +23,12 @@ void HUD::Draw()
 {
 
 	//setup screen in 2D orthographic mode because all HUDs are 2D 
-	TheScreen::Instance()->Set2DScreen(ScreenManager::BOTTOM_LEFT);
+	Screen::Instance()->Set2DScreen(Screen::BOTTOM_LEFT);
 
 	//reset model matrix to identity so we don't accumulate transformations
 	GameObject::SetIdentity();
 
-	float screenHeight = TheScreen::Instance()->GetScreenSize().y;
+	float screenHeight = Screen::Instance()->GetScreenSize().y;
 	GameObject::Translate(10.0f, (screenHeight - 150.0f), 0.0f);
 
 	GameObject::Scale(200.0f, 140.0f, 1.0f);

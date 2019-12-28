@@ -1,6 +1,6 @@
 #include <algorithm>
 #include "AABB.h"
-#include "DebugManager.h"
+#include "Debug.h"
 #include "Sphere.h"
 
 //------------------------------------------------------------------------------------------------------

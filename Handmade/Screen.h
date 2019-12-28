@@ -1,5 +1,5 @@
-#ifndef GAME_H
-#define GAME_H
+#ifndef SCREEN_H
+#define SCREEN_H
 
 /*==============================================================================================#
 |                                                                                               |
@@ -23,52 +23,74 @@
 | GitHub: https://github.com/djkarstenv									                        |
 |                                                                                               |
 #===============================================================================================#
-| 'Game' source files last updated in December 2019								                |
+| 'Screen' source files last updated in December 2019       								    |
 #==============================================================================================*/
 
-#include <deque>
 #include <string>
-#include "GameState.h"
+#include "glad.h"
+#include <glm.hpp>
+#include <SDL.h>
+#include <SDL_syswm.h>
 
-class Game
+class Screen
 {
 
 public:
 
-	static Game* Instance();
+	enum VSyncState      { VSYNC_OFF, VSYNC_ON };
+	enum ScreenOrigin2D  { TOP_LEFT, BOTTOM_LEFT };
 
 public:
 
-	int GetTotalTime();
-	int GetElapsedTime();
+    static Screen* Instance();
 
 public:
 
-	bool Initialize(std::string name, int screenWidth, int screenHeight, 
-		            int pixelsPerUnit = 1, bool fullscreen = false);
+	GLint GetPixelsPerUnit();
+	HWND GetWindowHandle();
+	SDL_Window* GetWindow();
+	glm::vec2 GetScreenSize();
+
+public:
+
+	bool SetVerticalSync(VSyncState vsyncState);
+	void SetViewport(GLint x, GLint y, GLint width, GLint height);
+	void SetClearColor(GLfloat r = 1.0f, GLfloat g = 1.0f, 
+		               GLfloat b = 1.0f, GLfloat a = 1.0f);
+
+	void Set2DScreen(ScreenOrigin2D screenOrigin);
+	void Set3DScreen(GLfloat fieldOfView, GLfloat nearClip, GLfloat farClip);
 	
-	void AddState(GameState* state);
-	void ChangeState(GameState* state);
+public:
 
-	bool Run();
+	bool Initialize(const char* windowTitle, GLint width = 1024, GLint height = 768, GLint pixelsPerUnit = 1,
+		            GLint major = 4, GLint minor = 0, bool compatibleContext = false, bool fullscreen = false);
+	
+	void DisplayExtensions();
+	void DisplayGraphicsProfile();
+	
+	void ClearScreen();
+	void SwapBuffer();
+
 	void ShutDown();
 
+private:
+
+	Screen();
+	Screen(const Screen&);
+	Screen& operator=(const Screen&);
 
 private:
 
-	Game();
-	Game(const Game&);
-	Game& operator=(const Game&);
+	GLint m_width;
+	GLint m_height;
+	GLint m_pixelsPerUnit;
 
-private:
-
-	void RemoveState();
-
-private:
-
-	bool m_endGame;
-	int m_elapsedTime;
-	std::deque<GameState*> m_gameStates;
+	HWND m_windowHandle;
+	SDL_Window* m_window;
+	SDL_GLContext m_context;
+	
+	glm::mat4 m_projectionMatrix;
 	
 };
 

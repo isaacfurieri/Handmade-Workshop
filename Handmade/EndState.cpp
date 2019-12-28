@@ -1,6 +1,6 @@
-#include "DebugManager.h"
+#include "Debug.h"
 #include "EndState.h"
-#include "PipelineManager.h"
+#include "Shader.h"
 
 //------------------------------------------------------------------------------------------------------
 //constructor that assigns all default values
@@ -75,13 +75,13 @@ void EndState::OnExit()
 	//debug manager and all of its components 
 #ifdef DEBUG
 
-	TheDebug::Instance()->DestroyDebugObjects();
+	Debug::Instance()->DestroyDebugObjects();
 
 #endif
 
-	ThePipeline::Instance()->DetachShaders();
-	ThePipeline::Instance()->DestroyShaders();
-	ThePipeline::Instance()->DestroyProgram();
+	Shader::Instance()->DetachShaders();
+	Shader::Instance()->DestroyShaders();
+	Shader::Instance()->DestroyProgram();
 
 	m_splashScreen->Destroy();
 	delete m_splashScreen;

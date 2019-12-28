@@ -50,28 +50,27 @@
 
 */
 
-#ifndef DEBUG_MANAGER_H
-#define DEBUG_MANAGER_H
+#ifndef DEBUG_H
+#define DEBUG_H
 
 #include "glad.h"
 #include "Buffer.h"
 #include "Model.h"
-#include "Singleton.h"
 
-class DebugManager
+class Debug
 {
 
 public:
 
-	friend class Singleton<DebugManager>;
+	static Debug* Instance();
 
-public :
+public:
 
 	void CheckError();
 	bool CreateDebugObjects(GLint size);
 	void DestroyDebugObjects();
 
-public :
+public:
 
 	void DrawGrid2D(GLfloat lineWidth = 2.0f);
 	void DrawGrid3D(GLfloat lineWidth = 2.0f);
@@ -117,11 +116,11 @@ private:
 
 private:
 
-	DebugManager()  {}
-	DebugManager(const DebugManager&);
-	DebugManager& operator=(const DebugManager&);
+	Debug()  {}
+	Debug(const Debug&);
+	Debug& operator=(const Debug&);
 
-private :
+private:
 
 	Model m_cube3D;
 	Model m_sphere3D;
@@ -136,7 +135,5 @@ private :
 	Buffer m_sphereBuffer2D;
 	
 };
-
-typedef Singleton<DebugManager> TheDebug;
 
 #endif
