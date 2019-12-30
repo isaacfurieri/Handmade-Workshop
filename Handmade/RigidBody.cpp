@@ -1,23 +1,22 @@
-#include <gtx\norm.hpp>
 #include "Game.h"
-#include "Physics.h"
+#include "RigidBody.h"
 
 //------------------------------------------------------------------------------------------------------
 //static function that calculates gravitational force using a formula 
 //------------------------------------------------------------------------------------------------------
-glm::vec3 Physics::GravityForce(double mass_1, double mass_2, glm::vec3 distance)
+glm::vec3 RigidBody::GravityForce(double mass_1, double mass_2, glm::vec3 distance)
 {
 
 	//the formula uses scalar values, so first the scalar value is calculated
 	//and then applied to the normalised distance value passed, to retain direction
-	double gravityForce = (GRAVITY * mass_1 * mass_2) / glm::length2(distance);
+	double gravityForce = (GRAVITY * mass_1 * mass_2) / glm::length(distance) * glm::length(distance);
 	return glm::normalize(distance) * (float)gravityForce;
 	
 }
 //------------------------------------------------------------------------------------------------------
 //static function that calculates torque force using a formula 
 //------------------------------------------------------------------------------------------------------
-glm::vec3 Physics::TorqueForce(glm::vec3 force, glm::vec3 contactPosition, glm::vec3 centreOfMass)
+glm::vec3 RigidBody::TorqueForce(glm::vec3 force, glm::vec3 contactPosition, glm::vec3 centreOfMass)
 {
 
 	//the result produces a vector, used for the rotation axis and torque magnitude
@@ -27,7 +26,7 @@ glm::vec3 Physics::TorqueForce(glm::vec3 force, glm::vec3 contactPosition, glm::
 //------------------------------------------------------------------------------------------------------
 //constructor that assigns all defaults
 //------------------------------------------------------------------------------------------------------
-Physics::Physics()
+RigidBody::RigidBody()
 {
 
 	m_mass = 0.0;
@@ -40,7 +39,7 @@ Physics::Physics()
 //------------------------------------------------------------------------------------------------------
 //getter-setter function that returns reference to angle variable 
 //------------------------------------------------------------------------------------------------------
-double& Physics::Angle()
+double& RigidBody::Angle()
 {
 
 	return m_angle;
@@ -49,7 +48,7 @@ double& Physics::Angle()
 //------------------------------------------------------------------------------------------------------
 //getter-setter function that returns reference to angular velocity variable 
 //------------------------------------------------------------------------------------------------------
-double& Physics::AngVelocity()
+double& RigidBody::AngVelocity()
 {
 
 	return m_angVelocity;
@@ -58,7 +57,7 @@ double& Physics::AngVelocity()
 //------------------------------------------------------------------------------------------------------
 //getter-setter function that returns reference to force variable 
 //------------------------------------------------------------------------------------------------------
-glm::vec3& Physics::Force()
+glm::vec3& RigidBody::Force()
 {
 
 	return m_force;
@@ -67,7 +66,7 @@ glm::vec3& Physics::Force()
 //------------------------------------------------------------------------------------------------------
 //getter-setter function that returns reference to torque variable 
 //------------------------------------------------------------------------------------------------------
-glm::vec3& Physics::Torque()
+glm::vec3& RigidBody::Torque()
 {
 
 	return m_torque;
@@ -76,7 +75,7 @@ glm::vec3& Physics::Torque()
 //------------------------------------------------------------------------------------------------------
 //getter-setter function that returns reference to position variable 
 //------------------------------------------------------------------------------------------------------
-glm::vec3& Physics::Position()
+glm::vec3& RigidBody::Position()
 {
 
 	return m_position;
@@ -85,7 +84,7 @@ glm::vec3& Physics::Position()
 //------------------------------------------------------------------------------------------------------
 //getter-setter function that returns reference to velocity variable 
 //------------------------------------------------------------------------------------------------------
-glm::vec3& Physics::Velocity()
+glm::vec3& RigidBody::Velocity()
 {
 
 	return m_velocity;
@@ -94,7 +93,7 @@ glm::vec3& Physics::Velocity()
 //------------------------------------------------------------------------------------------------------
 //setter function that sets mass of object
 //------------------------------------------------------------------------------------------------------
-void Physics::SetMass(double mass)
+void RigidBody::SetMass(double mass)
 {
 
 	m_mass = mass;
@@ -103,7 +102,7 @@ void Physics::SetMass(double mass)
 //------------------------------------------------------------------------------------------------------
 //setter function that sets angular mass of object
 //------------------------------------------------------------------------------------------------------
-void Physics::SetAngMass(double mass)
+void RigidBody::SetAngMass(double mass)
 {
 
 	m_angMass = mass;
@@ -112,7 +111,7 @@ void Physics::SetAngMass(double mass)
 //------------------------------------------------------------------------------------------------------
 //function that updates acceleration, velocity and position of object
 //------------------------------------------------------------------------------------------------------
-void Physics::Update()
+void RigidBody::Update()
 {
 
 	//variables for storing old velocity values for 

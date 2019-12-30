@@ -30,40 +30,40 @@
 
 const double GRAVITY = 1.0000000000667;
 
-class Physics
+class RigidBody
 {
 
-public :
+public:
 
 	static glm::vec3 GravityForce(double mass_1, double mass_2, glm::vec3 distance);
 	static glm::vec3 TorqueForce(glm::vec3 force, glm::vec3 contactPosition, glm::vec3 centreOfMass);
 
-public :
+public:
 
-	Physics();
+	RigidBody();
 
-public :
+public:
 
 	double& Angle();
 	double& AngVelocity();
 
-public :
+public:
 
 	glm::vec3& Force();
 	glm::vec3& Torque();
 	glm::vec3& Position();
 	glm::vec3& Velocity();
 
-public :
+public:
 
 	void SetMass(double mass);
 	void SetAngMass(double mass);
 
-public :
+public:
 
 	void Update();
 
-private :
+private:
 
 	double m_mass;
 	double m_angle;
