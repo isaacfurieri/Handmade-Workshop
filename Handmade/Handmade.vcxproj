@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{F5A4E4FB-4E66-4AEC-BCA4-3F90F37B265E}</ProjectGuid>
     <RootNamespace>Handmade</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -131,6 +131,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="Shaders\Default.frag" />
+    <None Include="Shaders\Default.vert" />
     <None Include="Shaders\Main.frag" />
     <None Include="Shaders\Main.vert" />
   </ItemGroup>
@@ -142,31 +144,27 @@
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="HUDCamera.h" />
-    <ClInclude Include="DebugManager.h" />
+    <ClInclude Include="Debug.h" />
     <ClInclude Include="EndState.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="HUD.h" />
-    <ClInclude Include="InputManager.h" />
+    <ClInclude Include="Input.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="MainCamera.h" />
     <ClInclude Include="MainState.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Model.h" />
-    <ClInclude Include="Physics.h" />
-    <ClInclude Include="PipelineManager.h" />
-    <ClInclude Include="Quaternion.h" />
-    <ClInclude Include="ScreenManager.h" />
-    <ClInclude Include="Singleton.h" />
+    <ClInclude Include="RigidBody.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="Screen.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="SplashScreen.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="StartState.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="Texture.h" />
-    <ClInclude Include="Tools.h" />
-    <ClInclude Include="Variable.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AABB.cpp" />
@@ -178,30 +176,27 @@
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="HUDCamera.cpp" />
-    <ClCompile Include="DebugManager.cpp" />
+    <ClCompile Include="Debug.cpp" />
     <ClCompile Include="EndState.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="HUD.cpp" />
-    <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="Input.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MainCamera.cpp" />
     <ClCompile Include="MainState.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Model.cpp" />
-    <ClCompile Include="Physics.cpp" />
-    <ClCompile Include="PipelineManager.cpp" />
-    <ClCompile Include="Quaternion.cpp" />
-    <ClCompile Include="ScreenManager.cpp" />
+    <ClCompile Include="RigidBody.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Screen.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="SplashScreen.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="StartState.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="Tools.cpp" />
-    <ClCompile Include="Variable.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

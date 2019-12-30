@@ -43,22 +43,22 @@ int main(int argc, char* args[])
 
 	//initialize game with name, width and height accordingly
 	//set the last parameter to "true" for fullscreen mode!
-	if (!(TheGame::Instance()->Initialize(gameName, screenWidth, screenHeight, pixelsPerUnit)))
+	if (!(Game::Instance()->Initialize(gameName, screenWidth, screenHeight, pixelsPerUnit)))
 	{
 		return 0;
 	}
 
 	//create the first state to be used in the game
-	TheGame::Instance()->AddState(new StartState(nullptr));
+	Game::Instance()->AddState(new StartState(nullptr));
 
 	//run the game
-	if (!TheGame::Instance()->Run())
+	if (!Game::Instance()->Run())
 	{
 		return 0;
 	}
 
 	//close down game
-	TheGame::Instance()->ShutDown();
+	Game::Instance()->ShutDown();
 	
 	//end application
 	return 0;

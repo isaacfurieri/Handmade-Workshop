@@ -1,5 +1,5 @@
-#include "ScreenManager.h"
-#include "PipelineManager.h"
+#include "Screen.h"
+#include "Shader.h"
 #include "Text.h"
 
 //------------------------------------------------------------------------------------------------------

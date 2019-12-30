@@ -1,5 +1,5 @@
-#ifndef START_STATE_H
-#define START_STATE_H
+#ifndef SHADER_H
+#define SHADER_H
 
 /*==============================================================================================#
 |                                                                                               |
@@ -23,34 +23,74 @@
 | GitHub: https://github.com/djkarstenv									                        |
 |                                                                                               |
 #===============================================================================================#
-| 'StartState' source files last updated in December 2019								        |
+| 'Shader' source files last updated in December 2019							       	        |
 #==============================================================================================*/
 
-#include "GameState.h"
-#include "HUDCamera.h"
-#include "SplashScreen.h"
+#include <string>
+#include "glad.h"
+#include <glm.hpp>
 
-class StartState : public GameState
+class Shader
 {
 
 public:
 
-	StartState(GameState* state);
-	virtual ~StartState() {}
+	enum RenderType { POLYGON_MODE, FULL_SHADE };
+	enum ShaderType { VERTEX_SHADER, FRAGMENT_SHADER };
+	
+public:
+
+	static Shader* Instance();
 
 public:
 
-	virtual bool OnEnter();
-	virtual bool Update();
-	virtual bool Draw();
-	virtual void OnExit();
+	void SetRenderType(RenderType renderType);
+	GLuint GetShaderAttribute(const std::string& vertAttrib);
+	
+public:
+
+	bool SendUniformData(const std::string& uniform, GLint intData);
+	bool SendUniformData(const std::string& uniform, GLuint uintData);
+	bool SendUniformData(const std::string& uniform, GLfloat floatData);
+	bool SendUniformData(const std::string& uniform, const glm::vec2& vec2Data);
+	bool SendUniformData(const std::string& uniform, const glm::vec3& vec3Data);
+	bool SendUniformData(const std::string& uniform, const glm::vec4& vec4Data);
+	
+	bool SendUniformData(const std::string& uniform, 
+		                 const glm::mat3& matrix3x3, bool transposed = false);
+	bool SendUniformData(const std::string& uniform, 
+		                 const glm::mat4& matrix4x4, bool transposed = false);
+
+	bool SendAttributeData(const std::string& attribute, GLfloat floatData);
+	bool SendAttributeData(const std::string& attribute, const glm::vec2& vec2Data);
+	bool SendAttributeData(const std::string& attribute, const glm::vec3& vec3Data);
+	bool SendAttributeData(const std::string& attribute, const glm::vec4& vec4Data);
+
+public:
+
+	bool CreateProgram();
+	bool CreateShaders();
+
+	bool CompileShader(ShaderType shaderType, const std::string& filename);
+	void AttachShaders();
+	bool LinkProgram();
+	
+	void DetachShaders();
+	void DestroyShaders();
+	void DestroyProgram();
 
 private:
 
-	HUDCamera* m_HUDCamera;
-	SplashScreen* m_splashScreen_1;
-	SplashScreen* m_splashScreen_2;
-	
+	Shader();
+	Shader(const Shader&);
+	Shader& operator=(Shader&);
+
+private:
+
+	GLuint m_shaderProgramID;
+	GLuint m_vertexShaderID;
+	GLuint m_fragmentShaderID;
+
 };
 
 #endif

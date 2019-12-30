@@ -1,5 +1,5 @@
-#ifndef START_STATE_H
-#define START_STATE_H
+#ifndef RIGIDBODY_H
+#define RIGIDBODY_H
 
 /*==============================================================================================#
 |                                                                                               |
@@ -23,34 +23,60 @@
 | GitHub: https://github.com/djkarstenv									                        |
 |                                                                                               |
 #===============================================================================================#
-| 'StartState' source files last updated in December 2019								        |
+| 'RigidBody' source files last updated in December 2019									    |
 #==============================================================================================*/
 
-#include "GameState.h"
-#include "HUDCamera.h"
-#include "SplashScreen.h"
+#include <glm.hpp>
 
-class StartState : public GameState
+const double GRAVITY = 1.0000000000667;
+
+class RigidBody
 {
 
 public:
 
-	StartState(GameState* state);
-	virtual ~StartState() {}
+	static glm::vec3 GravityForce(double mass_1, double mass_2, glm::vec3 distance);
+	static glm::vec3 TorqueForce(glm::vec3 force, glm::vec3 contactPosition, glm::vec3 centreOfMass);
 
 public:
 
-	virtual bool OnEnter();
-	virtual bool Update();
-	virtual bool Draw();
-	virtual void OnExit();
+	RigidBody();
+
+public:
+
+	double& Angle();
+	double& AngVelocity();
+
+public:
+
+	glm::vec3& Force();
+	glm::vec3& Torque();
+	glm::vec3& Position();
+	glm::vec3& Velocity();
+
+public:
+
+	void SetMass(double mass);
+	void SetAngMass(double mass);
+
+public:
+
+	void Update();
 
 private:
 
-	HUDCamera* m_HUDCamera;
-	SplashScreen* m_splashScreen_1;
-	SplashScreen* m_splashScreen_2;
-	
+	double m_mass;
+	double m_angle;
+	double m_angMass;  	
+	double m_angVelocity;
+	double m_angAcceleration;
+
+	glm::vec3 m_force;
+	glm::vec3 m_torque;
+	glm::vec3 m_position;
+	glm::vec3 m_velocity;
+	glm::vec3 m_acceleration;
+
 };
 
 #endif

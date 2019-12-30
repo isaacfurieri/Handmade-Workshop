@@ -51,7 +51,7 @@ void Animation::Update()
 {
 
 	//store the total time elapsed since animation began which will be used in formula below
-	m_timeElapsed += TheGame::Instance()->GetElapsedTime() / 1000.0f;
+	m_timeElapsed += Game::Instance()->GetElapsedTime() / 1000.0f;
 
 	//aquire index value of specific texture cell to "cut out" using a formula
 	//the texture index is zero based and is a whole number value counting from

@@ -1,5 +1,5 @@
-#ifndef START_STATE_H
-#define START_STATE_H
+#ifndef SCREEN_H
+#define SCREEN_H
 
 /*==============================================================================================#
 |                                                                                               |
@@ -23,33 +23,74 @@
 | GitHub: https://github.com/djkarstenv									                        |
 |                                                                                               |
 #===============================================================================================#
-| 'StartState' source files last updated in December 2019								        |
+| 'Screen' source files last updated in December 2019       								    |
 #==============================================================================================*/
 
-#include "GameState.h"
-#include "HUDCamera.h"
-#include "SplashScreen.h"
+#include <string>
+#include "glad.h"
+#include <glm.hpp>
+#include <SDL.h>
+#include <SDL_syswm.h>
 
-class StartState : public GameState
+class Screen
 {
 
 public:
 
-	StartState(GameState* state);
-	virtual ~StartState() {}
+	enum VSyncState      { VSYNC_OFF, VSYNC_ON };
+	enum ScreenOrigin2D  { TOP_LEFT, BOTTOM_LEFT };
 
 public:
 
-	virtual bool OnEnter();
-	virtual bool Update();
-	virtual bool Draw();
-	virtual void OnExit();
+    static Screen* Instance();
+
+public:
+
+	GLint GetPixelsPerUnit();
+	HWND GetWindowHandle();
+	SDL_Window* GetWindow();
+	glm::vec2 GetScreenSize();
+
+public:
+
+	bool SetVerticalSync(VSyncState vsyncState);
+	void SetViewport(GLint x, GLint y, GLint width, GLint height);
+	void SetClearColor(GLfloat r = 1.0f, GLfloat g = 1.0f, 
+		               GLfloat b = 1.0f, GLfloat a = 1.0f);
+
+	void Set2DScreen(ScreenOrigin2D screenOrigin);
+	void Set3DScreen(GLfloat fieldOfView, GLfloat nearClip, GLfloat farClip);
+	
+public:
+
+	bool Initialize(const char* windowTitle, GLint width = 1024, GLint height = 768, GLint pixelsPerUnit = 1,
+		            GLint major = 4, GLint minor = 0, bool compatibleContext = false, bool fullscreen = false);
+	
+	void DisplayExtensions();
+	void DisplayGraphicsProfile();
+	
+	void ClearScreen();
+	void SwapBuffer();
+
+	void ShutDown();
 
 private:
 
-	HUDCamera* m_HUDCamera;
-	SplashScreen* m_splashScreen_1;
-	SplashScreen* m_splashScreen_2;
+	Screen();
+	Screen(const Screen&);
+	Screen& operator=(const Screen&);
+
+private:
+
+	GLint m_width;
+	GLint m_height;
+	GLint m_pixelsPerUnit;
+
+	HWND m_windowHandle;
+	SDL_Window* m_window;
+	SDL_GLContext m_context;
+	
+	glm::mat4 m_projectionMatrix;
 	
 };
 

@@ -1,6 +1,6 @@
 #include <iostream>
 #include "Buffer.h"
-#include "PipelineManager.h"
+#include "Shader.h"
 
 //this allocated space remains in memory until the application ends
 std::map<std::string, BufferID>* Buffer::s_bufferIDMap = new std::map<std::string, BufferID>;
@@ -130,9 +130,9 @@ void Buffer::BindVBO(VBOType vboType, const std::string& vertAttrib,
 	glBindVertexArray(m_ID.vaoID);
 	
 		glBindBuffer(GL_ARRAY_BUFFER, m_ID.vboID[vboType]);
-		glVertexAttribPointer(ThePipeline::Instance()->GetShaderAttribute(vertAttrib), 
+		glVertexAttribPointer(Shader::Instance()->GetShaderAttribute(vertAttrib), 
 			                  componentSize, type, GL_FALSE, 0, 0);
-		glEnableVertexAttribArray(ThePipeline::Instance()->GetShaderAttribute(vertAttrib));
+		glEnableVertexAttribArray(Shader::Instance()->GetShaderAttribute(vertAttrib));
 
 	glBindVertexArray(0);
 

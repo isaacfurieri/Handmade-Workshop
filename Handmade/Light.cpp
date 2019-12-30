@@ -1,6 +1,6 @@
 #include "GameObject.h"
 #include "Light.h"
-#include "PipelineManager.h"
+#include "Shader.h"
 
 GLuint Light::s_totalLights = 0;
 
@@ -13,6 +13,8 @@ Light::Light()
 	m_attLinear = 0.05f;
 	m_attConstant = 0.2f;
 	m_attQuadratic = 0.05f;
+
+	m_position = glm::vec3(0.0f);
 
 	//set light color to white by default
 	m_ambient = glm::vec3(1.0f);
@@ -153,18 +155,18 @@ void Light::SendToShader()
 {
 	
 	//send total amount of lights to fragment shader so it can loop through them all
-	ThePipeline::Instance()->SendUniformData("totalLights", s_totalLights);
+	Shader::Instance()->SendUniformData("totalLights", s_totalLights);
 
 	//send light position and color to fragment shader
-	ThePipeline::Instance()->SendUniformData("light[" + std::to_string(m_lightNumber) + "].ambient", m_ambient);
-	ThePipeline::Instance()->SendUniformData("light[" + std::to_string(m_lightNumber) + "].diffuse", m_diffuse);
-	ThePipeline::Instance()->SendUniformData("light[" + std::to_string(m_lightNumber) + "].specular", m_specular);
-	ThePipeline::Instance()->SendUniformData("light[" + std::to_string(m_lightNumber) + "].position", m_position);
+	Shader::Instance()->SendUniformData("light[" + std::to_string(m_lightNumber) + "].ambient", m_ambient);
+	Shader::Instance()->SendUniformData("light[" + std::to_string(m_lightNumber) + "].diffuse", m_diffuse);
+	Shader::Instance()->SendUniformData("light[" + std::to_string(m_lightNumber) + "].specular", m_specular);
+	Shader::Instance()->SendUniformData("light[" + std::to_string(m_lightNumber) + "].position", m_position);
 
 	//send light attenuation data to fragment shader
-	ThePipeline::Instance()->SendUniformData("light[" + std::to_string(m_lightNumber) + "].attLinear", m_attLinear);
-	ThePipeline::Instance()->SendUniformData("light[" + std::to_string(m_lightNumber) + "].attConstant", m_attConstant);
-	ThePipeline::Instance()->SendUniformData("light[" + std::to_string(m_lightNumber) + "].attQuadratic", m_attQuadratic);
+	Shader::Instance()->SendUniformData("light[" + std::to_string(m_lightNumber) + "].attLinear", m_attLinear);
+	Shader::Instance()->SendUniformData("light[" + std::to_string(m_lightNumber) + "].attConstant", m_attConstant);
+	Shader::Instance()->SendUniformData("light[" + std::to_string(m_lightNumber) + "].attQuadratic", m_attQuadratic);
 
 }
 //------------------------------------------------------------------------------------------------------

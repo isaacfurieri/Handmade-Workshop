@@ -31,9 +31,6 @@
     <Filter Include="Header Files\Components\Audio">
       <UniqueIdentifier>{396013c2-095e-44a9-b3e7-73586546202d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Components\Collision">
-      <UniqueIdentifier>{791b9fa1-4df8-46c2-92cb-07c272d79629}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shaders">
       <UniqueIdentifier>{e562bf89-2a63-412a-8a06-6c434dc0faa7}</UniqueIdentifier>
     </Filter>
@@ -58,17 +55,8 @@
     <Filter Include="Source Files\Components\Audio">
       <UniqueIdentifier>{b81f9d0c-a5dd-4b2f-8068-8fc54c6318f3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Components\Collision">
-      <UniqueIdentifier>{e21bdc27-7b51-403d-9650-ac17241683e4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Components\Visual">
       <UniqueIdentifier>{952c6fe5-7ab9-449b-a46a-397cb483c6b9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Components\Maths">
-      <UniqueIdentifier>{323b05f5-7655-4c36-be74-d8ce089bd92a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Components\Maths">
-      <UniqueIdentifier>{a6e33328-626d-4df3-8f46-7ada7c7ffa25}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Components\Core">
       <UniqueIdentifier>{e11fdb0d-c36d-4fa9-80fa-2b8e34b3f918}</UniqueIdentifier>
@@ -76,12 +64,24 @@
     <Filter Include="Source Files\Components\Core">
       <UniqueIdentifier>{d3e431f9-3a0f-4a6b-b6ca-3576f11f387e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Components\Physics">
+      <UniqueIdentifier>{791b9fa1-4df8-46c2-92cb-07c272d79629}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\Physics">
+      <UniqueIdentifier>{e21bdc27-7b51-403d-9650-ac17241683e4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Main.frag">
       <Filter>Shaders</Filter>
     </None>
     <None Include="Shaders\Main.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Default.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Default.vert">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
@@ -107,22 +107,7 @@
     <ClInclude Include="Game.h">
       <Filter>Header Files\Main</Filter>
     </ClInclude>
-    <ClInclude Include="Singleton.h">
-      <Filter>Header Files\Main</Filter>
-    </ClInclude>
-    <ClInclude Include="Tools.h">
-      <Filter>Header Files\Main</Filter>
-    </ClInclude>
-    <ClInclude Include="Variable.h">
-      <Filter>Header Files\Main</Filter>
-    </ClInclude>
     <ClInclude Include="AudioManager.h">
-      <Filter>Header Files\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="InputManager.h">
-      <Filter>Header Files\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="ScreenManager.h">
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
     <ClInclude Include="StartState.h">
@@ -130,9 +115,6 @@
     </ClInclude>
     <ClInclude Include="EndState.h">
       <Filter>Header Files\GameStates</Filter>
-    </ClInclude>
-    <ClInclude Include="Quaternion.h">
-      <Filter>Header Files\Components\Maths</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.h">
       <Filter>Header Files\GameObjects</Filter>
@@ -143,17 +125,8 @@
     <ClInclude Include="SplashScreen.h">
       <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="DebugManager.h">
-      <Filter>Header Files\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Physics.h">
-      <Filter>Header Files\Components\Maths</Filter>
-    </ClInclude>
     <ClInclude Include="HUDCamera.h">
       <Filter>Header Files\GameObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineManager.h">
-      <Filter>Header Files\Managers</Filter>
     </ClInclude>
     <ClInclude Include="Model.h">
       <Filter>Header Files\Components\Visual</Filter>
@@ -177,10 +150,25 @@
       <Filter>Header Files\Components\Core</Filter>
     </ClInclude>
     <ClInclude Include="AABB.h">
-      <Filter>Header Files\Components\Collision</Filter>
+      <Filter>Header Files\Components\Physics</Filter>
     </ClInclude>
     <ClInclude Include="Sphere.h">
-      <Filter>Header Files\Components\Collision</Filter>
+      <Filter>Header Files\Components\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Screen.h">
+      <Filter>Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Debug.h">
+      <Filter>Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidBody.h">
+      <Filter>Header Files\Components\Physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -202,22 +190,10 @@
     <ClCompile Include="Game.cpp">
       <Filter>Source Files\Main</Filter>
     </ClCompile>
-    <ClCompile Include="Tools.cpp">
-      <Filter>Source Files\Main</Filter>
-    </ClCompile>
-    <ClCompile Include="Variable.cpp">
-      <Filter>Source Files\Main</Filter>
-    </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>Source Files\Main</Filter>
     </ClCompile>
     <ClCompile Include="AudioManager.cpp">
-      <Filter>Source Files\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="InputManager.cpp">
-      <Filter>Source Files\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="ScreenManager.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
     <ClCompile Include="StartState.cpp">
@@ -225,9 +201,6 @@
     </ClCompile>
     <ClCompile Include="EndState.cpp">
       <Filter>Source Files\GameStates</Filter>
-    </ClCompile>
-    <ClCompile Include="Quaternion.cpp">
-      <Filter>Source Files\Components\Maths</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
       <Filter>Source Files\GameObjects</Filter>
@@ -238,17 +211,8 @@
     <ClCompile Include="SplashScreen.cpp">
       <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="DebugManager.cpp">
-      <Filter>Source Files\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Physics.cpp">
-      <Filter>Source Files\Components\Maths</Filter>
-    </ClCompile>
     <ClCompile Include="HUDCamera.cpp">
       <Filter>Source Files\GameObjects</Filter>
-    </ClCompile>
-    <ClCompile Include="PipelineManager.cpp">
-      <Filter>Source Files\Managers</Filter>
     </ClCompile>
     <ClCompile Include="Model.cpp">
       <Filter>Source Files\Components\Visual</Filter>
@@ -278,10 +242,25 @@
       <Filter>Source Files\Main</Filter>
     </ClCompile>
     <ClCompile Include="AABB.cpp">
-      <Filter>Source Files\Components\Collision</Filter>
+      <Filter>Source Files\Components\Physics</Filter>
     </ClCompile>
     <ClCompile Include="Sphere.cpp">
-      <Filter>Source Files\Components\Collision</Filter>
+      <Filter>Source Files\Components\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Screen.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidBody.cpp">
+      <Filter>Source Files\Components\Physics</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

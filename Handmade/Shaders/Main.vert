@@ -1,4 +1,4 @@
-#version 400 core 
+#version 450 
 
 in vec3 vertexIn;
 in vec4 colorIn;

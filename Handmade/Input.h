@@ -1,5 +1,5 @@
-#ifndef START_STATE_H
-#define START_STATE_H
+#ifndef INPUT_H
+#define INPUT_H
 
 /*==============================================================================================#
 |                                                                                               |
@@ -23,34 +23,73 @@
 | GitHub: https://github.com/djkarstenv									                        |
 |                                                                                               |
 #===============================================================================================#
-| 'StartState' source files last updated in December 2019								        |
+| 'Input' source files last updated in December 2019								            |
 #==============================================================================================*/
 
-#include "GameState.h"
-#include "HUDCamera.h"
-#include "SplashScreen.h"
+#include <glm.hpp>
+#include <SDL.h>
 
-class StartState : public GameState
+class Input
 {
 
 public:
 
-	StartState(GameState* state);
-	virtual ~StartState() {}
+	enum ButtonState { UP, DOWN };
+	enum CursorState { ON = 1, OFF = 0, SHOW = 1, HIDE = 0 };
+	enum CursorType  { ARROW, IBEAM, WAIT, CROSSHAIR, WAIT_ARROW, NO = 10, HAND = 11 };
 
 public:
 
-	virtual bool OnEnter();
-	virtual bool Update();
-	virtual bool Draw();
-	virtual void OnExit();
+    static Input* Instance();
+
+public:
+
+	bool IsXClicked();
+	bool IsKeyPressed();
+	const Uint8* GetKeyStates();
+	//bool IsMouseColliding(const AABB2D& bound);
+	//bool IsMouseColliding(const Sphere2D& bound);
+
+public:
+
+	glm::vec2 GetMousePosition();
+	glm::vec2 GetMouseMotion();
+	glm::vec2 GetMouseWheel();	
+	
+	ButtonState GetLeftButtonState();
+	ButtonState GetMiddleButtonState();
+	ButtonState GetRightButtonState();
+
+	void SetMousePosition(int x, int y);
+	void SetMouseCursorType(CursorType cursorType = ARROW);
+	void SetMouseCursorState(CursorState cursorEnabled = ON, CursorState cursorVisible = SHOW);
+
+public:
+
+	void Update();
 
 private:
 
-	HUDCamera* m_HUDCamera;
-	SplashScreen* m_splashScreen_1;
-	SplashScreen* m_splashScreen_2;
+	Input();
+	Input(const Input&);
+	Input& operator=(const Input&);
+
+private:
+
+	bool m_isXClicked;
+	bool m_isKeyPressed;
+	const Uint8* m_keyStates;
+
+	SDL_Cursor* m_cursor;
+
+	glm::vec2 m_mousePosition;
+	glm::vec2 m_mouseMotion;
+	glm::vec2 m_mouseWheel;
 	
+	ButtonState m_leftButtonState;
+	ButtonState m_middleButtonState;
+	ButtonState m_rightButtonState;
+
 };
 
 #endif

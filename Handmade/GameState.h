@@ -1,36 +1,30 @@
-/*
-
-  All code has been written by Karsten Vermeulen and may be used freely by anyone. It is by no
-  means perfect and there is certainly room for improvement in some parts. As a whole, the code
-  has been created as part of an engine for the purposes of educating other fellow programmers,
-  and anyone else wishing to learn C++ and OOP. Feel free to use, copy, break, update and do as
-  you wish with this code - it is there for all!
-
-  UPDATED : December 2017
-
-  -----------------------------------------------------------------------------------------------
-
-- This class encapsulates a game state that will exist within the game. A game state can be 
-  anything like a play state, pause state, menu state, etc and will contain all the game
-  specific code specific to that state. Every game state needs to be instantiated as a 
-  sub-class of this abstract base class. Ideally, the instantiated game states will be created
-  and controlled inside the Game class, which serves as the game state machine.
-  
-- The main flag variable m_isActive will keep track if the game state is currently active or not. 
-  As long as its active, its overriden Update() and Draw() routines will constantly be called until
-  the state is set as not active, at which point the state will close down. As soon as the state
-  is flagged as not alive, it will be removed by the state machine.
-  
-- The OnEnter() routine is called when the state is activated and this function will load all 
-  resources from file, instantiate the game objects for that state and do all start up tasks for the
-  active state. The opposing OnExit() function will do the opposite when the state is deactivated, 
-  ie - call all shutdown tasks, remove all game objects from memory and free all resources from 
-  memory for the given state.
-
-*/
-
 #ifndef GAME_STATE_H
 #define GAME_STATE_H
+
+/*==============================================================================================#
+|                                                                                               |
+| All code has been written by Karsten Vermeulen as part of the 'Handmade' game engine, for the |
+| purposes of educating other fellow programmers, programming students and anyone else wishing  |
+| to learn about game development, C++ and OOP. The engine, class design and overall structure  |
+| is by no means perfect and there is certainly room for improvement. Feel free to use, copy,   |
+| break, update and do as you wish with this code - it is there, free, for all!                 |
+|																							    |
+| Designed to teach. Made from scratch. Built by hand.							                |
+|																							    |
+#===============================================================================================#
+|																								|
+| If you like 'Handmade', and wish to show your support, if you have any questions about the    |
+| project, or if you just want to reach out, please find me on the following channels:          |
+|																						        |
+| Web: http://www.karstenvermeulen.com														    |
+| Facebook: https://www.facebook.com/KarstensCorner								                |
+| Twitter: https://twitter.com/KarstensCorner													|
+| LinkedIn: https://www.linkedin.com/in/karstenvermeulen                                        |
+| GitHub: https://github.com/djkarstenv									                        |
+|                                                                                               |
+#===============================================================================================#
+| 'GameState' source files last updated in December 2019								        |
+#==============================================================================================*/
 
 class GameState
 {

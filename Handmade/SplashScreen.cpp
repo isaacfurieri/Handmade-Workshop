@@ -1,6 +1,6 @@
 #include "Game.h"
-#include "InputManager.h"
-#include "ScreenManager.h"
+#include "Input.h"
+#include "Screen.h"
 #include "SplashScreen.h"
 
 //------------------------------------------------------------------------------------------------------
@@ -44,7 +44,7 @@ void SplashScreen::Update()
 {
 
 	//store keyboard key states in a temp variable for processing below
-	const Uint8* keyState = TheInput::Instance()->GetKeyStates();
+	const Uint8* keyState = Input::Instance()->GetKeyStates();
 
 	//if TAB key was pressed, deactivate splash screen 
 	if (keyState[SDL_SCANCODE_TAB])
@@ -55,7 +55,7 @@ void SplashScreen::Update()
 	//if image is set to fade in and image is not yet fully opaque then fade in image
 	if (m_alpha <= 1.0f && m_fade == FADE_IN)
 	{
-		m_alpha += 0.5f * (float)TheGame::Instance()->GetElapsedTime() / 1000;
+		m_alpha += 0.5f * (float)Game::Instance()->GetElapsedTime() / 1000;
 		m_sprite.SetColor(1.0f, 1.0f, 1.0f, m_alpha);
 	}
 
@@ -63,7 +63,7 @@ void SplashScreen::Update()
 	else
 	{
 		m_fade = FADE_OUT;
-		m_alpha -= 0.5f * (float)TheGame::Instance()->GetElapsedTime() / 1000;
+		m_alpha -= 0.5f * (float)Game::Instance()->GetElapsedTime() / 1000;
 		m_sprite.SetColor(1.0f, 1.0f, 1.0f, m_alpha);
 	}
 	
@@ -82,7 +82,7 @@ void SplashScreen::Draw()
 {
 
 	//setup screen in 2D orthographic mode because all splash screens are 2D 
-	TheScreen::Instance()->Set2DScreen(ScreenManager::BOTTOM_LEFT);
+	Screen::Instance()->Set2DScreen(Screen::BOTTOM_LEFT);
 
 	//reset model matrix to identity so we don't accumulate transformations
 	GameObject::SetIdentity();

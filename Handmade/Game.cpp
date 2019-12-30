@@ -1,10 +1,20 @@
 #include "AudioManager.h"
-#include "DebugManager.h"
+#include "Debug.h"
 #include "Game.h"
-#include "InputManager.h"
-#include "PipelineManager.h"
-#include "ScreenManager.h"
+#include "Input.h"
+#include "Shader.h"
+#include "Screen.h"
 
+//------------------------------------------------------------------------------------------------------
+//static function that will create an instance of this Screen object and return its address
+//------------------------------------------------------------------------------------------------------
+Game* Game::Instance()
+{
+
+	static Game* gameObject = new Game();
+	return gameObject;
+
+}
 //------------------------------------------------------------------------------------------------------
 //constructor that assigns all default values
 //------------------------------------------------------------------------------------------------------
@@ -12,6 +22,7 @@ Game::Game()
 {
 
 	m_endGame = false;
+	m_elapsedTime = 0;
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -40,14 +51,14 @@ bool Game::Initialize(std::string name, int screenWidth, int screenHeight,
 {
 
 	//initialise game screen with passed values 
-	if (!(TheScreen::Instance()->
+	if (!(Screen::Instance()->
 		Initialize(name.c_str(), screenWidth, screenHeight, pixelsPerUnit, 4, 0, true, fullscreen)))
 	{
 		return false;
 	}
 
 	//initialize FMOD audio sub-system and return false if error occured
-	if (!(TheAudio::Instance()->Initialize()))
+	if (!(AudioManager::Instance()->Initialize()))
 	{
 		return false;
 	}
@@ -99,13 +110,13 @@ bool Game::Run()
 			int startTime = SDL_GetTicks();
 
 			//update FMOD audio sub-system
-			TheAudio::Instance()->Update();
+			AudioManager::Instance()->Update();
 
 			//update screen by clearing OpenGL frame buffer
-			TheScreen::Instance()->ClearScreen();
+			Screen::Instance()->ClearScreen();
 
 			//update input handling by listening for input events
-			TheInput::Instance()->Update();
+			Input::Instance()->Update();
 
 			//update the currently active state
 			state->Update();
@@ -114,7 +125,7 @@ bool Game::Run()
 			state->Draw();
 
 			//draw screen by swapping OpenGL frame buffer
-			TheScreen::Instance()->SwapBuffer();
+			Screen::Instance()->SwapBuffer();
 
 			//calculate time value passed for one frame call
 			//if vsync is on this value should be around 16ms
@@ -144,10 +155,10 @@ void Game::ShutDown()
 {
 
 	//close down FMOD audio sub-system 
-	TheAudio::Instance()->ShutDown();
+	AudioManager::Instance()->ShutDown();
 
 	//close down game screen 
-	TheScreen::Instance()->ShutDown();
+	Screen::Instance()->ShutDown();
 
 }
 //------------------------------------------------------------------------------------------------------
