@@ -1,3 +1,6 @@
+#ifndef MODEL_H
+#define MODEL_H
+
 /*==============================================================================================#
 |                                                                                               |
 | All code has been written by Karsten Vermeulen as part of the 'Handmade' game engine, for the |
@@ -22,9 +25,6 @@
 #===============================================================================================#
 | 'Model' source files last updated in December 2019					    			        |
 #==============================================================================================*/
-
-#ifndef MODEL_H
-#define MODEL_H
 
 #include <string>
 #include <vector>

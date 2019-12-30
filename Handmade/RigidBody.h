@@ -1,5 +1,5 @@
-#ifndef PHYSICS_H
-#define PHYSICS_H
+#ifndef RIGIDBODY_H
+#define RIGIDBODY_H
 
 /*==============================================================================================#
 |                                                                                               |

@@ -1,3 +1,6 @@
+#ifndef GAME_STATE_H
+#define GAME_STATE_H
+
 /*==============================================================================================#
 |                                                                                               |
 | All code has been written by Karsten Vermeulen as part of the 'Handmade' game engine, for the |
@@ -22,9 +25,6 @@
 #===============================================================================================#
 | 'GameState' source files last updated in December 2019								        |
 #==============================================================================================*/
-
-#ifndef GAME_STATE_H
-#define GAME_STATE_H
 
 class GameState
 {

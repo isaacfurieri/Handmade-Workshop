@@ -1,3 +1,6 @@
+#ifndef END_STATE_H
+#define END_STATE_H
+
 /*==============================================================================================#
 |                                                                                               |
 | All code has been written by Karsten Vermeulen as part of the 'Handmade' game engine, for the |
@@ -22,9 +25,6 @@
 #===============================================================================================#
 | 'EndState' source files last updated in December 2019								            |
 #==============================================================================================*/
-
-#ifndef END_STATE_H
-#define END_STATE_H
 
 #include "GameState.h"
 #include "HUDCamera.h"

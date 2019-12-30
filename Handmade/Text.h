@@ -1,3 +1,6 @@
+#ifndef TEXT_H
+#define TEXT_H
+
 /*==============================================================================================#
 |                                                                                               |
 | All code has been written by Karsten Vermeulen as part of the 'Handmade' game engine, for the |
@@ -22,9 +25,6 @@
 #===============================================================================================#
 | 'Text' source files last updated in December 2019					    			            |
 #==============================================================================================*/
-
-#ifndef TEXT_H
-#define TEXT_H
 
 #include "Sprite.h"
 
