@@ -23,6 +23,10 @@ Input::Input()
 	
 	m_cursor = nullptr;
 
+	m_mousePosition = glm::vec2(0.0f);
+	m_mouseMotion = glm::vec2(0.0f);
+	m_mouseWheel = glm::vec2(0.0f);
+
 	m_leftButtonState = UP;
 	m_middleButtonState = UP;
 	m_rightButtonState = UP;

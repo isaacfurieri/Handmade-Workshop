@@ -31,11 +31,11 @@
 class Text : public Sprite
 {
 
-public :
+public:
 
 	Text();
 	
-public :
+public:
 
 	void SetText(const std::string& text);
 	void SetCharSpace(GLfloat charSpace);
@@ -44,7 +44,7 @@ public:
 
 	bool Create(const std::string bufferID);
 
-private :
+private:
 	
 	std::string m_text;
 	GLfloat m_charSpace;

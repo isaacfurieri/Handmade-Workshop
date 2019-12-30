@@ -62,8 +62,8 @@ private:
 
 	glm::vec3 m_min;
 	glm::vec3 m_max;
-	glm::vec3 m_scale;
     glm::vec4 m_color;
+	glm::vec3 m_scale;
     glm::vec3 m_position;
 	glm::vec3 m_dimension;
 	glm::vec3 m_halfDimension;

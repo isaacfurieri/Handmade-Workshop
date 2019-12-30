@@ -10,6 +10,8 @@ Sprite::Sprite()
 	m_spriteType = STATIC;
 	m_isSpriteSampled = false;
 
+	m_textureCell = glm::vec2(0.0f);	
+
 	//assign texture dimension to 1 by default
 	//this assumes the sprite's texture contains 1 image
 	m_textureDimension = glm::vec2(1.0f);

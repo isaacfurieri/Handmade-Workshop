@@ -14,6 +14,8 @@ Light::Light()
 	m_attConstant = 0.2f;
 	m_attQuadratic = 0.05f;
 
+	m_position = glm::vec3(0.0f);
+
 	//set light color to white by default
 	m_ambient = glm::vec3(1.0f);
 	m_diffuse = glm::vec3(1.0f);

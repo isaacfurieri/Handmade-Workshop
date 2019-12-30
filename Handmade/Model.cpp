@@ -334,6 +334,7 @@ void Model::UnloadTexture(const std::string textureID)
 void Model::Draw()
 {
 
+	m_texture.Bind();
 	m_material.SendToShader();
 	m_buffer.Draw(Buffer::TRIANGLES);
 

@@ -31,9 +31,6 @@
     <Filter Include="Header Files\Components\Audio">
       <UniqueIdentifier>{396013c2-095e-44a9-b3e7-73586546202d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Components\Collision">
-      <UniqueIdentifier>{791b9fa1-4df8-46c2-92cb-07c272d79629}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shaders">
       <UniqueIdentifier>{e562bf89-2a63-412a-8a06-6c434dc0faa7}</UniqueIdentifier>
     </Filter>
@@ -58,23 +55,20 @@
     <Filter Include="Source Files\Components\Audio">
       <UniqueIdentifier>{b81f9d0c-a5dd-4b2f-8068-8fc54c6318f3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Components\Collision">
-      <UniqueIdentifier>{e21bdc27-7b51-403d-9650-ac17241683e4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Components\Visual">
       <UniqueIdentifier>{952c6fe5-7ab9-449b-a46a-397cb483c6b9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Components\Maths">
-      <UniqueIdentifier>{323b05f5-7655-4c36-be74-d8ce089bd92a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Components\Maths">
-      <UniqueIdentifier>{a6e33328-626d-4df3-8f46-7ada7c7ffa25}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Components\Core">
       <UniqueIdentifier>{e11fdb0d-c36d-4fa9-80fa-2b8e34b3f918}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Components\Core">
       <UniqueIdentifier>{d3e431f9-3a0f-4a6b-b6ca-3576f11f387e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Components\Physics">
+      <UniqueIdentifier>{791b9fa1-4df8-46c2-92cb-07c272d79629}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\Physics">
+      <UniqueIdentifier>{e21bdc27-7b51-403d-9650-ac17241683e4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -156,10 +150,10 @@
       <Filter>Header Files\Components\Core</Filter>
     </ClInclude>
     <ClInclude Include="AABB.h">
-      <Filter>Header Files\Components\Collision</Filter>
+      <Filter>Header Files\Components\Physics</Filter>
     </ClInclude>
     <ClInclude Include="Sphere.h">
-      <Filter>Header Files\Components\Collision</Filter>
+      <Filter>Header Files\Components\Physics</Filter>
     </ClInclude>
     <ClInclude Include="Screen.h">
       <Filter>Header Files\Managers</Filter>
@@ -174,7 +168,7 @@
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
     <ClInclude Include="RigidBody.h">
-      <Filter>Header Files\Components\Maths</Filter>
+      <Filter>Header Files\Components\Physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -254,10 +248,10 @@
       <Filter>Source Files\Main</Filter>
     </ClCompile>
     <ClCompile Include="AABB.cpp">
-      <Filter>Source Files\Components\Collision</Filter>
+      <Filter>Source Files\Components\Physics</Filter>
     </ClCompile>
     <ClCompile Include="Sphere.cpp">
-      <Filter>Source Files\Components\Collision</Filter>
+      <Filter>Source Files\Components\Physics</Filter>
     </ClCompile>
     <ClCompile Include="Screen.cpp">
       <Filter>Source Files\Managers</Filter>
@@ -272,7 +266,7 @@
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
     <ClCompile Include="RigidBody.cpp">
-      <Filter>Source Files\Components\Maths</Filter>
+      <Filter>Source Files\Components\Physics</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

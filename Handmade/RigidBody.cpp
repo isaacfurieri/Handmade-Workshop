@@ -35,6 +35,12 @@ RigidBody::RigidBody()
 	m_angVelocity = 0.0;
 	m_angAcceleration = 0.0;
 
+	m_force = glm::vec3(0.0f);
+	m_torque = glm::vec3(0.0f);
+	m_position = glm::vec3(0.0f);
+	m_velocity = glm::vec3(0.0f);
+	m_acceleration = glm::vec3(0.0f);
+
 }
 //------------------------------------------------------------------------------------------------------
 //getter-setter function that returns reference to angle variable 

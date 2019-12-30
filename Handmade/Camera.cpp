@@ -4,8 +4,8 @@
 #include "Shader.h"
 #include "Screen.h"
 
-glm::vec3 Camera::s_position;
-glm::mat4 Camera::s_viewMatrix;
+glm::vec3 Camera::s_position = glm::vec3(0.0f);
+glm::mat4 Camera::s_viewMatrix = glm::mat4(1.0f);
 
 //------------------------------------------------------------------------------------------------------
 //static setter function that resets view matrix to the identity 
@@ -45,11 +45,19 @@ Camera::Camera()
 {
 
 	m_isFreeFlow = false;
+	
 	m_velocity = 0.07f;
 	m_sensitivity = 1.0f;
-	m_upVector.y = 1.0f;
+
+	m_moveDirection = glm::vec3(0.0f);
+	m_viewDirection = glm::vec3(0.0f);
+
 	m_threshold = glm::vec2(-0.90f, 0.90f);
+	m_upVector = glm::vec3(0.0f, 1.0f, 0.0f);
 	m_lookAt = glm::vec3(0.0f, 0.0f, -1.0f);
+
+	m_rotationMatrixX = glm::mat4(1.0f);
+	m_rotationMatrixY = glm::mat4(1.0f);
 
 }
 //------------------------------------------------------------------------------------------------------

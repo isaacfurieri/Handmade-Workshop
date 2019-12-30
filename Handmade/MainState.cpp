@@ -82,7 +82,7 @@ bool MainState::Draw()
 
 #ifdef GAME_3D
 
-	Screen::Instance()->Set3DScreen(60.0f, 0.1f, 1000.0f);
+	Screen::Instance()->Set3DScreen(45.0f, 0.1f, 1000.0f);
 
 #ifdef DEBUG
 

@@ -28,6 +28,8 @@ Screen::Screen()
 	m_window = nullptr;
 	m_context = nullptr;
 	
+	m_projectionMatrix = glm::mat4(1.0f);
+
 }
 //------------------------------------------------------------------------------------------------------
 //getter function that returns pixel scale value
@@ -123,7 +125,7 @@ void Screen::Set2DScreen(ScreenOrigin2D screenOrigin)
 	}
 
 	//send projection matrix to shader
-	//ThePipeline::Instance()->SendUniformData("projMatrix", m_projectionMatrix);
+	Shader::Instance()->SendUniformData("projMatrix", m_projectionMatrix);
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -143,7 +145,7 @@ void Screen::Set3DScreen(GLfloat fieldOfView, GLfloat nearClip, GLfloat farClip)
 	m_projectionMatrix = glm::perspective(glm::radians(fieldOfView), aspectRatio, nearClip, farClip);
 
 	//send projection matrix to shader
-	//ThePipeline::Instance()->SendUniformData("projMatrix", m_projectionMatrix);
+	Shader::Instance()->SendUniformData("projMatrix", m_projectionMatrix);
 
 }
 //------------------------------------------------------------------------------------------------------
