@@ -58,7 +58,6 @@
 #include <glm.hpp>
 #include <string>
 #include <vector>
-#include "Quaternion.h"
 
 class GameObject 
 {
@@ -71,7 +70,7 @@ public:
 	static void SendToShader(bool isLit, bool isTextured);
 
 	static void Translate(GLfloat x, GLfloat y, GLfloat z);
-	static void Rotate(Quaternion& quaternion);
+	//static void Rotate(Quaternion& quaternion);
 	static void Rotate(GLfloat angle, GLfloat x, GLfloat y, GLfloat z);
 	static void Scale(GLfloat x, GLfloat y, GLfloat z);
 	static void ScaleUV(GLfloat x, GLfloat y);
@@ -119,8 +118,6 @@ protected :
 
 	std::string m_tag;
 	unsigned int m_priority;
-
-	Quaternion m_rotation;
 
 };
 

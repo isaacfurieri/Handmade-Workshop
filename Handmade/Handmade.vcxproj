@@ -156,7 +156,6 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="Shader.h" />
-    <ClInclude Include="Quaternion.h" />
     <ClInclude Include="Screen.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="SplashScreen.h" />
@@ -191,7 +190,6 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="Screen.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="SplashScreen.cpp" />

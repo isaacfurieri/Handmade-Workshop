@@ -76,12 +76,12 @@ void GameObject::Translate(GLfloat x, GLfloat y, GLfloat z)
 //------------------------------------------------------------------------------------------------------
 //static function that applies passed quaternion rotation to model matrix
 //------------------------------------------------------------------------------------------------------
-void GameObject::Rotate(Quaternion& quaternion)
-{
-
-	s_modelMatrix.back() = s_modelMatrix.back() * quaternion.GetMatrix();
-
-}
+//void GameObject::Rotate(Quaternion& quaternion)
+//{
+//
+//	s_modelMatrix.back() = s_modelMatrix.back() * quaternion.GetMatrix();
+//
+//}
 //------------------------------------------------------------------------------------------------------
 //static function that applies passed euler angle values to model matrix
 //------------------------------------------------------------------------------------------------------
