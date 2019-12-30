@@ -131,9 +131,6 @@
     <ClInclude Include="SplashScreen.h">
       <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="Physics.h">
-      <Filter>Header Files\Components\Maths</Filter>
-    </ClInclude>
     <ClInclude Include="HUDCamera.h">
       <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
@@ -175,6 +172,9 @@
     </ClInclude>
     <ClInclude Include="Shader.h">
       <Filter>Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidBody.h">
+      <Filter>Header Files\Components\Maths</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -223,9 +223,6 @@
     <ClCompile Include="SplashScreen.cpp">
       <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="Physics.cpp">
-      <Filter>Source Files\Components\Maths</Filter>
-    </ClCompile>
     <ClCompile Include="HUDCamera.cpp">
       <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
@@ -273,6 +270,9 @@
     </ClCompile>
     <ClCompile Include="Shader.cpp">
       <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidBody.cpp">
+      <Filter>Source Files\Components\Maths</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
