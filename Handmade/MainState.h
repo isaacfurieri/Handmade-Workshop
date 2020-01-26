@@ -23,7 +23,7 @@
 | GitHub: https://github.com/djkarstenv									                        |
 |                                                                                               |
 #===============================================================================================#
-| 'MainState' source files last updated in December 2019								        |
+| 'MainState' source files last updated in January 2020								            |
 #==============================================================================================*/
 
 #include <vector>
@@ -38,13 +38,13 @@ class MainState : public GameState
 
 public:
 
-	MainState(GameState* state);
+	MainState(Game* game, GameState* state);
 	virtual ~MainState() {}
 
 public:
 
 	virtual bool OnEnter();
-	virtual bool Update();
+	virtual bool Update(int deltaTime);
 	virtual bool Draw();
 	virtual void OnExit();
 

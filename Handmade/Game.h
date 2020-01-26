@@ -23,7 +23,7 @@
 | GitHub: https://github.com/djkarstenv									                        |
 |                                                                                               |
 #===============================================================================================#
-| 'Game' source files last updated in December 2019								                |
+| 'Game' source files last updated in January 2020								                |
 #==============================================================================================*/
 
 #include <deque>
@@ -35,7 +35,7 @@ class Game
 
 public:
 
-	static Game* Instance();
+	Game();
 
 public:
 
@@ -53,13 +53,6 @@ public:
 	bool Run();
 	void ShutDown();
 
-
-private:
-
-	Game();
-	Game(const Game&);
-	Game& operator=(const Game&);
-
 private:
 
 	void RemoveState();
@@ -67,7 +60,7 @@ private:
 private:
 
 	bool m_endGame;
-	int m_elapsedTime;
+	int m_deltaTime;
 	std::deque<GameState*> m_gameStates;
 	
 };

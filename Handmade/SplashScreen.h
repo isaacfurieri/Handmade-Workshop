@@ -23,7 +23,7 @@
 | GitHub: https://github.com/djkarstenv									                        |
 |                                                                                               |
 #===============================================================================================#
-| 'SplashScreen' source files last updated in December 2019								        |
+| 'SplashScreen' source files last updated in January 2020							            |
 #==============================================================================================*/
 
 #include <string>
@@ -45,7 +45,7 @@ public:
 public:
 
 	virtual bool Create();
-	virtual void Update();
+	virtual void Update(int deltaTime);
 	virtual void Draw();
 	virtual void Destroy(); 
 

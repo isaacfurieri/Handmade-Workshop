@@ -39,7 +39,7 @@ MainCamera::MainCamera()
 //------------------------------------------------------------------------------------------------------
 //function that updates the camera and reads key and mouse input  
 //------------------------------------------------------------------------------------------------------
-void MainCamera::Update()
+void MainCamera::Update(int deltaTime)
 {
 
 	//store keyboard key states in a temp variable for processing below

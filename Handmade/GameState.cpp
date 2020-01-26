@@ -3,11 +3,13 @@
 //------------------------------------------------------------------------------------------------------
 //constructor that assigns all defaults 
 //------------------------------------------------------------------------------------------------------
-GameState::GameState(GameState* state)
+GameState::GameState(Game* game, GameState* state)
 {
 
 	m_isAlive = true;
 	m_isActive = true;
+
+	m_game = game;
 	m_previousState = state;
 
 }

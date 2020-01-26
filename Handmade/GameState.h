@@ -23,15 +23,17 @@
 | GitHub: https://github.com/djkarstenv									                        |
 |                                                                                               |
 #===============================================================================================#
-| 'GameState' source files last updated in December 2019								        |
+| 'GameState' source files last updated in January 2020	  							            |
 #==============================================================================================*/
+
+class Game;
 
 class GameState
 {
 
 public:
 
-	GameState(GameState* state);
+	GameState(Game* game, GameState* state);
 	virtual ~GameState() = 0 {}
 
 public:
@@ -41,15 +43,17 @@ public:
 
 public:
 
-	virtual bool OnEnter() = 0;
-	virtual bool Update() = 0;
-	virtual bool Draw() = 0;
-	virtual void OnExit() = 0;
+	virtual bool OnEnter()             = 0;
+	virtual bool Update(int deltaTime) = 0;
+	virtual bool Draw()                = 0;
+	virtual void OnExit()              = 0;
 
 protected:
 
 	bool m_isAlive;
 	bool m_isActive;
+
+	Game* m_game;
 	GameState* m_previousState;
 
 };

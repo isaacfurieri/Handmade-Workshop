@@ -41,25 +41,29 @@ int pixelsPerUnit = 50;
 int main(int argc, char* args[])
 {
 
+	Game* game = new Game;
+
 	//initialize game with name, width and height accordingly
 	//set the last parameter to "true" for fullscreen mode!
-	if (!(Game::Instance()->Initialize(gameName, screenWidth, screenHeight, pixelsPerUnit)))
+	if (!game->Initialize(gameName, screenWidth, screenHeight, pixelsPerUnit))
 	{
 		return 0;
 	}
 
 	//create the first state to be used in the game
-	Game::Instance()->AddState(new StartState(nullptr));
+	game->AddState(new StartState(game, nullptr));
 
 	//run the game
-	if (!Game::Instance()->Run())
+	if (!game->Run())
 	{
 		return 0;
 	}
 
 	//close down game
-	Game::Instance()->ShutDown();
+	game->ShutDown();
 	
+	delete game;
+
 	//end application
 	return 0;
 

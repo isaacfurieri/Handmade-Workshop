@@ -23,7 +23,7 @@
 | GitHub: https://github.com/djkarstenv									                        |
 |                                                                                               |
 #===============================================================================================#
-| 'StartState' source files last updated in December 2019								        |
+| 'StartState' source files last updated in January 2020								        |
 #==============================================================================================*/
 
 #include "GameState.h"
@@ -35,13 +35,13 @@ class StartState : public GameState
 
 public:
 
-	StartState(GameState* state);
+	StartState(Game* game, GameState* state);
 	virtual ~StartState() {}
 
 public:
 
 	virtual bool OnEnter();
-	virtual bool Update();
+	virtual bool Update(int deltaTime);
 	virtual bool Draw();
 	virtual void OnExit();
 

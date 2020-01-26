@@ -133,13 +133,13 @@ void RigidBody::Update()
 	//calculate the new position using Euler Integration
 	//this formula is frame independent and uses time for accurate calculations
 	oldVelocity = m_velocity;
-	m_velocity += m_acceleration * ((float)Game::Instance()->GetElapsedTime() / 1000);
-	m_position += (m_velocity + oldVelocity) * 0.5f * ((float)Game::Instance()->GetElapsedTime() / 1000);
+	m_velocity += m_acceleration * 0.16f; // ((float)Game::Instance()->GetElapsedTime() / 1000);
+	m_position += (m_velocity + oldVelocity) * 0.5f * 0.16f; // ((float)Game::Instance()->GetElapsedTime() / 1000);
 
 	//calculate the new rotational angle using Euler Integration
 	//this formula is frame independent and uses time for accurate calculations	
 	oldVel = m_angVelocity;
-	m_angVelocity += m_angAcceleration * Game::Instance()->GetElapsedTime() / 1000;
-	m_angle += (m_angVelocity + oldVel) * 0.5 * Game::Instance()->GetElapsedTime() / 1000;
+	m_angVelocity += m_angAcceleration * 0.16f; // Game::Instance()->GetElapsedTime() / 1000; //temp!
+	m_angle += (m_angVelocity + oldVel) * 0.5 * 0.16f; // Game::Instance()->GetElapsedTime() / 1000; //temp!
 
 }

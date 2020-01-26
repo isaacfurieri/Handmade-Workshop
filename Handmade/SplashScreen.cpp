@@ -40,7 +40,7 @@ bool SplashScreen::Create()
 //------------------------------------------------------------------------------------------------------
 //function that updates image's alpha to fade in and out
 //------------------------------------------------------------------------------------------------------
-void SplashScreen::Update()
+void SplashScreen::Update(int deltaTime)
 {
 
 	//store keyboard key states in a temp variable for processing below
@@ -55,7 +55,7 @@ void SplashScreen::Update()
 	//if image is set to fade in and image is not yet fully opaque then fade in image
 	if (m_alpha <= 1.0f && m_fade == FADE_IN)
 	{
-		m_alpha += 0.5f * (float)Game::Instance()->GetElapsedTime() / 1000;
+		m_alpha += 0.5f * (float)deltaTime / 1000;
 		m_sprite.SetColor(1.0f, 1.0f, 1.0f, m_alpha);
 	}
 
@@ -63,7 +63,7 @@ void SplashScreen::Update()
 	else
 	{
 		m_fade = FADE_OUT;
-		m_alpha -= 0.5f * (float)Game::Instance()->GetElapsedTime() / 1000;
+		m_alpha -= 0.5f * (float)deltaTime / 1000;
 		m_sprite.SetColor(1.0f, 1.0f, 1.0f, m_alpha);
 	}
 	
