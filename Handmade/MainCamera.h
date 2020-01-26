@@ -15,7 +15,7 @@ public:
 public:
 
 	virtual bool Create() { return true; }
-	virtual void Update();
+	virtual void Update(int deltaTime);
 	virtual void Draw();
 	virtual void Destroy() {}
 

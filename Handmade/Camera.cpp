@@ -136,8 +136,8 @@ void Camera::Update()
 	if (m_moveDirection != glm::vec3(0.0f))
 	{
 
-		s_position += m_moveDirection * m_velocity *
-			          ((float)Game::Instance()->GetElapsedTime() / 1000);
+		s_position += m_moveDirection * m_velocity * 0.016f; //temp!
+			         // ((float)Game::Instance()->GetElapsedTime() / 1000);
 	}
 
 	//update camera's view matrix

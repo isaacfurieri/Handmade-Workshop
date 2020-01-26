@@ -9,7 +9,7 @@
 //------------------------------------------------------------------------------------------------------
 //constructor that assigns all default values
 //------------------------------------------------------------------------------------------------------
-MainState::MainState(GameState* state) : GameState(state)
+MainState::MainState(Game* game, GameState* state) : GameState(game, state)
 {
 
 	m_HUD = nullptr;
@@ -39,20 +39,20 @@ bool MainState::OnEnter()
 //------------------------------------------------------------------------------------------------------
 //function that updates all active game objects in game state
 //------------------------------------------------------------------------------------------------------
-bool MainState::Update()
+bool MainState::Update(int deltaTime)
 {
 
 	//store keyboard key states in a temp variable for processing below
 	const Uint8* keyState = Input::Instance()->GetKeyStates();
 
 	//update main camera
-	m_mainCamera->Update();
+	m_mainCamera->Update(deltaTime);
 
 	//if ESCAPE key was pressed, return flag to end game 
 	if (keyState[SDL_SCANCODE_ESCAPE])
 	{
 		m_isActive = m_isAlive = false;
-		Game::Instance()->ChangeState(new EndState(this));
+		m_game->ChangeState(new EndState(m_game, this));
 	}
 
 	//loop through all game objects in vector and update them only if they are active
@@ -60,7 +60,7 @@ bool MainState::Update()
 	{
 		if ((*it)->IsActive())
 		{
-			(*it)->Update();
+			(*it)->Update(deltaTime);
 		}
 	}	
 

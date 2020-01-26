@@ -6,23 +6,13 @@
 #include "Screen.h"
 
 //------------------------------------------------------------------------------------------------------
-//static function that will create an instance of this Screen object and return its address
-//------------------------------------------------------------------------------------------------------
-Game* Game::Instance()
-{
-
-	static Game* gameObject = new Game();
-	return gameObject;
-
-}
-//------------------------------------------------------------------------------------------------------
 //constructor that assigns all default values
 //------------------------------------------------------------------------------------------------------
 Game::Game()
 {
 
 	m_endGame = false;
-	m_elapsedTime = 0;
+	m_deltaTime = 0;
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -40,7 +30,7 @@ int Game::GetTotalTime()
 int Game::GetElapsedTime()
 {
 
-	return m_elapsedTime;
+	return m_deltaTime;
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -119,7 +109,7 @@ bool Game::Run()
 			Input::Instance()->Update();
 
 			//update the currently active state
-			state->Update();
+			state->Update(m_deltaTime);
 
 			//render the currently active state
 			state->Draw();
@@ -129,7 +119,7 @@ bool Game::Run()
 
 			//calculate time value passed for one frame call
 			//if vsync is on this value should be around 16ms
-			m_elapsedTime = SDL_GetTicks() - startTime;
+			m_deltaTime = SDL_GetTicks() - startTime;
 
 		}
 

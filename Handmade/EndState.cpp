@@ -5,7 +5,7 @@
 //------------------------------------------------------------------------------------------------------
 //constructor that assigns all default values
 //------------------------------------------------------------------------------------------------------
-EndState::EndState(GameState* state) : GameState(state)
+EndState::EndState(Game* game, GameState* state) : GameState(game, state)
 {
 
 	m_HUDCamera = nullptr;
@@ -28,7 +28,7 @@ bool EndState::OnEnter()
 //------------------------------------------------------------------------------------------------------
 //function that updates splash screen object 
 //------------------------------------------------------------------------------------------------------
-bool EndState::Update()
+bool EndState::Update(int deltaTime)
 {
 
 	//if in debug mode, go straight through and end the state
@@ -41,7 +41,7 @@ bool EndState::Update()
 
 #ifdef RELEASE
 
-	m_splashScreen->Update();
+	m_splashScreen->Update(deltaTime);
 	m_isActive = m_isAlive = m_splashScreen->IsActive();
 
 #endif

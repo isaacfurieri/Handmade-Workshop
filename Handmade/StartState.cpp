@@ -10,7 +10,7 @@
 //------------------------------------------------------------------------------------------------------
 //constructor that assigns all default values
 //------------------------------------------------------------------------------------------------------
-StartState::StartState(GameState* state) : GameState(state)
+StartState::StartState(Game* game, GameState* state) : GameState(game, state)
 {
 
 	m_HUDCamera = nullptr;
@@ -89,7 +89,7 @@ bool StartState::OnEnter()
 //------------------------------------------------------------------------------------------------------
 //function that updates splash screen objects 
 //------------------------------------------------------------------------------------------------------
-bool StartState::Update()
+bool StartState::Update(int deltaTime)
 {
 
 	//if in debug mode, go straight through to the main state
@@ -97,7 +97,7 @@ bool StartState::Update()
 #ifdef DEBUG
 
 	m_isActive = m_isAlive = false;
-	Game::Instance()->ChangeState(new MainState(this));
+	m_game->ChangeState(new MainState(m_game, this));
 
 #endif
 
@@ -106,7 +106,7 @@ bool StartState::Update()
 	//if first splash screen is active then update it
 	if (m_splashScreen_1->IsActive())
 	{
-		m_splashScreen_1->Update();
+		m_splashScreen_1->Update(deltaTime);
 	}
 
 	//otherwise activate second splash screen so that it can start updating
@@ -119,14 +119,14 @@ bool StartState::Update()
 	//state so that game state deactivates as soon as second splash screen is done
 	if (m_splashScreen_2->IsActive())
 	{
-		m_splashScreen_2->Update();
+		m_splashScreen_2->Update(deltaTime);
 		m_isActive = m_isAlive = m_splashScreen_2->IsActive();
 	}
 
 	//load up next state as soon as this one is done with all the splash screens
 	if (!m_isAlive)
 	{
-		TheGame::Instance()->ChangeState(new MainState(this));
+		m_game->ChangeState(new MainState(m_game, this));
 	}
 
 #endif
