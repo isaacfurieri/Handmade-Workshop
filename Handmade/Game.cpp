@@ -103,7 +103,7 @@ bool Game::Run()
 			AudioManager::Instance()->Update();
 
 			//update screen by clearing OpenGL frame buffer
-			Screen::Instance()->ClearScreen();
+			Screen::Instance()->Clear();
 
 			//update input handling by listening for input events
 			Input::Instance()->Update();
@@ -115,7 +115,7 @@ bool Game::Run()
 			state->Draw();
 
 			//draw screen by swapping OpenGL frame buffer
-			Screen::Instance()->SwapBuffer();
+			Screen::Instance()->Present();
 
 			//calculate time value passed for one frame call
 			//if vsync is on this value should be around 16ms

@@ -23,7 +23,7 @@
 | GitHub: https://github.com/djkarstenv									                        |
 |                                                                                               |
 #===============================================================================================#
-| 'Camera' source files last updated in December 2019									        |
+| 'Camera' source files last updated in February 2020									        |
 #==============================================================================================*/
 
 #include <string>
@@ -74,6 +74,9 @@ public:
 	void MoveBackward();
 	void RotateX(short motionY);
 	void RotateY(short motionX);
+
+	//void DisplayExtensions();
+	//void DisplayGraphicsProfile();
 
 private:
 

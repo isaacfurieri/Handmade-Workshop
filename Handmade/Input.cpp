@@ -159,7 +159,7 @@ Input::ButtonState Input::GetRightButtonState()
 void Input::SetMousePosition(int x, int y)
 {
 
-	SDL_WarpMouseInWindow(Screen::Instance()->GetWindow(), x, y);
+	//SDL_WarpMouseInWindow(Screen::Instance()->GetWindow(), x, y);
 
 }
 //------------------------------------------------------------------------------------------------------

@@ -82,7 +82,7 @@ void SplashScreen::Draw()
 {
 
 	//setup screen in 2D orthographic mode because all splash screens are 2D 
-	Screen::Instance()->Set2DScreen(Screen::BOTTOM_LEFT);
+	//Screen::Instance()->Set2DScreen(Screen::BOTTOM_LEFT);
 
 	//reset model matrix to identity so we don't accumulate transformations
 	GameObject::SetIdentity();
