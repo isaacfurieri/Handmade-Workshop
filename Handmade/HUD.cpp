@@ -23,13 +23,13 @@ void HUD::Draw()
 {
 
 	//setup screen in 2D orthographic mode because all HUDs are 2D 
-	Screen::Instance()->Set2DScreen(Screen::BOTTOM_LEFT);
+	//Screen::Instance()->Set2DScreen(Screen::BOTTOM_LEFT);
 
 	//reset model matrix to identity so we don't accumulate transformations
 	GameObject::SetIdentity();
 
-	float screenHeight = Screen::Instance()->GetScreenSize().y;
-	GameObject::Translate(10.0f, (screenHeight - 150.0f), 0.0f);
+	//float screenHeight = Screen::Instance()->GetScreenSize().y; //TO FIX
+	//GameObject::Translate(10.0f, (screenHeight - 150.0f), 0.0f);
 
 	GameObject::Scale(200.0f, 140.0f, 1.0f);
 
