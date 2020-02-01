@@ -43,7 +43,7 @@ bool MainState::Update(int deltaTime)
 {
 
 	//store keyboard key states in a temp variable for processing below
-	const Uint8* keyState = Input::Instance()->GetKeyStates();
+	KeyState keyState = Input::Instance()->GetKeyStates();
 
 	//update main camera
 	m_mainCamera->Update(deltaTime);

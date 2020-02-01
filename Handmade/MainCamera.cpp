@@ -33,7 +33,7 @@ MainCamera::MainCamera()
 #endif
 
 	//disable mouse cursor so that it does not interfere when rotating the camera
-	Input::Instance()->SetMouseCursorState(Input::OFF);
+	Input::Instance()->SetCursorState(Input::OFF);
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -43,7 +43,7 @@ void MainCamera::Update(int deltaTime)
 {
 
 	//store keyboard key states in a temp variable for processing below
-	const Uint8* keyState = Input::Instance()->GetKeyStates();
+	KeyState keyState = Input::Instance()->GetKeyStates();
 
 	//if a key has been released, stop the camera from moving
 	if (!(Input::Instance()->IsKeyPressed()))

@@ -23,11 +23,13 @@
 | GitHub: https://github.com/djkarstenv									                        |
 |                                                                                               |
 #===============================================================================================#
-| 'Input' source files last updated in December 2019								            |
+| 'Input' source files last updated in February 2020								            |
 #==============================================================================================*/
 
 #include <glm.hpp>
 #include <SDL.h>
+
+typedef const Uint8* KeyState;
 
 class Input
 {
@@ -46,9 +48,7 @@ public:
 
 	bool IsXClicked();
 	bool IsKeyPressed();
-	const Uint8* GetKeyStates();
-	//bool IsMouseColliding(const AABB2D& bound);
-	//bool IsMouseColliding(const Sphere2D& bound);
+	KeyState GetKeyStates();
 
 public:
 
@@ -60,9 +60,9 @@ public:
 	ButtonState GetMiddleButtonState();
 	ButtonState GetRightButtonState();
 
-	void SetMousePosition(int x, int y);
-	void SetMouseCursorType(CursorType cursorType = ARROW);
-	void SetMouseCursorState(CursorState cursorEnabled = ON, CursorState cursorVisible = SHOW);
+	void SetCursorPosition(int x, int y);
+	void SetCursorType(CursorType cursorType = ARROW);
+	void SetCursorState(CursorState cursorEnabled = ON, CursorState cursorVisible = SHOW);
 
 public:
 
@@ -76,19 +76,23 @@ private:
 
 private:
 
+	char m_keyUp;
+	char m_keyDown;
+
 	bool m_isXClicked;
 	bool m_isKeyPressed;
-	const Uint8* m_keyStates;
+	bool m_isWindowResized;
 
+	KeyState m_keyStates;
 	SDL_Cursor* m_cursor;
 
-	glm::vec2 m_mousePosition;
-	glm::vec2 m_mouseMotion;
 	glm::vec2 m_mouseWheel;
+	glm::vec2 m_mouseMotion;
+	glm::vec2 m_mousePosition;
 	
 	ButtonState m_leftButtonState;
-	ButtonState m_middleButtonState;
 	ButtonState m_rightButtonState;
+	ButtonState m_middleButtonState;
 
 };
 
