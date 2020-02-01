@@ -76,10 +76,10 @@ bool StartState::OnEnter()
 	//debug manager and all of its debug objects 
 #ifdef DEBUG
 
-	if (!Debug::Instance()->CreateDebugObjects(15))
+	/*if (!Debug::Instance()->CreateDebugObjects(15))
 	{
 		return false;
-	}
+	}*/
 
 #endif
 

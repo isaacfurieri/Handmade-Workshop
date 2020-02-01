@@ -23,7 +23,7 @@
 | GitHub: https://github.com/djkarstenv									                        |
 |                                                                                               |
 #===============================================================================================#
-| 'Texture' source files last updated in December 2019									        |
+| 'Texture' source files last updated in February 2020									        |
 #==============================================================================================*/
 
 #include <map>
@@ -32,6 +32,10 @@
 
 class Texture
 {
+
+public:
+
+	static void Output();
 
 public:
 
@@ -52,9 +56,6 @@ public:
 	void Unload();
 	void Unload(const std::string& textureID);
 
-public:
-
-	void Output();
 
 private:
 

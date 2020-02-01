@@ -1,5 +1,6 @@
 #include <fstream>
 #include <iostream>
+#include "Debug.h"
 #include "Model.h"
 
 //------------------------------------------------------------------------------------------------------
@@ -98,7 +99,7 @@ bool Model::LoadModel(const std::string& filename, const std::string bufferID)
 	std::vector<std::string> subStrings;
 	
 	//display text to state that file is being opened and read
-	std::cout << "Opening and reading model file : " << "\"" << filename << "\"" << std::endl;
+	Debug::Log("Opening and reading model file: '" + filename + "'");
 
 	//open model file
 	file.open(filename);
@@ -106,8 +107,8 @@ bool Model::LoadModel(const std::string& filename, const std::string bufferID)
 	//if opening of model file failed, display error message
 	if (!file)
 	{
-		std::cout << "File could not be loaded." << std::endl;
-		std::cout << "---------------------------------------------------------------" << std::endl;
+		Debug::Log("File could not be loaded.", Debug::FAILURE);
+		Debug::Log("===============================================================");
 		return false;
 	}
 
@@ -244,14 +245,17 @@ bool Model::LoadModel(const std::string& filename, const std::string bufferID)
 	}
 
 	//stats for vertices saved
-	std::cout << "Total Vertices : " << m_indices.size() << std::endl;
-	std::cout << "Actual Vertices : " << m_groups.size() << std::endl;
-	std::cout << "Vertex Space Saved : " 
-		      << 100 - (int)((float)(m_groups.size()) / (float)(m_indices.size()) * 100) << "%" << std::endl;
+	Debug::Log((GLfloat)m_indices.size(), "Total vertices");
+	Debug::Log((GLfloat)m_groups.size(), "Actual vertices");
+
+	int savedVerts = 100 - (int)((GLfloat)(m_groups.size()) /
+		                         (GLfloat)(m_indices.size()) * 100);
+
+	Debug::Log((GLfloat)savedVerts, "Vertex space saved %");
 	
 	//display text to state that file has been opened and read
-	std::cout << "File opened and read successfully." << std::endl;
-	std::cout << "---------------------------------------------------------------" << std::endl;
+	Debug::Log("File opened and read successfully.", Debug::SUCCESS);
+	Debug::Log("===============================================================");
 	
 	//---------------------------------
 	//add all data to VBOs

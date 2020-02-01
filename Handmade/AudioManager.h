@@ -19,6 +19,10 @@ public:
 
 public:
 
+	static void Output();
+
+public:
+
 	FMOD::System* GetAudioSystem();
 	FMOD::Sound* GetAudioData(AudioType audioType, const std::string& mapIndex);
 
@@ -36,10 +40,6 @@ public:
 	void UnloadFromMemory(AudioType audioType, RemoveType removeType, const std::string& mapIndex = "");
 	void ShutDown();
 
-public:
-
-	void Output();
-
 private:
 
 	AudioManager();
@@ -50,9 +50,9 @@ private :
 
 	FMOD::System* m_audioSystem;
 	
-	std::map<std::string, FMOD::Sound*> m_sfxDataMap;
-	std::map<std::string, FMOD::Sound*> m_musicDataMap;	
-	std::map<std::string, FMOD::Sound*> m_voiceDataMap;	
+	static std::map<std::string, FMOD::Sound*> s_sfxDataMap;
+	static std::map<std::string, FMOD::Sound*> s_musicDataMap;	
+	static std::map<std::string, FMOD::Sound*> s_voiceDataMap;	
 
 };
 

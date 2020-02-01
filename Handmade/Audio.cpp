@@ -1,6 +1,7 @@
 #include <iostream>
 #include <math.h>
 #include "Audio.h"
+#include "Debug.h"
 
 //------------------------------------------------------------------------------------------------------
 //constructor that assigns all defaults
@@ -190,7 +191,9 @@ bool Audio::Play()
 	//if no channel was generated, display error message and return false
 	if(!m_channel)
 	{
-		std::cout << "Audio could not be played through any channels." << std::endl;
+		Debug::Log("Audio could not be played through any channels.", Debug::WARNING);
+		Debug::Log("===============================================================");
+		Debug::PauseLog();
 		return false;
 	}
 
@@ -224,7 +227,6 @@ void Audio::Resume()
 	}
 
 }
-
 //------------------------------------------------------------------------------------------------------
 //function that stops the audio
 //------------------------------------------------------------------------------------------------------
