@@ -70,7 +70,7 @@ bool StartState::OnEnter()
 
 	//set second splash screen to inactive as 
 	//it only activates after the first one is done
-	m_splashScreen_2->IsActive() = false;
+	m_splashScreen_2->IsActive(false);
 	
 	//if the game is in debug mode initialize the 
 	//debug manager and all of its debug objects 
