@@ -60,6 +60,8 @@ bool StartState::OnEnter()
 	//store IDs of shader variables in our local map
 	Shader::Instance()->BindAttribute("vertexIn");
 	Shader::Instance()->BindAttribute("colorIn");
+	Shader::Instance()->BindAttribute("textureIn");
+
 	Shader::Instance()->BindUniform("model");
 	Shader::Instance()->BindUniform("view");
 	Shader::Instance()->BindUniform("projection");

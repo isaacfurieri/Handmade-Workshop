@@ -133,8 +133,8 @@
   <ItemGroup>
     <None Include="Shaders\Default.frag" />
     <None Include="Shaders\Default.vert" />
-    <None Include="Shaders\Main.frag" />
-    <None Include="Shaders\Main.vert" />
+    <None Include="Shaders\ADS.frag" />
+    <None Include="Shaders\ADS.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AABB.h" />
