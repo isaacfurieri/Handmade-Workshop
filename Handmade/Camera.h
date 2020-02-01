@@ -26,23 +26,16 @@
 | 'Camera' source files last updated in February 2020									        |
 #==============================================================================================*/
 
-#include <string>
-#include "glad.h"
 #include <glm.hpp>
+#include "glad.h"
+#include "GameObject.h"
 
-class Camera
+class Camera : public GameObject
 {
 
 public:
 
-	static void SetIdentity();
-	static void SendToShader();
-	static glm::vec3& Position();
-
-private:
-
-	static glm::vec3 s_position;
-	static glm::mat4 s_viewMatrix;
+	enum Origin2D { TOP_LEFT, BOTTOM_LEFT };
 
 public:
 
@@ -50,46 +43,25 @@ public:
 
 public:
 
-	bool& IsFreeFlow();
-
-public:
-
 	void SetVelocity(GLfloat velocity);
-	void SetSensitivity(GLfloat sensitivity);
-	void SetThreshold(GLfloat min, GLfloat max);
-	void SetLookAt(GLfloat x, GLfloat y, GLfloat z);
+	void SetFieldOfView(GLfloat fieldOfView);
+	void SetPosition(GLfloat x, GLfloat y, GLfloat z);
+	void SetOrthoView(Origin2D origin = BOTTOM_LEFT);
+	void SetPerspView(GLfloat nearClip = 0.1f, GLfloat farClip = 1000.0f);
 
-public:
+protected:
 
-	void Update();
-	
-public:
-
-	void Stop();
-	void MoveUp();
-	void MoveDown();
-	void MoveLeft();
-	void MoveRight();
-	void MoveForward();
-	void MoveBackward();
-	void RotateX(short motionY);
-	void RotateY(short motionX);
-
-private:
-
-	bool m_isFreeFlow;
-	
 	GLfloat m_velocity;
-	GLfloat m_sensitivity;
+	GLfloat m_fieldOfView;
 
-	glm::vec3 m_lookAt;
-	glm::vec3 m_upVector;
-	glm::vec2 m_threshold;
-	glm::vec3 m_moveDirection;
-	glm::vec3 m_viewDirection;
+	glm::vec3 m_up;
+	glm::vec3 m_right;
+	glm::vec3 m_forward;
+	glm::vec3 m_position;
+	glm::vec3 m_direction;
 
-	glm::mat4 m_rotationMatrixX;
-	glm::mat4 m_rotationMatrixY;
+	glm::mat4 m_viewMatrix;
+	glm::mat4 m_projMatrix;
 	
 };
 
