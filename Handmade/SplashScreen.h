@@ -23,7 +23,7 @@
 | GitHub: https://github.com/djkarstenv									                        |
 |                                                                                               |
 #===============================================================================================#
-| 'SplashScreen' source files last updated in January 2020							            |
+| 'SplashScreen' source files last updated in February 2020							            |
 #==============================================================================================*/
 
 #include <string>

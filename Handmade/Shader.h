@@ -79,7 +79,7 @@ public:
 	bool CreateProgram();
 	bool CreateShaders();
 
-	bool CompileShader(ShaderType shaderType, const std::string& filename);
+	bool CompileShader(const std::string& filename, ShaderType shaderType);
 	void AttachShaders();
 	bool LinkProgram();
 	

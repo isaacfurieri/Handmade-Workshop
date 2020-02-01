@@ -95,12 +95,12 @@ void GameObject::SendToShader(bool isLit, bool isTextured)
 {
 
 	//pass lighting flag to fragment shader 
-	Shader::Instance()->SendUniformData("isLit", (GLint)isLit);
+	//Shader::Instance()->SendUniformData("isLit", (GLint)isLit);
 
 	//pass texturing flag to fragment shader 
-	Shader::Instance()->SendUniformData("isTextured", (GLint)isTextured);
+	//Shader::Instance()->SendUniformData("isTextured", (GLint)isTextured);
 
 	//send model matrix to vertex shader
-	Shader::Instance()->SendUniformData("modelMatrix", m_modelMatrix);
+	Shader::Instance()->SendUniformData("model", m_modelMatrix);
 
 }

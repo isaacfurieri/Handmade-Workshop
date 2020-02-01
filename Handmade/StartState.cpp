@@ -37,13 +37,13 @@ bool StartState::OnEnter()
 	}
 
 	//compile vertex shader for main program 
-	if(!(Shader::Instance()->CompileShader(Shader::VERTEX_SHADER, "Shaders\\Main.vert")))
+	if(!(Shader::Instance()->CompileShader("Shaders/Default.vert", Shader::VERTEX_SHADER)))
 	{
 		return false;
 	}
 
 	//compile fragment shader for main program 
-	if(!(Shader::Instance()->CompileShader(Shader::FRAGMENT_SHADER, "Shaders\\Main.frag")))
+	if(!(Shader::Instance()->CompileShader("Shaders/Default.frag", Shader::FRAGMENT_SHADER)))
 	{
 		return false;
 	}
@@ -57,12 +57,19 @@ bool StartState::OnEnter()
 		return false;
 	}
 
+	//store IDs of shader variables in our local map
+	Shader::Instance()->BindAttribute("vertexIn");
+	Shader::Instance()->BindAttribute("colorIn");
+	Shader::Instance()->BindUniform("model");
+	Shader::Instance()->BindUniform("view");
+	Shader::Instance()->BindUniform("projection");
+
 	//create 2D camera to view the splash images
 	m_UICamera = new UICamera;
 
 	//create both splash screen objects for state
-	m_splashScreen_1 = new SplashScreen("Assets\\Sprites\\SplashScreen_1.png");
-	m_splashScreen_2 = new SplashScreen("Assets\\Sprites\\SplashScreen_2.png");
+	m_splashScreen_1 = new SplashScreen("Assets/Sprites/SplashScreen_1.png");
+	m_splashScreen_2 = new SplashScreen("Assets/Sprites/SplashScreen_2.png");
 	
 	//create the buffers for the sprite images
 	m_splashScreen_1->Create();

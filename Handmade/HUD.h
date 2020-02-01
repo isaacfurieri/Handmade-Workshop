@@ -23,7 +23,7 @@
 | GitHub: https://github.com/djkarstenv									                        |
 |                                                                                               |
 #===============================================================================================#
-| 'HUD' source files last updated in January 2020 							                    |
+| 'HUD' source files last updated in February 2020 							                    |
 #==============================================================================================*/
 
 #include "glad.h"

@@ -4,9 +4,9 @@ in vec3 vertexIn;
 in vec3 colorIn;
 out vec3 colorOut;
 
-uniform mat4 modelMatrix;
-uniform mat4 viewMatrix;
-uniform mat4 projMatrix;
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
 
 void main(void)
 {
@@ -15,6 +15,6 @@ void main(void)
     colorOut = colorIn;
 
 	//interpolate each vertex based on MVP transformations
-	gl_Position = projMatrix * viewMatrix * modelMatrix * vec4(vertexIn, 1.0);
+	gl_Position = projection * view * model * vec4(vertexIn, 1.0);
 
 }

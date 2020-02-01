@@ -10,7 +10,7 @@ bool HUD::Create()
 {
 
 	m_sprite.Create("HUD");
-	m_sprite.LoadTexture("Assets\\Sprites\\HUD.png", "HUD");
+	m_sprite.LoadTexture("Assets/Sprites/HUD.png", "HUD");
 	m_sprite.SetSpriteType(Sprite::STATIC);
 
 	return true;

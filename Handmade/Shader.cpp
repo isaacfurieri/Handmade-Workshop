@@ -378,7 +378,7 @@ bool Shader::CreateShaders()
 //------------------------------------------------------------------------------------------------------
 //function that reads in the shader source code and compiles it
 //------------------------------------------------------------------------------------------------------
-bool Shader::CompileShader(ShaderType shaderType, const std::string& filename)
+bool Shader::CompileShader(const std::string& filename, ShaderType shaderType)
 {
 
 	//variables for file handling and reading of source code text
