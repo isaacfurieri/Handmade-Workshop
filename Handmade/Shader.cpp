@@ -1,6 +1,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include "Debug.h"
 #include "Shader.h"
 
 //------------------------------------------------------------------------------------------------------
@@ -181,7 +182,9 @@ bool Shader::CreateProgram()
 	//program display an error message and return false
 	if (m_shaderProgramID == 0)
 	{
-		std::cout << "Shader program could not be created." << std::endl;
+		Debug::Log("Shader program could not be created.", Debug::FAILURE);
+		Debug::Log("===============================================================");
+		Debug::PauseLog();
 		return false;
 	}
 
@@ -202,7 +205,9 @@ bool Shader::CreateShaders()
 	
 	if (m_vertexShaderID == 0)
 	{
-		std::cout << "Vertex shader could not be created." << std::endl;
+		Debug::Log("Vertex shader could not be created.", Debug::FAILURE);
+		Debug::Log("===============================================================");
+		Debug::PauseLog();
 		return false;
 	}
 	
@@ -210,7 +215,9 @@ bool Shader::CreateShaders()
 
 	if (m_fragmentShaderID == 0)
 	{
-		std::cout << "Fragment shader could not be created." << std::endl;
+		Debug::Log("Fragment shader could not be created.", Debug::FAILURE);
+		Debug::Log("===============================================================");
+		Debug::PauseLog();
 		return false;
 	}
 
@@ -232,9 +239,8 @@ bool Shader::CompileShader(ShaderType shaderType, const std::string& filename)
 	GLint compileResult;
 
 	//display text to state that file is being opened and read
-	std::cout << "Opening and reading "
-		      << (shaderType == VERTEX_SHADER ? "vertex" : "fragment") << " shader file : "
-		      << "\"" << filename << "\"" << std::endl;
+	std::string shaderString = (shaderType == VERTEX_SHADER) ? "vertex" : "fragment";
+	Debug::Log("Opening and reading " + shaderString + " shader file: '" + filename + "'");
 
 	//open shader file
 	file.open(filename);
@@ -242,8 +248,8 @@ bool Shader::CompileShader(ShaderType shaderType, const std::string& filename)
 	//if file has an error opening output error message
 	if (!file)
 	{
-		std::cout << "Shader file could not be loaded." << std::endl;
-		std::cout << "---------------------------------------------------------------" << std::endl;
+		Debug::Log("Shader file could not be loaded.", Debug::FAILURE);
+		Debug::Log("===============================================================");
 		return false;
 	}
 
@@ -271,7 +277,7 @@ bool Shader::CompileShader(ShaderType shaderType, const std::string& filename)
 	const GLchar* finalCode = (const GLchar*)(finalString.c_str());
 
 	//debug output of long shader source code
-	std::cout << "Compiling shader file..." << std::endl;
+	Debug::Log("Compiling shader file...");
 
 	//bind shader object with the shader source code
 	glShaderSource(tempShaderID, 1, &finalCode, NULL);
@@ -285,8 +291,8 @@ bool Shader::CompileShader(ShaderType shaderType, const std::string& filename)
 	//if compilation went well, display a friendly message
 	if (compileResult == GL_TRUE)
 	{
-		std::cout << "Shader file compiled successfully." << std::endl;
-		std::cout << "---------------------------------------------------------------" << std::endl;
+		Debug::Log("Shader file compiled successfully.", Debug::SUCCESS);
+		Debug::Log("===============================================================");
 	}
 
 	//otherwise request error string and store in an 
@@ -296,12 +302,12 @@ bool Shader::CompileShader(ShaderType shaderType, const std::string& filename)
 		GLchar error[1000];
 		GLsizei length = 1000;
 
-		std::cout << "Shader file could not be compiled. See error list below." << std::endl;
-		std::cout << "---------------------------------------------------------------" << std::endl;
+		Debug::Log("Shader file could not be compiled. See error list below.", Debug::FAILURE);
+		Debug::Log("---------------------------------------------------------------");
 
 		glGetShaderInfoLog(tempShaderID, 1000, &length, error);
-		std::cout << error << std::endl;
-		std::cout << "---------------------------------------------------------------" << std::endl;
+		Debug::Log(error, Debug::FAILURE);
+		Debug::Log("===============================================================");
 
 		return false;
 
@@ -348,12 +354,12 @@ bool Shader::LinkProgram()
 		GLchar error[1000];
 		GLsizei length = 1000;
 
-		std::cout << "Shader program could not be linked. See error list below." << std::endl;
-		std::cout << "---------------------------------------------------------------" << std::endl;
+		Debug::Log("Shader program could not be linked. See error list below.", Debug::FAILURE);
+		Debug::Log("---------------------------------------------------------------");
 
 		glGetProgramInfoLog(m_shaderProgramID, 1000, &length, error);
-		std::cout << error << std::endl;
-		std::cout << "---------------------------------------------------------------" << std::endl;
+		Debug::Log(error, Debug::FAILURE);
+		Debug::Log("===============================================================");
 
 		return false;
 	}

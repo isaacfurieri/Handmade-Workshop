@@ -86,8 +86,8 @@ bool MainState::Draw()
 
 #ifdef DEBUG
 
-	Debug::Instance()->DrawGrid3D();
-	Debug::Instance()->DrawCoordSystem3D(15.0f);
+	//Debug::Instance()->DrawGrid3D();
+	//Debug::Instance()->DrawCoordSystem3D(15.0f);
 
 #endif
 	

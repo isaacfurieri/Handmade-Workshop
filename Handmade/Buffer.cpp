@@ -1,10 +1,48 @@
 #include <iostream>
 #include "Buffer.h"
+#include "Debug.h"
 #include "Shader.h"
 
 //this allocated space remains in memory until the application ends
 std::map<std::string, BufferID>* Buffer::s_bufferIDMap = new std::map<std::string, BufferID>;
 
+//------------------------------------------------------------------------------------------------------
+//static function that displays total size of buffer ID map with details (DEBUG ONLY)
+//------------------------------------------------------------------------------------------------------
+void Buffer::Output()
+{
+
+	//clear the console window for a fresh display
+	Debug::ClearLog();
+
+	//display total amount of buffer IDs stored in map
+	Debug::Log("===============================================================");
+	Debug::Log("Size of Buffer ID Map: " + std::to_string(s_bufferIDMap->size()));
+	Debug::Log("===============================================================");
+
+	//loop through map and display each buffer detailing its OpenGL IDs and tag name
+	for (auto it = s_bufferIDMap->begin(); it != s_bufferIDMap->end(); it++)
+	{
+
+		Debug::Log(it->first);
+		Debug::Log("---------------------------------------------------------------");
+
+		Debug::Log((GLfloat)it->second.vaoID, "VAO ID");
+		Debug::Log((GLfloat)it->second.vboID[VERTEX_BUFFER], "VERTEX VBO ID");
+		Debug::Log((GLfloat)it->second.vboID[COLOR_BUFFER], "COLOR VBO ID");
+		Debug::Log((GLfloat)it->second.vboID[NORMAL_BUFFER], "NORMAL VBO ID");
+		Debug::Log((GLfloat)it->second.vboID[TEXTURE_BUFFER], "TEXTURE VBO ID");
+		Debug::Log((GLfloat)it->second.eboID, "EBO ID");
+
+		(it->second.hasEBO) ? Debug::Log("This buffer has an EBO")
+			                : Debug::Log("This buffer has no EBO");
+
+		Debug::Log((GLfloat)it->second.totalVertices, "Total vertices");
+		Debug::Log("===============================================================");
+
+	}
+
+}
 //------------------------------------------------------------------------------------------------------
 //constructor that assigns all defaults
 //------------------------------------------------------------------------------------------------------
@@ -46,7 +84,7 @@ void Buffer::SetPointSize(GLfloat pointSize)
 void Buffer::SetBuffers(const std::string& bufferID)
 {
 
-	std::cout << "Setting buffers to : " << "\"" << bufferID << "\"" << std::endl;
+	Debug::Log("Setting buffers to: '" + bufferID + "'");
 
 	//first check if buffer ID exists in map and if not display
 	//error message, otherwise go ahead and assign the buffer ID
@@ -55,15 +93,15 @@ void Buffer::SetBuffers(const std::string& bufferID)
 
 	if (it == s_bufferIDMap->end())
 	{
-		std::cout << "Buffer IDs not found. Please enter a valid ID." << std::endl;
-		std::cout << "---------------------------------------------------------------" << std::endl;
+		Debug::Log("Buffer IDs not found. Please enter a valid ID.", Debug::WARNING);
+		Debug::Log("===============================================================");
 	}
 
 	else
 	{
 		m_ID = it->second;
-		std::cout << "Buffer IDs assigned successfully." << std::endl;
-		std::cout << "---------------------------------------------------------------" << std::endl;
+		Debug::Log("Buffer IDs assigned successfully.", Debug::SUCCESS);
+		Debug::Log("===============================================================");
 	}
 
 }
@@ -73,14 +111,14 @@ void Buffer::SetBuffers(const std::string& bufferID)
 bool Buffer::CreateBuffers(const std::string& bufferID, GLsizei totalVertices, bool hasEBO)
 {
 
-	std::cout << "Creating buffers in graphics memory : " << "\"" << bufferID << "\"" << std::endl;
+	Debug::Log("Creating buffers in graphics memory: '" + bufferID + "'");
 
 	//first check if buffer ID exists in map and if it does display error message
 	//and halt creation because we don't want to replace the existing buffers
 	if (s_bufferIDMap->find(bufferID) != s_bufferIDMap->end())
 	{
-		std::cout << "Buffers already created in graphics memory." << std::endl;
-		std::cout << "---------------------------------------------------------------" << std::endl;
+		Debug::Log("Buffers already created in graphics memory.", Debug::WARNING);
+		Debug::Log("===============================================================");
 		return false;
 	}
 
@@ -95,8 +133,8 @@ bool Buffer::CreateBuffers(const std::string& bufferID, GLsizei totalVertices, b
 
 	(*s_bufferIDMap)[bufferID] = m_ID;
 
-	std::cout << "Buffers created successfully."<< std::endl;
-	std::cout << "---------------------------------------------------------------" << std::endl;
+	Debug::Log("Buffers created successfully.", Debug::SUCCESS);
+	Debug::Log("===============================================================");
 
 	return true;
 
@@ -235,7 +273,7 @@ void Buffer::Draw(DrawMode drawMode)
 void Buffer::DestroyBuffers()
 {
 
-	std::cout << "Unloading all buffers from memory." << std::endl;
+	Debug::Log("Unloading all buffers from memory...");
 
 	//loop through entire buffer map in order to remove all buffer IDs
 	for (auto it = s_bufferIDMap->begin(); it != s_bufferIDMap->end(); it++)
@@ -248,7 +286,8 @@ void Buffer::DestroyBuffers()
 	//clear the buffer ID map
 	s_bufferIDMap->clear();
 
-	std::cout << "---------------------------------------------------------------" << std::endl;
+	Debug::Log("Buffers unloaded successfully.", Debug::SUCCESS);
+	Debug::Log("===============================================================");
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -257,7 +296,7 @@ void Buffer::DestroyBuffers()
 void Buffer::DestroyBuffers(const std::string& bufferID)
 {
 
-	std::cout << "Unloading buffers : " << "\"" << bufferID << "\"" << std::endl;
+	Debug::Log("Unloading buffers: '" + bufferID + "'");
 
 	//check if buffer ID exists in map and if not display error message
 	//otherwise remove that specific buffer ID and remove map element
@@ -265,8 +304,8 @@ void Buffer::DestroyBuffers(const std::string& bufferID)
 
 	if (it == s_bufferIDMap->end())
 	{
-		std::cout << "Buffer IDs not found. Please enter a valid ID." << std::endl;
-		std::cout << "---------------------------------------------------------------" << std::endl;
+		Debug::Log("Buffer IDs not found. Please enter a valid ID.", Debug::WARNING);
+		Debug::Log("===============================================================");
 	}
 
 	else
@@ -277,39 +316,8 @@ void Buffer::DestroyBuffers(const std::string& bufferID)
 
 		s_bufferIDMap->erase(it);
 
-		std::cout << "Buffers unloaded successfully." << std::endl;
-		std::cout << "---------------------------------------------------------------" << std::endl;
-	}
-
-}
-//------------------------------------------------------------------------------------------------------
-//function that displays total size of buffer ID map with details (FOR DEBUG ONLY)
-//------------------------------------------------------------------------------------------------------
-void Buffer::Output()
-{
-
-	//clear the console window for a fresh display
-	system("cls");
-
-	//display total amount of buffer IDs stored in map
-	std::cout << "---------------------------------------------------------------" << std::endl;
-	std::cout << "Size of Buffer ID Map : " << s_bufferIDMap->size() << std::endl;
-	std::cout << "---------------------------------------------------------------" << std::endl;
-
-	//loop through map and display each buffer detailing its OpenGL IDs and tag name
-	for (auto it = s_bufferIDMap->begin(); it != s_bufferIDMap->end(); it++)
-	{
-		std::cout << "\"" << it->first << "\"" << std::endl;
-
-		std::cout << "VAO (ID " << it->second.vaoID << ")" << std::endl;
-		std::cout << "VBO (IDs " << it->second.vboID[VERTEX_BUFFER] << ", "  
-							     << it->second.vboID[COLOR_BUFFER] << ", " 
-							     << it->second.vboID[NORMAL_BUFFER] << ", "
-							     << it->second.vboID[TEXTURE_BUFFER] << ")" << std::endl;
-		std::cout << "EBO (ID " << it->second.eboID << ")" << std::endl;
-		std::cout << (it->second.hasEBO ? "This buffer has an EBO" : "No EBO") << std::endl;
-		std::cout << it->second.totalVertices << " total vertices" << std::endl;
-		std::cout << "---------------------------------------------------------------" << std::endl;
+		Debug::Log("Buffers unloaded successfully.", Debug::SUCCESS);
+		Debug::Log("===============================================================");
 	}
 
 }

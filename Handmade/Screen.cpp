@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include <gtc\matrix_transform.hpp>
+#include "Debug.h"
 #include "Shader.h"
 #include "Screen.h"
 
@@ -50,7 +50,9 @@ bool Screen::SetVerticalSync(VSyncState vsyncState)
 
 	if (SDL_GL_SetSwapInterval((int)vsyncState) == -1)
 	{
-		std::cout << "Vertical sync not supported." << std::endl;
+		Debug::Log("Vertical sync not supported.", Debug::WARNING);
+		Debug::Log("===============================================================");
+		Debug::PauseLog();
 		return false;
 	}
 
@@ -82,11 +84,15 @@ bool Screen::Initialize(const std::string& windowTitle, GLuint width, GLuint hei
 	                    GLuint major, GLuint minor, bool isCoreContext, bool isFullscreen)
 {
 
+	Debug::Log("Initializing SDL, OpenGL and GLAD...");
+
 	//initialize SDL subsystem by enabling the entire SDL package
 	//if SDL initialization fails, display error message and return false
 	if (SDL_Init(SDL_INIT_EVERYTHING) == -1)
 	{
-		std::cout << "SDL did not initialize properly." << std::endl;
+		Debug::Log("SDL did not initialize properly.", Debug::FAILURE);
+		Debug::Log("===============================================================");
+		Debug::PauseLog();
 		return false;
 	}
 
@@ -126,7 +132,9 @@ bool Screen::Initialize(const std::string& windowTitle, GLuint width, GLuint hei
 	//if game window could not be created, display error message and return false
 	if (!m_window)
 	{
-		std::cout << "Game window could not be created." << std::endl;
+		Debug::Log("Game window could not be created.", Debug::FAILURE);
+		Debug::Log("===============================================================");
+		Debug::PauseLog();
 		return false;
 	}
 
@@ -136,8 +144,11 @@ bool Screen::Initialize(const std::string& windowTitle, GLuint width, GLuint hei
 	//if OpenGL context could not be created, display error message and return false
 	if (!m_context)
 	{
-		std::cout << "OpenGL context " << major << "." << minor << " could not be created. The "
-			         "context is either invalid or not supported by your graphics card." << std::endl;
+		std::string openGLVersion = std::to_string(major) + "." + std::to_string(minor);
+		Debug::Log("OpenGL context " + openGLVersion + " could not be created.", Debug::FAILURE);
+		Debug::Log("The context is either invalid or not supported.", Debug::FAILURE);
+		Debug::Log("===============================================================");
+		Debug::PauseLog();
 		return false;
 	}
 
@@ -154,8 +165,9 @@ bool Screen::Initialize(const std::string& windowTitle, GLuint width, GLuint hei
 	//and return a 'false' flag so that the client can deal with it
 	if (!gladLoadGL())
 	{
-		std::cout << "Failed to initialize GLAD" << std::endl;
-		system("pause");
+		Debug::Log("GLAD could not initialize and load extensions.", Debug::FAILURE);
+		Debug::Log("===============================================================");
+		Debug::PauseLog();
 		return false;
 	}
 
@@ -163,7 +175,9 @@ bool Screen::Initialize(const std::string& windowTitle, GLuint width, GLuint hei
 	//if there was an error setting this value, display error message and return false 
 	if (SDL_GL_SetSwapInterval(1) == -1)
 	{
-		std::cout << "VSync not supported." << std::endl;
+		Debug::Log("VSync not supported.", Debug::WARNING);
+		Debug::Log("===============================================================");
+		Debug::PauseLog();
 		return false;
 	}
 
@@ -172,6 +186,10 @@ bool Screen::Initialize(const std::string& windowTitle, GLuint width, GLuint hei
 
 	//store window handle for use with Windows specific functions
 	m_windowHandle = systemInfo.info.win.window;
+
+	//display text to state that screen has been setup successfully
+	Debug::Log("SDL, OpenGL and GLAD successfully initialized.", Debug::SUCCESS);
+	Debug::Log("===============================================================");
 
 	//enable blending for transparency
 	glEnable(GL_BLEND);

@@ -75,9 +75,6 @@ public:
 	void RotateX(short motionY);
 	void RotateY(short motionX);
 
-	//void DisplayExtensions();
-	//void DisplayGraphicsProfile();
-
 private:
 
 	bool m_isFreeFlow;

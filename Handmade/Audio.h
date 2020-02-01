@@ -23,7 +23,7 @@
 | GitHub: https://github.com/djkarstenv									                        |
 |                                                                                               |
 #===============================================================================================#
-| 'Audio' source files last updated in December 2019									        |
+| 'Audio' source files last updated in February 2020									        |
 #==============================================================================================*/
 
 #include <string>

@@ -75,7 +75,7 @@ void EndState::OnExit()
 	//debug manager and all of its components 
 #ifdef DEBUG
 
-	Debug::Instance()->DestroyDebugObjects();
+	//Debug::Instance()->DestroyDebugObjects();
 
 #endif
 

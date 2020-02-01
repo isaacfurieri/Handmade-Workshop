@@ -23,7 +23,7 @@
 | GitHub: https://github.com/djkarstenv									                        |
 |                                                                                               |
 #===============================================================================================#
-| 'Buffer' source files last updated in December 2019									        |
+| 'Buffer' source files last updated in February 2020									        |
 #==============================================================================================*/
 
 #include <map>
@@ -50,6 +50,10 @@ public:
 	enum ComponentSize  { XY = 2, XYZ = 3, RGB = 3, RGBA = 4, UV = 2 };
 	enum DrawMode       { LINES, LINE_LOOP, POINTS, TRIANGLES, TRIANGLE_FAN };
 	enum VBOType        { VERTEX_BUFFER, COLOR_BUFFER, NORMAL_BUFFER, TEXTURE_BUFFER };
+
+public:
+
+	static void Output();
 
 public:
 
@@ -82,9 +86,6 @@ public:
 	void DestroyBuffers();
 	void DestroyBuffers(const std::string& bufferID);
 
-public:
-
-	void Output();
 
 private:
 
