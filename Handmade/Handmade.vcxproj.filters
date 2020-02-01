@@ -167,13 +167,13 @@
     <ClInclude Include="RigidBody.h">
       <Filter>Header Files\Components\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="UICam.h">
-      <Filter>Header Files\GameObjects</Filter>
-    </ClInclude>
     <ClInclude Include="FPSCamera.h">
       <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
+      <Filter>Header Files\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="UICamera.h">
       <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
   </ItemGroup>
@@ -265,13 +265,13 @@
     <ClCompile Include="RigidBody.cpp">
       <Filter>Source Files\Components\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="UICam.cpp">
-      <Filter>Source Files\GameObjects</Filter>
-    </ClCompile>
     <ClCompile Include="FPSCamera.cpp">
       <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="UICamera.cpp">
       <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
   </ItemGroup>

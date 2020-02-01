@@ -166,7 +166,7 @@
     <ClInclude Include="StartState.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="Texture.h" />
-    <ClInclude Include="UICam.h" />
+    <ClInclude Include="UICamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AABB.cpp" />
@@ -200,7 +200,7 @@
     <ClCompile Include="StartState.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="UICam.cpp" />
+    <ClCompile Include="UICamera.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
