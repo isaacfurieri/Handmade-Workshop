@@ -108,3 +108,11 @@ void Camera::SetPerspView(GLfloat nearClip, GLfloat farClip)
 	Shader::Instance()->SendUniformData("projection", m_projMatrix);
 
 }
+
+void Camera::Draw()
+{
+
+	//send camera's view matrix data to the vertex shader
+	Shader::Instance()->SendUniformData("view", m_viewMatrix);
+
+}

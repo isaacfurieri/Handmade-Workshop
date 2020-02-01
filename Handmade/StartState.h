@@ -28,6 +28,7 @@
 
 #include "GameState.h"
 #include "SplashScreen.h"
+#include "UICamera.h"
 
 class StartState : public GameState
 {
@@ -46,6 +47,7 @@ public:
 
 private:
 
+	UICamera* m_UICamera;
 	SplashScreen* m_splashScreen_1;
 	SplashScreen* m_splashScreen_2;
 	

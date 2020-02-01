@@ -49,6 +49,10 @@ public:
 	void SetOrthoView(Origin2D origin = BOTTOM_LEFT);
 	void SetPerspView(GLfloat nearClip = 0.1f, GLfloat farClip = 1000.0f);
 
+public:
+
+	virtual void Draw();
+
 protected:
 
 	GLfloat m_velocity;

@@ -70,7 +70,8 @@ void FPSCamera::Update(int deltaTime)
 	m_pitch = glm::clamp(m_pitch, -89.0f, 89.0f);
 
 	//use either the sin/cos or the matrix method of rotation
-	
+	UseMatrix();
+	UseSinCos();
 
 	//if WASDQE keys are pressed then move the camera in the correct direction
 	//we make use of the forward vector to move in the forward/backward direction
@@ -129,9 +130,6 @@ void FPSCamera::Update(int deltaTime)
 
 	//update FPSCamera's view matrix
 	m_viewMatrix = glm::lookAt(m_position, m_position + m_lookAt, m_up);
-
-	//send camera's view matrix data to the vertex shader
-	Shader::Instance()->SendUniformData("view", m_viewMatrix);
 
 }
 

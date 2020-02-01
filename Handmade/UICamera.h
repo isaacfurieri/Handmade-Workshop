@@ -8,10 +8,9 @@ class UICamera : public Camera
 
 public:
 
-	virtual bool Create()               { return true; }
+	virtual bool Create()  { return true; }
 	virtual void Update(int deltaTime);
-	virtual void Draw()                 {};
-	virtual void Destroy()              {};
+	virtual void Destroy() {};
 
 };
 
