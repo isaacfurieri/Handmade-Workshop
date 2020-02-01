@@ -44,7 +44,7 @@ void SplashScreen::Update(int deltaTime)
 {
 
 	//store keyboard key states in a temp variable for processing below
-	const Uint8* keyState = Input::Instance()->GetKeyStates();
+	KeyState keyState = Input::Instance()->GetKeyStates();
 
 	//if TAB key was pressed, deactivate splash screen 
 	if (keyState[SDL_SCANCODE_TAB])
