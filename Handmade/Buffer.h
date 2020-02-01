@@ -61,8 +61,7 @@ public:
 
 public:
 
-	void SetLineWidth(GLfloat lineWidth);
-	void SetPointSize(GLfloat pointSize);
+	
 	void SetBuffers(const std::string& bufferID);
 
 public:
