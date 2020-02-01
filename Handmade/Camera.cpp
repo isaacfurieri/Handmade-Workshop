@@ -1,72 +1,26 @@
 #include <gtc\matrix_transform.hpp>
 #include "Camera.h"
-#include "Game.h"
-#include "Shader.h"
+#include "Input.h"
 #include "Screen.h"
+#include "Shader.h"
 
-glm::vec3 Camera::s_position = glm::vec3(0.0f);
-glm::mat4 Camera::s_viewMatrix = glm::mat4(1.0f);
-
-//------------------------------------------------------------------------------------------------------
-//static setter function that resets view matrix to the identity 
-//------------------------------------------------------------------------------------------------------
-void Camera::SetIdentity()
-{
-
-	s_viewMatrix = glm::mat4(1.0f);
-
-}
-//------------------------------------------------------------------------------------------------------
-//static function that sends all camera's main properties to shaders
-//------------------------------------------------------------------------------------------------------
-void Camera::SendToShader()
-{
-
-	//send view matrix data to the vertex shader
-	Shader::Instance()->SendUniformData("viewMatrix", s_viewMatrix);
-
-	//send camera position to fragment shader
-	Shader::Instance()->SendUniformData("cameraPosition", s_position);
-
-}
-//------------------------------------------------------------------------------------------------------
-//getter-setter function that returns position reference variable for camera 
-//------------------------------------------------------------------------------------------------------
-glm::vec3& Camera::Position()
-{
-
-	return s_position;
-
-}
 //------------------------------------------------------------------------------------------------------
 //constructor that assigns all default values 
 //------------------------------------------------------------------------------------------------------
 Camera::Camera()
 {
 
-	m_isFreeFlow = false;
-	
 	m_velocity = 0.07f;
-	m_sensitivity = 1.0f;
+	m_fieldOfView = 45.0f;
 
-	m_moveDirection = glm::vec3(0.0f);
-	m_viewDirection = glm::vec3(0.0f);
+	m_viewMatrix = glm::mat4(1.0f);
+	m_projMatrix = glm::mat4(1.0f);
 
-	m_threshold = glm::vec2(-0.90f, 0.90f);
-	m_upVector = glm::vec3(0.0f, 1.0f, 0.0f);
-	m_lookAt = glm::vec3(0.0f, 0.0f, -1.0f);
-
-	m_rotationMatrixX = glm::mat4(1.0f);
-	m_rotationMatrixY = glm::mat4(1.0f);
-
-}
-//------------------------------------------------------------------------------------------------------
-//getter-setter function that returns free flow movement flag reference variable for camera 
-//------------------------------------------------------------------------------------------------------
-bool& Camera::IsFreeFlow()
-{
-
-	return m_isFreeFlow;
+	m_position = glm::vec3(0.0f);
+	m_direction = glm::vec3(0.0f);
+	m_up = glm::vec3(0.0f, 1.0f, 0.0f);
+	m_right = glm::vec3(1.0f, 0.0f, 0.0f);
+	m_forward = glm::vec3(0.0f, 0.0f, -1.0f);
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -79,169 +33,86 @@ void Camera::SetVelocity(GLfloat velocity)
 
 }
 //------------------------------------------------------------------------------------------------------
-//setter function that assigns camera rotation sensitivity
+//setter function that assigns FOV of camera
 //------------------------------------------------------------------------------------------------------
-void Camera::SetSensitivity(GLfloat sensitivity)
+void Camera::SetFieldOfView(GLfloat fieldOfView)
 {
 
-	m_sensitivity = sensitivity;
+	m_fieldOfView = fieldOfView;
 
 }
 //------------------------------------------------------------------------------------------------------
-//setter function that assigns camera's min and max Y threshold value
+//setter function that assigns position of camera
 //------------------------------------------------------------------------------------------------------
-void Camera::SetThreshold(GLfloat min, GLfloat max)
+void Camera::SetPosition(GLfloat x, GLfloat y, GLfloat z)
 {
 
-	m_threshold = glm::vec2(min, max);
+	m_position = glm::vec3(x, y, z);
 
 }
 //------------------------------------------------------------------------------------------------------
-//setter function that assigns initial viewing direction of camera
+//setter function that creates a 2D orthographic projection 
 //------------------------------------------------------------------------------------------------------
-void Camera::SetLookAt(GLfloat x, GLfloat y, GLfloat z)
+void Camera::SetOrthoView(Origin2D origin)
 {
 
-	m_lookAt = glm::vec3(x, y, z);
+	//disable Z-buffering because in
+	//2D the depth buffer isn't needed 
+	glDisable(GL_DEPTH_TEST);
 
-}
-//------------------------------------------------------------------------------------------------------
-//function that updates and assigns camera "look at" direction and position
-//------------------------------------------------------------------------------------------------------
-void Camera::Update()
-{
+	//first get screen resolution for calculating projection below
+	glm::ivec2 resolution; 
+	Screen::Instance()->GetResolution(resolution.x, resolution.y);
 
-	//set camera to initially look forward in the negative Z-axis 
-	//this view will be transformed by the camera's rotation below
-	m_lookAt = glm::vec3(0.0f, 0.0f, -1.0f);
-
-	//create a total rotation transformation based on X and Y rotations
-	//we do a Y rotation FIRST and then a local X rotation thereafter
-	glm::mat4 totalRotation = m_rotationMatrixY * m_rotationMatrixX;
-
-	//calculate the camera's view direction vector by transforming 
-	//the initial viewing target based on camera's total rotation
-	m_lookAt = glm::vec3(totalRotation * glm::vec4(m_lookAt, 1.0f));
-
-	//create a separate move rotation based on if camera is in freeflow mode or not
-	//this affects movement so that camera either moves freely or is bound to a Y plane 
-	glm::mat4 moveRotation = (m_isFreeFlow) ? totalRotation : m_rotationMatrixY;
-
-	//apply same rotation to move direction vector so that
-	//the camera moves correctly based on camera orientation
-	m_moveDirection = glm::vec3(moveRotation * glm::vec4(m_moveDirection, 1.0f));
-
-	//if the camera is set to move, calculate its position using the chosen rotation, 
-	//the direction the camera is moving in, the speed at which its moving and time
-	if (m_moveDirection != glm::vec3(0.0f))
+	//if screen origin passed is set as top left of screen 
+	//create orthographic view so that Y is positive downward 
+	if (origin == TOP_LEFT)
 	{
-
-		s_position += m_moveDirection * m_velocity * 0.016f; //temp!
-			         // ((float)Game::Instance()->GetElapsedTime() / 1000);
+		m_projMatrix = glm::ortho(0.0f, (float)resolution.x, 
+			                            (float)resolution.y, 0.0f);
 	}
 
-	//update camera's view matrix
-	s_viewMatrix = glm::lookAt(s_position, s_position + m_lookAt, m_upVector);
-
-}
-//------------------------------------------------------------------------------------------------------
-//function that stops camera from moving
-//------------------------------------------------------------------------------------------------------
-void Camera::Stop()
-{
-
-	m_moveDirection = glm::vec3(0.0f);
-
-}
-//------------------------------------------------------------------------------------------------------
-//function that assigns camera movement to go UP
-//------------------------------------------------------------------------------------------------------
-void Camera::MoveUp()
-{
-
-	m_moveDirection = glm::vec3(0.0f, 1.0f, 0.0f);
-
-}
-//------------------------------------------------------------------------------------------------------
-//function that assigns camera movement to go DOWN
-//------------------------------------------------------------------------------------------------------
-void Camera::MoveDown()
-{
-
-	m_moveDirection = glm::vec3(0.0f, -1.0f, 0.0f);
-
-}
-//------------------------------------------------------------------------------------------------------
-//function that assigns camera movement to go LEFT
-//------------------------------------------------------------------------------------------------------
-void Camera::MoveLeft()
-{
-
-	m_moveDirection = glm::vec3(-1.0f, 0.0f, 0.0f);
-
-}
-//------------------------------------------------------------------------------------------------------
-//function that assigns camera movement to go RIGHT
-//------------------------------------------------------------------------------------------------------
-void Camera::MoveRight()
-{
-
-	m_moveDirection = glm::vec3(1.0f, 0.0f, 0.0f);
-
-}
-//------------------------------------------------------------------------------------------------------
-//function that assigns camera movement to go FORWARD
-//------------------------------------------------------------------------------------------------------
-void Camera::MoveForward()
-{
-
-	m_moveDirection = glm::vec3(0.0f, 0.0f, -1.0f);
-
-}
-//------------------------------------------------------------------------------------------------------
-//function that assigns camera movement to go BACKWARD
-//------------------------------------------------------------------------------------------------------
-void Camera::MoveBackward()
-{
-
-	m_moveDirection = glm::vec3(0.0f, 0.0f, 1.0f);
-
-}
-//------------------------------------------------------------------------------------------------------
-//function that controls rotation of camera around local X axis
-//------------------------------------------------------------------------------------------------------
-void Camera::RotateX(short motionY)
-{
-
-	//generate a rotation angle based on mouse motion and rotation sensitivity
-	GLfloat angle = motionY * m_sensitivity;
-
-	//calculate the dot product between the "look at" vector and the up vector. This will
-	//give us a value to determine how far up or down the X axis the camera is tilting
-	double dot = glm::dot(m_lookAt, m_upVector);
-
-	//if the camera is tilting upwards or downwards and only if it is between its allowed 
-	//threshold, then accumulate the current X axis rotation using the angle calculated
-	if ((motionY > 0 && dot >= m_threshold.x) || (motionY < 0 && dot <= m_threshold.y))
+	//if screen origin passed is set as bottom left of screen 
+	//create orthographic view so that Y is positive upward 
+	else if (origin == BOTTOM_LEFT)
 	{
-		m_rotationMatrixX = glm::rotate(m_rotationMatrixX,
-						    glm::radians(angle),
-						    glm::vec3(-1.0f, 0.0f, 0.0f));
+		m_projMatrix = glm::ortho(0.0f, (float)resolution.x, 
+			                      0.0f, (float)resolution.y);
 	}
 
+	//send projection matrix data to shader
+	Shader::Instance()->SendUniformData("projection", m_projMatrix);
+
 }
 //------------------------------------------------------------------------------------------------------
-//function that controls rotation of camera around global Y axis
+//setter function that creates a 3D perspective projection 
 //------------------------------------------------------------------------------------------------------
-void Camera::RotateY(short motionX)
+void Camera::SetPerspView(GLfloat nearClip, GLfloat farClip)
 {
 
-	//generate a rotation angle based on mouse motion and rotation sensitivity
-	GLfloat angle = motionX * m_sensitivity;
+	//enable Z-buffering so that vertices
+	//are rendered in the correct order
+	glEnable(GL_DEPTH_TEST);
 
-	//accumulate the current Y axis rotation using the angle calculated
-	m_rotationMatrixY = glm::rotate(m_rotationMatrixY,
-						glm::radians(angle),
-						glm::vec3(0.0f, -1.0f, 0.0f));
+	//first get screen resolution for calculating projection below
+	glm::ivec2 resolution;
+	Screen::Instance()->GetResolution(resolution.x, resolution.y);
+
+	//determine the aspect ratio based on width and height of screen
+	float aspectRatio = (float)resolution.x / (float)resolution.y;
+
+	//create a 3D perspective projection using FOV angle, aspect ratio and clipping planes
+	m_projMatrix = glm::perspective(glm::radians(m_fieldOfView), aspectRatio, nearClip, farClip);
+
+	//send projection matrix data to shader
+	Shader::Instance()->SendUniformData("projection", m_projMatrix);
+
+}
+
+void Camera::Draw()
+{
+
+	//send camera's view matrix data to the vertex shader
+	Shader::Instance()->SendUniformData("view", m_viewMatrix);
 
 }

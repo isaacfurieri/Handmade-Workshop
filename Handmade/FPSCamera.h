@@ -1,5 +1,5 @@
-#ifndef END_STATE_H
-#define END_STATE_H
+#ifndef FPS_CAMERA_H
+#define FPS_CAMERA_H
 
 /*==============================================================================================#
 |                                                                                               |
@@ -23,33 +23,55 @@
 | GitHub: https://github.com/djkarstenv									                        |
 |                                                                                               |
 #===============================================================================================#
-| 'EndState' source files last updated in January 2020								            |
+| 'Camera' source files last updated in February 2020									        |
 #==============================================================================================*/
 
-#include "GameState.h"
-#include "SplashScreen.h"
-#include "UICamera.h"
+#include <string>
+#include "glad.h"
+#include <glm.hpp>
+#include "Camera.h"
 
-class EndState : public GameState
+class FPSCamera : public Camera
 {
 
 public:
 
-	EndState(Game* game, GameState* state);
-	virtual ~EndState() {}
+	FPSCamera();
 
 public:
 
-	virtual bool OnEnter();
-	virtual bool Update(int deltaTime);
-	virtual bool Draw();
-	virtual void OnExit();
+	bool IsFlying();
+	void IsFlying(bool isFlying);
+
+public:
+
+	void SetSensitivity(GLfloat sensitivity);
+	void SetTarget(GLfloat x, GLfloat y, GLfloat z);
+
+public:
+
+	virtual bool Create()  { return true; }
+	virtual void Update(int deltaTime);
+	virtual void Destroy() {};
+	
+private:
+
+	void UseMatrix();
+	void UseSinCos();
 
 private:
 
-	UICamera* m_UICamera;
-	SplashScreen* m_splashScreen;
-
+	bool m_isFlying;
+	
+	GLfloat m_yaw;
+	GLfloat m_pitch;
+	GLfloat m_sensitivity;
+	
+	glm::vec3 m_lookAt;
+	glm::vec3 m_target;
+	glm::mat4 m_rotationMatrixX;
+	glm::mat4 m_rotationMatrixY;
+	
 };
 
 #endif

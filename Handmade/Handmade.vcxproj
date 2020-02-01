@@ -143,7 +143,7 @@
     <ClInclude Include="AudioManager.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="HUDCamera.h" />
+    <ClInclude Include="FPSCamera.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="EndState.h" />
     <ClInclude Include="Game.h" />
@@ -152,7 +152,6 @@
     <ClInclude Include="HUD.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Light.h" />
-    <ClInclude Include="MainCamera.h" />
     <ClInclude Include="MainState.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Model.h" />
@@ -165,6 +164,7 @@
     <ClInclude Include="StartState.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="UICamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AABB.cpp" />
@@ -173,9 +173,9 @@
     <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="FPSCamera.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="glad.c" />
-    <ClCompile Include="HUDCamera.cpp" />
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="EndState.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -184,7 +184,6 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="MainCamera.cpp" />
     <ClCompile Include="MainState.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Model.cpp" />
@@ -197,6 +196,7 @@
     <ClCompile Include="StartState.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="UICamera.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

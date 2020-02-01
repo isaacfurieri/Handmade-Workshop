@@ -13,7 +13,7 @@
 StartState::StartState(Game* game, GameState* state) : GameState(game, state)
 {
 
-	m_HUDCamera = nullptr;
+	m_UICamera = nullptr;
 	m_splashScreen_1 = nullptr;
 	m_splashScreen_2 = nullptr;
 
@@ -58,7 +58,7 @@ bool StartState::OnEnter()
 	}
 
 	//create 2D camera to view the splash images
-	m_HUDCamera = new HUDCamera();
+	m_UICamera = new UICamera;
 
 	//create both splash screen objects for state
 	m_splashScreen_1 = new SplashScreen("Assets\\Sprites\\SplashScreen_1.png");
@@ -144,13 +144,13 @@ bool StartState::Draw()
 
 	if (m_splashScreen_1->IsActive())
 	{
-		m_HUDCamera->Draw();
+		m_UICamera->Draw();
 		m_splashScreen_1->Draw();
 	}
 
 	if (m_splashScreen_2->IsActive())
 	{
-		m_HUDCamera->Draw();
+		m_UICamera->Draw();
 		m_splashScreen_2->Draw();
 	}
 
@@ -170,6 +170,6 @@ void StartState::OnExit()
 
 	delete m_splashScreen_2;
 	delete m_splashScreen_1;
-	delete m_HUDCamera;
+	delete m_UICamera;
 
 }

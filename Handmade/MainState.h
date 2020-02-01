@@ -27,11 +27,11 @@
 #==============================================================================================*/
 
 #include <vector>
+#include "FPSCamera.h"
 #include "GameObject.h"
 #include "GameState.h"
 #include "HUD.h"
-#include "HUDCamera.h"
-#include "MainCamera.h"
+#include "UICamera.h"
 
 class MainState : public GameState
 {
@@ -51,9 +51,8 @@ public:
 private :
 
 	HUD* m_HUD;
-	HUDCamera* m_HUDCamera;
-	MainCamera* m_mainCamera;
 	
+	std::vector<Camera*> m_cameras;
 	std::vector<GameObject*> m_gameObjects;
 
 };
