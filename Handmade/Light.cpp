@@ -144,7 +144,7 @@ void Light::Draw()
 	GameObject::SendToShader(false, false);
 
 	//render light bulb in scene 
-	m_buffer.SetPointSize(25.0f);
+	Shader::SetPointSize(25.0f);
 	m_buffer.Draw(Buffer::POINTS);
 
 }

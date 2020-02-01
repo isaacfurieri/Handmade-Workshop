@@ -23,9 +23,10 @@
 | GitHub: https://github.com/djkarstenv									                        |
 |                                                                                               |
 #===============================================================================================#
-| 'Shader' source files last updated in December 2019							       	        |
+| 'Shader' source files last updated in February 2020							       	        |
 #==============================================================================================*/
 
+#include <map>
 #include <string>
 #include "glad.h"
 #include <glm.hpp>
@@ -35,8 +36,9 @@ class Shader
 
 public:
 
-	enum RenderType { POLYGON_MODE, FULL_SHADE };
-	enum ShaderType { VERTEX_SHADER, FRAGMENT_SHADER };
+	enum RenderType { POLYGON_MODE = GL_LINE, FULL_SHADE = GL_FILL };
+	enum ShaderType { VERTEX_SHADER = GL_VERTEX_SHADER, 
+		              FRAGMENT_SHADER = GL_FRAGMENT_SHADER };
 	
 public:
 
@@ -44,9 +46,20 @@ public:
 
 public:
 
-	void SetRenderType(RenderType renderType);
-	GLuint GetShaderAttribute(const std::string& vertAttrib);
-	
+	GLint GetUniformID(const std::string& uniform);
+	GLint GetAttributeID(const std::string& attribute);
+
+public:
+
+	static void SetLineWidth(GLfloat lineWidth);
+	static void SetPointSize(GLfloat pointSize);
+	static void SetRenderType(RenderType renderType);
+
+public:
+
+	void BindUniform(const std::string& uniform);
+	void BindAttribute(const std::string& attribute);
+
 public:
 
 	bool SendUniformData(const std::string& uniform, GLint intData);
@@ -60,11 +73,6 @@ public:
 		                 const glm::mat3& matrix3x3, bool transposed = false);
 	bool SendUniformData(const std::string& uniform, 
 		                 const glm::mat4& matrix4x4, bool transposed = false);
-
-	bool SendAttributeData(const std::string& attribute, GLfloat floatData);
-	bool SendAttributeData(const std::string& attribute, const glm::vec2& vec2Data);
-	bool SendAttributeData(const std::string& attribute, const glm::vec3& vec3Data);
-	bool SendAttributeData(const std::string& attribute, const glm::vec4& vec4Data);
 
 public:
 
@@ -90,6 +98,9 @@ private:
 	GLuint m_shaderProgramID;
 	GLuint m_vertexShaderID;
 	GLuint m_fragmentShaderID;
+
+	std::map<std::string, GLuint> m_uniforms;
+	std::map<std::string, GLuint> m_attributes;
 
 };
 
