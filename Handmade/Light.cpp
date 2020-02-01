@@ -141,7 +141,7 @@ void Light::Draw()
 	
 	//set flags in fragment shader - light bulb is not 
 	//affected by lighting calculations and not textured
-	GameObject::SendToShader(false, false);
+	//GameObject::SendToShader(false, false);
 
 	//render light bulb in scene 
 	Shader::SetPointSize(25.0f);
