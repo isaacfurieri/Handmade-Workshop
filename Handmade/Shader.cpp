@@ -287,8 +287,7 @@ bool Shader::SendUniformData(const std::string& uniform, const glm::vec4& vec4Da
 //------------------------------------------------------------------------------------------------------
 //function that sends uniform data to shader (3x3 MATRIX)
 //------------------------------------------------------------------------------------------------------
-bool Shader::SendUniformData(const std::string& uniform, 
-	                                  const glm::mat3& matrix3x3, bool transposed)
+bool Shader::SendUniformData(const std::string& uniform, const glm::mat3& matrix3x3, bool transposed)
 {
 
 	GLint ID = GetUniformID(uniform);
@@ -305,8 +304,7 @@ bool Shader::SendUniformData(const std::string& uniform,
 //------------------------------------------------------------------------------------------------------
 //function that sends uniform data to shader (4x4 MATRIX)
 //------------------------------------------------------------------------------------------------------
-bool Shader::SendUniformData(const std::string& uniform, 
-	                                  const glm::mat4& matrix4x4, bool transposed)
+bool Shader::SendUniformData(const std::string& uniform, const glm::mat4& matrix4x4, bool transposed)
 {
 
 	GLint ID = GetUniformID(uniform);
