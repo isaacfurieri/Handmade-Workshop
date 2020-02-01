@@ -1,10 +1,10 @@
 #version 450 
 
 in vec3 vertexIn;
-in vec3 colorIn;
+in vec4 colorIn;
 in vec2 textureIn;
 
-out vec3 colorOut;
+out vec4 colorOut;
 out vec2 textureOut;
 
 uniform mat4 model;

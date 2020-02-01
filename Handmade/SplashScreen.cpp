@@ -1,3 +1,4 @@
+#include <gtc\matrix_transform.hpp>
 #include "Game.h"
 #include "Input.h"
 #include "Screen.h"
@@ -81,19 +82,8 @@ void SplashScreen::Update(int deltaTime)
 void SplashScreen::Draw()
 {
 
-	//setup screen in 2D orthographic mode because all splash screens are 2D 
-	//Screen::Instance()->Set2DScreen(Screen::BOTTOM_LEFT);
-
-	//reset model matrix to identity so we don't accumulate transformations
-	//GameObject::SetIdentity();
-
-	//apply splash screen size to model matrix
-	//GameObject::Scale(1024.0f, 768.0f, 1.0f);
-
-	//send all flags and matrices to shaders 
-	//GameObject::SendToShader(false, true);
-	        
-	//draw splash screen image
+	m_modelMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(1024.0f, 768.0f, 1.0f));
+	SendToShader(false, true);
 	m_sprite.Draw();
 
 }

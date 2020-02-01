@@ -65,6 +65,7 @@ bool StartState::OnEnter()
 	Shader::Instance()->BindUniform("model");
 	Shader::Instance()->BindUniform("view");
 	Shader::Instance()->BindUniform("projection");
+	Shader::Instance()->BindUniform("isTextured");
 
 	//create 2D camera to view the splash images
 	m_UICamera = new UICamera;
@@ -85,10 +86,8 @@ bool StartState::OnEnter()
 	//debug manager and all of its debug objects 
 #ifdef DEBUG
 
-	/*if (!Debug::Instance()->CreateDebugObjects(15))
-	{
-		return false;
-	}*/
+	//create debug objects
+	//pre-made primitives?
 
 #endif
 
@@ -112,6 +111,8 @@ bool StartState::Update(int deltaTime)
 
 #ifdef RELEASE
 
+	m_UICamera->Update(deltaTime);
+
 	//if first splash screen is active then update it
 	if (m_splashScreen_1->IsActive())
 	{
@@ -121,7 +122,7 @@ bool StartState::Update(int deltaTime)
 	//otherwise activate second splash screen so that it can start updating
 	else
 	{
-		m_splashScreen_2->IsActive() = true;
+		m_splashScreen_2->IsActive(true);
 	}
 
 	//if second splash screen is active then update it and monitor its active 
@@ -153,12 +154,14 @@ bool StartState::Draw()
 
 	if (m_splashScreen_1->IsActive())
 	{
+		m_UICamera->SetOrthoView();
 		m_UICamera->Draw();
 		m_splashScreen_1->Draw();
 	}
 
 	if (m_splashScreen_2->IsActive())
 	{
+		m_UICamera->SetOrthoView();
 		m_UICamera->Draw();
 		m_splashScreen_2->Draw();
 	}

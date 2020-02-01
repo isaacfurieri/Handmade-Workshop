@@ -19,7 +19,7 @@ bool EndState::OnEnter()
 {
  
 	m_UICamera = new UICamera;
-	m_splashScreen = new SplashScreen("Assets\\Sprites\\SplashScreen_3.png");
+	m_splashScreen = new SplashScreen("Assets/Sprites/SplashScreen_3.png");
 	m_splashScreen->Create();
 	
 	return true;
@@ -41,6 +41,7 @@ bool EndState::Update(int deltaTime)
 
 #ifdef RELEASE
 
+	m_UICamera->Update(deltaTime);
 	m_splashScreen->Update(deltaTime);
 	m_isActive = m_isAlive = m_splashScreen->IsActive();
 
@@ -57,6 +58,7 @@ bool EndState::Draw()
 
 #ifdef RELEASE
 
+	m_UICamera->SetOrthoView();
 	m_UICamera->Draw();
 	m_splashScreen->Draw();
 
@@ -75,7 +77,7 @@ void EndState::OnExit()
 	//debug manager and all of its components 
 #ifdef DEBUG
 
-	//Debug::Instance()->DestroyDebugObjects();
+	//destroy any debug primitives created?
 
 #endif
 
