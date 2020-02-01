@@ -60,24 +60,7 @@ Buffer::Buffer()
 	m_ID.totalVertices = 0;
 
 }
-//------------------------------------------------------------------------------------------------------
-//setter function that sets thickness of primitive line for rendering
-//------------------------------------------------------------------------------------------------------
-void Buffer::SetLineWidth(GLfloat lineWidth)
-{
 
-	glLineWidth(lineWidth);
-
-}
-//------------------------------------------------------------------------------------------------------
-//setter function that sets size of primitive vertex for rendering
-//------------------------------------------------------------------------------------------------------
-void Buffer::SetPointSize(GLfloat pointSize)
-{
-
-	glPointSize(pointSize);
-
-}
 //------------------------------------------------------------------------------------------------------
 //setter function that assigns buffer IDs based on index value passed
 //------------------------------------------------------------------------------------------------------
@@ -168,9 +151,9 @@ void Buffer::BindVBO(VBOType vboType, const std::string& vertAttrib,
 	glBindVertexArray(m_ID.vaoID);
 	
 		glBindBuffer(GL_ARRAY_BUFFER, m_ID.vboID[vboType]);
-		glVertexAttribPointer(Shader::Instance()->GetShaderAttribute(vertAttrib), 
+		glVertexAttribPointer(Shader::Instance()->GetAttributeID(vertAttrib), 
 			                  componentSize, type, GL_FALSE, 0, 0);
-		glEnableVertexAttribArray(Shader::Instance()->GetShaderAttribute(vertAttrib));
+		glEnableVertexAttribArray(Shader::Instance()->GetAttributeID(vertAttrib));
 
 	glBindVertexArray(0);
 

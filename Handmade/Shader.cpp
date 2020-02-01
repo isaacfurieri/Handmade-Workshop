@@ -15,15 +15,72 @@ Shader* Shader::Instance()
 
 }
 //------------------------------------------------------------------------------------------------------
-//constructor that assigns all default values 
+//getter function that searches map for bound uniform IDs
 //------------------------------------------------------------------------------------------------------
-Shader::Shader()
+GLint Shader::GetUniformID(const std::string& uniform)
 {
 
-	m_shaderProgramID = 0;
-	m_vertexShaderID = 0;
-	m_fragmentShaderID = 0;
-	
+	//first check if uniform ID exists in the map
+	auto it = m_uniforms.find(uniform);
+
+	//if ID was NOT found then return a -1 
+	//error code otherwise return the ID
+
+	if (it == m_uniforms.end())
+	{
+		Debug::Log("Shader uniform '" + uniform + "' not bound.", Debug::WARNING);
+		Debug::Log("===============================================================");
+		return -1;
+	}
+
+	else
+	{
+		return it->second;
+	}
+
+}
+//------------------------------------------------------------------------------------------------------
+//getter function that searches map for bound vertex attribute IDs
+//------------------------------------------------------------------------------------------------------
+GLint Shader::GetAttributeID(const std::string& attribute)
+{
+
+	//first check if attribute ID exists in the map
+	auto it = m_attributes.find(attribute);
+
+	//if ID was NOT found then return a -1 
+	//error code otherwise return the ID
+
+	if (it == m_attributes.end())
+	{
+		Debug::Log("Shader attribute '" + attribute + "' not bound.", Debug::WARNING);
+		Debug::Log("===============================================================");
+		return -1;
+	}
+
+	else
+	{
+		return it->second;
+	}
+
+}
+//------------------------------------------------------------------------------------------------------
+//setter function that sets thickness of primitive line for rendering
+//------------------------------------------------------------------------------------------------------
+void Shader::SetLineWidth(GLfloat lineWidth)
+{
+
+	glLineWidth(lineWidth);
+
+}
+//------------------------------------------------------------------------------------------------------
+//setter function that sets size of primitive vertex for rendering
+//------------------------------------------------------------------------------------------------------
+void Shader::SetPointSize(GLfloat pointSize)
+{
+
+	glPointSize(pointSize);
+
 }
 //------------------------------------------------------------------------------------------------------
 //setter function that toggles shading of geometry between polygons and full shading
@@ -35,13 +92,95 @@ void Shader::SetRenderType(RenderType renderType)
 
 }
 //------------------------------------------------------------------------------------------------------
-//getter function that returns shader vertex attribute ID
+//function that searches in the shader for passed uniform and adds it to map if found
 //------------------------------------------------------------------------------------------------------
-GLuint Shader::GetShaderAttribute(const std::string& vertAttrib)
+void Shader::BindUniform(const std::string& uniform)
 {
 
-	return glGetAttribLocation(m_shaderProgramID, vertAttrib.c_str());
+	//first check if uniform ID is already in the map
+	auto it = m_uniforms.find(uniform);
 
+	//if ID was NOT found then search for it in the shader and if the 
+	//returned value is -1 it means the uniform is missing or inactive
+	//Otherwise store the newly acquired ID in the map for future use
+
+	if (it == m_uniforms.end())
+	{
+
+		GLint ID = glGetUniformLocation(m_shaderProgramID, uniform.c_str());
+
+		if (ID == -1)
+		{
+			Debug::Log("Shader uniform '" + uniform + "' not found or inactive.", Debug::WARNING);
+			Debug::Log("===============================================================");
+		}
+
+		else
+		{
+			m_uniforms[uniform] = ID;
+			Debug::Log("Shader uniform '" + uniform + "' bound to program.", Debug::SUCCESS);
+			Debug::Log("===============================================================");
+		}
+
+	}
+
+	else
+	{
+		Debug::Log("Shader uniform '" + uniform + "' already bound to program.", Debug::WARNING);
+		Debug::Log("===============================================================");
+	}
+
+}
+//------------------------------------------------------------------------------------------------------
+//function that searches in the shader for passed attribute and adds it to map if found
+//------------------------------------------------------------------------------------------------------
+void Shader::BindAttribute(const std::string& attribute)
+{
+
+	//first check if attribute ID is already in the map
+	auto it = m_attributes.find(attribute);
+
+	//if ID was NOT found then search for it in the shader and if the 
+	//returned value is -1 it means the attribute is missing or inactive
+	//Otherwise store the newly acquired ID in the map for future use
+
+	if (it == m_attributes.end())
+	{
+
+		GLint ID = glGetAttribLocation(m_shaderProgramID, attribute.c_str());
+
+		if (ID == -1)
+		{
+			Debug::Log("Shader attribute '" + attribute + "' not found or inactive.", Debug::WARNING);
+			Debug::Log("===============================================================");
+		}
+
+		else
+		{
+			m_attributes[attribute] = ID;
+			Debug::Log("Shader attribute '" + attribute + "' bound to program.", Debug::SUCCESS);
+			Debug::Log("===============================================================");
+		}
+
+	}
+
+	else
+	{
+		Debug::Log("Shader attribute '" + attribute + "' already bound to program.", Debug::WARNING);
+		Debug::Log("===============================================================");
+	}
+
+}
+//------------------------------------------------------------------------------------------------------
+//constructor that assigns all default values 
+//------------------------------------------------------------------------------------------------------
+Shader::Shader()
+{
+
+	m_shaderProgramID = 0;
+	m_vertexShaderID = 0;
+	m_fragmentShaderID = 0;
+	
 }
 //------------------------------------------------------------------------------------------------------
 //function that sends uniform data to shader (INT)
@@ -49,8 +188,15 @@ GLuint Shader::GetShaderAttribute(const std::string& vertAttrib)
 bool Shader::SendUniformData(const std::string& uniform, GLint intData)
 {
 
-	glUniform1i(glGetUniformLocation(m_shaderProgramID, uniform.c_str()), intData);
-	return true;
+	GLint ID = GetUniformID(uniform);
+
+	if (ID > -1)
+	{
+		glUniform1i(ID, intData);
+		return true;
+	}
+
+	return false;
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -59,8 +205,15 @@ bool Shader::SendUniformData(const std::string& uniform, GLint intData)
 bool Shader::SendUniformData(const std::string& uniform, GLuint uintData)
 {
 
-	glUniform1ui(glGetUniformLocation(m_shaderProgramID, uniform.c_str()), uintData);
-	return true;
+	GLint ID = GetUniformID(uniform);
+
+	if (ID > -1)
+	{
+		glUniform1ui(ID, uintData);
+		return true;
+	}
+
+	return false;
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -69,8 +222,15 @@ bool Shader::SendUniformData(const std::string& uniform, GLuint uintData)
 bool Shader::SendUniformData(const std::string& uniform, GLfloat floatData)
 {
 
-	glUniform1f(glGetUniformLocation(m_shaderProgramID, uniform.c_str()), floatData);
-	return true;
+	GLint ID = GetUniformID(uniform);
+
+	if (ID > -1)
+	{
+		glUniform1f(ID, floatData);
+		return true;
+	}
+
+	return false;
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -79,8 +239,15 @@ bool Shader::SendUniformData(const std::string& uniform, GLfloat floatData)
 bool Shader::SendUniformData(const std::string& uniform, const glm::vec2& vec2Data)
 {
 
-	glUniform2fv(glGetUniformLocation(m_shaderProgramID, uniform.c_str()), 1, &vec2Data.x);
-	return true;
+	GLint ID = GetUniformID(uniform);
+
+	if (ID > -1)
+	{
+		glUniform2fv(ID, 1, &vec2Data.x);
+		return true;
+	}
+
+	return false;
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -89,8 +256,15 @@ bool Shader::SendUniformData(const std::string& uniform, const glm::vec2& vec2Da
 bool Shader::SendUniformData(const std::string& uniform, const glm::vec3& vec3Data)
 {
 
-	glUniform3fv(glGetUniformLocation(m_shaderProgramID, uniform.c_str()), 1, &vec3Data.x);
-	return true;
+	GLint ID = GetUniformID(uniform);
+
+	if (ID > -1)
+	{
+		glUniform3fv(ID, 1, &vec3Data.x);
+		return true;
+	}
+
+	return false;
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -99,8 +273,15 @@ bool Shader::SendUniformData(const std::string& uniform, const glm::vec3& vec3Da
 bool Shader::SendUniformData(const std::string& uniform, const glm::vec4& vec4Data)
 {
 
-	glUniform4fv(glGetUniformLocation(m_shaderProgramID, uniform.c_str()), 1, &vec4Data.x);
-	return true;
+	GLint ID = GetUniformID(uniform);
+
+	if (ID > -1)
+	{
+		glUniform4fv(ID, 1, &vec4Data.x);
+		return true;
+	}
+
+	return false;
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -110,9 +291,15 @@ bool Shader::SendUniformData(const std::string& uniform,
 	                                  const glm::mat3& matrix3x3, bool transposed)
 {
 
-	glUniformMatrix3fv(glGetUniformLocation(m_shaderProgramID, uniform.c_str()), 1, 
-		               (GLboolean)transposed, &matrix3x3[0][0]);
-	return true;
+	GLint ID = GetUniformID(uniform);
+
+	if (ID > -1)
+	{
+		glUniformMatrix3fv(ID, 1, transposed, &matrix3x3[0][0]);
+		return true;
+	}
+
+	return false;
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -122,51 +309,15 @@ bool Shader::SendUniformData(const std::string& uniform,
 	                                  const glm::mat4& matrix4x4, bool transposed)
 {
 
-	glUniformMatrix4fv(glGetUniformLocation(m_shaderProgramID, uniform.c_str()), 1, 
-		               (GLboolean)transposed, &matrix4x4[0][0]);
-	return true;
+	GLint ID = GetUniformID(uniform);
 
-}
-//------------------------------------------------------------------------------------------------------
-//function that sends attribute data to vertex shader (FLOAT)
-//------------------------------------------------------------------------------------------------------
-bool Shader::SendAttributeData(const std::string& attribute, GLfloat floatData)
-{
+	if (ID > -1)
+	{
+		glUniformMatrix4fv(ID, 1, transposed, &matrix4x4[0][0]);
+		return true;
+	}
 
-	glVertexAttrib1f(glGetUniformLocation(m_shaderProgramID, attribute.c_str()), floatData);
-	return true;
-
-}
-//------------------------------------------------------------------------------------------------------
-//function that sends attribute data to vertex shader (VEC2)
-//------------------------------------------------------------------------------------------------------
-bool Shader::SendAttributeData(const std::string& attribute, const glm::vec2& vec2Data)
-{
-
-	glVertexAttrib2f(glGetUniformLocation(m_shaderProgramID, attribute.c_str()), vec2Data.x, vec2Data.y);
-	return true;
-
-}
-//------------------------------------------------------------------------------------------------------
-//function that sends attribute data to vertex shader (VEC3)
-//------------------------------------------------------------------------------------------------------
-bool Shader::SendAttributeData(const std::string& attribute, const glm::vec3& vec3Data)
-{
-
-	glVertexAttrib3f(glGetUniformLocation(m_shaderProgramID, attribute.c_str()), 
-		             vec3Data.x, vec3Data.y, vec3Data.z);
-	return true;
-
-}
-//------------------------------------------------------------------------------------------------------
-//function that sends attribute data to vertex shader (VEC4)
-//------------------------------------------------------------------------------------------------------
-bool Shader::SendAttributeData(const std::string& attribute, const glm::vec4& vec4Data)
-{
-
-	glVertexAttrib4f(glGetUniformLocation(m_shaderProgramID, attribute.c_str()), 
-		             vec4Data.x, vec4Data.y, vec4Data.z, vec4Data.w);
-	return true;
+	return false;
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -230,13 +381,10 @@ bool Shader::CreateShaders()
 bool Shader::CompileShader(ShaderType shaderType, const std::string& filename)
 {
 
-	//variables for file handling, source code 
-	//text reading and storing and temp shader ID storage
+	//variables for file handling and reading of source code text
 	std::fstream file;
-	std::string lineText = "";
-	std::string finalString = "";
-	GLint tempShaderID;
-	GLint compileResult;
+	std::string lineText;
+	std::string finalString;
 
 	//display text to state that file is being opened and read
 	std::string shaderString = (shaderType == VERTEX_SHADER) ? "vertex" : "fragment";
@@ -255,10 +403,12 @@ bool Shader::CompileShader(ShaderType shaderType, const std::string& filename)
 
 	//based on which shader needs to be compiled point to specific 
 	//shader ID so that when compiling later there is no duplicate code
+	GLint tempShaderID = 0;
+		
 	switch (shaderType)
 	{
-		case VERTEX_SHADER   : tempShaderID = m_vertexShaderID; break;
-		case FRAGMENT_SHADER : tempShaderID = m_fragmentShaderID; break;
+		case VERTEX_SHADER: tempShaderID = m_vertexShaderID; break;
+		case FRAGMENT_SHADER: tempShaderID = m_fragmentShaderID; break;
 	}
 
 	//read through the entire file and add each line of code into a big string
@@ -280,12 +430,13 @@ bool Shader::CompileShader(ShaderType shaderType, const std::string& filename)
 	Debug::Log("Compiling shader file...");
 
 	//bind shader object with the shader source code
-	glShaderSource(tempShaderID, 1, &finalCode, NULL);
+	glShaderSource(tempShaderID, 1, &finalCode, nullptr);
 
 	//compile the source code using the shader object
 	glCompileShader(tempShaderID);
 
 	//request compilation error code for error checking
+	GLint compileResult;
 	glGetShaderiv(tempShaderID, GL_COMPILE_STATUS, &compileResult);
 
 	//if compilation went well, display a friendly message
