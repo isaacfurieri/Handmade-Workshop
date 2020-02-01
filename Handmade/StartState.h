@@ -27,7 +27,6 @@
 #==============================================================================================*/
 
 #include "GameState.h"
-#include "HUDCamera.h"
 #include "SplashScreen.h"
 
 class StartState : public GameState
@@ -47,7 +46,6 @@ public:
 
 private:
 
-	HUDCamera* m_HUDCamera;
 	SplashScreen* m_splashScreen_1;
 	SplashScreen* m_splashScreen_2;
 	

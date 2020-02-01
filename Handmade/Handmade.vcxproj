@@ -144,7 +144,6 @@
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="FPSCamera.h" />
-    <ClInclude Include="HUDCamera.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="EndState.h" />
     <ClInclude Include="Game.h" />
@@ -153,7 +152,6 @@
     <ClInclude Include="HUD.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Light.h" />
-    <ClInclude Include="MainCamera.h" />
     <ClInclude Include="MainState.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Model.h" />
@@ -178,7 +176,6 @@
     <ClCompile Include="FPSCamera.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="glad.c" />
-    <ClCompile Include="HUDCamera.cpp" />
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="EndState.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -187,7 +184,6 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="MainCamera.cpp" />
     <ClCompile Include="MainState.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Model.cpp" />

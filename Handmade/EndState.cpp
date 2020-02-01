@@ -8,7 +8,6 @@
 EndState::EndState(Game* game, GameState* state) : GameState(game, state)
 {
 
-	m_HUDCamera = nullptr;
 	m_splashScreen = nullptr;
 
 }
@@ -18,7 +17,6 @@ EndState::EndState(Game* game, GameState* state) : GameState(game, state)
 bool EndState::OnEnter()
 {
  
-	m_HUDCamera = new HUDCamera();
 	m_splashScreen = new SplashScreen("Assets\\Sprites\\SplashScreen_3.png");
 	m_splashScreen->Create();
 	
@@ -85,6 +83,5 @@ void EndState::OnExit()
 
 	m_splashScreen->Destroy();
 	delete m_splashScreen;
-	delete m_HUDCamera;
 
 }

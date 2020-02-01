@@ -30,8 +30,6 @@
 #include "GameObject.h"
 #include "GameState.h"
 #include "HUD.h"
-#include "HUDCamera.h"
-#include "MainCamera.h"
 
 class MainState : public GameState
 {
@@ -51,8 +49,7 @@ public:
 private :
 
 	HUD* m_HUD;
-	HUDCamera* m_HUDCamera;
-	MainCamera* m_mainCamera;
+	
 	
 	std::vector<GameObject*> m_gameObjects;
 

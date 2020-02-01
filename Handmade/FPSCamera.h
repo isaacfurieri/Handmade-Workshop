@@ -50,7 +50,7 @@ public:
 
 public:
 
-	virtual bool Create()               {}
+	virtual bool Create()               { return true; }
 	virtual void Update(int deltaTime);
 	virtual void Draw()                 {};
 	virtual void Destroy()              {};

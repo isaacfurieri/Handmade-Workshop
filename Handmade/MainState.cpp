@@ -12,9 +12,7 @@
 MainState::MainState(Game* game, GameState* state) : GameState(game, state)
 {
 
-	m_HUD = nullptr;
-	m_HUDCamera = nullptr;
-	m_mainCamera = nullptr;
+	//..
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -24,10 +22,10 @@ bool MainState::OnEnter()
 {
 
 	//create the main camera to control the main view
-	m_mainCamera = new MainCamera();
+	//..
 
 	//create the 2D camera for HUDs and sprite objects
-	m_HUDCamera = new HUDCamera();
+	//..
 
 	//create a heads-up display object
 	m_HUD = new HUD();
@@ -46,7 +44,7 @@ bool MainState::Update(int deltaTime)
 	KeyState keyState = Input::Instance()->GetKeyStates();
 
 	//update main camera
-	m_mainCamera->Update(deltaTime);
+	//..
 
 	//if ESCAPE key was pressed, return flag to end game 
 	if (keyState[SDL_SCANCODE_ESCAPE])
@@ -78,7 +76,7 @@ bool MainState::Draw()
 
 	//first set up camera which sets the view accordingly
 	//make sure this is called BEFORE displaying the grid
-	m_mainCamera->Draw();
+	//..
 
 #ifdef GAME_3D
 
@@ -122,7 +120,7 @@ bool MainState::Draw()
 #ifdef DEBUG
 
 	//set the 2D camera and render the heads-up display last
-	m_HUDCamera->Draw();
+	//..
 	m_HUD->Draw();
 
 #endif
@@ -139,8 +137,7 @@ void MainState::OnExit()
 	//destroy the HUD, camera and grid objects
 	m_HUD->Destroy();
 	delete m_HUD;
-	delete m_HUDCamera;
-	delete m_mainCamera;
+	//..
 
 	//loop through all game objects in vector and remove them from memory
 	for (auto it = m_gameObjects.begin(); it != m_gameObjects.end(); it++)
