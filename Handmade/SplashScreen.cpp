@@ -7,13 +7,14 @@
 //------------------------------------------------------------------------------------------------------
 //constructor that assigns all defaults 
 //------------------------------------------------------------------------------------------------------
-SplashScreen::SplashScreen(std::string filename)
+SplashScreen::SplashScreen(const std::string& filename)
 {
 
 	m_alpha = 0.0f;
 	m_fade = FADE_IN;
 	m_filename = filename;
 	m_sprite.SetColor(1.0f, 1.0f, 1.0f, 0.0f);
+	Screen::Instance()->GetResolution(m_dimension.x, m_dimension.y);
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -56,7 +57,7 @@ void SplashScreen::Update(int deltaTime)
 	//if image is set to fade in and image is not yet fully opaque then fade in image
 	if (m_alpha <= 1.0f && m_fade == FADE_IN)
 	{
-		m_alpha += 0.5f * (float)deltaTime / 1000;
+		m_alpha += 0.5f * (deltaTime / 1000.0f);
 		m_sprite.SetColor(1.0f, 1.0f, 1.0f, m_alpha);
 	}
 
@@ -64,7 +65,7 @@ void SplashScreen::Update(int deltaTime)
 	else
 	{
 		m_fade = FADE_OUT;
-		m_alpha -= 0.5f * (float)deltaTime / 1000;
+		m_alpha -= 0.5f * (deltaTime / 1000.0f);
 		m_sprite.SetColor(1.0f, 1.0f, 1.0f, m_alpha);
 	}
 	
@@ -82,7 +83,7 @@ void SplashScreen::Update(int deltaTime)
 void SplashScreen::Draw()
 {
 
-	m_modelMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(1024.0f, 768.0f, 1.0f));
+	m_modelMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(m_dimension, 1.0f));
 	SendToShader(false, true);
 	m_sprite.Draw();
 

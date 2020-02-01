@@ -36,13 +36,13 @@ int Game::GetElapsedTime()
 //------------------------------------------------------------------------------------------------------
 //function that initializes all other managers of the game
 //------------------------------------------------------------------------------------------------------
-bool Game::Initialize(std::string name, int screenWidth, int screenHeight,
-	                  int pixelsPerUnit, bool fullscreen)
+bool Game::Initialize(const std::string& name, int screenWidth, 
+	                  int screenHeight, int pixelsPerUnit, bool isFullscreen)
 {
 
 	//initialise game screen with passed values 
 	if (!(Screen::Instance()->
-		Initialize(name.c_str(), screenWidth, screenHeight, pixelsPerUnit, 4, 0, true, fullscreen)))
+		Initialize(name.c_str(), screenWidth, screenHeight, pixelsPerUnit, 4, 5, true, isFullscreen)))
 	{
 		return false;
 	}

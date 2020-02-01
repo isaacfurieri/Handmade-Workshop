@@ -26,8 +26,8 @@
 #include "StartState.h"
 
 //screen width and height values
-int screenWidth = 1024;
-int screenHeight = 768;
+int screenWidth = 1280;
+int screenHeight = 720;
 
 //variable for name of game demo
 std::string gameName = "<insert game name here>";

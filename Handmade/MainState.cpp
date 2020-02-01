@@ -48,7 +48,7 @@ bool MainState::Update(int deltaTime)
 	}
 
 	//if ESCAPE key was pressed, return flag to end game 
-	if (keyState[SDL_SCANCODE_ESCAPE])
+	if (keyState[SDL_SCANCODE_ESCAPE] || Input::Instance()->IsXClicked())
 	{
 		m_isActive = m_isAlive = false;
 		m_game->ChangeState(new EndState(m_game, this));
@@ -64,7 +64,7 @@ bool MainState::Update(int deltaTime)
 	}	
 
 	//ADD YOUR CODE HERE...
-	//...
+	
 
 	return true;
 

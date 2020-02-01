@@ -23,7 +23,7 @@
 | GitHub: https://github.com/djkarstenv									                        |
 |                                                                                               |
 #===============================================================================================#
-| 'MainState' source files last updated in January 2020								            |
+| 'MainState' source files last updated in February 2020								        |
 #==============================================================================================*/
 
 #include <vector>

@@ -23,7 +23,7 @@
 | GitHub: https://github.com/djkarstenv									                        |
 |                                                                                               |
 #===============================================================================================#
-| 'EndState' source files last updated in January 2020								            |
+| 'EndState' source files last updated in February 2020								            |
 #==============================================================================================*/
 
 #include "GameState.h"

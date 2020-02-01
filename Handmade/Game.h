@@ -44,8 +44,8 @@ public:
 
 public:
 
-	bool Initialize(std::string name, int screenWidth, int screenHeight, 
-		            int pixelsPerUnit = 1, bool fullscreen = false);
+	bool Initialize(const std::string& name, int screenWidth, int screenHeight, 
+		            int pixelsPerUnit = 1, bool isFullscreen = false);
 	
 	void AddState(GameState* state);
 	void ChangeState(GameState* state);

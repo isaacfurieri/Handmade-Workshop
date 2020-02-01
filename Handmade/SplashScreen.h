@@ -27,19 +27,20 @@
 #==============================================================================================*/
 
 #include <string>
+#include "glad.h"
 #include "GameObject.h"
 #include "Sprite.h"
 
 class SplashScreen : public GameObject
 {
 
-public :
+public:
 
 	enum Fade { FADE_IN, FADE_OUT };
 
 public:
 
-	SplashScreen(std::string filename);
+	SplashScreen(const std::string& filename);
 	virtual ~SplashScreen() {}
 
 public:
@@ -55,6 +56,7 @@ private:
 	GLfloat m_alpha;
 	Sprite m_sprite;
 	std::string m_filename;
+	glm::ivec2 m_dimension;
 
 };
 
