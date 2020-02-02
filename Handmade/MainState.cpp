@@ -12,7 +12,9 @@
 MainState::MainState(Game* game, GameState* state) : GameState(game, state)
 {
 
-	//..
+	m_HUD = nullptr;
+	m_grid2D = nullptr;
+	m_grid3D = nullptr;
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -21,13 +23,17 @@ MainState::MainState(Game* game, GameState* state) : GameState(game, state)
 bool MainState::OnEnter()
 {
 
-	//create the main camera to control the main view
 	m_cameras.push_back(new FPSCamera);
 	m_cameras.push_back(new UICamera);
 
-	//create a heads-up display object
-	m_HUD = new HUD();
+	m_HUD = new HUD;
 	m_HUD->Create();
+
+	m_grid2D = new Grid2D;
+	m_grid2D->Create();
+
+	m_grid3D = new Grid3D;
+	m_grid3D->Create();
 
 	return true;
 
@@ -75,18 +81,16 @@ bool MainState::Update(int deltaTime)
 bool MainState::Draw()
 {
 
+#ifdef GAME_3D
+
 	//first set up camera which sets the view accordingly
 	//make sure this is called BEFORE displaying the grid
 	m_cameras[0]->SetPerspView();
 	m_cameras[0]->Draw();
 
-#ifdef GAME_3D
-
-	//Screen::Instance()->Set3DScreen(45.0f, 0.1f, 1000.0f);
-
 #ifdef DEBUG
 
-	//Debug::Instance()->DrawGrid3D();
+	m_grid3D->Draw();
 	//Debug::Instance()->DrawCoordSystem3D(15.0f);
 
 #endif
@@ -124,7 +128,8 @@ bool MainState::Draw()
 	//set the 2D camera and render the heads-up display last
 	m_cameras[1]->SetOrthoView();
 	m_cameras[1]->Draw();  
-	m_HUD->Draw();
+	//m_grid2D->Draw();
+	//m_HUD->Draw();
 
 #endif
 
@@ -140,6 +145,12 @@ void MainState::OnExit()
 	//destroy the HUD, camera and grid objects
 	m_HUD->Destroy();
 	delete m_HUD;
+
+	m_grid2D->Destroy();
+	delete m_grid2D;
+
+	m_grid3D->Destroy();
+	delete m_grid3D;
 
 	//loop through all game objects in vector and remove them from memory
 	for (auto it = m_gameObjects.begin(); it != m_gameObjects.end(); it++)

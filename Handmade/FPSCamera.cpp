@@ -5,6 +5,8 @@
 #include "Shader.h"
 #include "Screen.h"
 
+#include "Debug.h"
+
 //------------------------------------------------------------------------------------------------------
 //constructor that assigns all default values 
 //------------------------------------------------------------------------------------------------------
@@ -71,7 +73,7 @@ void FPSCamera::Update(int deltaTime)
 
 	//use either the sin/cos or the matrix method of rotation
 	UseMatrix();
-	UseSinCos();
+	//UseSinCos();
 
 	//if WASDQE keys are pressed then move the camera in the correct direction
 	//we make use of the forward vector to move in the forward/backward direction
@@ -129,7 +131,7 @@ void FPSCamera::Update(int deltaTime)
 	}
 
 	//update FPSCamera's view matrix
-	m_viewMatrix = glm::lookAt(m_position, m_position + m_lookAt, m_up);
+	m_viewMatrix = glm::lookAt(m_position, m_position + m_forward, m_up);
 
 }
 
@@ -184,6 +186,6 @@ void FPSCamera::UseSinCos()
 
 	//calculate the right/up vectors based on the forward 
 	m_right = glm::normalize(glm::cross(m_forward, m_up));
-	m_up = glm::normalize(glm::cross(m_forward, m_right));
+	//m_up = glm::normalize(glm::cross(m_forward, m_right));
 
 }

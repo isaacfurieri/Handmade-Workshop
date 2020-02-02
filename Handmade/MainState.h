@@ -30,6 +30,8 @@
 #include "FPSCamera.h"
 #include "GameObject.h"
 #include "GameState.h"
+#include "Grid2D.h"
+#include "Grid3D.h"
 #include "HUD.h"
 #include "UICamera.h"
 
@@ -51,7 +53,9 @@ public:
 private :
 
 	HUD* m_HUD;
-	
+	Grid2D* m_grid2D = new Grid2D;
+	Grid3D* m_grid3D = new Grid3D;
+
 	std::vector<Camera*> m_cameras;
 	std::vector<GameObject*> m_gameObjects;
 
