@@ -4,7 +4,7 @@
 //------------------------------------------------------------------------------------------------------
 //constructor that assigns all default values 
 //------------------------------------------------------------------------------------------------------
-Grid3D::Grid3D(GLuint size, GLfloat lineWidth)
+Grid3D::Grid3D(GLint size, GLfloat lineWidth)
 {
 
 	m_size = size;
@@ -12,7 +12,7 @@ Grid3D::Grid3D(GLuint size, GLfloat lineWidth)
 
 }
 
-void Grid3D::SetSize(GLuint size)
+void Grid3D::SetSize(GLint size)
 {
 
 	m_size = size;
@@ -63,7 +63,7 @@ bool Grid3D::Create()
 
 	//constants to help clarify different calculations below
 	const int QUADRANTS = 4;
-	const int BYTES_PER_VERTEX = 3 * sizeof(GLfloat);
+	const int BYTES_PER_VERTEX = 3 * sizeof(GLint);
 	const int BYTES_PER_COLOR = 4 * sizeof(GLfloat);
 	
 	//pre-calculate the total amount of bytes needed for the VBOs  
@@ -182,6 +182,14 @@ void Grid3D::Draw()
 {
 
 	Shader::SetLineWidth(m_lineWidth);
+	SendToShader(false, false);
 	m_buffer.Draw(Buffer::LINES);
+
+}
+
+void Grid3D::Destroy()
+{
+
+	m_buffer.DestroyBuffers("GRID_3D");
 
 }

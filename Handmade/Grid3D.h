@@ -35,11 +35,11 @@ class Grid3D : public GameObject
 
 public:
 
-	Grid3D(GLuint size = 15, GLfloat lineWidth = 2.0f);
+	Grid3D(GLint size = 15, GLfloat lineWidth = 2.0f);
 
 public:
 
-	void SetSize(GLuint size);
+	void SetSize(GLint size);
 	void SetLineWidth(GLfloat lineWidth);
 	void SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a = 1.0f);
 

@@ -5,7 +5,7 @@
 //------------------------------------------------------------------------------------------------------
 //constructor that assigns all default values 
 //------------------------------------------------------------------------------------------------------
-Grid2D::Grid2D(GLuint size, GLfloat lineWidth)
+Grid2D::Grid2D(GLint size, GLfloat lineWidth)
 {
 
 	m_size = size;
@@ -13,7 +13,7 @@ Grid2D::Grid2D(GLuint size, GLfloat lineWidth)
 
 }
 
-void Grid2D::SetSize(GLuint size)
+void Grid2D::SetSize(GLint size)
 {
 
 	m_size = size;
@@ -89,7 +89,7 @@ bool Grid2D::Create()
 	m_buffer.FillVBO(Buffer::COLOR_BUFFER, (GLfloat*)nullptr, TOTAL_BYTES_COLOR_VBO, Buffer::STATIC_FILL);
 
 	//first pre-calculate the pixels per unit based on screen setup
-	GLuint pixelsPerUnit = Screen::Instance()->GetPixelsPerUnit();
+	GLint pixelsPerUnit = Screen::Instance()->GetPixelsPerUnit();
 
 	//now we create the grid one quadrant at a time	and fill each vertex and
 	//color VBO with the line's vertex and color data accordingly. The offset
@@ -125,8 +125,8 @@ bool Grid2D::Create()
 	for (int i = 1; i < m_size + 1; i++)
 	{
 
-		GLint vertices[] = {  0 + (i * pixelsPerUnit), -m_size * pixelsPerUnit,     //first vertex
-							  0 + (i * pixelsPerUnit),  m_size * pixelsPerUnit  };  //second vertex
+		GLint vertices[] = { 0 + (i * pixelsPerUnit), -m_size * pixelsPerUnit,     //first vertex
+							 0 + (i * pixelsPerUnit),  m_size * pixelsPerUnit  };  //second vertex
 
 		GLfloat colors[] = { 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f };
 
@@ -190,6 +190,7 @@ void Grid2D::Draw()
 {
 
 	Shader::SetLineWidth(m_lineWidth);
+	SendToShader(false, false);
 	m_buffer.Draw(Buffer::LINES);
 
 }

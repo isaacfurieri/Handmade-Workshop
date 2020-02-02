@@ -35,11 +35,11 @@ class Grid2D : public GameObject
 
 public:
 
-	Grid2D(GLuint size = 15, GLfloat lineWidth = 2.0f);
+	Grid2D(GLint size = 15, GLfloat lineWidth = 2.0f);
 
 public:
 
-	void SetSize(GLuint size);
+	void SetSize(GLint size);
 	void SetLineWidth(GLfloat lineWidth);
 	void SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a = 1.0f);
 
@@ -52,7 +52,7 @@ public:
 
 private:
 
-	GLuint m_size;
+	GLint m_size;
 	Buffer m_buffer;
 	GLfloat m_lineWidth;
 
