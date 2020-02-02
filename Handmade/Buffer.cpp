@@ -142,17 +142,13 @@ void Buffer::BindVBO(VBOType vboType, const std::string& vertAttrib,
 					 ComponentSize componentSize, DataType dataType)
 {
 
-	//assign correct data type to enum based on type passed
-	//we need to send a GL enumerated type to the function below 
-	GLenum type = (dataType == FLOAT) ? GL_FLOAT : GL_UNSIGNED_INT;
-
 	//bind VAO with either the vertex, color, normal or texture VBO
 	//here we also link the VBOs with their respective shader attributes
 	glBindVertexArray(m_ID.vaoID);
 	
 		glBindBuffer(GL_ARRAY_BUFFER, m_ID.vboID[vboType]);
 		glVertexAttribPointer(Shader::Instance()->GetAttributeID(vertAttrib), 
-			                  componentSize, type, GL_FALSE, 0, 0);
+			                  componentSize, dataType, GL_FALSE, 0, 0);
 		glEnableVertexAttribArray(Shader::Instance()->GetAttributeID(vertAttrib));
 
 	glBindVertexArray(0);
@@ -165,9 +161,8 @@ void Buffer::FillEBO(const GLuint* data, GLsizeiptr size, FillType fillType)
 {
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ID.eboID);
-	fillType == STATIC_FILL ? glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, GL_STATIC_DRAW)
-							: glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, GL_DYNAMIC_DRAW);
-
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, fillType);
+							
 }
 //------------------------------------------------------------------------------------------------------
 //function that fills VBO with integer data 
@@ -176,8 +171,7 @@ void Buffer::FillVBO(VBOType vboType, const GLint* data, GLsizeiptr size, FillTy
 {
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_ID.vboID[vboType]);
-	fillType == STATIC_FILL ? glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW)
-		                    : glBufferData(GL_ARRAY_BUFFER, size, data, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, size, data, fillType);
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -187,8 +181,7 @@ void Buffer::FillVBO(VBOType vboType, const GLuint* data, GLsizeiptr size, FillT
 {
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_ID.vboID[vboType]);
-	fillType == STATIC_FILL ? glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW)
-							: glBufferData(GL_ARRAY_BUFFER, size, data, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, size, data, fillType);
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -198,8 +191,7 @@ void Buffer::FillVBO(VBOType vboType, const GLfloat* data, GLsizeiptr size, Fill
 {
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_ID.vboID[vboType]);
-	fillType == STATIC_FILL ? glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW)
-							: glBufferData(GL_ARRAY_BUFFER, size, data, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, size, data, fillType);
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -248,25 +240,11 @@ void Buffer::AppendVBO(VBOType vboType, const GLfloat* data, GLsizeiptr size, GL
 void Buffer::Draw(DrawMode drawMode)
 {
 
-	//variable to store OpenGL drawing mode 
-	//to be passed to OpenGL during the draw call
-	GLenum mode;
-
-	//based on draw mode passed set OpenGL draw mode
-	switch (drawMode)
-	{
-		case LINES:        { mode = GL_LINES;        break; }
-		case LINE_LOOP:    { mode = GL_LINE_LOOP;    break; }
-		case POINTS:       { mode = GL_POINTS;       break; }
-		case TRIANGLES:    { mode = GL_TRIANGLES;    break; }
-		case TRIANGLE_FAN: { mode = GL_TRIANGLE_FAN; break; }
-	}
-
 	//bind VAO and render everything based on if there are indices or not
 	glBindVertexArray(m_ID.vaoID);
 
-		(m_ID.hasEBO) ? glDrawElements(mode, m_ID.totalVertices, GL_UNSIGNED_INT, 0)
-				      : glDrawArrays(mode, 0, m_ID.totalVertices);
+		(m_ID.hasEBO) ? glDrawElements(drawMode, m_ID.totalVertices, GL_UNSIGNED_INT, 0)
+				      : glDrawArrays(drawMode, 0, m_ID.totalVertices);
 
 	glBindVertexArray(0);
 

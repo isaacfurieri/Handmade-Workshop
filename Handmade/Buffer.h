@@ -45,11 +45,21 @@ class Buffer
 
 public:
 
-	enum DataType       { FLOAT, INT, U_INT };
-	enum FillType       { STATIC_FILL, DYNAMIC_FILL };
-	enum ComponentSize  { XY = 2, XYZ = 3, RGB = 3, RGBA = 4, UV = 2 };
-	enum DrawMode       { LINES, LINE_LOOP, POINTS, TRIANGLES, TRIANGLE_FAN };
+	enum DataType       { FLOAT = GL_FLOAT, 
+		                  INT = GL_INT, 
+		                  U_INT = GL_UNSIGNED_INT};
+
+	enum FillType       { STATIC_FILL = GL_STATIC_DRAW, 
+		                  DYNAMIC_FILL = GL_DYNAMIC_DRAW};
+
+	enum DrawMode       { LINES = GL_LINES, 
+		                  LINE_LOOP = GL_LINE_LOOP, 
+		                  POINTS = GL_POINTS, 
+		                  TRIANGLES = GL_TRIANGLES, 
+		                  TRIANGLE_FAN = GL_TRIANGLE_FAN };
+
 	enum VBOType        { VERTEX_BUFFER, COLOR_BUFFER, NORMAL_BUFFER, TEXTURE_BUFFER };
+	enum ComponentSize  { XY = 2, XYZ = 3, RGB = 3, RGBA = 4, UV = 2 };
 
 public:
 
