@@ -170,6 +170,17 @@ void Buffer::FillEBO(const GLuint* data, GLsizeiptr size, FillType fillType)
 
 }
 //------------------------------------------------------------------------------------------------------
+//function that fills VBO with integer data 
+//------------------------------------------------------------------------------------------------------
+void Buffer::FillVBO(VBOType vboType, const GLint* data, GLsizeiptr size, FillType fillType)
+{
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_ID.vboID[vboType]);
+	fillType == STATIC_FILL ? glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW)
+		                    : glBufferData(GL_ARRAY_BUFFER, size, data, GL_DYNAMIC_DRAW);
+
+}
+//------------------------------------------------------------------------------------------------------
 //function that fills VBO with unsigned integer data 
 //------------------------------------------------------------------------------------------------------
 void Buffer::FillVBO(VBOType vboType, const GLuint* data, GLsizeiptr size, FillType fillType)
@@ -199,6 +210,16 @@ void Buffer::AppendEBO(const GLuint* data, GLsizeiptr size, GLuint offset)
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ID.eboID);
 	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, size, data);
+
+}
+//------------------------------------------------------------------------------------------------------
+//function that adds integer data to VBO at index position passed 
+//------------------------------------------------------------------------------------------------------
+void Buffer::AppendVBO(VBOType vboType, const GLint* data, GLsizeiptr size, GLuint offset)
+{
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_ID.vboID[vboType]);
+	glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
 
 }
 //------------------------------------------------------------------------------------------------------

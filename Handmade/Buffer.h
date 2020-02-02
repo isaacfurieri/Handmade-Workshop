@@ -45,7 +45,7 @@ class Buffer
 
 public:
 
-	enum DataType       { FLOAT, U_INT };
+	enum DataType       { FLOAT, INT, U_INT };
 	enum FillType       { STATIC_FILL, DYNAMIC_FILL };
 	enum ComponentSize  { XY = 2, XYZ = 3, RGB = 3, RGBA = 4, UV = 2 };
 	enum DrawMode       { LINES, LINE_LOOP, POINTS, TRIANGLES, TRIANGLE_FAN };
@@ -61,7 +61,6 @@ public:
 
 public:
 
-	
 	void SetBuffers(const std::string& bufferID);
 
 public:
@@ -73,10 +72,12 @@ public:
 		         ComponentSize componentSize, DataType dataType);
 
 	void FillEBO(const GLuint* data, GLsizeiptr size, FillType fillType = STATIC_FILL);
+	void FillVBO(VBOType vboType, const GLint* data, GLsizeiptr size, FillType fillType = STATIC_FILL);
 	void FillVBO(VBOType vboType, const GLuint* data, GLsizeiptr size, FillType fillType = STATIC_FILL);
 	void FillVBO(VBOType vboType, const GLfloat* data, GLsizeiptr size, FillType fillType = STATIC_FILL);
 
 	void AppendEBO(const GLuint* data, GLsizeiptr size, GLuint offset);
+	void AppendVBO(VBOType vboType, const GLint* data, GLsizeiptr size, GLuint offset);
 	void AppendVBO(VBOType vboType, const GLuint* data, GLsizeiptr size, GLuint offset);
 	void AppendVBO(VBOType vboType, const GLfloat* data, GLsizeiptr size, GLuint offset);
 
