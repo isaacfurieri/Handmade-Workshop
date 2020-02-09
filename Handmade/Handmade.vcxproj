@@ -141,6 +141,8 @@
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Audio.h" />
     <ClInclude Include="AudioManager.h" />
+    <ClInclude Include="Axes2D.h" />
+    <ClInclude Include="Axes3D.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="FPSCamera.h" />
@@ -173,6 +175,8 @@
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="AudioManager.cpp" />
+    <ClCompile Include="Axes2D.cpp" />
+    <ClCompile Include="Axes3D.cpp" />
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="FPSCamera.cpp" />

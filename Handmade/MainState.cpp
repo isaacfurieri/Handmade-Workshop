@@ -29,6 +29,12 @@ bool MainState::OnEnter()
 	m_HUD = new HUD;
 	m_HUD->Create();
 
+	m_axes2D = new Axes2D;
+	m_axes2D->Create();
+	  
+	m_axes3D = new Axes3D;
+	m_axes3D->Create();
+
 	m_grid2D = new Grid2D;
 	m_grid2D->Create();
 
@@ -91,7 +97,7 @@ bool MainState::Draw()
 #ifdef DEBUG
 
 	m_grid3D->Draw();
-	//Debug::Instance()->DrawCoordSystem3D(15.0f);
+	m_axes3D->Draw();
 
 #endif
 	
@@ -129,6 +135,7 @@ bool MainState::Draw()
 	//m_cameras[1]->SetOrthoView();
 	//m_cameras[1]->Draw();  
 	//m_grid2D->Draw();
+	//m_axes2D->Draw();
 	//m_HUD->Draw();
 
 #endif
@@ -151,6 +158,12 @@ void MainState::OnExit()
 
 	m_grid3D->Destroy();
 	delete m_grid3D;
+
+	m_axes2D->Destroy();
+	delete m_axes2D;
+
+	m_axes3D->Destroy();
+	delete m_axes3D;
 
 	//loop through all game objects in vector and remove them from memory
 	for (auto it = m_gameObjects.begin(); it != m_gameObjects.end(); it++)

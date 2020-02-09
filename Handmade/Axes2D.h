@@ -1,5 +1,5 @@
-#ifndef MAIN_STATE_H
-#define MAIN_STATE_H
+#ifndef AXES_2D_H
+#define AXES_2D_H
 
 /*==============================================================================================#
 |                                                                                               |
@@ -23,46 +23,37 @@
 | GitHub: https://github.com/djkarstenv									                        |
 |                                                                                               |
 #===============================================================================================#
-| 'MainState' source files last updated in February 2020								        |
+| 'Axes2D' source files last updated in February 2020							                |
 #==============================================================================================*/
 
-#include <vector>
-#include "Axes2D.h"
-#include "Axes3D.h"
-#include "FPSCamera.h"
+#include "glad.h"
+#include "Buffer.h"
 #include "GameObject.h"
-#include "GameState.h"
-#include "Grid2D.h"
-#include "Grid3D.h"
-#include "HUD.h"
-#include "UICamera.h"
 
-class MainState : public GameState
+class Axes2D : public GameObject
 {
 
 public:
 
-	MainState(Game* game, GameState* state);
-	virtual ~MainState() {}
+	Axes2D(GLint size = 15, GLfloat lineWidth = 5.0f);
 
 public:
 
-	virtual bool OnEnter();
-	virtual bool Update(int deltaTime);
-	virtual bool Draw();
-	virtual void OnExit();
+	void SetSize(GLint size);
+	void SetLineWidth(GLfloat lineWidth);
 
-private :
+public:
 
-	HUD* m_HUD;
+	virtual bool Create();
+	virtual void Update(int deltaTime) {}
+	virtual void Draw();
+	virtual void Destroy();
 
-	Axes2D* m_axes2D = new Axes2D;
-	Axes3D* m_axes3D = new Axes3D;
-	Grid2D* m_grid2D = new Grid2D;
-	Grid3D* m_grid3D = new Grid3D;
+private:
 
-	std::vector<Camera*> m_cameras;
-	std::vector<GameObject*> m_gameObjects;
+	GLint m_size;
+	Buffer m_buffer;
+	GLfloat m_lineWidth;
 
 };
 

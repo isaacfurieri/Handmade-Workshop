@@ -188,6 +188,12 @@
     <ClInclude Include="Grid3D.h">
       <Filter>Header Files\GameObjects\Debug</Filter>
     </ClInclude>
+    <ClInclude Include="Axes2D.h">
+      <Filter>Header Files\GameObjects\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Axes3D.h">
+      <Filter>Header Files\GameObjects\Debug</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio.cpp">
@@ -284,6 +290,12 @@
       <Filter>Source Files\GameObjects\Debug</Filter>
     </ClCompile>
     <ClCompile Include="Grid3D.cpp">
+      <Filter>Source Files\GameObjects\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Axes2D.cpp">
+      <Filter>Source Files\GameObjects\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Axes3D.cpp">
       <Filter>Source Files\GameObjects\Debug</Filter>
     </ClCompile>
   </ItemGroup>
