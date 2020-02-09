@@ -126,8 +126,8 @@ bool MainState::Draw()
 #ifdef DEBUG
 
 	//set the 2D camera and render the heads-up display last
-	m_cameras[1]->SetOrthoView();
-	m_cameras[1]->Draw();  
+	//m_cameras[1]->SetOrthoView();
+	//m_cameras[1]->Draw();  
 	//m_grid2D->Draw();
 	//m_HUD->Draw();
 

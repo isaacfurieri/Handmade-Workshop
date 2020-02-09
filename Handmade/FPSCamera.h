@@ -56,8 +56,8 @@ public:
 	
 private:
 
-	void UseMatrix();
-	void UseSinCos();
+	void RotateTrig();
+	void RotateMatrix();
 
 private:
 

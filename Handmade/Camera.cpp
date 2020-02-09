@@ -10,7 +10,7 @@
 Camera::Camera()
 {
 
-	m_velocity = 0.07f;
+	m_velocity = 0.9f;
 	m_fieldOfView = 45.0f;
 
 	m_viewMatrix = glm::mat4(1.0f);
