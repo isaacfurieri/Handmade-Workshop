@@ -5,8 +5,6 @@
 #include "Shader.h"
 #include "Screen.h"
 
-#include "Debug.h"
-
 //------------------------------------------------------------------------------------------------------
 //constructor that assigns all default values 
 //------------------------------------------------------------------------------------------------------
@@ -15,12 +13,13 @@ FPSCamera::FPSCamera()
 
 	m_isFlying = true;
 	
-	m_yaw = 0.0f;
-	m_pitch = 0.0f;
-	m_sensitivity = 1.0f;
+	m_yaw = -45.0f;
+	m_pitch = 30.0f;
+	m_sensitivity = 0.4f;
 
 	m_lookAt = glm::vec3(0.0f, 0.0f, -1.0f);
 	m_target = glm::vec3(0.0f, 0.0f, -1.0f);
+	m_position = glm::vec3(5.0f, 5.0f, 5.0f);
 
 	m_rotationMatrixX = glm::mat4(1.0f);
 	m_rotationMatrixY = glm::mat4(1.0f);
@@ -78,7 +77,7 @@ void FPSCamera::Update(int deltaTime)
 	//if WASDQE keys are pressed then move the camera in the correct direction
 	//we make use of the forward vector to move in the forward/backward direction
 	//the cross product of forward/up create a left/right direction of movement
-	//when flying about, a new temporary 'up' vector is calculated to move it
+	//up/down always remain in global space to prevent too many complications
 
 	KeyState keys = Input::Instance()->GetKeyStates();
 
@@ -117,7 +116,13 @@ void FPSCamera::Update(int deltaTime)
 		m_direction = glm::vec3(0.0f);
 	}
 
+	//toggle camera to use fly/debug mode
 	if (keys[SDL_SCANCODE_F])
+	{
+		m_isFlying = true;
+	}
+
+	else if((keys[SDL_SCANCODE_G]))
 	{
 		m_isFlying = false;
 	}
@@ -145,7 +150,7 @@ void FPSCamera::RotateTrig()
 
 	//use basic trig to calculate the x, y and z components of the viewing vector
 	//when the camera moves around the y-axis (yaw) the vector changes along the x/z plane
-	//the x-axis (pitch) movements only affect the y component of the viewing vector 
+	//the x-axis (pitch) movements affect the x, y and z components of the viewing vector 
 	//we always subtract 90 degrees from the yaw so that our initial view is (0, 0, -1) 
 	m_lookAt.x = glm::cos(glm::radians(m_yaw - 90.0f)) * glm::cos(glm::radians(-m_pitch));
 	m_lookAt.y = glm::sin(glm::radians(-m_pitch));
@@ -155,9 +160,9 @@ void FPSCamera::RotateTrig()
 	//the overall rotation, so that camera moves forward in any direction
 	m_forward = m_lookAt;
 
-	//otherwise transform the forward vector based on ONLY the y-rotations as
-	//this prevents the camera from moving forward freely and will restrict it to
-	//a certain y-axis. The camera still looks anywhere but moves with restrictions
+	//otherwise ignore the y component so that the forward vector stays on a horizontal plane
+	//when moving. This prevents the camera from moving forward freely and will restrict it. 
+	//The camera still looks anywhere but moves with restrictions
 	if (!m_isFlying)
 	{
 		m_forward.y = 0.0f;
@@ -177,8 +182,8 @@ void FPSCamera::RotateMatrix()
 	m_rotationMatrixY = glm::rotate(glm::mat4(1.0f), glm::radians(m_yaw), glm::vec3(0.0f, -1.0f, 0.0f));
 	m_rotationMatrixX = glm::rotate(glm::mat4(1.0f), glm::radians(m_pitch), glm::vec3(-1.0f, 0.0f, 0.0f));
 
-	//create a total rotation transformation based on X and Y rotations
-	//we do a Y rotation FIRST and then a local X rotation thereafter
+	//create a total rotation transformation based on x and y rotations
+	//we do a y rotation FIRST and then a local x rotation thereafter
 	glm::mat4 totalRotation = m_rotationMatrixY * m_rotationMatrixX;
 
 	//calculate the FPSCamera's viewing vector by transforming the 

@@ -63,7 +63,7 @@ private:
 private:
 
 	bool m_isFlying;
-	
+
 	GLfloat m_yaw;
 	GLfloat m_pitch;
 	GLfloat m_sensitivity;
