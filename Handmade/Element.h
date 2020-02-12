@@ -1,5 +1,5 @@
-#ifndef MAIN_STATE_H
-#define MAIN_STATE_H
+#ifndef ELEMENT_H
+#define ELEMENT_H
 
 /*==============================================================================================#
 |                                                                                               |
@@ -23,53 +23,43 @@
 | GitHub: https://github.com/djkarstenv									                        |
 |                                                                                               |
 #===============================================================================================#
-| 'MainState' source files last updated in February 2020								        |
+| 'Element' source files last updated in February 2020								            |
 #==============================================================================================*/
 
-#include <vector>
-#include "Axes2D.h"
-#include "Axes3D.h"
-#include "Element.h"
-#include "FPSCamera.h"
+#include "Buffer.h"
 #include "GameObject.h"
-#include "GameState.h"
-#include "Grid2D.h"
-#include "Grid3D.h"
-#include "HUD.h"
-#include "UICamera.h"
 
-class MainState : public GameState
+class Element : public GameObject
 {
 
 public:
 
-	MainState(Game* game, GameState* state);
-	virtual ~MainState() {}
+	Element() {}
 
 public:
 
-	virtual bool OnEnter();
-	virtual bool Update(int deltaTime);
-	virtual bool Draw();
-	virtual void OnExit();
+	virtual bool Create();
+	virtual void Update(int deltaTime) {}
+	virtual void Draw()                {}
+	
+	void DrawVertex(GLfloat x, GLfloat y, GLfloat z,
+		            GLfloat r = 1.0f, GLfloat g = 1.0f, GLfloat b = 1.0f,
+		            GLfloat pointSize = 10.0f);
+
+	void DrawVector(GLfloat x, GLfloat y, GLfloat z,
+					GLfloat r = 1.0f, GLfloat g = 1.0f, GLfloat b = 1.0f,
+					GLfloat lineWidth = 2.0f);
+
+	void DrawLineSegment(GLfloat x1, GLfloat y1, GLfloat z1,
+						 GLfloat x2, GLfloat y2, GLfloat z2,
+						 GLfloat r = 1.0f, GLfloat g = 1.0f, GLfloat b = 1.0f,
+						 GLfloat lineWidth = 2.0f);
+
+	virtual void Destroy();
 
 private:
 
-	bool m_isTabPressed;
-	bool m_isMouseVisible;
-
-	HUD* m_HUD;
-	Axes2D* m_axes2D;
-	Axes3D* m_axes3D;
-	Grid2D* m_grid2D;
-	Grid3D* m_grid3D;
-
-	UICamera* m_UICam;
-	FPSCamera* m_mainCam;
-
-	Element* m_test;
-
-	std::vector<GameObject*> m_gameObjects;
+	Buffer m_buffer;
 
 };
 

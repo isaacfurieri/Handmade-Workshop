@@ -50,6 +50,10 @@ bool MainState::OnEnter()
 
 	Input::Instance()->SetCursorState(Input::OFF);
 
+	//test!
+	m_test = new Element;
+	m_test->Create();
+
 	return true;
 
 }
@@ -165,6 +169,15 @@ bool MainState::Draw()
 			(*it)->Draw();
 		}
 	}
+
+	//test!
+	m_test->DrawLineSegment(1, 0, 3, -2, 0, 4, 1, 1, 0);
+	m_test->DrawLineSegment(0, 0, 0, -2, 0, 4, 0, 1, 1);
+	m_test->DrawVector(2, 1, -3, 1, 0, 1);
+	m_test->DrawVector(-3, 0, -4, 1, 0, 0);
+	m_test->DrawVertex(2, 0, -4, 0, 1, 1);
+	m_test->DrawVertex(5, 0, 4, 1, 1, 0);
+	m_test->DrawVertex(-3, 0, 4, 1, 1, 1);
 
 	//ADD YOUR CODE HERE...
 	//...

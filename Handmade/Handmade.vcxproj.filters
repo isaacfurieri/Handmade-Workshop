@@ -82,6 +82,12 @@
     <Filter Include="Source Files\GameObjects\Cameras">
       <UniqueIdentifier>{3000ea84-92e8-44fd-beab-227f62fbad26}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\GameObjects\Primitives">
+      <UniqueIdentifier>{b5cac0ab-c499-411e-9d0c-5f3ffb6df275}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObjects\Primitives">
+      <UniqueIdentifier>{4126045c-d924-49f0-aa9d-700be4fd1a64}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Default.frag">
@@ -194,6 +200,9 @@
     <ClInclude Include="HUD.h">
       <Filter>Header Files\GameObjects\Debug</Filter>
     </ClInclude>
+    <ClInclude Include="Element.h">
+      <Filter>Header Files\GameObjects\Primitives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio.cpp">
@@ -297,6 +306,9 @@
     </ClCompile>
     <ClCompile Include="HUD.cpp">
       <Filter>Source Files\GameObjects\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Element.cpp">
+      <Filter>Source Files\GameObjects\Primitives</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
