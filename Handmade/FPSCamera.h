@@ -23,7 +23,7 @@
 | GitHub: https://github.com/djkarstenv									                        |
 |                                                                                               |
 #===============================================================================================#
-| 'Camera' source files last updated in February 2020									        |
+| 'FPSCamera' source files last updated in February 2020									        |
 #==============================================================================================*/
 
 #include <string>
@@ -37,6 +37,7 @@ class FPSCamera : public Camera
 public:
 
 	FPSCamera();
+	virtual ~FPSCamera() {}
 
 public:
 

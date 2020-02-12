@@ -55,11 +55,10 @@ public:
 private :
 
 	HUD* m_HUD;
-
-	Axes2D* m_axes2D = new Axes2D;
-	Axes3D* m_axes3D = new Axes3D;
-	Grid2D* m_grid2D = new Grid2D;
-	Grid3D* m_grid3D = new Grid3D;
+	Axes2D* m_axes2D;
+	Axes3D* m_axes3D;
+	Grid2D* m_grid2D;
+	Grid3D* m_grid3D;
 
 	std::vector<Camera*> m_cameras;
 	std::vector<GameObject*> m_gameObjects;

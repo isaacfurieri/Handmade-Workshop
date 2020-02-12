@@ -13,6 +13,8 @@ MainState::MainState(Game* game, GameState* state) : GameState(game, state)
 {
 
 	m_HUD = nullptr;
+	m_axes2D = nullptr;
+	m_axes3D = nullptr;
 	m_grid2D = nullptr;
 	m_grid3D = nullptr;
 

@@ -40,6 +40,7 @@ public:
 public:
 
 	Camera();
+	virtual ~Camera() = 0 {}
 
 public:
 
