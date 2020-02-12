@@ -216,13 +216,7 @@ void MainState::OnExit()
 		delete (*it);
 	}
 
-	/*for (auto it = m_cameras.begin(); it != m_cameras.end(); it++)
-	{
-		delete (*it);
-	}*/
-
 	//clear the game object vector
 	m_gameObjects.clear();
-	//m_cameras.clear();
 
 }

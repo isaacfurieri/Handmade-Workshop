@@ -20,7 +20,8 @@ Input::Input()
 	m_keyStates = 0;
 	m_isXClicked = false;
 	m_isKeyPressed = false;
-	
+	m_isWindowResized = false;
+
 	m_cursor = nullptr;
 
 	m_mouseWheel = glm::vec2(0.0f);
@@ -50,6 +51,12 @@ bool Input::IsKeyPressed()
 	return m_isKeyPressed;
 
 }
+
+bool Input::IsWindowResized()
+{
+	return m_isWindowResized;
+}
+
 //------------------------------------------------------------------------------------------------------
 //getter function that returns pointer to array of key states
 //------------------------------------------------------------------------------------------------------
@@ -189,6 +196,7 @@ void Input::Update()
 	m_mouseWheel.y = 0;
 	m_mouseMotion.x = 0;
 	m_mouseMotion.y = 0;
+	m_isWindowResized = false;
 
 	//store state of keyboard in array
 	m_keyStates = SDL_GetKeyboardState(nullptr);

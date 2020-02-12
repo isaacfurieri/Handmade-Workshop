@@ -64,6 +64,8 @@ void Camera::SetOrthoView(Origin2D origin)
 	glm::ivec2 resolution; 
 	Screen::Instance()->GetResolution(resolution.x, resolution.y);
 
+	
+
 	//if screen origin passed is set as top left of screen 
 	//create orthographic view so that Y is positive downward 
 	if (origin == TOP_LEFT)
@@ -82,6 +84,12 @@ void Camera::SetOrthoView(Origin2D origin)
 
 	//send projection matrix data to shader
 	Shader::Instance()->SendUniformData("projection", m_projMatrix);
+
+	//only if the window was resized then reset the viewport for correct display
+	if (Input::Instance()->IsWindowResized())
+	{
+		Screen::Instance()->SetViewport(0, 0, resolution.x, resolution.y);
+	}
 
 }
 //------------------------------------------------------------------------------------------------------
@@ -106,6 +114,12 @@ void Camera::SetPerspView(GLfloat nearClip, GLfloat farClip)
 
 	//send projection matrix data to shader
 	Shader::Instance()->SendUniformData("projection", m_projMatrix);
+
+	//only if the window was resized then reset the viewport for correct display
+	if (Input::Instance()->IsWindowResized())
+	{
+		Screen::Instance()->SetViewport(0, 0, resolution.x, resolution.y);
+	}
 
 }
 
