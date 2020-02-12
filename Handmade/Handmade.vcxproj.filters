@@ -70,6 +70,18 @@
     <Filter Include="Source Files\Components\Physics">
       <UniqueIdentifier>{e21bdc27-7b51-403d-9650-ac17241683e4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\GameObjects\Debug">
+      <UniqueIdentifier>{7ff0da42-541b-4bee-931c-f23166cfac67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameObjects\Cameras">
+      <UniqueIdentifier>{c9d0d1e0-5b90-4004-8f0a-1e7a74147b3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObjects\Debug">
+      <UniqueIdentifier>{c72afc2c-3fc0-45ee-bc4e-e5859525e800}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObjects\Cameras">
+      <UniqueIdentifier>{3000ea84-92e8-44fd-beab-227f62fbad26}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Default.frag">
@@ -125,9 +137,6 @@
     <ClInclude Include="Model.h">
       <Filter>Header Files\Components\Visual</Filter>
     </ClInclude>
-    <ClInclude Include="HUD.h">
-      <Filter>Header Files\GameObjects</Filter>
-    </ClInclude>
     <ClInclude Include="Buffer.h">
       <Filter>Header Files\Components\Core</Filter>
     </ClInclude>
@@ -161,14 +170,29 @@
     <ClInclude Include="RigidBody.h">
       <Filter>Header Files\Components\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="FPSCamera.h">
-      <Filter>Header Files\GameObjects</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>Header Files\GameObjects</Filter>
+      <Filter>Header Files\GameObjects\Cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="FPSCamera.h">
+      <Filter>Header Files\GameObjects\Cameras</Filter>
     </ClInclude>
     <ClInclude Include="UICamera.h">
-      <Filter>Header Files\GameObjects</Filter>
+      <Filter>Header Files\GameObjects\Cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="Grid2D.h">
+      <Filter>Header Files\GameObjects\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Grid3D.h">
+      <Filter>Header Files\GameObjects\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Axes2D.h">
+      <Filter>Header Files\GameObjects\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Axes3D.h">
+      <Filter>Header Files\GameObjects\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="HUD.h">
+      <Filter>Header Files\GameObjects\Debug</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -211,9 +235,6 @@
     <ClCompile Include="Model.cpp">
       <Filter>Source Files\Components\Visual</Filter>
     </ClCompile>
-    <ClCompile Include="HUD.cpp">
-      <Filter>Source Files\GameObjects</Filter>
-    </ClCompile>
     <ClCompile Include="GameState.cpp">
       <Filter>Source Files\GameStates</Filter>
     </ClCompile>
@@ -253,14 +274,29 @@
     <ClCompile Include="RigidBody.cpp">
       <Filter>Source Files\Components\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="FPSCamera.cpp">
-      <Filter>Source Files\GameObjects</Filter>
-    </ClCompile>
     <ClCompile Include="Camera.cpp">
-      <Filter>Source Files\GameObjects</Filter>
+      <Filter>Source Files\GameObjects\Cameras</Filter>
+    </ClCompile>
+    <ClCompile Include="FPSCamera.cpp">
+      <Filter>Source Files\GameObjects\Cameras</Filter>
     </ClCompile>
     <ClCompile Include="UICamera.cpp">
-      <Filter>Source Files\GameObjects</Filter>
+      <Filter>Source Files\GameObjects\Cameras</Filter>
+    </ClCompile>
+    <ClCompile Include="Grid2D.cpp">
+      <Filter>Source Files\GameObjects\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Grid3D.cpp">
+      <Filter>Source Files\GameObjects\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Axes2D.cpp">
+      <Filter>Source Files\GameObjects\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Axes3D.cpp">
+      <Filter>Source Files\GameObjects\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="HUD.cpp">
+      <Filter>Source Files\GameObjects\Debug</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

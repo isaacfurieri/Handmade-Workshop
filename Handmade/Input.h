@@ -48,6 +48,8 @@ public:
 
 	bool IsXClicked();
 	bool IsKeyPressed();
+	bool IsWindowResized();
+
 	KeyState GetKeyStates();
 
 public:

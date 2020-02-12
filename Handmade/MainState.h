@@ -27,9 +27,13 @@
 #==============================================================================================*/
 
 #include <vector>
+#include "Axes2D.h"
+#include "Axes3D.h"
 #include "FPSCamera.h"
 #include "GameObject.h"
 #include "GameState.h"
+#include "Grid2D.h"
+#include "Grid3D.h"
 #include "HUD.h"
 #include "UICamera.h"
 
@@ -48,11 +52,20 @@ public:
 	virtual bool Draw();
 	virtual void OnExit();
 
-private :
+private:
+
+	bool m_isTabPressed;
+	bool m_isMouseVisible;
 
 	HUD* m_HUD;
-	
-	std::vector<Camera*> m_cameras;
+	Axes2D* m_axes2D;
+	Axes3D* m_axes3D;
+	Grid2D* m_grid2D;
+	Grid3D* m_grid3D;
+
+	UICamera* m_UICam;
+	FPSCamera* m_mainCam;
+
 	std::vector<GameObject*> m_gameObjects;
 
 };

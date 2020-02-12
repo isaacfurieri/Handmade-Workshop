@@ -1,5 +1,5 @@
-#ifndef HUD_H
-#define HUD_H
+#ifndef AXES_2D_H
+#define AXES_2D_H
 
 /*==============================================================================================#
 |                                                                                               |
@@ -23,20 +23,24 @@
 | GitHub: https://github.com/djkarstenv									                        |
 |                                                                                               |
 #===============================================================================================#
-| 'HUD' source files last updated in February 2020 							                    |
+| 'Axes2D' source files last updated in February 2020							                |
 #==============================================================================================*/
 
 #include "glad.h"
+#include "Buffer.h"
 #include "GameObject.h"
-#include "Sprite.h"
-#include "Texture.h"
 
-class HUD : public GameObject
+class Axes2D : public GameObject
 {
 
 public:
 
-	virtual ~HUD() {}
+	Axes2D(GLint size = 15, GLfloat lineWidth = 5.0f);
+
+public:
+
+	void SetSize(GLint size);
+	void SetLineWidth(GLfloat lineWidth);
 
 public:
 
@@ -47,8 +51,9 @@ public:
 
 private:
 
-	Sprite m_sprite;
-	glm::ivec2 m_dimension;
+	GLint m_size;
+	Buffer m_buffer;
+	GLfloat m_lineWidth;
 
 };
 

@@ -1,5 +1,5 @@
-#ifndef HUD_H
-#define HUD_H
+#ifndef GRID_3D_H
+#define GRID_3D_H
 
 /*==============================================================================================#
 |                                                                                               |
@@ -23,20 +23,25 @@
 | GitHub: https://github.com/djkarstenv									                        |
 |                                                                                               |
 #===============================================================================================#
-| 'HUD' source files last updated in February 2020 							                    |
+| 'Grid3D' source files last updated in February 2020								            |
 #==============================================================================================*/
 
 #include "glad.h"
+#include "Buffer.h"
 #include "GameObject.h"
-#include "Sprite.h"
-#include "Texture.h"
 
-class HUD : public GameObject
+class Grid3D : public GameObject 
 {
 
 public:
 
-	virtual ~HUD() {}
+	Grid3D(GLint size = 15, GLfloat lineWidth = 2.0f);
+
+public:
+
+	void SetSize(GLint size);
+	void SetLineWidth(GLfloat lineWidth);
+	void SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a = 1.0f);
 
 public:
 
@@ -47,8 +52,9 @@ public:
 
 private:
 
-	Sprite m_sprite;
-	glm::ivec2 m_dimension;
+	GLint m_size;
+	GLfloat m_lineWidth;
+	Buffer m_buffer;
 
 };
 
