@@ -45,9 +45,10 @@ public:
 	virtual void Draw();
 	virtual void Destroy();
 
-private :
+private:
 
 	Sprite m_sprite;
+	glm::ivec2 m_dimension;
 
 };
 

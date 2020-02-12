@@ -52,7 +52,10 @@ public:
 	virtual bool Draw();
 	virtual void OnExit();
 
-private :
+private:
+
+	bool m_isTabPressed;
+	bool m_isMouseVisible;
 
 	HUD* m_HUD;
 	Axes2D* m_axes2D;
@@ -60,7 +63,9 @@ private :
 	Grid2D* m_grid2D;
 	Grid3D* m_grid3D;
 
-	std::vector<Camera*> m_cameras;
+	UICamera* m_UICam;
+	FPSCamera* m_mainCam;
+
 	std::vector<GameObject*> m_gameObjects;
 
 };

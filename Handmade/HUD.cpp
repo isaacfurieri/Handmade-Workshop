@@ -1,3 +1,4 @@
+#include <gtc\matrix_transform.hpp>
 #include "Debug.h"
 #include "HUD.h"
 #include "Screen.h"
@@ -12,6 +13,7 @@ bool HUD::Create()
 	m_sprite.Create("HUD");
 	m_sprite.LoadTexture("Assets/Sprites/HUD.png", "HUD");
 	m_sprite.SetSpriteType(Sprite::STATIC);
+	Screen::Instance()->GetResolution(m_dimension.x, m_dimension.y);
 
 	return true;
 
@@ -22,21 +24,10 @@ bool HUD::Create()
 void HUD::Draw()
 {
 
-	//setup screen in 2D orthographic mode because all HUDs are 2D 
-	//Screen::Instance()->Set2DScreen(Screen::BOTTOM_LEFT);
+	m_modelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(10.0f, (m_dimension.y - 150.0f), 0.0f));
+	m_modelMatrix = glm::scale(m_modelMatrix, glm::vec3(200.0f, 140.0f, 1.0f));
 
-	//reset model matrix to identity so we don't accumulate transformations
-	//GameObject::SetIdentity();
-
-	//float screenHeight = Screen::Instance()->GetScreenSize().y; //TO FIX
-	//GameObject::Translate(10.0f, (screenHeight - 150.0f), 0.0f);
-
-	//GameObject::Scale(200.0f, 140.0f, 1.0f);
-
-	//send all flags and matrices to shaders 
 	GameObject::SendToShader(false, true);
-	
-	//draw HUD image
 	m_sprite.Draw();
 
 }
