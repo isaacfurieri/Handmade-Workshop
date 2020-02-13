@@ -1,11 +1,11 @@
 #include <algorithm>
 #include "Debug.h"
-#include "Sphere.h"
+#include "SphereCollider.h"
 
 //------------------------------------------------------------------------------------------------------
 //constructor that assigns all default values
 //------------------------------------------------------------------------------------------------------
-Sphere::Sphere()
+SphereCollider::SphereCollider()
 {
 
 	m_scale = 1.0f;
@@ -16,65 +16,65 @@ Sphere::Sphere()
 
 }
 //------------------------------------------------------------------------------------------------------
-//getter function that returns radius of sphere
+//getter function that returns radius of SphereCollider
 //------------------------------------------------------------------------------------------------------
-float Sphere::GetRadius() const
+float SphereCollider::GetRadius() const
 {
 
 	return m_radius;
 
 }
 //------------------------------------------------------------------------------------------------------
-//getter function that returns scaled radius of sphere
+//getter function that returns scaled radius of SphereCollider
 //------------------------------------------------------------------------------------------------------
-float Sphere::GetRadiusScaled() const
+float SphereCollider::GetRadiusScaled() const
 {
 
 	return m_radiusScaled;
 
 }
 
-const glm::vec3& Sphere::GetPosition() const
+const glm::vec3& SphereCollider::GetPosition() const
 {
 	
 	return m_position;
 
 }
 //------------------------------------------------------------------------------------------------------
-//setter function that assigns scale of sphere
+//setter function that assigns scale of SphereCollider
 //------------------------------------------------------------------------------------------------------
-void Sphere::SetScale(float scale)
+void SphereCollider::SetScale(float scale)
 {
 
 	m_scale = scale;
 
 }
 //------------------------------------------------------------------------------------------------------
-//setter function that assigns radius of sphere
+//setter function that assigns radius of SphereCollider
 //------------------------------------------------------------------------------------------------------
-void Sphere::SetRadius(float radius)
+void SphereCollider::SetRadius(float radius)
 {
 
 	m_radius = radius;
 
 }
 //------------------------------------------------------------------------------------------------------
-//function that checks if sphere collides with a AABB object
+//function that checks if SphereCollider collides with a AABB object
 //------------------------------------------------------------------------------------------------------
-bool Sphere::IsColliding(const AABB& secondBox) const
+bool SphereCollider::IsColliding(const BoxCollider& secondBox) const
 {
 
-	//make use of AABB's box-sphere collision function
+	//make use of AABB's box-SphereCollider collision function
 	return (secondBox.IsColliding(*this));
 
 }
 //------------------------------------------------------------------------------------------------------
-//function that checks if sphere collides with another sphere object
+//function that checks if SphereCollider collides with another SphereCollider object
 //------------------------------------------------------------------------------------------------------
-bool Sphere::IsColliding(const Sphere& secondSphere) const
+bool SphereCollider::IsColliding(const SphereCollider& secondSphere) const
 {
 
-	//first calculate distance between both spheres and store that temporarily
+	//first calculate distance between both SphereColliders and store that temporarily
 	//we have to temporarily remove the constness to make the formula below work
 	float distance = glm::length(m_position - secondSphere.m_position);
 
@@ -83,21 +83,21 @@ bool Sphere::IsColliding(const Sphere& secondSphere) const
 
 }
 //------------------------------------------------------------------------------------------------------
-//function that calculates radius value of sphere based on scale for collision purposes
+//function that calculates radius value of SphereCollider based on scale for collision purposes
 //------------------------------------------------------------------------------------------------------
-void Sphere::Update()
+void SphereCollider::Update()
 {
 
 	m_radiusScaled = m_radius * m_scale;
 
 }
 //------------------------------------------------------------------------------------------------------
-//function that renders a sphere 
+//function that renders a SphereCollider 
 //------------------------------------------------------------------------------------------------------
-void Sphere::Draw()
+void SphereCollider::Draw()
 {
 
 	//draw bound based on dimension and color set 
-	//TheDebug::Instance()->DrawSphere(m_dimension, m_color.r, m_color.g, m_color.b, m_color.a);
+	//TheDebug::Instance()->DrawSphereCollider(m_dimension, m_color.r, m_color.g, m_color.b, m_color.a);
 
 }

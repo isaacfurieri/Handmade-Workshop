@@ -1,5 +1,5 @@
-#ifndef AABB_H
-#define AABB_H
+#ifndef BOX_COLLIDER_H
+#define BOX_COLLIDER_H
 
 /*==============================================================================================#
 |                                                                                               |
@@ -23,19 +23,19 @@
 | GitHub: https://github.com/djkarstenv									                        |
 |                                                                                               |
 #===============================================================================================#
-| 'AABB' source files last updated in December 2019								                |
+| 'BoxCollider' source files last updated in February 2020								        |
 #==============================================================================================*/
 
 #include <glm.hpp>
 
-class Sphere;
+class SphereCollider;
 
-class AABB
+class BoxCollider
 {
 
 public:
 
-	AABB();
+	BoxCollider();
 	
 public:
 
@@ -49,8 +49,8 @@ public:
 
 public:
 
-	bool IsColliding(const AABB& secondBox) const;
-	bool IsColliding(const Sphere& secondSphere) const;
+	bool IsColliding(const BoxCollider& secondBox) const;
+	bool IsColliding(const SphereCollider& secondSphere) const;
 	glm::vec3 PointOnBox(float positionX, float positionY, float positionZ) const;
 
 public:

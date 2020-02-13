@@ -1,5 +1,5 @@
-#ifndef SPHERE_H
-#define SPHERE_H
+#ifndef SPHERE_COLLIDER_H
+#define SPHERE_COLLIDER_H
 
 /*==============================================================================================#
 |                                                                                               |
@@ -23,17 +23,17 @@
 | GitHub: https://github.com/djkarstenv									                        |
 |                                                                                               |
 #===============================================================================================#
-| 'Sphere' source files last updated in December 2019								            |
+| 'Sphere' source files last updated in February 2020								            |
 #==============================================================================================*/
 
-#include "AABB.h"
+#include "BoxCollider.h"
 
-class Sphere
+class SphereCollider
 {
 
 public:
 
-	Sphere();
+	SphereCollider();
 	
 public:
 
@@ -48,8 +48,8 @@ public:
 
 public:
 
-	bool IsColliding(const AABB& secondBox) const;
-	bool IsColliding(const Sphere& secondSphere) const;
+	bool IsColliding(const BoxCollider& secondBox) const;
+	bool IsColliding(const SphereCollider& secondSphere) const;
 
 public:
 
