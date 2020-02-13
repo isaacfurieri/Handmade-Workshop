@@ -22,7 +22,7 @@ bool Element::Create()
 
 	//bind all VBOs and shader attributes together with VAO
 	m_buffer.BindVBO(Buffer::VERTEX_BUFFER, "vertexIn", Buffer::XYZ, Buffer::FLOAT);
-	m_buffer.BindVBO(Buffer::COLOR_BUFFER, "colorIn", Buffer::RGB, Buffer::FLOAT);
+	m_buffer.BindVBO(Buffer::COLOR_BUFFER, "colorIn", Buffer::RGBA, Buffer::FLOAT);
 
 	//create empty VBOs to be filled later 
 	m_buffer.FillVBO(Buffer::VERTEX_BUFFER, (GLfloat*)nullptr, TOTAL_BYTES_VERTEX_VBO, Buffer::DYNAMIC_FILL);
@@ -47,7 +47,7 @@ void Element::DrawVertex(GLfloat x, GLfloat y, GLfloat z,
 	//buffer has two slots and will render two points, so
 	//this cheap hack will draw two points in the same place
 	GLfloat vertices[] = { x, y, z, x, y, z };
-	GLfloat colors[] = { r, g, b, r, g, b };
+	GLfloat colors[] = { r, g, b, 1.0f, r, g, b, 1.0f };
 
 	//fill vertex and color buffer with above array data
 	m_buffer.FillVBO(Buffer::VERTEX_BUFFER, vertices, sizeof(vertices), Buffer::DYNAMIC_FILL);
@@ -68,7 +68,7 @@ void Element::DrawVector(GLfloat x, GLfloat y, GLfloat z,
 	//data for vertex and color of vector which starts at an origin 
 	//point and extends out at a size based on values passed in
 	GLfloat vertices[] = { 0.0f, 0.0f, 0.0f, x, y, z };
-	GLfloat colors[] = { r, g, b, r, g, b };
+	GLfloat colors[] = { r, g, b, 1.0f, r, g, b, 1.0f };
 
 	//fill vertex and color buffer with above array data
 	m_buffer.FillVBO(Buffer::VERTEX_BUFFER, vertices, sizeof(vertices), Buffer::DYNAMIC_FILL);
@@ -90,7 +90,7 @@ void Element::DrawLineSegment(GLfloat x1, GLfloat y1, GLfloat z1,
 	//data for vertex and color of vector which 
 	//starts and ends at specified point passed in 
 	GLfloat vertices[] = { x1, y1, z1, x2, y2, z2 };
-	GLfloat colors[] = { r, g, b, r, g, b };
+	GLfloat colors[] = { r, g, b, 1.0f, r, g, b, 1.0f };
 
 	//fill vertex and color buffer with above array data
 	m_buffer.FillVBO(Buffer::VERTEX_BUFFER, vertices, sizeof(vertices), Buffer::DYNAMIC_FILL);

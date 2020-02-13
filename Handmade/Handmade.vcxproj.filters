@@ -203,6 +203,9 @@
     <ClInclude Include="SphereCollider.h">
       <Filter>Header Files\Components\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="Quad.h">
+      <Filter>Header Files\GameObjects\Primitives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio.cpp">
@@ -309,6 +312,9 @@
     </ClCompile>
     <ClCompile Include="SphereCollider.cpp">
       <Filter>Source Files\Components\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Quad.cpp">
+      <Filter>Source Files\GameObjects\Primitives</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
