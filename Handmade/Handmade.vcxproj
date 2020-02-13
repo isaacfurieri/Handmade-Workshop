@@ -145,6 +145,7 @@
     <ClInclude Include="Axes3D.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Cuboid.h" />
     <ClInclude Include="FPSCamera.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="EndState.h" />
@@ -181,6 +182,7 @@
     <ClCompile Include="Axes3D.cpp" />
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Cuboid.cpp" />
     <ClCompile Include="FPSCamera.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="glad.c" />
