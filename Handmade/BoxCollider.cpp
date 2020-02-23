@@ -20,16 +20,21 @@ BoxCollider::BoxCollider()
 //------------------------------------------------------------------------------------------------------
 //getter function that returns scale of BoxCollider
 //------------------------------------------------------------------------------------------------------
-glm::vec3 BoxCollider::GetScale() const
+const glm::vec3& BoxCollider::GetScale() const
 {
 
 	return m_scale;
 
 }
+
+const glm::vec3& BoxCollider::GetPosition() const
+{
+	return m_position;
+}
 //------------------------------------------------------------------------------------------------------
 //getter function that returns dimension of BoxCollider
 //------------------------------------------------------------------------------------------------------
-glm::vec3 BoxCollider::GetDimension() const
+const glm::vec3& BoxCollider::GetDimension() const
 {
 
 	return m_dimension;
@@ -45,6 +50,13 @@ void BoxCollider::SetScale(float x, float y, float z)
 	m_scale.y = y;
 	m_scale.z = z;
 
+}
+
+void BoxCollider::SetPosition(float x, float y, float z)
+{
+	m_position.x = x;
+	m_position.y = y;
+	m_position.z = z;
 }
 //------------------------------------------------------------------------------------------------------
 //setter function that assigns dimensions of BoxCollider
@@ -89,12 +101,12 @@ bool BoxCollider::IsColliding(const SphereCollider& secondSphere) const
 //------------------------------------------------------------------------------------------------------
 //function that determines point on box edge that is closest to position passed 
 //------------------------------------------------------------------------------------------------------
-glm::vec3 BoxCollider::PointOnBox(float positionX, float positionY, float positionZ) const
+const glm::vec3& BoxCollider::PointOnBox(float x, float y, float z) const
 {
 
 	glm::vec3 clampValue;
 	glm::vec3 distanceFromObject;
-	glm::vec3 position(positionX, positionY, positionZ);
+	glm::vec3 position(x, y, z);
 
 	//first calculate distance between the box's position and passed position
 	distanceFromObject = m_position - position;

@@ -39,19 +39,21 @@ public:
 	
 public:
 
-	glm::vec3 GetScale()     const;
-	glm::vec3 GetDimension() const;
+	const glm::vec3& GetScale()     const;
+	const glm::vec3& GetPosition()  const;
+	const glm::vec3& GetDimension() const;
 
 public:
 
 	void SetScale(float x, float y, float z);
+	void SetPosition(float x, float y, float z);
 	void SetDimension(float width, float height, float depth);
 
 public:
 
 	bool IsColliding(const BoxCollider& secondBox) const;
 	bool IsColliding(const SphereCollider& secondSphere) const;
-	glm::vec3 PointOnBox(float positionX, float positionY, float positionZ) const;
+	const glm::vec3& PointOnBox(float x, float y, float z) const;
 
 public:
 
