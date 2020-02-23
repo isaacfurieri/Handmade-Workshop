@@ -37,6 +37,7 @@ public:
 	
 public:
 
+	float GetScale() const;
 	float GetRadius() const;
     float GetRadiusScaled() const;
     const glm::vec3& GetPosition() const;
@@ -45,6 +46,7 @@ public:
 
 	void SetScale(float scale);
     void SetRadius(float radius);
+	void SetPosition(float x, float y, float z);
 
 public:
 

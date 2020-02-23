@@ -54,6 +54,26 @@ bool MainState::OnEnter()
 	m_test = new Element;
 	m_test->Create();
 
+	m_quad = new Quad(1, 1, 1, 1, 0, 1.0f);
+	m_quad->Create();
+	//m_quad->SetColor(1, 0, 1, 1);
+	//m_quad->SetDimension(0.5f, 0.5f);
+
+	m_cube = new Cuboid;
+	m_cube->Create();
+	m_cube->SetColor(1, 0, 1, 0.7f);
+	m_cube->SetDimension(2, 0.5, 3);
+
+	m_sphere = new Sphere;
+	m_sphere->Create();
+	m_sphere->SetRadius(2);
+	m_sphere->SetColor(1, 1, 0, 0.3);
+
+	m_circle = new Circle(2.25f, 45.0f, 1, 0, 0, 0.75);
+	m_circle->Create();
+	//m_circle->SetRadius(2.25f);
+	//m_circle->SetColor(1, 1, 0, 0.5);
+
 	return true;
 
 }
@@ -171,13 +191,10 @@ bool MainState::Draw()
 	}
 
 	//test!
-	m_test->DrawLineSegment(1, 0, 3, -2, 0, 4, 1, 1, 0);
-	m_test->DrawLineSegment(0, 0, 0, -2, 0, 4, 0, 1, 1);
-	m_test->DrawVector(2, 1, -3, 1, 0, 1);
-	m_test->DrawVector(-3, 0, -4, 1, 0, 0);
-	m_test->DrawVertex(2, 0, -4, 0, 1, 1);
-	m_test->DrawVertex(5, 0, 4, 1, 1, 0);
-	m_test->DrawVertex(-3, 0, 4, 1, 1, 1);
+	m_quad->Draw();
+	//m_cube->Draw();
+	//m_sphere->Draw();
+	//m_circle->Draw();
 
 	//ADD YOUR CODE HERE...
 	//...

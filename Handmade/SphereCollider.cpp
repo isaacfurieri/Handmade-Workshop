@@ -15,6 +15,11 @@ SphereCollider::SphereCollider()
 	m_color = glm::vec4(0.0f, 1.0f, 0.0f, 0.4f);
 
 }
+
+float SphereCollider::GetScale() const
+{
+	return m_scale;
+}
 //------------------------------------------------------------------------------------------------------
 //getter function that returns radius of SphereCollider
 //------------------------------------------------------------------------------------------------------
@@ -58,6 +63,14 @@ void SphereCollider::SetRadius(float radius)
 	m_radius = radius;
 
 }
+
+void SphereCollider::SetPosition(float x, float y, float z)
+{
+	m_position.x = x;
+	m_position.y = y;
+	m_position.z = z;
+}
+
 //------------------------------------------------------------------------------------------------------
 //function that checks if SphereCollider collides with a AABB object
 //------------------------------------------------------------------------------------------------------
