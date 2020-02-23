@@ -29,12 +29,17 @@
 #include <vector>
 #include "Axes2D.h"
 #include "Axes3D.h"
+#include "Circle.h"
+#include "Cuboid.h"
+#include "Element.h"
 #include "FPSCamera.h"
 #include "GameObject.h"
 #include "GameState.h"
 #include "Grid2D.h"
 #include "Grid3D.h"
 #include "HUD.h"
+#include "Quad.h"
+#include "Sphere.h"
 #include "UICamera.h"
 
 class MainState : public GameState
@@ -65,6 +70,12 @@ private:
 
 	UICamera* m_UICam;
 	FPSCamera* m_mainCam;
+
+	Quad* m_quad;
+	Cuboid* m_cube;
+	Sphere* m_sphere;
+	Circle* m_circle;
+	Element* m_test;
 
 	std::vector<GameObject*> m_gameObjects;
 

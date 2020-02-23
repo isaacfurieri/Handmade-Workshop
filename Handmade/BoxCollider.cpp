@@ -1,12 +1,11 @@
 #include <algorithm>
-#include "AABB.h"
-#include "Debug.h"
-#include "Sphere.h"
+#include "BoxCollider.h"
+#include "SphereCollider.h"
 
 //------------------------------------------------------------------------------------------------------
 //constructor that assigns all default values
 //------------------------------------------------------------------------------------------------------
-AABB::AABB()
+BoxCollider::BoxCollider()
 {
 
 	m_min = glm::vec3(0.0f);
@@ -19,27 +18,32 @@ AABB::AABB()
 	
 }
 //------------------------------------------------------------------------------------------------------
-//getter function that returns scale of AABB
+//getter function that returns scale of BoxCollider
 //------------------------------------------------------------------------------------------------------
-glm::vec3 AABB::GetScale() const
+const glm::vec3& BoxCollider::GetScale() const
 {
 
 	return m_scale;
 
 }
+
+const glm::vec3& BoxCollider::GetPosition() const
+{
+	return m_position;
+}
 //------------------------------------------------------------------------------------------------------
-//getter function that returns dimension of AABB
+//getter function that returns dimension of BoxCollider
 //------------------------------------------------------------------------------------------------------
-glm::vec3 AABB::GetDimension() const
+const glm::vec3& BoxCollider::GetDimension() const
 {
 
 	return m_dimension;
 
 }
 //------------------------------------------------------------------------------------------------------
-//setter function that assigns scale of AABB
+//setter function that assigns scale of BoxCollider
 //------------------------------------------------------------------------------------------------------
-void AABB::SetScale(float x, float y, float z)
+void BoxCollider::SetScale(float x, float y, float z)
 {
 
 	m_scale.x = x;
@@ -47,10 +51,17 @@ void AABB::SetScale(float x, float y, float z)
 	m_scale.z = z;
 
 }
+
+void BoxCollider::SetPosition(float x, float y, float z)
+{
+	m_position.x = x;
+	m_position.y = y;
+	m_position.z = z;
+}
 //------------------------------------------------------------------------------------------------------
-//setter function that assigns dimensions of AABB
+//setter function that assigns dimensions of BoxCollider
 //------------------------------------------------------------------------------------------------------
-void AABB::SetDimension(float width, float height, float depth)
+void BoxCollider::SetDimension(float width, float height, float depth)
 {
 
 	m_dimension.x = width;
@@ -59,9 +70,9 @@ void AABB::SetDimension(float width, float height, float depth)
 
 }
 //------------------------------------------------------------------------------------------------------
-//function that checks if AABB collides with another AABB object
+//function that checks if BoxCollider collides with another BoxCollider object
 //------------------------------------------------------------------------------------------------------
-bool AABB::IsColliding(const AABB& secondBox) const
+bool BoxCollider::IsColliding(const BoxCollider& secondBox) const
 {
 
 	return ((m_max.x > secondBox.m_min.x && secondBox.m_max.x > m_min.x) &&
@@ -70,9 +81,9 @@ bool AABB::IsColliding(const AABB& secondBox) const
 
 }
 //------------------------------------------------------------------------------------------------------
-//function that checks if AABB collides with a sphere object
+//function that checks if BoxCollider collides with a sphere object
 //------------------------------------------------------------------------------------------------------
-bool AABB::IsColliding(const Sphere& secondSphere) const
+bool BoxCollider::IsColliding(const SphereCollider& secondSphere) const
 {
 
 	glm::vec3 distanceFromBox;
@@ -90,12 +101,12 @@ bool AABB::IsColliding(const Sphere& secondSphere) const
 //------------------------------------------------------------------------------------------------------
 //function that determines point on box edge that is closest to position passed 
 //------------------------------------------------------------------------------------------------------
-glm::vec3 AABB::PointOnBox(float positionX, float positionY, float positionZ) const
+const glm::vec3& BoxCollider::PointOnBox(float x, float y, float z) const
 {
 
 	glm::vec3 clampValue;
 	glm::vec3 distanceFromObject;
-	glm::vec3 position(positionX, positionY, positionZ);
+	glm::vec3 position(x, y, z);
 
 	//first calculate distance between the box's position and passed position
 	distanceFromObject = m_position - position;
@@ -112,9 +123,9 @@ glm::vec3 AABB::PointOnBox(float positionX, float positionY, float positionZ) co
 
 }
 //------------------------------------------------------------------------------------------------------
-//function that calculates min and max values of AABB for collision purposes
+//function that calculates min and max values of BoxCollider for collision purposes
 //------------------------------------------------------------------------------------------------------
-void AABB::Update()
+void BoxCollider::Update()
 {
 
 	//first determine the half width, height and depth based on scale value  
@@ -131,9 +142,9 @@ void AABB::Update()
 
 }
 //------------------------------------------------------------------------------------------------------
-//function that renders a AABB box 
+//function that renders a BoxCollider box 
 //------------------------------------------------------------------------------------------------------
-void AABB::Draw()
+void BoxCollider::Draw()
 {
 
 	//draw bound based on dimension and color set 

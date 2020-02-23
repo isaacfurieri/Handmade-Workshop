@@ -1,5 +1,5 @@
-#ifndef SPHERE_H
-#define SPHERE_H
+#ifndef SPHERE_COLLIDER_H
+#define SPHERE_COLLIDER_H
 
 /*==============================================================================================#
 |                                                                                               |
@@ -26,39 +26,46 @@
 | 'Sphere' source files last updated in February 2020								            |
 #==============================================================================================*/
 
-#include <glm.hpp>
-#include "glad.h"
-#include "Buffer.h"
-#include "GameObject.h"
+#include "BoxCollider.h"
 
-class Sphere : public GameObject
+class SphereCollider
 {
 
 public:
 
-	Sphere(GLfloat radius = 1.0f, GLuint segments = 25, GLuint slices = 25,
-		   GLfloat r = 1.0f, GLfloat g = 1.0f, GLfloat b = 1.0f, GLfloat a = 1.0f);
+	SphereCollider();
+	
+public:
+
+	float GetScale() const;
+	float GetRadius() const;
+    float GetRadiusScaled() const;
+    const glm::vec3& GetPosition() const;
 
 public:
 
-	void SetRadius(GLfloat radius);
-	void SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
+	void SetScale(float scale);
+    void SetRadius(float radius);
+	void SetPosition(float x, float y, float z);
 
 public:
 
-	virtual bool Create();
-	virtual void Update(int deltaTime) {}
-	virtual void Draw();
-	virtual void Destroy();
+	bool IsColliding(const BoxCollider& secondBox) const;
+	bool IsColliding(const SphereCollider& secondSphere) const;
+
+public:
+
+	void Update();
+	void Draw();
 
 private:
 
-	GLuint m_slices;
-	GLfloat m_radius;
-	GLuint m_segments;
-
-	Buffer m_buffer;
-	glm::vec4 m_color;
+	float m_scale;
+	float m_radius;
+    float m_radiusScaled;
+    
+    glm::vec4 m_color;
+    glm::vec3 m_position;
 
 };
 

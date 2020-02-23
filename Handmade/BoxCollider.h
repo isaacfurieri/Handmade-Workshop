@@ -1,5 +1,5 @@
-#ifndef SPHERE_H
-#define SPHERE_H
+#ifndef BOX_COLLIDER_H
+#define BOX_COLLIDER_H
 
 /*==============================================================================================#
 |                                                                                               |
@@ -23,42 +23,52 @@
 | GitHub: https://github.com/djkarstenv									                        |
 |                                                                                               |
 #===============================================================================================#
-| 'Sphere' source files last updated in February 2020								            |
+| 'BoxCollider' source files last updated in February 2020								        |
 #==============================================================================================*/
 
 #include <glm.hpp>
-#include "glad.h"
-#include "Buffer.h"
-#include "GameObject.h"
 
-class Sphere : public GameObject
+class SphereCollider;
+
+class BoxCollider
 {
 
 public:
 
-	Sphere(GLfloat radius = 1.0f, GLuint segments = 25, GLuint slices = 25,
-		   GLfloat r = 1.0f, GLfloat g = 1.0f, GLfloat b = 1.0f, GLfloat a = 1.0f);
+	BoxCollider();
+	
+public:
+
+	const glm::vec3& GetScale()     const;
+	const glm::vec3& GetPosition()  const;
+	const glm::vec3& GetDimension() const;
 
 public:
 
-	void SetRadius(GLfloat radius);
-	void SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
+	void SetScale(float x, float y, float z);
+	void SetPosition(float x, float y, float z);
+	void SetDimension(float width, float height, float depth);
 
 public:
 
-	virtual bool Create();
-	virtual void Update(int deltaTime) {}
-	virtual void Draw();
-	virtual void Destroy();
+	bool IsColliding(const BoxCollider& secondBox) const;
+	bool IsColliding(const SphereCollider& secondSphere) const;
+	const glm::vec3& PointOnBox(float x, float y, float z) const;
+
+public:
+
+	void Update();
+	void Draw();
 
 private:
 
-	GLuint m_slices;
-	GLfloat m_radius;
-	GLuint m_segments;
-
-	Buffer m_buffer;
-	glm::vec4 m_color;
+	glm::vec3 m_min;
+	glm::vec3 m_max;
+    glm::vec4 m_color;
+	glm::vec3 m_scale;
+    glm::vec3 m_position;
+	glm::vec3 m_dimension;
+	glm::vec3 m_halfDimension;
 
 };
 

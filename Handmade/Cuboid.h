@@ -1,5 +1,5 @@
-#ifndef SPHERE_H
-#define SPHERE_H
+#ifndef CUBOID_H
+#define CUBOID_H
 
 /*==============================================================================================#
 |                                                                                               |
@@ -23,7 +23,7 @@
 | GitHub: https://github.com/djkarstenv									                        |
 |                                                                                               |
 #===============================================================================================#
-| 'Sphere' source files last updated in February 2020								            |
+| 'Cuboid' source files last updated in February 2020								            |
 #==============================================================================================*/
 
 #include <glm.hpp>
@@ -31,18 +31,18 @@
 #include "Buffer.h"
 #include "GameObject.h"
 
-class Sphere : public GameObject
+class Cuboid : public GameObject
 {
 
 public:
 
-	Sphere(GLfloat radius = 1.0f, GLuint segments = 25, GLuint slices = 25,
+	Cuboid(GLfloat width = 1.0f, GLfloat height = 1.0f, GLfloat depth = 1.0f,
 		   GLfloat r = 1.0f, GLfloat g = 1.0f, GLfloat b = 1.0f, GLfloat a = 1.0f);
 
 public:
 
-	void SetRadius(GLfloat radius);
 	void SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
+	void SetDimension(GLfloat width, GLfloat height, GLfloat depth);
 
 public:
 
@@ -53,12 +53,9 @@ public:
 
 private:
 
-	GLuint m_slices;
-	GLfloat m_radius;
-	GLuint m_segments;
-
 	Buffer m_buffer;
 	glm::vec4 m_color;
+	glm::vec3 m_dimension;
 
 };
 

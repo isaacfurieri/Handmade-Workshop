@@ -1,5 +1,5 @@
-#ifndef AABB_H
-#define AABB_H
+#ifndef ELEMENT_H
+#define ELEMENT_H
 
 /*==============================================================================================#
 |                                                                                               |
@@ -23,50 +23,43 @@
 | GitHub: https://github.com/djkarstenv									                        |
 |                                                                                               |
 #===============================================================================================#
-| 'AABB' source files last updated in December 2019								                |
+| 'Element' source files last updated in February 2020								            |
 #==============================================================================================*/
 
-#include <glm.hpp>
+#include "Buffer.h"
+#include "GameObject.h"
 
-class Sphere;
-
-class AABB
+class Element : public GameObject
 {
 
 public:
 
-	AABB();
+	Element() {}
+
+public:
+
+	virtual bool Create();
+	virtual void Update(int deltaTime) {}
+	virtual void Draw()                {}
 	
-public:
+	void DrawVertex(GLfloat x, GLfloat y, GLfloat z,
+		            GLfloat r = 1.0f, GLfloat g = 1.0f, GLfloat b = 1.0f,
+		            GLfloat pointSize = 10.0f);
 
-	glm::vec3 GetScale()     const;
-	glm::vec3 GetDimension() const;
+	void DrawVector(GLfloat x, GLfloat y, GLfloat z,
+					GLfloat r = 1.0f, GLfloat g = 1.0f, GLfloat b = 1.0f,
+					GLfloat lineWidth = 2.0f);
 
-public:
+	void DrawLineSegment(GLfloat x1, GLfloat y1, GLfloat z1,
+						 GLfloat x2, GLfloat y2, GLfloat z2,
+						 GLfloat r = 1.0f, GLfloat g = 1.0f, GLfloat b = 1.0f,
+						 GLfloat lineWidth = 2.0f);
 
-	void SetScale(float x, float y, float z);
-	void SetDimension(float width, float height, float depth);
-
-public:
-
-	bool IsColliding(const AABB& secondBox) const;
-	bool IsColliding(const Sphere& secondSphere) const;
-	glm::vec3 PointOnBox(float positionX, float positionY, float positionZ) const;
-
-public:
-
-	void Update();
-	void Draw();
+	virtual void Destroy();
 
 private:
 
-	glm::vec3 m_min;
-	glm::vec3 m_max;
-    glm::vec4 m_color;
-	glm::vec3 m_scale;
-    glm::vec3 m_position;
-	glm::vec3 m_dimension;
-	glm::vec3 m_halfDimension;
+	Buffer m_buffer;
 
 };
 

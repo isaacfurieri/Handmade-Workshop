@@ -82,6 +82,12 @@
     <Filter Include="Source Files\GameObjects\Cameras">
       <UniqueIdentifier>{3000ea84-92e8-44fd-beab-227f62fbad26}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\GameObjects\Primitives">
+      <UniqueIdentifier>{b5cac0ab-c499-411e-9d0c-5f3ffb6df275}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObjects\Primitives">
+      <UniqueIdentifier>{4126045c-d924-49f0-aa9d-700be4fd1a64}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Default.frag">
@@ -149,12 +155,6 @@
     <ClInclude Include="Light.h">
       <Filter>Header Files\Components\Core</Filter>
     </ClInclude>
-    <ClInclude Include="AABB.h">
-      <Filter>Header Files\Components\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="Sphere.h">
-      <Filter>Header Files\Components\Physics</Filter>
-    </ClInclude>
     <ClInclude Include="Screen.h">
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
@@ -193,6 +193,27 @@
     </ClInclude>
     <ClInclude Include="HUD.h">
       <Filter>Header Files\GameObjects\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Element.h">
+      <Filter>Header Files\GameObjects\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="BoxCollider.h">
+      <Filter>Header Files\Components\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="SphereCollider.h">
+      <Filter>Header Files\Components\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Quad.h">
+      <Filter>Header Files\GameObjects\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Cuboid.h">
+      <Filter>Header Files\GameObjects\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Sphere.h">
+      <Filter>Header Files\GameObjects\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Circle.h">
+      <Filter>Header Files\GameObjects\Primitives</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -253,12 +274,6 @@
     <ClCompile Include="glad.c">
       <Filter>Source Files\Main</Filter>
     </ClCompile>
-    <ClCompile Include="AABB.cpp">
-      <Filter>Source Files\Components\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="Sphere.cpp">
-      <Filter>Source Files\Components\Physics</Filter>
-    </ClCompile>
     <ClCompile Include="Screen.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
@@ -297,6 +312,27 @@
     </ClCompile>
     <ClCompile Include="HUD.cpp">
       <Filter>Source Files\GameObjects\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Element.cpp">
+      <Filter>Source Files\GameObjects\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="BoxCollider.cpp">
+      <Filter>Source Files\Components\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="SphereCollider.cpp">
+      <Filter>Source Files\Components\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Quad.cpp">
+      <Filter>Source Files\GameObjects\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Cuboid.cpp">
+      <Filter>Source Files\GameObjects\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Sphere.cpp">
+      <Filter>Source Files\GameObjects\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Circle.cpp">
+      <Filter>Source Files\GameObjects\Primitives</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
