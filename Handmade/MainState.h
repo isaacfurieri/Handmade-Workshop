@@ -23,7 +23,7 @@
 | GitHub: https://github.com/djkarstenv									                        |
 |                                                                                               |
 #===============================================================================================#
-| 'MainState' source files last updated in February 2020								        |
+| 'MainState' source files last updated in April 2020   							            |
 #==============================================================================================*/
 
 #include <vector>
@@ -70,12 +70,6 @@ private:
 
 	UICamera* m_UICam;
 	FPSCamera* m_mainCam;
-
-	Quad* m_quad;
-	Cuboid* m_cube;
-	Sphere* m_sphere;
-	Circle* m_circle;
-	Element* m_test;
 
 	std::vector<GameObject*> m_gameObjects;
 

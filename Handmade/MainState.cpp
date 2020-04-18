@@ -50,29 +50,8 @@ bool MainState::OnEnter()
 
 	Input::Instance()->SetCursorState(Input::OFF);
 
-	//test!
-	m_test = new Element;
-	m_test->Create();
-
-	m_quad = new Quad(1, 1, 1, 1, 0, 1.0f);
-	m_quad->Create();
-	//m_quad->SetColor(1, 0, 1, 1);
-	//m_quad->SetDimension(0.5f, 0.5f);
-
-	m_cube = new Cuboid;
-	m_cube->Create();
-	m_cube->SetColor(1, 0, 1, 0.7f);
-	m_cube->SetDimension(2, 0.5, 3);
-
-	m_sphere = new Sphere;
-	m_sphere->Create();
-	m_sphere->SetRadius(2);
-	m_sphere->SetColor(1, 1, 0, 0.3);
-
-	m_circle = new Circle(2.25f, 45.0f, 1, 0, 0, 0.75);
-	m_circle->Create();
-	//m_circle->SetRadius(2.25f);
-	//m_circle->SetColor(1, 1, 0, 0.5);
+	//ADD YOUR CODE HERE...
+	//..
 
 	return true;
 
@@ -189,12 +168,6 @@ bool MainState::Draw()
 			(*it)->Draw();
 		}
 	}
-
-	//test!
-	m_quad->Draw();
-	//m_cube->Draw();
-	//m_sphere->Draw();
-	//m_circle->Draw();
 
 	//ADD YOUR CODE HERE...
 	//...
