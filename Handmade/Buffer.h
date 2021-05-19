@@ -1,30 +1,8 @@
-#ifndef BUFFER_H
-#define BUFFER_H
+#pragma once
 
-/*==============================================================================================#
-|                                                                                               |
-| All code has been written by Karsten Vermeulen as part of the 'Handmade' game engine, for the |
-| purposes of educating other fellow programmers, programming students and anyone else wishing  |
-| to learn about game development, C++ and OOP. The engine, class design and overall structure  |
-| is by no means perfect and there is certainly room for improvement. Feel free to use, copy,   |
-| break, update and do as you wish with this code - it is there, free, for all!                 |
-|																							    |
-| Designed to teach. Made from scratch. Built by hand.							                |
-|																							    |
-#===============================================================================================#
-|																								|
-| If you like 'Handmade', and wish to show your support, if you have any questions about the    |
-| project, or if you just want to reach out, please find me on the following channels:          |
-|																						        |
-| Web: http://www.karstenvermeulen.com														    |
-| Facebook: https://www.facebook.com/KarstensCorner								                |
-| Twitter: https://twitter.com/KarstensCorner													|
-| LinkedIn: https://www.linkedin.com/in/karstenvermeulen                                        |
-| GitHub: https://github.com/djkarstenv									                        |
-|                                                                                               |
-#===============================================================================================#
-| 'Buffer' source files last updated in February 2020									        |
-#==============================================================================================*/
+/*===================================================================#
+| 'Buffer' source files last updated on 19 May 2021                  |
+#===================================================================*/
 
 #include <map>
 #include <string>
@@ -48,41 +26,56 @@ class Buffer
 
 public:
 
-	enum DataType       { FLOAT = GL_FLOAT, 
-		                  INT = GL_INT, 
-		                  U_INT = GL_UNSIGNED_INT};
+	enum DataType
+	{
+		FLOAT = GL_FLOAT,
+		INT = GL_INT,
+		U_INT = GL_UNSIGNED_INT
+	};
 
-	enum FillType       { STATIC_FILL = GL_STATIC_DRAW, 
-		                  DYNAMIC_FILL = GL_DYNAMIC_DRAW};
+	enum FillType
+	{
+		STATIC_FILL = GL_STATIC_DRAW,
+		DYNAMIC_FILL = GL_DYNAMIC_DRAW
+	};
 
-	enum DrawMode       { LINES = GL_LINES, 
-		                  LINE_LOOP = GL_LINE_LOOP, 
-		                  POINTS = GL_POINTS, 
-		                  TRIANGLES = GL_TRIANGLES, 
-		                  TRIANGLE_FAN = GL_TRIANGLE_FAN };
+	enum DrawMode
+	{
+		LINES = GL_LINES,
+		LINE_LOOP = GL_LINE_LOOP,
+		POINTS = GL_POINTS,
+		TRIANGLES = GL_TRIANGLES,
+		TRIANGLE_FAN = GL_TRIANGLE_FAN
+	};
 
-	enum VBOType        { VERTEX_BUFFER, COLOR_BUFFER, NORMAL_BUFFER, TEXTURE_BUFFER };
-	enum ComponentSize  { XY = 2, XYZ = 3, RGB = 3, RGBA = 4, UV = 2 };
+	enum VBOType
+	{
+		VERTEX_BUFFER,
+		COLOR_BUFFER,
+		NORMAL_BUFFER,
+		TEXTURE_BUFFER
+	};
 
-public:
+	enum ComponentSize
+	{
+		XY = 2,
+		XYZ = 3,
+		RGB = 3,
+		RGBA = 4,
+		UV = 2
+	};
 
 	static void Output();
 
-public:
-
 	Buffer();
 
-public:
-
 	void SetBuffers(const std::string& bufferID);
-
-public:
 
 	bool CreateBuffers(const std::string& bufferID, GLsizei totalVertices = 0, bool hasEBO = false);
 
 	void BindEBO();
 	void BindVBO(VBOType vboType, const std::string& vertAttrib,
-		         ComponentSize componentSize, DataType dataType);
+		ComponentSize componentSize, DataType dataType);
 
 	void FillEBO(const GLuint* data, GLsizeiptr size, FillType fillType = STATIC_FILL);
 	void FillVBO(VBOType vboType, const GLint* data, GLsizeiptr size, FillType fillType = STATIC_FILL);
@@ -99,15 +92,10 @@ public:
 	void DestroyBuffers();
 	void DestroyBuffers(const std::string& bufferID);
 
-
 private:
 
 	static std::map<std::string, BufferID>* s_bufferIDMap;
 
-private:
-
 	BufferID m_ID;
 
 };
-
-#endif

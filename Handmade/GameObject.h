@@ -1,20 +1,21 @@
-#ifndef GAME_OBJECT_H
-#define GAME_OBJECT_H
+#pragma once
+
+/*===================================================================#
+| 'GameObject' source files last updated on 19 May 2021              |
+#===================================================================*/
 
 #include <glm.hpp>
 #include <string>
 
 //TODO - Add 'CreatePrimitive()' function to 'GameObject' class to create set primitives 
 
-class GameObject 
+class GameObject
 {
 
 public:
 
 	GameObject();
 	virtual ~GameObject() = 0 {}
-
-public:
 
 	bool IsLit();
 	void IsLit(bool isLit);
@@ -31,22 +32,16 @@ public:
 	bool IsTextured();
 	void IsTextured(bool isTextured);
 
-public:
-
 	const std::string& GetTag();
 	unsigned int GetPriority();
 
 	void SetTag(const std::string& tag);
 	void SetPriority(unsigned int priority);
 
-public:
-
-	virtual bool Create()              = 0;
+	virtual bool Create() = 0;
 	virtual void Update(int deltaTime) = 0;
-	virtual void Draw()                = 0;
-	virtual void Destroy()             = 0;
-
-public:
+	virtual void Draw() = 0;
+	virtual void Destroy() = 0;
 
 	void SendToShader(bool isLit, bool isTextured);
 
@@ -63,5 +58,3 @@ protected:
 	glm::mat4 m_modelMatrix;
 
 };
-
-#endif

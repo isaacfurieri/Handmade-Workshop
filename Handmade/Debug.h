@@ -1,5 +1,8 @@
-#ifndef DEBUG_H
-#define DEBUG_H
+#pragma once
+
+/*===================================================================#
+| 'Debug' source files last updated on 19 May 2021                   |
+#===================================================================*/
 
 #include <Windows.h>
 #include <glm.hpp>
@@ -13,10 +16,13 @@ class Debug
 
 public:
 
-	enum ErrorCode { FAILURE = 4, WARNING = 6, SUCCESS = 10, DEFAULT = 15 };
-
-public:
-
+	enum ErrorCode
+	{
+		FAILURE = 4,
+		WARNING = 6,
+		SUCCESS = 10,
+		DEFAULT = 15
+	};
 
 	static void GLError();
 	static void PauseLog();
@@ -35,5 +41,3 @@ private:
 	static HANDLE s_consoleHandle;
 
 };
-
-#endif
