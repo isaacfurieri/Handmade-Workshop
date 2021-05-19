@@ -30,6 +30,10 @@
 #include <fmod.hpp>
 #include "AudioManager.h"
 
+//TODO - Create component class similar to 'Texture' class
+//TODO - Blend older 'AudioManager' class with 'Audio' 
+//component class and remove 'AudioManager' class entirely
+
 class Audio
 {
 

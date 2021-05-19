@@ -31,6 +31,8 @@
 #include "Buffer.h"
 #include "GameObject.h"
 
+//TODO - Add 'BoxCollider' component to the 'Quad' and 'Cuboid' classes
+
 class Quad : public GameObject
 {
 

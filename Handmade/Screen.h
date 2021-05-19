@@ -32,6 +32,8 @@
 #include <SDL.h>
 #include <SDL_syswm.h>
 
+//TODO - Refine class such that it follows newer design
+
 class Screen
 {
 

@@ -28,6 +28,8 @@
 
 #include "Camera.h"
 
+//TODO - Refine class such that it follows newer design
+
 class UICamera : public Camera
 {
 

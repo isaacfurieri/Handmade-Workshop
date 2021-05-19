@@ -30,6 +30,8 @@
 #include <string>
 #include "glad.h"
 
+//TODO - Refine class such that it follows newer design
+
 class Texture
 {
 

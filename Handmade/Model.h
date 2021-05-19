@@ -34,6 +34,8 @@
 #include "Material.h"
 #include "Texture.h"
 
+//TODO - Refine class such that it follows newer design
+
 //struct to store all three components of a vertex group, which is
 //the grouping of verts, UVs and norms for each point in a triangle
 struct Groups

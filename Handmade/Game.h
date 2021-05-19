@@ -30,6 +30,8 @@
 #include <string>
 #include "GameState.h"
 
+//TODO - Refine class such that it follows newer design
+
 class Game
 {
 

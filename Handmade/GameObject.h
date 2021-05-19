@@ -4,6 +4,8 @@
 #include <glm.hpp>
 #include <string>
 
+//TODO - Add 'CreatePrimitive()' function to 'GameObject' class to create set primitives 
+
 class GameObject 
 {
 

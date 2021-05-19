@@ -30,6 +30,8 @@
 #include "glad.h"
 #include "GameObject.h"
 
+//TODO - Refine class such that it follows newer design
+
 class Camera : public GameObject
 {
 

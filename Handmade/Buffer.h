@@ -31,6 +31,9 @@
 #include <vector>
 #include "glad.h"
 
+//TODO - Add ability to set existing buffers so that buffer objects can be shared between objects
+//TODO - Refine this class so that it follows the newer structure
+
 struct BufferID
 {
 	bool hasEBO;

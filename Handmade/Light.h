@@ -30,6 +30,9 @@
 #include <glm.hpp>
 #include "Buffer.h"
 
+//TODO - Refine class such that it follows newer design
+//TODO - Add support for spot, directional and point lights
+
 class Light
 {
 

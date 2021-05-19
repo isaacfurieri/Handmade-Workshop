@@ -31,6 +31,9 @@
 #include "glad.h"
 #include <glm.hpp>
 
+//TODO - Research shader compilation & linking error checks (OpenGL cookbook)
+//TODO - Refine class such that it follows the newer design
+
 class Shader
 {
 

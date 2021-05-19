@@ -29,6 +29,8 @@
 #include "glad.h"
 #include <glm.hpp>
 
+//TODO - Refine class such that it follows newer design
+
 class Material
 {
 

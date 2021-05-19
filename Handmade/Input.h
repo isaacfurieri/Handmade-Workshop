@@ -29,6 +29,9 @@
 #include <glm.hpp>
 #include <SDL.h>
 
+//TODO - Add key bindings similar to Handmade Lite
+//TODO - Refine class such that it follows newer design
+
 typedef const Uint8* KeyState;
 
 class Input

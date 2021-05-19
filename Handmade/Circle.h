@@ -31,6 +31,8 @@
 #include "Buffer.h"
 #include "GameObject.h"
 
+//TODO - Add 'SphereCollider' component to the 'Circle' and 'Sphere' classes
+
 class Circle : public GameObject
 {
 

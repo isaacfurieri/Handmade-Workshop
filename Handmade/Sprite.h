@@ -36,6 +36,10 @@
 
 */
 
+//TODO - Add 'Tile' class
+//TODO - Remove 'Sprite' and 'Animation' classes  
+//TODO - Add functionality to process sprite sheets(static/animated)
+
 #ifndef SPRITE_H
 #define SPRITE_H
 

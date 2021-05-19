@@ -28,6 +28,8 @@
 
 #include "Sprite.h"
 
+//TODO - Refine class such that it follows newer design
+
 class Text : public Sprite
 {
 

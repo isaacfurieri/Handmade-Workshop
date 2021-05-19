@@ -28,6 +28,8 @@
 
 class Game;
 
+//TODO - Consider removing all game states and have only one single state
+
 class GameState
 {
 

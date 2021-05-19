@@ -30,6 +30,8 @@
 
 const double GRAVITY = 1.0000000000667;
 
+//TODO - Add proper getter/setters
+
 class RigidBody
 {
 

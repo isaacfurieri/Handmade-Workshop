@@ -6,6 +6,8 @@
 #include <string>
 #include "glad.h"
 
+//TODO - Research on modern OpenGL debug callbacks and add these
+
 class Debug
 {
 

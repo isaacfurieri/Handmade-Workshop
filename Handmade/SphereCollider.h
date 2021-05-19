@@ -28,6 +28,8 @@
 
 #include "BoxCollider.h"
 
+//TODO - Add some kind of 'central system' to render all colliders in the scene
+
 class SphereCollider
 {
 
