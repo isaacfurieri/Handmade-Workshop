@@ -11,20 +11,20 @@
 //TODO - Create component class similar to 'Texture' class
 //TODO - Blend older 'AudioManager' class with 'Audio' 
 //component class and remove 'AudioManager' class entirely
+//TODO - Test class fully with some audio samples
+
+const float LEFT_PAN = -1.0;
+const float RIGHT_PAN = 1.0f;
+
+const float MIN_VOLUME = 0.0f;
+const float MAX_VOLUME = 1.0f;
 
 class Audio
 {
 
 public:
 
-	enum Pan
-	{
-		LEFT_PAN = -1,
-		CENTRE_PAN = 0,
-		RIGHT_PAN = 1
-	};
-
-	enum Loop
+	enum class Loop
 	{
 		CUSTOM_LOOP = -2,
 		ENDLESS_LOOP = -1,
@@ -32,26 +32,20 @@ public:
 		ONCE_LOOP = 1
 	};
 
-	enum Volume
-	{
-		MIN_VOLUME = 0,
-		MAX_VOLUME = 1
-	};
-
-	enum Position
+	enum class Position
 	{
 		CUSTOM_POSITION = 0,
 		START_POSITION = 1,
 		END_POSITION = 2
 	};
 
-	enum Interval
+	enum class Interval
 	{
 		SEMITONE_INTERVAL = 0,
 		OCTAVE_INTERVAL = 1
 	};
 
-	enum AudioType
+	enum class AudioType
 	{
 		SFX_AUDIO,
 		MUSIC_AUDIO,
@@ -61,15 +55,19 @@ public:
 	Audio();
 	~Audio() {}
 
-	float& Pan();
-	float& Volume();
-	float& Frequency();
+	float GetPan();
+	float GetVolume();
+	float GetFrequency();
 
 	unsigned int GetLength();
 	unsigned int GetPosition();
 
-	void SetMute(bool muteFlag);
-	void SetLoopCount(Loop loopType, Loop loopCount = NO_LOOP);
+	void SetPan(float pan);
+	void SetVolume(float volume);
+	void SetFrequency(float frequency);
+
+	void IsMuted(bool flag);
+	void SetLoopCount(Loop loopType, Loop loopCount = Loop::NO_LOOP);
 	void SetAudioData(const std::string& mapIndex, AudioManager::AudioType audioType);
 	void SetFrequencyRange(float minFrequency, float maxFrequency);
 	void SetFrequencyInterval(Interval intervalType, float interval = 1.0f);
@@ -90,8 +88,8 @@ private:
 
 	float m_minFrequency;
 	float m_maxFrequency;
-
-	bool m_isMute;
+	
+	bool m_isMuted;
 	Loop m_loopCount;
 
 	FMOD::Sound* m_audioData;
