@@ -1,9 +1,10 @@
 #pragma once
 
 /*===================================================================#
-| 'GameObject' source files last updated on 19 May 2021              |
+| 'GameObject' source files last updated on 25 May 2021              |
 #===================================================================*/
 
+#include "glad.h"
 #include <glm.hpp>
 #include <string>
 
@@ -18,28 +19,28 @@ public:
 	virtual ~GameObject() = 0 {}
 
 	bool IsLit();
-	void IsLit(bool isLit);
+	void IsLit(bool flag);
 
 	bool IsAlive();
-	void IsAlive(bool isAlive);
+	void IsAlive(bool flag);
 
 	bool IsActive();
-	void IsActive(bool isActive);
+	void IsActive(bool flag);
 
 	bool IsVisible();
-	void IsVisible(bool isVisible);
+	void IsVisible(bool flag);
 
 	bool IsTextured();
-	void IsTextured(bool isTextured);
+	void IsTextured(bool flag);
 
+	GLuint GetPriority();
 	const std::string& GetTag();
-	unsigned int GetPriority();
 
 	void SetTag(const std::string& tag);
-	void SetPriority(unsigned int priority);
+	void SetPriority(GLuint priority);
 
 	virtual bool Create() = 0;
-	virtual void Update(int deltaTime) = 0;
+	virtual void Update(GLint deltaTime) = 0;
 	virtual void Draw() = 0;
 	virtual void Destroy() = 0;
 
@@ -53,8 +54,8 @@ protected:
 	bool m_isVisible;
 	bool m_isTextured;
 
+	GLuint m_priority;
 	std::string m_tag;
-	unsigned int m_priority;
 	glm::mat4 m_modelMatrix;
 
 };

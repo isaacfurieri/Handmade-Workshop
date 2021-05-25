@@ -1,18 +1,15 @@
 #include <gtc\matrix_transform.hpp>
-#include "FPSCamera.h"
+#include "FreeCamera.h"
 #include "Game.h"
 #include "Input.h"
 #include "Shader.h"
 #include "Screen.h"
 
-//------------------------------------------------------------------------------------------------------
-//constructor that assigns all default values 
-//------------------------------------------------------------------------------------------------------
-FPSCamera::FPSCamera()
+//======================================================================================================
+FreeCamera::FreeCamera()
 {
-
 	m_isFlying = true;
-	
+
 	m_yaw = -45.0f;
 	m_pitch = 30.0f;
 	m_sensitivity = 0.4f;
@@ -23,45 +20,31 @@ FPSCamera::FPSCamera()
 
 	m_rotationMatrixX = glm::mat4(1.0f);
 	m_rotationMatrixY = glm::mat4(1.0f);
-
 }
-//------------------------------------------------------------------------------------------------------
-//getter-setter function that returns free flow movement flag reference variable for FPSCamera 
-//------------------------------------------------------------------------------------------------------
-bool FPSCamera::IsFlying()
+//======================================================================================================
+bool FreeCamera::IsFlying()
 {
 	return m_isFlying;
 }
-
-void FPSCamera::IsFlying(bool isFlying)
+//======================================================================================================
+void FreeCamera::IsFlying(bool isFlying)
 {
 	m_isFlying = isFlying;
 }
-//------------------------------------------------------------------------------------------------------
-//setter function that assigns FPSCamera rotation sensitivity
-//------------------------------------------------------------------------------------------------------
-void FPSCamera::SetSensitivity(GLfloat sensitivity)
+//======================================================================================================
+void FreeCamera::SetSensitivity(GLfloat sensitivity)
 {
-
 	m_sensitivity = sensitivity;
-
 }
-//------------------------------------------------------------------------------------------------------
-//setter function that assigns initial viewing direction of FPSCamera
-//------------------------------------------------------------------------------------------------------
-void FPSCamera::SetTarget(GLfloat x, GLfloat y, GLfloat z)
+//======================================================================================================
+void FreeCamera::SetTarget(GLfloat x, GLfloat y, GLfloat z)
 {
-
 	m_target = glm::vec3(x, y, z);
 	m_target = glm::normalize(m_target - m_position);
-
 }
-//------------------------------------------------------------------------------------------------------
-//function that updates and assigns FPSFPSCamera "look at" direction and position
-//------------------------------------------------------------------------------------------------------
-void FPSCamera::Update(int deltaTime)
+//======================================================================================================
+void FreeCamera::Update(int deltaTime)
 {
-
 	glm::vec2 mouseWheel = Input::Instance()->GetMouseWheel();
 	glm::vec2 mouseMotion = Input::Instance()->GetMouseMotion();
 
@@ -93,12 +76,12 @@ void FPSCamera::Update(int deltaTime)
 
 	else if (keys[SDL_SCANCODE_A])
 	{
-		m_direction = -m_right; 
+		m_direction = -m_right;
 	}
 
 	else if (keys[SDL_SCANCODE_D])
 	{
-		m_direction = m_right; 
+		m_direction = m_right;
 	}
 
 	else if (keys[SDL_SCANCODE_Q] && m_isFlying)
@@ -122,15 +105,15 @@ void FPSCamera::Update(int deltaTime)
 		m_isFlying = true;
 	}
 
-	else if((keys[SDL_SCANCODE_G]))
+	else if ((keys[SDL_SCANCODE_G]))
 	{
 		m_isFlying = false;
 	}
 
-	//if the FPSCamera is set to move, calculate its position using the chosen rotation, 
-	//the direction the FPSCamera is moving in, the speed at which its moving and time
+	//if the FreeCamera is set to move, calculate its position using the chosen rotation, 
+	//the direction the FreeCamera is moving in, the speed at which its moving and time
 	m_position += m_direction * m_velocity * (deltaTime / 1000.0f);
-	
+
 	//if mouse wheel was moved, apply values to FOV to zoom in/out
 	//also make sure that the FOV stays between 1 and 45 degrees!
 	if (mouseWheel != glm::vec2(0.0f))
@@ -140,14 +123,12 @@ void FPSCamera::Update(int deltaTime)
 		SetPerspView();
 	}
 
-	//update FPSCamera's view matrix
+	//update FreeCamera's view matrix
 	m_viewMatrix = glm::lookAt(m_position, m_position + m_lookAt, m_up);
-
 }
-
-void FPSCamera::RotateTrig()
+//======================================================================================================
+void FreeCamera::RotateTrig()
 {
-
 	//use basic trig to calculate the x, y and z components of the viewing vector
 	//when the camera moves around the y-axis (yaw) the vector changes along the x/z plane
 	//the x-axis (pitch) movements affect the x, y and z components of the viewing vector 
@@ -171,12 +152,10 @@ void FPSCamera::RotateTrig()
 	//calculate the new right vector based on the forward vector
 	//so that camera can move local left/right based on rotation
 	m_right = glm::normalize(glm::cross(m_forward, m_up));
-
 }
-
-void FPSCamera::RotateMatrix()
+//======================================================================================================
+void FreeCamera::RotateMatrix()
 {
-
 	//create rotation matrices for x/y rotation
 	//we always start with fresh new matrices
 	m_rotationMatrixY = glm::rotate(glm::mat4(1.0f), glm::radians(m_yaw), glm::vec3(0.0f, -1.0f, 0.0f));
@@ -186,10 +165,10 @@ void FPSCamera::RotateMatrix()
 	//we do a y rotation FIRST and then a local x rotation thereafter
 	glm::mat4 totalRotation = m_rotationMatrixY * m_rotationMatrixX;
 
-	//calculate the FPSCamera's viewing vector by transforming the 
-	//initial viewing target based on FPSCamera's total rotation
+	//calculate the FreeCamera's viewing vector by transforming the 
+	//initial viewing target based on FreeCamera's total rotation
 	m_lookAt = glm::vec3(totalRotation * glm::vec4(m_target, 1.0f));
-	
+
 	//if camera is in debug/fly mode, transform the forward vector based on
 	//the overall rotation, so that camera moves forward in any direction
 	if (m_isFlying)
@@ -208,5 +187,4 @@ void FPSCamera::RotateMatrix()
 	//calculate the new right vector based on the forward vector
 	//so that camera can move local left/right based on rotation
 	m_right = glm::normalize(glm::cross(m_forward, m_up));
-
 }

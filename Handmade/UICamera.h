@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'UICamera' source files last updated on 19 May 2021                |
+| 'UICamera' source files last updated on 25 May 2021                |
 #===================================================================*/
 
 #include "Camera.h"

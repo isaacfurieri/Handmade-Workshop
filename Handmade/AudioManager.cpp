@@ -82,7 +82,7 @@ bool AudioManager::Initialize()
 	//if initialization failed, display error message and return false
 	if(m_audioSystem->init(100, FMOD_INIT_NORMAL, 0) != FMOD_OK)
 	{
-		Debug::Log("Audio sub-system did not initialize properly.", Debug::WARNING);
+		Debug::Log("Audio sub-system did not initialize properly.", Debug::ErrorCode::WARNING);
 		Debug::Log("===============================================================");
 		Debug::PauseLog();
 		return false;
@@ -113,7 +113,7 @@ bool AudioManager::LoadFromFile(const std::string& filename, AudioType audioType
 
 		if (!sfx)
 		{
-			Debug::Log("File could not be loaded.", Debug::FAILURE);
+			Debug::Log("File could not be loaded.", Debug::ErrorCode::FAILURE);
 			Debug::Log("===============================================================");
 			return false;
 		}
@@ -134,7 +134,7 @@ bool AudioManager::LoadFromFile(const std::string& filename, AudioType audioType
 
 		if (!audio)
 		{
-			Debug::Log("File could not be loaded.", Debug::FAILURE);
+			Debug::Log("File could not be loaded.", Debug::ErrorCode::FAILURE);
 			Debug::Log("===============================================================");
 			return false;
 		}
@@ -145,7 +145,7 @@ bool AudioManager::LoadFromFile(const std::string& filename, AudioType audioType
 	}
 		
 	//display text to state that file has been opened and read
-	Debug::Log("File opened and read successfully.", Debug::SUCCESS);
+	Debug::Log("File opened and read successfully.", Debug::ErrorCode::SUCCESS);
 	Debug::Log("===============================================================");
 
 	return true;
@@ -187,7 +187,7 @@ void AudioManager::UnloadFromMemory(AudioType audioType,
 
 		if (it == tempMap->end())
 		{
-			Debug::Log("Audio data not found.", Debug::SUCCESS);
+			Debug::Log("Audio data not found.", Debug::ErrorCode::SUCCESS);
 			Debug::Log("===============================================================");
 		}
 

@@ -1,9 +1,10 @@
 #pragma once
 
 /*===================================================================#
-| 'Game' source files last updated on 19 May 2021                    |
+| 'Game' source files last updated on 25 May 2021                    |
 #===================================================================*/
 
+#include "glad.h"
 #include <deque>
 #include <string>
 #include "GameState.h"
@@ -20,8 +21,8 @@ public:
 	int GetTotalTime();
 	int GetElapsedTime();
 
-	bool Initialize(const std::string& name, int screenWidth, int screenHeight,
-		int pixelsPerUnit = 1, bool isFullscreen = false);
+	bool Initialize(const std::string& name, GLuint screenWidth, GLuint screenHeight,
+		GLuint pixelsPerUnit = 1, bool isFullscreen = false);
 
 	void AddState(GameState* state);
 	void ChangeState(GameState* state);

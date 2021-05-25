@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Element' source files last updated on 19 May 2021                 |
+| 'Element' source files last updated on 25 May 2021                 |
 #===================================================================*/
 
 #include "Buffer.h"
@@ -15,7 +15,7 @@ public:
 	Element() {}
 
 	virtual bool Create();
-	virtual void Update(int deltaTime) {}
+	virtual void Update(GLint deltaTime) {}
 	virtual void Draw() {}
 
 	void DrawVertex(GLfloat x, GLfloat y, GLfloat z,

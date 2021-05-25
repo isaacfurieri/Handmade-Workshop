@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Light' source files last updated on 19 May 2021                   |
+| 'Light' source files last updated on 25 May 2021                   |
 #===================================================================*/
 
 #include "glad.h"
@@ -26,7 +26,6 @@ public:
 	void SetAmbient(GLfloat r, GLfloat g, GLfloat b);
 	void SetDiffuse(GLfloat r, GLfloat g, GLfloat b);
 	void SetSpecular(GLfloat r, GLfloat g, GLfloat b);
-
 	void SetPosition(GLfloat x, GLfloat y, GLfloat z);
 
 	void Create(const std::string bufferID);

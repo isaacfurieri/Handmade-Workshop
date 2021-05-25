@@ -107,7 +107,7 @@ bool Model::LoadModel(const std::string& filename, const std::string bufferID)
 	//if opening of model file failed, display error message
 	if (!file)
 	{
-		Debug::Log("File could not be loaded.", Debug::FAILURE);
+		Debug::Log("File could not be loaded.", Debug::ErrorCode::FAILURE);
 		Debug::Log("===============================================================");
 		return false;
 	}
@@ -254,7 +254,7 @@ bool Model::LoadModel(const std::string& filename, const std::string bufferID)
 	Debug::Log((GLfloat)savedVerts, "Vertex space saved %");
 	
 	//display text to state that file has been opened and read
-	Debug::Log("File opened and read successfully.", Debug::SUCCESS);
+	Debug::Log("File opened and read successfully.", Debug::ErrorCode::SUCCESS);
 	Debug::Log("===============================================================");
 	
 	//---------------------------------

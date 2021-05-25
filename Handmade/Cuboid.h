@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Cuboid' source files last updated on 19 May 2021                  |
+| 'Cuboid' source files last updated on 25 May 2021                  |
 #===================================================================*/
 
 #include <glm.hpp>
@@ -23,7 +23,7 @@ public:
 	void SetDimension(GLfloat width, GLfloat height, GLfloat depth);
 
 	virtual bool Create();
-	virtual void Update(int deltaTime) {}
+	virtual void Update(GLint deltaTime) {}
 	virtual void Draw();
 	virtual void Destroy();
 

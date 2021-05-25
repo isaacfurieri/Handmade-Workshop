@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'SplashScreen' source files last updated on 19 May 2021            |
+| 'SplashScreen' source files last updated on 25 May 2021            |
 #===================================================================*/
 
 #include <string>
@@ -14,7 +14,7 @@ class SplashScreen : public GameObject
 
 public:
 
-	enum Fade
+	enum class Fade
 	{
 		FADE_IN,
 		FADE_OUT
@@ -24,7 +24,7 @@ public:
 	virtual ~SplashScreen() {}
 
 	virtual bool Create();
-	virtual void Update(int deltaTime);
+	virtual void Update(GLint deltaTime);
 	virtual void Draw();
 	virtual void Destroy();
 

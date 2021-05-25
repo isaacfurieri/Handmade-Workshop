@@ -138,7 +138,7 @@ bool Audio::Play()
 	//TODO - Consider removing console messages and replace with assert/message boxes
 	if (!m_channel)
 	{
-		Debug::Log("Audio could not be played through any channels.", Debug::WARNING);
+		Debug::Log("Audio could not be played through any channels.", Debug::ErrorCode::WARNING);
 		Debug::Log("===============================================================");
 		Debug::PauseLog();
 		return false;

@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'SphereCollider' source files last updated on 19 May 2021          |
+| 'SphereCollider' source files last updated on 25 May 2021          |
 #===================================================================*/
 
 #include "BoxCollider.h"

@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'RigidBody' source files last updated on 19 May 2021               |
+| 'RigidBody' source files last updated on 25 May 2021               |
 #===================================================================*/
 
 #include <glm.hpp>

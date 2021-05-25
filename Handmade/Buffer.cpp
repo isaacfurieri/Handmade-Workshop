@@ -6,12 +6,9 @@
 //this allocated space remains in memory until the application ends
 std::map<std::string, BufferID>* Buffer::s_bufferIDMap = new std::map<std::string, BufferID>;
 
-//------------------------------------------------------------------------------------------------------
-//static function that displays total size of buffer ID map with details (DEBUG ONLY)
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 void Buffer::Output()
 {
-
 	//clear the console window for a fresh display
 	Debug::ClearLog();
 
@@ -35,20 +32,16 @@ void Buffer::Output()
 		Debug::Log((GLfloat)it->second.eboID, "EBO ID");
 
 		(it->second.hasEBO) ? Debug::Log("This buffer has an EBO")
-			                : Debug::Log("This buffer has no EBO");
+			: Debug::Log("This buffer has no EBO");
 
 		Debug::Log((GLfloat)it->second.totalVertices, "Total vertices");
 		Debug::Log("===============================================================");
 
 	}
-
 }
-//------------------------------------------------------------------------------------------------------
-//constructor that assigns all defaults
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 Buffer::Buffer()
 {
-
 	m_ID.vaoID = 0;
 	m_ID.eboID = 0;
 	m_ID.vboID[VERTEX_BUFFER] = 0;
@@ -58,15 +51,10 @@ Buffer::Buffer()
 
 	m_ID.hasEBO = false;
 	m_ID.totalVertices = 0;
-
 }
-
-//------------------------------------------------------------------------------------------------------
-//setter function that assigns buffer IDs based on index value passed
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 void Buffer::SetBuffers(const std::string& bufferID)
 {
-
 	Debug::Log("Setting buffers to: '" + bufferID + "'");
 
 	//first check if buffer ID exists in map and if not display
@@ -76,31 +64,27 @@ void Buffer::SetBuffers(const std::string& bufferID)
 
 	if (it == s_bufferIDMap->end())
 	{
-		Debug::Log("Buffer IDs not found. Please enter a valid ID.", Debug::WARNING);
+		Debug::Log("Buffer IDs not found. Please enter a valid ID.", Debug::ErrorCode::WARNING);
 		Debug::Log("===============================================================");
 	}
 
 	else
 	{
 		m_ID = it->second;
-		Debug::Log("Buffer IDs assigned successfully.", Debug::SUCCESS);
+		Debug::Log("Buffer IDs assigned successfully.", Debug::ErrorCode::SUCCESS);
 		Debug::Log("===============================================================");
 	}
-
 }
-//------------------------------------------------------------------------------------------------------
-//function that creates a VAO, VBOs and an EBO and stores the ID in buffer map 
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 bool Buffer::CreateBuffers(const std::string& bufferID, GLsizei totalVertices, bool hasEBO)
 {
-
 	Debug::Log("Creating buffers in graphics memory: '" + bufferID + "'");
 
 	//first check if buffer ID exists in map and if it does display error message
 	//and halt creation because we don't want to replace the existing buffers
 	if (s_bufferIDMap->find(bufferID) != s_bufferIDMap->end())
 	{
-		Debug::Log("Buffers already created in graphics memory.", Debug::WARNING);
+		Debug::Log("Buffers already created in graphics memory.", Debug::ErrorCode::WARNING);
 		Debug::Log("===============================================================");
 		return false;
 	}
@@ -116,145 +100,95 @@ bool Buffer::CreateBuffers(const std::string& bufferID, GLsizei totalVertices, b
 
 	(*s_bufferIDMap)[bufferID] = m_ID;
 
-	Debug::Log("Buffers created successfully.", Debug::SUCCESS);
+	Debug::Log("Buffers created successfully.", Debug::ErrorCode::SUCCESS);
 	Debug::Log("===============================================================");
 
 	return true;
-
 }
-//------------------------------------------------------------------------------------------------------
-//function that associates VAO with EBO
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 void Buffer::BindEBO()
 {
-
 	glBindVertexArray(m_ID.vaoID);
-
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ID.eboID);
-
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ID.eboID);
 	glBindVertexArray(0);
-
 }
-//------------------------------------------------------------------------------------------------------
-//function that associates VAO with VBO based on passed VBO type 
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 void Buffer::BindVBO(VBOType vboType, const std::string& vertAttrib,
-					 ComponentSize componentSize, DataType dataType)
+	ComponentSize componentSize, DataType dataType)
 {
-
 	//bind VAO with either the vertex, color, normal or texture VBO
 	//here we also link the VBOs with their respective shader attributes
 	glBindVertexArray(m_ID.vaoID);
-	
-		glBindBuffer(GL_ARRAY_BUFFER, m_ID.vboID[vboType]);
-		glVertexAttribPointer(Shader::Instance()->GetAttributeID(vertAttrib), 
-			                  componentSize, dataType, GL_FALSE, 0, 0);
-		glEnableVertexAttribArray(Shader::Instance()->GetAttributeID(vertAttrib));
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_ID.vboID[vboType]);
+	glVertexAttribPointer(Shader::Instance()->GetAttributeID(vertAttrib),
+		componentSize, dataType, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(Shader::Instance()->GetAttributeID(vertAttrib));
 
 	glBindVertexArray(0);
-
 }
-//------------------------------------------------------------------------------------------------------
-//function that fills EBO with index data 
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 void Buffer::FillEBO(const GLuint* data, GLsizeiptr size, FillType fillType)
 {
-
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ID.eboID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, fillType);
-							
 }
-//------------------------------------------------------------------------------------------------------
-//function that fills VBO with integer data 
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 void Buffer::FillVBO(VBOType vboType, const GLint* data, GLsizeiptr size, FillType fillType)
 {
-
 	glBindBuffer(GL_ARRAY_BUFFER, m_ID.vboID[vboType]);
 	glBufferData(GL_ARRAY_BUFFER, size, data, fillType);
-
 }
-//------------------------------------------------------------------------------------------------------
-//function that fills VBO with unsigned integer data 
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 void Buffer::FillVBO(VBOType vboType, const GLuint* data, GLsizeiptr size, FillType fillType)
 {
-
 	glBindBuffer(GL_ARRAY_BUFFER, m_ID.vboID[vboType]);
 	glBufferData(GL_ARRAY_BUFFER, size, data, fillType);
-
 }
-//------------------------------------------------------------------------------------------------------
-//function that fills VBO with float data 
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 void Buffer::FillVBO(VBOType vboType, const GLfloat* data, GLsizeiptr size, FillType fillType)
 {
-
 	glBindBuffer(GL_ARRAY_BUFFER, m_ID.vboID[vboType]);
 	glBufferData(GL_ARRAY_BUFFER, size, data, fillType);
-
 }
-//------------------------------------------------------------------------------------------------------
-//function that adds index data to EBO at index position passed 
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================---
 void Buffer::AppendEBO(const GLuint* data, GLsizeiptr size, GLuint offset)
 {
-
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ID.eboID);
 	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, size, data);
-
 }
-//------------------------------------------------------------------------------------------------------
-//function that adds integer data to VBO at index position passed 
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 void Buffer::AppendVBO(VBOType vboType, const GLint* data, GLsizeiptr size, GLuint offset)
 {
-
 	glBindBuffer(GL_ARRAY_BUFFER, m_ID.vboID[vboType]);
 	glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
-
 }
-//------------------------------------------------------------------------------------------------------
-//function that adds unsigned integer data to VBO at index position passed 
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 void Buffer::AppendVBO(VBOType vboType, const GLuint* data, GLsizeiptr size, GLuint offset)
 {
-
 	glBindBuffer(GL_ARRAY_BUFFER, m_ID.vboID[vboType]);
 	glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
-
 }
-//------------------------------------------------------------------------------------------------------
-//function that adds float data to VBO at index position passed 
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 void Buffer::AppendVBO(VBOType vboType, const GLfloat* data, GLsizeiptr size, GLuint offset)
 {
-
 	glBindBuffer(GL_ARRAY_BUFFER, m_ID.vboID[vboType]);
 	glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
-
 }
-//------------------------------------------------------------------------------------------------------
-//function that sends all buffer data to the vertex shader 
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 void Buffer::Draw(DrawMode drawMode)
 {
-
 	//bind VAO and render everything based on if there are indices or not
 	glBindVertexArray(m_ID.vaoID);
 
-		(m_ID.hasEBO) ? glDrawElements(drawMode, m_ID.totalVertices, GL_UNSIGNED_INT, 0)
-				      : glDrawArrays(drawMode, 0, m_ID.totalVertices);
+	(m_ID.hasEBO) ? glDrawElements(drawMode, m_ID.totalVertices, GL_UNSIGNED_INT, 0)
+		: glDrawArrays(drawMode, 0, m_ID.totalVertices);
 
 	glBindVertexArray(0);
-
 }
-//------------------------------------------------------------------------------------------------------
-//function that unloads all OpenGL buffer IDs from memory
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 void Buffer::DestroyBuffers()
 {
-
 	Debug::Log("Unloading all buffers from memory...");
 
 	//loop through entire buffer map in order to remove all buffer IDs
@@ -268,16 +202,12 @@ void Buffer::DestroyBuffers()
 	//clear the buffer ID map
 	s_bufferIDMap->clear();
 
-	Debug::Log("Buffers unloaded successfully.", Debug::SUCCESS);
+	Debug::Log("Buffers unloaded successfully.", Debug::ErrorCode::SUCCESS);
 	Debug::Log("===============================================================");
-
 }
-//------------------------------------------------------------------------------------------------------
-//function that unloads a specific OpenGL buffer ID from memory
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 void Buffer::DestroyBuffers(const std::string& bufferID)
 {
-
 	Debug::Log("Unloading buffers: '" + bufferID + "'");
 
 	//check if buffer ID exists in map and if not display error message
@@ -286,7 +216,7 @@ void Buffer::DestroyBuffers(const std::string& bufferID)
 
 	if (it == s_bufferIDMap->end())
 	{
-		Debug::Log("Buffer IDs not found. Please enter a valid ID.", Debug::WARNING);
+		Debug::Log("Buffer IDs not found. Please enter a valid ID.", Debug::ErrorCode::WARNING);
 		Debug::Log("===============================================================");
 	}
 
@@ -298,8 +228,7 @@ void Buffer::DestroyBuffers(const std::string& bufferID)
 
 		s_bufferIDMap->erase(it);
 
-		Debug::Log("Buffers unloaded successfully.", Debug::SUCCESS);
+		Debug::Log("Buffers unloaded successfully.", Debug::ErrorCode::SUCCESS);
 		Debug::Log("===============================================================");
 	}
-
 }

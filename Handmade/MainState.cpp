@@ -46,9 +46,9 @@ bool MainState::OnEnter()
 	m_grid3D->Create();
 
 	m_UICam = new UICamera;
-	m_mainCam = new FPSCamera;
+	m_mainCam = new FreeCamera;
 
-	Input::Instance()->SetCursorState(Input::OFF);
+	Input::Instance()->SetCursorState(Input::CursorState::OFF);
 
 	//ADD YOUR CODE HERE...
 	//..
@@ -89,13 +89,13 @@ bool MainState::Update(int deltaTime)
 
 		if (m_isMouseVisible)
 		{
-			Input::Instance()->SetCursorState(Input::OFF);
+			Input::Instance()->SetCursorState(Input::CursorState::OFF);
 			m_isMouseVisible = false;
 		}
 
 		else
 		{
-			Input::Instance()->SetCursorState(Input::ON);
+			Input::Instance()->SetCursorState(Input::CursorState::ON);
 			m_isMouseVisible = true;
 		}
 

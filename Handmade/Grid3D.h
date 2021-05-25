@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Grid3D' source files last updated on 19 May 2021                  |
+| 'Grid3D' source files last updated on 25 May 2021                  |
 #===================================================================*/
 
 #include "glad.h"
@@ -20,7 +20,7 @@ public:
 	void SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a = 1.0f);
 
 	virtual bool Create();
-	virtual void Update(int deltaTime) {}
+	virtual void Update(GLint deltaTime) {}
 	virtual void Draw();
 	virtual void Destroy();
 

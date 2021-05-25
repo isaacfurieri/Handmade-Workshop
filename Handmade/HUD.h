@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'HUD' source files last updated on 19 May 2021                     |
+| 'HUD' source files last updated on 25 May 2021                     |
 #===================================================================*/
 
 #include "glad.h"

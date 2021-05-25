@@ -149,7 +149,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Circle.h" />
     <ClInclude Include="Cuboid.h" />
-    <ClInclude Include="FPSCamera.h" />
+    <ClInclude Include="FreeCamera.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="EndState.h" />
     <ClInclude Include="Game.h" />
@@ -188,7 +188,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Circle.cpp" />
     <ClCompile Include="Cuboid.cpp" />
-    <ClCompile Include="FPSCamera.cpp" />
+    <ClCompile Include="FreeCamera.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Debug.cpp" />

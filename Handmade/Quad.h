@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Quad' source files last updated on 19 May 2021                    |
+| 'Quad' source files last updated on 25 May 2021                    |
 #===================================================================*/
 
 #include <glm.hpp>
@@ -23,7 +23,7 @@ public:
 	void SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
 
 	virtual bool Create();
-	virtual void Update(int deltaTime) {}
+	virtual void Update(GLint deltaTime) {}
 	virtual void Draw();
 	virtual void Destroy();
 

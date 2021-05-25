@@ -32,7 +32,7 @@
 #include "Circle.h"
 #include "Cuboid.h"
 #include "Element.h"
-#include "FPSCamera.h"
+#include "FreeCamera.h"
 #include "GameObject.h"
 #include "GameState.h"
 #include "Grid2D.h"
@@ -69,7 +69,7 @@ private:
 	Grid3D* m_grid3D;
 
 	UICamera* m_UICam;
-	FPSCamera* m_mainCam;
+	FreeCamera* m_mainCam;
 
 	std::vector<GameObject*> m_gameObjects;
 

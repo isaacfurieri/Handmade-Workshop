@@ -173,9 +173,6 @@
     <ClInclude Include="Camera.h">
       <Filter>Header Files\GameObjects\Cameras</Filter>
     </ClInclude>
-    <ClInclude Include="FPSCamera.h">
-      <Filter>Header Files\GameObjects\Cameras</Filter>
-    </ClInclude>
     <ClInclude Include="UICamera.h">
       <Filter>Header Files\GameObjects\Cameras</Filter>
     </ClInclude>
@@ -214,6 +211,9 @@
     </ClInclude>
     <ClInclude Include="Circle.h">
       <Filter>Header Files\GameObjects\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="FreeCamera.h">
+      <Filter>Header Files\GameObjects\Cameras</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -292,9 +292,6 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files\GameObjects\Cameras</Filter>
     </ClCompile>
-    <ClCompile Include="FPSCamera.cpp">
-      <Filter>Source Files\GameObjects\Cameras</Filter>
-    </ClCompile>
     <ClCompile Include="UICamera.cpp">
       <Filter>Source Files\GameObjects\Cameras</Filter>
     </ClCompile>
@@ -333,6 +330,9 @@
     </ClCompile>
     <ClCompile Include="Circle.cpp">
       <Filter>Source Files\GameObjects\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="FreeCamera.cpp">
+      <Filter>Source Files\GameObjects\Cameras</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Input' source files last updated on 19 May 2021                   |
+| 'Input' source files last updated on 25 May 2021                   |
 #===================================================================*/
 
 #include <glm.hpp>
@@ -17,13 +17,13 @@ class Input
 
 public:
 
-	enum ButtonState
+	enum class ButtonState
 	{
 		UP,
 		DOWN
 	};
 
-	enum CursorState
+	enum class CursorState
 	{
 		ON = 1,
 		OFF = 0,
@@ -31,7 +31,7 @@ public:
 		HIDE = 0
 	};
 
-	enum CursorType
+	enum class CursorType
 	{
 		ARROW,
 		IBEAM,
@@ -59,8 +59,8 @@ public:
 	ButtonState GetRightButtonState();
 
 	void SetCursorPosition(int x, int y);
-	void SetCursorType(CursorType cursorType = ARROW);
-	void SetCursorState(CursorState cursorEnabled = ON, CursorState cursorVisible = SHOW);
+	void SetCursorType(CursorType cursorType = CursorType::ARROW);
+	void SetCursorState(CursorState cursorEnabled = CursorState::ON, CursorState cursorVisible = CursorState::SHOW);
 
 	void Update();
 

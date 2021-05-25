@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Buffer' source files last updated on 19 May 2021                  |
+| 'Buffer' source files last updated on 25 May 2021                  |
 #===================================================================*/
 
 #include <map>

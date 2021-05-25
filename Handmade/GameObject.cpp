@@ -1,12 +1,9 @@
 #include "GameObject.h"
 #include "Shader.h"
 
-//------------------------------------------------------------------------------------------------------
-//constructor that assigns all defaults 
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 GameObject::GameObject()
 {
-
 	m_isLit = false;
 	m_isAlive = true;
 	m_isActive = true;
@@ -14,86 +11,82 @@ GameObject::GameObject()
 	m_isTextured = false;
 
 	m_tag = "";
-	m_priority = 0;	
+	m_priority = 0;
 	m_modelMatrix = glm::mat4(1.0f);
-
 }
-
+//======================================================================================================
 bool GameObject::IsLit()
 {
 	return m_isLit;
 }
-
-void GameObject::IsLit(bool isLit)
+//======================================================================================================
+void GameObject::IsLit(bool flag)
 {
-	m_isLit = isLit;
+	m_isLit = flag;
 }
-
+//======================================================================================================
 bool GameObject::IsAlive()
 {
 	return m_isAlive;
 }
-
-void GameObject::IsAlive(bool isAlive)
+//======================================================================================================
+void GameObject::IsAlive(bool flag)
 {
-	m_isAlive = isAlive;
+	m_isAlive = flag;
 }
-
+//======================================================================================================
 bool GameObject::IsActive()
 {
 	return m_isActive;
 }
-
-void GameObject::IsActive(bool isActive)
+//======================================================================================================
+void GameObject::IsActive(bool flag)
 {
-	m_isActive = isActive;
+	m_isActive = flag;
 }
-
+//======================================================================================================
 bool GameObject::IsVisible()
 {
 	return m_isVisible;
 }
-
-void GameObject::IsVisible(bool isVisible)
+//======================================================================================================
+void GameObject::IsVisible(bool flag)
 {
-	m_isVisible = isVisible;
+	m_isVisible = flag;
 }
-
+//======================================================================================================
 bool GameObject::IsTextured()
 {
 	return m_isTextured;
 }
-
-void GameObject::IsTextured(bool isTextured)
+//======================================================================================================
+void GameObject::IsTextured(bool flag)
 {
-	m_isTextured = isTextured;
+	m_isTextured = flag;
 }
-
+//======================================================================================================
 const std::string& GameObject::GetTag()
 {
 	return m_tag;
 }
-
-unsigned int GameObject::GetPriority()
+//======================================================================================================
+GLuint GameObject::GetPriority()
 {
 	return m_priority;
 }
-
+//======================================================================================================
 void GameObject::SetTag(const std::string& tag)
 {
 	m_tag = tag;
 }
-
-void GameObject::SetPriority(unsigned int priority)
+//======================================================================================================
+void GameObject::SetPriority(GLuint priority)
 {
 	m_priority = priority;
 }
-//------------------------------------------------------------------------------------------------------
-//function that sends all game object's main properties to shaders
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 void GameObject::SendToShader(bool isLit, bool isTextured)
 {
-
 	//pass lighting flag to fragment shader 
 	//Shader::Instance()->SendUniformData("isLit", (GLint)isLit);
 
@@ -102,5 +95,4 @@ void GameObject::SendToShader(bool isLit, bool isTextured)
 
 	//send model matrix to vertex shader
 	Shader::Instance()->SendUniformData("model", m_modelMatrix);
-
 }

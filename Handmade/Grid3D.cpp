@@ -1,38 +1,25 @@
 #include "Grid3D.h"
 #include "Shader.h"
 
-//------------------------------------------------------------------------------------------------------
-//constructor that assigns all default values 
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 Grid3D::Grid3D(GLint size, GLfloat lineWidth)
 {
-
 	m_size = size;
 	m_lineWidth = lineWidth;
-
 }
-
+//======================================================================================================
 void Grid3D::SetSize(GLint size)
 {
-
 	m_size = size;
-
 }
-//------------------------------------------------------------------------------------------------------
-//setter function that assigns thickness of grid lines
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 void Grid3D::SetLineWidth(GLfloat lineWidth)
 {
-
 	m_lineWidth = lineWidth;
-
 }
-//------------------------------------------------------------------------------------------------------
-//setter function that assigns color of grid lines
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 void Grid3D::SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
 {
-
 	//the offset will add up and keep track of 
 	//how many bytes are added to the VBOs
 	GLuint offset = 0;
@@ -48,14 +35,10 @@ void Grid3D::SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
 		offset += sizeof(colors);
 
 	}
-
 }
-//------------------------------------------------------------------------------------------------------
-//function that creates and fills all buffers with vertex and color data  
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 bool Grid3D::Create()
 {
-
 	//the offset will add up and keep track of 
 	//how many bytes are added to the VBOs
 	GLuint offsetColor = 0;
@@ -65,7 +48,7 @@ bool Grid3D::Create()
 	const int QUADRANTS = 4;
 	const int BYTES_PER_VERTEX = 3 * sizeof(GLint);
 	const int BYTES_PER_COLOR = 4 * sizeof(GLfloat);
-	
+
 	//pre-calculate the total amount of bytes needed for the VBOs  
 	//each quadrant in the grid will have an amount of lines and
 	//each line has 2 vertices, each vertex has an XYZ component
@@ -92,9 +75,9 @@ bool Grid3D::Create()
 	//will get updated each iteration and keep track of how many bytes into
 	//each VBO we already are in order to fill the VBOs in the right place
 
-	//**********************************
+	//==================================
 	//draw all negative X lines
-	//**********************************
+	//==================================
 
 	for (int i = 0; i < m_size; i++)
 	{
@@ -106,21 +89,21 @@ bool Grid3D::Create()
 
 		m_buffer.AppendVBO(Buffer::VERTEX_BUFFER, vertices, sizeof(vertices), offsetVertex);
 		m_buffer.AppendVBO(Buffer::COLOR_BUFFER, colors, sizeof(colors), offsetColor);
-		
+
 		offsetVertex += BYTES_PER_VERTEX * 2;
 		offsetColor += BYTES_PER_COLOR * 2;
 
 	}
 
-	//**********************************
+	//==================================
 	//draw all positive X lines
-	//**********************************
+	//==================================
 
 	for (int i = 1; i < m_size + 1; i++)
 	{
 
 		GLint vertices[] = { 0 + i, 0,  m_size,      //first vertex
-				             0 + i, 0, -m_size };    //second vertex
+							 0 + i, 0, -m_size };    //second vertex
 
 		GLfloat colors[] = { 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f };
 
@@ -132,15 +115,15 @@ bool Grid3D::Create()
 
 	}
 
-	//**********************************
+	//==================================
 	//draw all negative Z lines
-	//**********************************
+	//==================================
 
 	for (int i = 0; i < m_size; i++)
 	{
 
 		GLint vertices[] = { -m_size, 0, -m_size + i,        //first vertex
-							  m_size, 0, -m_size + i  };     //second vertex
+							  m_size, 0, -m_size + i };     //second vertex
 
 		GLfloat colors[] = { 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f };
 
@@ -152,15 +135,15 @@ bool Grid3D::Create()
 
 	}
 
-	//**********************************
+	//==================================
 	//draw all positive Z lines
-	//**********************************
+	//==================================
 
 	for (int i = 1; i < m_size + 1; i++)
 	{
 
 		GLint vertices[] = { -m_size, 0, 0 + i,        //first vertex
-							  m_size, 0, 0 + i  };     //second vertex
+							  m_size, 0, 0 + i };     //second vertex
 
 		GLfloat colors[] = { 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f };
 
@@ -171,25 +154,18 @@ bool Grid3D::Create()
 		offsetColor += BYTES_PER_COLOR * 2;
 
 	}
-	
-	return true;
 
+	return true;
 }
-//------------------------------------------------------------------------------------------------------
-//function that sets the grid line thickness and renders the grid on screen
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 void Grid3D::Draw()
 {
-
 	Shader::SetLineWidth(m_lineWidth);
 	SendToShader(false, false);
 	m_buffer.Draw(Buffer::LINES);
-
 }
-
+//======================================================================================================
 void Grid3D::Destroy()
 {
-
 	m_buffer.DestroyBuffers("GRID_3D");
-
 }

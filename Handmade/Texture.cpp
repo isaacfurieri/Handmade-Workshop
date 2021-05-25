@@ -3,15 +3,11 @@
 #include "Debug.h"
 #include "Texture.h"
 
-//this allocated space remains in memory until the application ends
 std::map<std::string, GLuint>* Texture::s_textureIDMap = new std::map<std::string, GLuint>;
 
-//------------------------------------------------------------------------------------------------------
-//static function that displays total size of texture ID map (DEBUG ONLY)
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================-
 void Texture::Output()
 {
-
 	//clear the console window for a fresh display
 	Debug::ClearLog();
 
@@ -27,50 +23,38 @@ void Texture::Output()
 	}
 
 	Debug::Log("===============================================================");
-
 }
-//------------------------------------------------------------------------------------------------------
-//constructor that assigns all default values 
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 Texture::Texture()
 {
-
 	m_ID = 0;
-
 }
-//------------------------------------------------------------------------------------------------------
-//setter function that assigns texture image ID based on index value passed
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 void Texture::SetTexture(const std::string& textureID)
 {
-
 	Debug::Log("Setting texture to: '" + textureID + "'");
 
 	//first check if texture ID exists in map and if not display
 	//error message, otherwise go ahead and assign the texture ID
 
 	auto it = s_textureIDMap->find(textureID);
-	
+
 	if (it == s_textureIDMap->end())
 	{
-		Debug::Log("Texture ID not found. Please enter a valid ID.", Debug::WARNING);
+		Debug::Log("Texture ID not found. Please enter a valid ID.", Debug::ErrorCode::WARNING);
 		Debug::Log("===============================================================");
 	}
-	
+
 	else
 	{
 		m_ID = it->second;
-		Debug::Log("Texture ID assigned successfully.", Debug::SUCCESS);
+		Debug::Log("Texture ID assigned successfully.", Debug::ErrorCode::SUCCESS);
 		Debug::Log("===============================================================");
 	}
-
 }
-//------------------------------------------------------------------------------------------------------
-//function that loads a texture from a raw image file and stores the ID in texture map
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 bool Texture::Load(const std::string& filename, const std::string& textureID)
 {
-
 	//variables to hold property values of raw image data
 	unsigned char* pixels = 0;
 	unsigned int width = 0;
@@ -86,7 +70,7 @@ bool Texture::Load(const std::string& filename, const std::string& textureID)
 	//and halt loading because we don't want to replace the existing texture
 	if (s_textureIDMap->find(textureID) != s_textureIDMap->end())
 	{
-		Debug::Log("Texture already loaded in memory.", Debug::WARNING);
+		Debug::Log("Texture already loaded in memory.", Debug::ErrorCode::WARNING);
 		Debug::Log("===============================================================");
 		return false;
 	}
@@ -97,7 +81,7 @@ bool Texture::Load(const std::string& filename, const std::string& textureID)
 	//if texture loading failed, display error message 
 	if (!textureData)
 	{
-		Debug::Log("File could not be loaded.", Debug::FAILURE);
+		Debug::Log("File could not be loaded.", Debug::ErrorCode::FAILURE);
 		Debug::Log("===============================================================");
 		return false;
 	}
@@ -117,22 +101,22 @@ bool Texture::Load(const std::string& filename, const std::string& textureID)
 	//data we are about to send to OpenGL  
 	glBindTexture(GL_TEXTURE_2D, m_ID);
 
-		//set magnification and minification filters 
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	//set magnification and minification filters 
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-		//set texture wrap filters 
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	//set texture wrap filters 
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-		//send the raw image data to OpenGL, where it will be stored in OpenGL's texture database
-		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, pixels);
+	//send the raw image data to OpenGL, where it will be stored in OpenGL's texture database
+	glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, pixels);
 
-		//automatically generate mipmaps
-		glGenerateMipmap(GL_TEXTURE_2D);
+	//automatically generate mipmaps
+	glGenerateMipmap(GL_TEXTURE_2D);
 
-		//free SDL image as its no longer needed
-		SDL_FreeSurface(textureData);
+	//free SDL image as its no longer needed
+	SDL_FreeSurface(textureData);
 
 	//unlink texture
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -142,36 +126,24 @@ bool Texture::Load(const std::string& filename, const std::string& textureID)
 	(*s_textureIDMap)[textureID] = m_ID;
 
 	//display text to state that file has been opened and read
-	Debug::Log("File opened and read successfully.", Debug::SUCCESS);
+	Debug::Log("File opened and read successfully.", Debug::ErrorCode::SUCCESS);
 	Debug::Log("===============================================================");
 
 	return true;
-
 }
-//------------------------------------------------------------------------------------------------------
-//function that binds texture ID for use in fragment shader
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 void Texture::Bind()
 {
-
 	glBindTexture(GL_TEXTURE_2D, m_ID);
-
 }
-//------------------------------------------------------------------------------------------------------
-//function that unbinds current texture 
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 void Texture::UnBind()
 {
-
 	glBindTexture(GL_TEXTURE_2D, 0);
-
 }
-//------------------------------------------------------------------------------------------------------
-//function that unloads all OpenGL texture IDs from memory
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 void Texture::Unload()
 {
-
 	Debug::Log("Unloading all textures from memory...");
 
 	//loop through entire texture map in order to remove all texture IDs
@@ -183,16 +155,12 @@ void Texture::Unload()
 	//clear the texture ID map
 	s_textureIDMap->clear();
 
-	Debug::Log("Textures unloaded successfully.", Debug::SUCCESS);
+	Debug::Log("Textures unloaded successfully.", Debug::ErrorCode::SUCCESS);
 	Debug::Log("===============================================================");
-
 }
-//------------------------------------------------------------------------------------------------------
-//function that unloads a specific OpenGL texture ID from memory
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 void Texture::Unload(const std::string& textureID)
 {
-
 	Debug::Log("Unloading texture: '" + textureID + "'");
 
 	//check if texture ID exists in map and if not display error message
@@ -201,7 +169,7 @@ void Texture::Unload(const std::string& textureID)
 
 	if (it == s_textureIDMap->end())
 	{
-		Debug::Log("Texture ID not found. Please enter a valid ID.", Debug::WARNING);
+		Debug::Log("Texture ID not found. Please enter a valid ID.", Debug::ErrorCode::WARNING);
 		Debug::Log("===============================================================");
 	}
 
@@ -210,8 +178,7 @@ void Texture::Unload(const std::string& textureID)
 		glDeleteTextures(1, &(it->second));
 		s_textureIDMap->erase(it);
 
-		Debug::Log("Texture unloaded successfully.", Debug::SUCCESS);
+		Debug::Log("Texture unloaded successfully.", Debug::ErrorCode::SUCCESS);
 		Debug::Log("===============================================================");
 	}
-
 }

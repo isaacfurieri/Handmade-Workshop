@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Debug' source files last updated on 19 May 2021                   |
+| 'Debug' source files last updated on 25 May 2021                   |
 #===================================================================*/
 
 #include <Windows.h>
@@ -16,7 +16,7 @@ class Debug
 
 public:
 
-	enum ErrorCode
+	enum class ErrorCode
 	{
 		FAILURE = 4,
 		WARNING = 6,
@@ -33,7 +33,7 @@ public:
 
 	static void Log(GLfloat value, const std::string& label = "");
 	static void Log(const glm::vec3& vector, const std::string& label = "");
-	static void Log(const std::string& message, ErrorCode errorCode = DEFAULT);
+	static void Log(const std::string& message, ErrorCode errorCode = ErrorCode::DEFAULT);
 	static void Log(GLfloat x, GLfloat y, GLfloat z = 0, const std::string& label = "");
 
 private:

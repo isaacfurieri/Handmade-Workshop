@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Camera' source files last updated on 19 May 2021                  |
+| 'Camera' source files last updated on 25 May 2021                  |
 #===================================================================*/
 
 #include <glm.hpp>
@@ -15,7 +15,7 @@ class Camera : public GameObject
 
 public:
 
-	enum Origin2D
+	enum class Origin2D
 	{
 		TOP_LEFT,
 		BOTTOM_LEFT
@@ -27,7 +27,7 @@ public:
 	void SetVelocity(GLfloat velocity);
 	void SetFieldOfView(GLfloat fieldOfView);
 	void SetPosition(GLfloat x, GLfloat y, GLfloat z);
-	void SetOrthoView(Origin2D origin = BOTTOM_LEFT);
+	void SetOrthoView(Origin2D origin = Origin2D::BOTTOM_LEFT);
 	void SetPerspView(GLfloat nearClip = 0.1f, GLfloat farClip = 1000.0f);
 
 	virtual void Draw();

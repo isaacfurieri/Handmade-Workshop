@@ -28,7 +28,7 @@ GLint Shader::GetUniformID(const std::string& uniform)
 
 	if (it == m_uniforms.end())
 	{
-		Debug::Log("Shader uniform '" + uniform + "' not bound.", Debug::WARNING);
+		Debug::Log("Shader uniform '" + uniform + "' not bound.", Debug::ErrorCode::WARNING);
 		Debug::Log("===============================================================");
 		return -1;
 	}
@@ -53,7 +53,7 @@ GLint Shader::GetAttributeID(const std::string& attribute)
 
 	if (it == m_attributes.end())
 	{
-		Debug::Log("Shader attribute '" + attribute + "' not bound.", Debug::WARNING);
+		Debug::Log("Shader attribute '" + attribute + "' not bound.", Debug::ErrorCode::WARNING);
 		Debug::Log("===============================================================");
 		return -1;
 	}
@@ -111,14 +111,14 @@ void Shader::BindUniform(const std::string& uniform)
 
 		if (ID == -1)
 		{
-			Debug::Log("Shader uniform '" + uniform + "' not found or inactive.", Debug::WARNING);
+			Debug::Log("Shader uniform '" + uniform + "' not found or inactive.", Debug::ErrorCode::WARNING);
 			Debug::Log("===============================================================");
 		}
 
 		else
 		{
 			m_uniforms[uniform] = ID;
-			Debug::Log("Shader uniform '" + uniform + "' bound to program.", Debug::SUCCESS);
+			Debug::Log("Shader uniform '" + uniform + "' bound to program.", Debug::ErrorCode::SUCCESS);
 			Debug::Log("===============================================================");
 		}
 
@@ -126,7 +126,7 @@ void Shader::BindUniform(const std::string& uniform)
 
 	else
 	{
-		Debug::Log("Shader uniform '" + uniform + "' already bound to program.", Debug::WARNING);
+		Debug::Log("Shader uniform '" + uniform + "' already bound to program.", Debug::ErrorCode::WARNING);
 		Debug::Log("===============================================================");
 	}
 
@@ -151,14 +151,14 @@ void Shader::BindAttribute(const std::string& attribute)
 
 		if (ID == -1)
 		{
-			Debug::Log("Shader attribute '" + attribute + "' not found or inactive.", Debug::WARNING);
+			Debug::Log("Shader attribute '" + attribute + "' not found or inactive.", Debug::ErrorCode::WARNING);
 			Debug::Log("===============================================================");
 		}
 
 		else
 		{
 			m_attributes[attribute] = ID;
-			Debug::Log("Shader attribute '" + attribute + "' bound to program.", Debug::SUCCESS);
+			Debug::Log("Shader attribute '" + attribute + "' bound to program.", Debug::ErrorCode::SUCCESS);
 			Debug::Log("===============================================================");
 		}
 
@@ -166,7 +166,7 @@ void Shader::BindAttribute(const std::string& attribute)
 
 	else
 	{
-		Debug::Log("Shader attribute '" + attribute + "' already bound to program.", Debug::WARNING);
+		Debug::Log("Shader attribute '" + attribute + "' already bound to program.", Debug::ErrorCode::WARNING);
 		Debug::Log("===============================================================");
 	}
 
@@ -180,7 +180,7 @@ Shader::Shader()
 	m_shaderProgramID = 0;
 	m_vertexShaderID = 0;
 	m_fragmentShaderID = 0;
-	
+
 }
 //------------------------------------------------------------------------------------------------------
 //function that sends uniform data to shader (INT)
@@ -331,40 +331,40 @@ bool Shader::CreateProgram()
 	//program display an error message and return false
 	if (m_shaderProgramID == 0)
 	{
-		Debug::Log("Shader program could not be created.", Debug::FAILURE);
+		Debug::Log("Shader program could not be created.", Debug::ErrorCode::FAILURE);
 		Debug::Log("===============================================================");
 		Debug::PauseLog();
 		return false;
 	}
 
 	return true;
-	
+
 }
 //------------------------------------------------------------------------------------------------------
 //function that creates a vertex and fragment shader object
 //------------------------------------------------------------------------------------------------------
 bool Shader::CreateShaders()
 {
-		
+
 	//create a OpenGL shader ID for the vertex and fragment shader
 	//if an error occured while creating either shader display
 	//an error message and return false back to the calling code
 
 	m_vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
-	
+
 	if (m_vertexShaderID == 0)
 	{
-		Debug::Log("Vertex shader could not be created.", Debug::FAILURE);
+		Debug::Log("Vertex shader could not be created.", Debug::ErrorCode::FAILURE);
 		Debug::Log("===============================================================");
 		Debug::PauseLog();
 		return false;
 	}
-	
+
 	m_fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
 
 	if (m_fragmentShaderID == 0)
 	{
-		Debug::Log("Fragment shader could not be created.", Debug::FAILURE);
+		Debug::Log("Fragment shader could not be created.", Debug::ErrorCode::FAILURE);
 		Debug::Log("===============================================================");
 		Debug::PauseLog();
 		return false;
@@ -394,7 +394,7 @@ bool Shader::CompileShader(const std::string& filename, ShaderType shaderType)
 	//if file has an error opening output error message
 	if (!file)
 	{
-		Debug::Log("Shader file could not be loaded.", Debug::FAILURE);
+		Debug::Log("Shader file could not be loaded.", Debug::ErrorCode::FAILURE);
 		Debug::Log("===============================================================");
 		return false;
 	}
@@ -402,11 +402,11 @@ bool Shader::CompileShader(const std::string& filename, ShaderType shaderType)
 	//based on which shader needs to be compiled point to specific 
 	//shader ID so that when compiling later there is no duplicate code
 	GLint tempShaderID = 0;
-		
+
 	switch (shaderType)
 	{
-		case VERTEX_SHADER: tempShaderID = m_vertexShaderID; break;
-		case FRAGMENT_SHADER: tempShaderID = m_fragmentShaderID; break;
+	case VERTEX_SHADER: tempShaderID = m_vertexShaderID; break;
+	case FRAGMENT_SHADER: tempShaderID = m_fragmentShaderID; break;
 	}
 
 	//read through the entire file and add each line of code into a big string
@@ -440,7 +440,7 @@ bool Shader::CompileShader(const std::string& filename, ShaderType shaderType)
 	//if compilation went well, display a friendly message
 	if (compileResult == GL_TRUE)
 	{
-		Debug::Log("Shader file compiled successfully.", Debug::SUCCESS);
+		Debug::Log("Shader file compiled successfully.", Debug::ErrorCode::SUCCESS);
 		Debug::Log("===============================================================");
 	}
 
@@ -451,11 +451,11 @@ bool Shader::CompileShader(const std::string& filename, ShaderType shaderType)
 		GLchar error[1000];
 		GLsizei length = 1000;
 
-		Debug::Log("Shader file could not be compiled. See error list below.", Debug::FAILURE);
+		Debug::Log("Shader file could not be compiled. See error list below.", Debug::ErrorCode::FAILURE);
 		Debug::Log("---------------------------------------------------------------");
 
 		glGetShaderInfoLog(tempShaderID, 1000, &length, error);
-		Debug::Log(error, Debug::FAILURE);
+		Debug::Log(error, Debug::ErrorCode::FAILURE);
 		Debug::Log("===============================================================");
 
 		return false;
@@ -503,11 +503,11 @@ bool Shader::LinkProgram()
 		GLchar error[1000];
 		GLsizei length = 1000;
 
-		Debug::Log("Shader program could not be linked. See error list below.", Debug::FAILURE);
+		Debug::Log("Shader program could not be linked. See error list below.", Debug::ErrorCode::FAILURE);
 		Debug::Log("---------------------------------------------------------------");
 
 		glGetProgramInfoLog(m_shaderProgramID, 1000, &length, error);
-		Debug::Log(error, Debug::FAILURE);
+		Debug::Log(error, Debug::ErrorCode::FAILURE);
 		Debug::Log("===============================================================");
 
 		return false;

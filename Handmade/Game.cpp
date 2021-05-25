@@ -5,41 +5,26 @@
 #include "Shader.h"
 #include "Screen.h"
 
-//------------------------------------------------------------------------------------------------------
-//constructor that assigns all default values
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 Game::Game()
 {
-
 	m_endGame = false;
 	m_deltaTime = 0;
-
 }
-//------------------------------------------------------------------------------------------------------
-//getter function that returns total time passed in milliseconds
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 int Game::GetTotalTime()
 {
-
 	return SDL_GetTicks();
-
 }
-//------------------------------------------------------------------------------------------------------
-//getter function that returns time elapsed in milliseconds
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 int Game::GetElapsedTime()
 {
-
 	return m_deltaTime;
-
 }
-//------------------------------------------------------------------------------------------------------
-//function that initializes all other managers of the game
-//------------------------------------------------------------------------------------------------------
-bool Game::Initialize(const std::string& name, int screenWidth, 
-	                  int screenHeight, int pixelsPerUnit, bool isFullscreen)
+//======================================================================================================
+bool Game::Initialize(const std::string& name, GLuint screenWidth,
+	GLuint screenHeight, GLuint pixelsPerUnit, bool isFullscreen)
 {
-
 	//initialise game screen with passed values 
 	if (!(Screen::Instance()->
 		Initialize(name.c_str(), screenWidth, screenHeight, pixelsPerUnit, 4, 5, true, isFullscreen)))
@@ -54,34 +39,22 @@ bool Game::Initialize(const std::string& name, int screenWidth,
 	}
 
 	return true;
-
 }
-//------------------------------------------------------------------------------------------------------
-//function that loads and adds a game state to the front of the queue (for temporary states)
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 void Game::AddState(GameState* state)
 {
-
 	state->OnEnter();
 	m_gameStates.push_front(state);
-
 }
-//------------------------------------------------------------------------------------------------------
-//function that loads and adds a game state to the back of the queue (for new states)
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 void Game::ChangeState(GameState* state)
 {
-
 	state->OnEnter();
 	m_gameStates.push_back(state);
-
 }
-//------------------------------------------------------------------------------------------------------
-//function that runs the game while at least one game state is active
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 bool Game::Run()
 {
-
 	GameState* state;
 
 	//main game loop!
@@ -136,30 +109,21 @@ bool Game::Run()
 	}
 
 	return true;
-
 }
-//------------------------------------------------------------------------------------------------------
-//function that closes down all other managers of the game
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 void Game::ShutDown()
 {
-
 	//close down FMOD audio sub-system 
 	AudioManager::Instance()->ShutDown();
 
 	//close down game screen 
 	Screen::Instance()->ShutDown();
-
 }
-//------------------------------------------------------------------------------------------------------
-//function that unloads and removes the front-most game state from the queue
-//------------------------------------------------------------------------------------------------------
+//======================================================================================================
 void Game::RemoveState()
 {
-
 	m_gameStates.front()->OnExit();
 
 	delete m_gameStates.front();
 	m_gameStates.pop_front();
-
 }

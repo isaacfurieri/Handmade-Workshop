@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Texture' source files last updated on 19 May 2021                 |
+| 'Texture' source files last updated on 25 May 2021                 |
 #===================================================================*/
 
 #include <map>

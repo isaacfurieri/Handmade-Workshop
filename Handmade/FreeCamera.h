@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'FPSCamera' source files last updated on 19 May 2021               |
+| 'FreeCamera' source files last updated on 25 May 2021              |
 #===================================================================*/
 
 #include <string>
@@ -11,13 +11,13 @@
 
 //TODO - Refine class such that it follows newer design
 
-class FPSCamera : public Camera
+class FreeCamera : public Camera
 {
 
 public:
 
-	FPSCamera();
-	virtual ~FPSCamera() {}
+	FreeCamera();
+	virtual ~FreeCamera() {}
 
 	bool IsFlying();
 	void IsFlying(bool isFlying);
@@ -26,7 +26,7 @@ public:
 	void SetTarget(GLfloat x, GLfloat y, GLfloat z);
 
 	virtual bool Create() { return true; }
-	virtual void Update(int deltaTime);
+	virtual void Update(GLint deltaTime);
 	virtual void Destroy() {};
 
 private:

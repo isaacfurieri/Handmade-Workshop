@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Screen' source files last updated on 19 May 2021                  |
+| 'Screen' source files last updated on 25 May 2021                  |
 #===================================================================*/
 
 #include <string>
@@ -17,16 +17,10 @@ class Screen
 
 public:
 
-	enum VSyncState
+	enum class VSyncState
 	{
 		VSYNC_OFF,
 		VSYNC_ON
-	};
-
-	enum ScreenOrigin2D
-	{
-		TOP_LEFT,
-		BOTTOM_LEFT
 	};
 
 	static Screen* Instance();
