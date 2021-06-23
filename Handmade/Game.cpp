@@ -1,4 +1,3 @@
-#include "AudioManager.h"
 #include "Debug.h"
 #include "Game.h"
 #include "Input.h"
@@ -28,12 +27,6 @@ bool Game::Initialize(const std::string& name, GLuint screenWidth,
 	//initialise game screen with passed values 
 	if (!(Screen::Instance()->
 		Initialize(name.c_str(), screenWidth, screenHeight, pixelsPerUnit, 4, 5, true, isFullscreen)))
-	{
-		return false;
-	}
-
-	//initialize FMOD audio sub-system and return false if error occured
-	if (!(AudioManager::Instance()->Initialize()))
 	{
 		return false;
 	}
@@ -72,8 +65,7 @@ bool Game::Run()
 			//save time value to mark the start of the frame
 			int startTime = SDL_GetTicks();
 
-			//update FMOD audio sub-system
-			AudioManager::Instance()->Update();
+			
 
 			//update screen by clearing OpenGL frame buffer
 			Screen::Instance()->Clear();
@@ -113,9 +105,6 @@ bool Game::Run()
 //======================================================================================================
 void Game::ShutDown()
 {
-	//close down FMOD audio sub-system 
-	AudioManager::Instance()->ShutDown();
-
 	//close down game screen 
 	Screen::Instance()->ShutDown();
 }

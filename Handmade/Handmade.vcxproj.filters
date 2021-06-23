@@ -104,9 +104,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Audio.h">
-      <Filter>Header Files\Components\Audio</Filter>
-    </ClInclude>
     <ClInclude Include="Animation.h">
       <Filter>Header Files\Components\Visual</Filter>
     </ClInclude>
@@ -124,9 +121,6 @@
     </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>Header Files\Main</Filter>
-    </ClInclude>
-    <ClInclude Include="AudioManager.h">
-      <Filter>Header Files\Managers</Filter>
     </ClInclude>
     <ClInclude Include="StartState.h">
       <Filter>Header Files\GameStates</Filter>
@@ -217,9 +211,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Audio.cpp">
-      <Filter>Source Files\Components\Audio</Filter>
-    </ClCompile>
     <ClCompile Include="Animation.cpp">
       <Filter>Source Files\Components\Visual</Filter>
     </ClCompile>
@@ -237,9 +228,6 @@
     </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>Source Files\Main</Filter>
-    </ClCompile>
-    <ClCompile Include="AudioManager.cpp">
-      <Filter>Source Files\Managers</Filter>
     </ClCompile>
     <ClCompile Include="StartState.cpp">
       <Filter>Source Files\GameStates</Filter>

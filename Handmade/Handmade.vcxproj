@@ -89,7 +89,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_net.lib;fmod_vc.lib;fmodL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_net.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
       <AdditionalLibraryDirectories>..\Development Libraries\FMOD\bin;</AdditionalLibraryDirectories>
     </Link>
@@ -115,7 +115,7 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_net.lib;fmod_vc.lib;fmodL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_net.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -141,8 +141,6 @@
   <ItemGroup>
     <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="Animation.h" />
-    <ClInclude Include="Audio.h" />
-    <ClInclude Include="AudioManager.h" />
     <ClInclude Include="Axes2D.h" />
     <ClInclude Include="Axes3D.h" />
     <ClInclude Include="Buffer.h" />
@@ -180,8 +178,6 @@
   <ItemGroup>
     <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="Animation.cpp" />
-    <ClCompile Include="Audio.cpp" />
-    <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="Axes2D.cpp" />
     <ClCompile Include="Axes3D.cpp" />
     <ClCompile Include="Buffer.cpp" />
