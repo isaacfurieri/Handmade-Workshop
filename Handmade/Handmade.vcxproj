@@ -139,7 +139,6 @@
     <None Include="Shaders\ADS.vert" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Axes2D.h" />
     <ClInclude Include="Axes3D.h" />
@@ -163,11 +162,9 @@
     <ClInclude Include="Material.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Quad.h" />
-    <ClInclude Include="RigidBody.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Screen.h" />
     <ClInclude Include="Sphere.h" />
-    <ClInclude Include="SphereCollider.h" />
     <ClInclude Include="SplashScreen.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="StartState.h" />
@@ -176,7 +173,6 @@
     <ClInclude Include="UICamera.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Axes2D.cpp" />
     <ClCompile Include="Axes3D.cpp" />
@@ -202,11 +198,9 @@
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Quad.cpp" />
-    <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Screen.cpp" />
     <ClCompile Include="Sphere.cpp" />
-    <ClCompile Include="SphereCollider.cpp" />
     <ClCompile Include="SplashScreen.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="StartState.cpp" />

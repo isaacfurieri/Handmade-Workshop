@@ -28,9 +28,6 @@
     <Filter Include="Header Files\Managers">
       <UniqueIdentifier>{f0d43da4-3c10-4b0d-9ec4-1481302c07f2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Components\Audio">
-      <UniqueIdentifier>{396013c2-095e-44a9-b3e7-73586546202d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shaders">
       <UniqueIdentifier>{e562bf89-2a63-412a-8a06-6c434dc0faa7}</UniqueIdentifier>
     </Filter>
@@ -52,9 +49,6 @@
     <Filter Include="Source Files\Managers">
       <UniqueIdentifier>{2e826b70-23c4-4de0-be3a-90618f193e31}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Components\Audio">
-      <UniqueIdentifier>{b81f9d0c-a5dd-4b2f-8068-8fc54c6318f3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Components\Visual">
       <UniqueIdentifier>{952c6fe5-7ab9-449b-a46a-397cb483c6b9}</UniqueIdentifier>
     </Filter>
@@ -63,12 +57,6 @@
     </Filter>
     <Filter Include="Source Files\Components\Core">
       <UniqueIdentifier>{d3e431f9-3a0f-4a6b-b6ca-3576f11f387e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Components\Physics">
-      <UniqueIdentifier>{791b9fa1-4df8-46c2-92cb-07c272d79629}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Components\Physics">
-      <UniqueIdentifier>{e21bdc27-7b51-403d-9650-ac17241683e4}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\GameObjects\Debug">
       <UniqueIdentifier>{7ff0da42-541b-4bee-931c-f23166cfac67}</UniqueIdentifier>
@@ -161,9 +149,6 @@
     <ClInclude Include="Shader.h">
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="RigidBody.h">
-      <Filter>Header Files\Components\Physics</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Header Files\GameObjects\Cameras</Filter>
     </ClInclude>
@@ -187,12 +172,6 @@
     </ClInclude>
     <ClInclude Include="Element.h">
       <Filter>Header Files\GameObjects\Primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="BoxCollider.h">
-      <Filter>Header Files\Components\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="SphereCollider.h">
-      <Filter>Header Files\Components\Physics</Filter>
     </ClInclude>
     <ClInclude Include="Quad.h">
       <Filter>Header Files\GameObjects\Primitives</Filter>
@@ -274,9 +253,6 @@
     <ClCompile Include="Shader.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
-    <ClCompile Include="RigidBody.cpp">
-      <Filter>Source Files\Components\Physics</Filter>
-    </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files\GameObjects\Cameras</Filter>
     </ClCompile>
@@ -300,12 +276,6 @@
     </ClCompile>
     <ClCompile Include="Element.cpp">
       <Filter>Source Files\GameObjects\Primitives</Filter>
-    </ClCompile>
-    <ClCompile Include="BoxCollider.cpp">
-      <Filter>Source Files\Components\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="SphereCollider.cpp">
-      <Filter>Source Files\Components\Physics</Filter>
     </ClCompile>
     <ClCompile Include="Quad.cpp">
       <Filter>Source Files\GameObjects\Primitives</Filter>
