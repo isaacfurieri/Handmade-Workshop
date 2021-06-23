@@ -19,9 +19,6 @@
     <Filter Include="Header Files\GameObjects">
       <UniqueIdentifier>{48304c74-82b2-4530-9307-940ce9168529}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\GameStates">
-      <UniqueIdentifier>{d7431f13-1cd0-453a-94fc-4bd87d2f23ed}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Main">
       <UniqueIdentifier>{873c0c68-a65e-4583-8bef-911809385fa3}</UniqueIdentifier>
     </Filter>
@@ -39,9 +36,6 @@
     </Filter>
     <Filter Include="Source Files\GameObjects">
       <UniqueIdentifier>{41003b60-cd76-4bc4-b42a-68cd7d2d22c3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\GameStates">
-      <UniqueIdentifier>{46eb999d-f073-44b8-8cad-c09f0aec1d65}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Main">
       <UniqueIdentifier>{d7bed421-5170-40a8-aa37-6a1ac86a1126}</UniqueIdentifier>
@@ -101,20 +95,8 @@
     <ClInclude Include="Text.h">
       <Filter>Header Files\Components\Visual</Filter>
     </ClInclude>
-    <ClInclude Include="GameState.h">
-      <Filter>Header Files\GameStates</Filter>
-    </ClInclude>
-    <ClInclude Include="MainState.h">
-      <Filter>Header Files\GameStates</Filter>
-    </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>Header Files\Main</Filter>
-    </ClInclude>
-    <ClInclude Include="StartState.h">
-      <Filter>Header Files\GameStates</Filter>
-    </ClInclude>
-    <ClInclude Include="EndState.h">
-      <Filter>Header Files\GameStates</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.h">
       <Filter>Header Files\GameObjects</Filter>
@@ -199,20 +181,11 @@
     <ClCompile Include="Text.cpp">
       <Filter>Source Files\Components\Visual</Filter>
     </ClCompile>
-    <ClCompile Include="MainState.cpp">
-      <Filter>Source Files\GameStates</Filter>
-    </ClCompile>
     <ClCompile Include="Game.cpp">
       <Filter>Source Files\Main</Filter>
     </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>Source Files\Main</Filter>
-    </ClCompile>
-    <ClCompile Include="StartState.cpp">
-      <Filter>Source Files\GameStates</Filter>
-    </ClCompile>
-    <ClCompile Include="EndState.cpp">
-      <Filter>Source Files\GameStates</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
       <Filter>Source Files\GameObjects</Filter>
@@ -222,9 +195,6 @@
     </ClCompile>
     <ClCompile Include="Model.cpp">
       <Filter>Source Files\Components\Visual</Filter>
-    </ClCompile>
-    <ClCompile Include="GameState.cpp">
-      <Filter>Source Files\GameStates</Filter>
     </ClCompile>
     <ClCompile Include="Material.cpp">
       <Filter>Source Files\Components\Core</Filter>

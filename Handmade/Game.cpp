@@ -34,50 +34,24 @@ bool Game::Initialize(const std::string& name, GLuint screenWidth,
 	return true;
 }
 //======================================================================================================
-void Game::AddState(GameState* state)
-{
-	state->OnEnter();
-	m_gameStates.push_front(state);
-}
-//======================================================================================================
-void Game::ChangeState(GameState* state)
-{
-	state->OnEnter();
-	m_gameStates.push_back(state);
-}
-//======================================================================================================
 bool Game::Run()
 {
-	GameState* state;
-
-	//main game loop!
 	while (!m_endGame)
 	{
 
-		//current active state is always the front one
-		state = m_gameStates.front();
-
 		//update and render all objects while the current state is active
 		//each state will flag itself as inactive after which the loop breaks
-		while (state->IsActive())
+		while (1)
 		{
 
 			//save time value to mark the start of the frame
 			int startTime = SDL_GetTicks();
-
-			
 
 			//update screen by clearing OpenGL frame buffer
 			Screen::Instance()->Clear();
 
 			//update input handling by listening for input events
 			Input::Instance()->Update();
-
-			//update the currently active state
-			state->Update(m_deltaTime);
-
-			//render the currently active state
-			state->Draw();
 
 			//draw screen by swapping OpenGL frame buffer
 			Screen::Instance()->Present();
@@ -88,16 +62,6 @@ bool Game::Run()
 
 		}
 
-		//if game state is also flagged as dead  
-		//then completely remove all of its objects
-		if (!state->IsAlive())
-		{
-			RemoveState();
-		}
-
-		//the main game loop will run as long there are game states available
-		m_endGame = m_gameStates.empty();
-
 	}
 
 	return true;
@@ -107,12 +71,4 @@ void Game::ShutDown()
 {
 	//close down game screen 
 	Screen::Instance()->ShutDown();
-}
-//======================================================================================================
-void Game::RemoveState()
-{
-	m_gameStates.front()->OnExit();
-
-	delete m_gameStates.front();
-	m_gameStates.pop_front();
 }

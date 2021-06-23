@@ -8,7 +8,6 @@
 
 #include <string>
 #include "Game.h"
-#include "StartState.h"
 
 //screen width and height values
 int screenWidth = 1280;
@@ -31,9 +30,6 @@ int main(int argc, char* args[])
 	{
 		return 0;
 	}
-
-	//create the first state to be used in the game
-	game->AddState(new StartState(game, nullptr));
 
 	//run the game
 	if (!game->Run())
