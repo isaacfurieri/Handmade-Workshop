@@ -141,10 +141,8 @@
   <ItemGroup>
     <ClInclude Include="Axes2D.h" />
     <ClInclude Include="Axes3D.h" />
-    <ClInclude Include="Camera.h" />
     <ClInclude Include="Circle.h" />
     <ClInclude Include="Cuboid.h" />
-    <ClInclude Include="FreeCamera.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
@@ -159,15 +157,12 @@
     <ClInclude Include="Screen.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="SplashScreen.h" />
-    <ClInclude Include="UICamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Axes2D.cpp" />
     <ClCompile Include="Axes3D.cpp" />
-    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Circle.cpp" />
     <ClCompile Include="Cuboid.cpp" />
-    <ClCompile Include="FreeCamera.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -184,7 +179,6 @@
     <ClCompile Include="Screen.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="SplashScreen.cpp" />
-    <ClCompile Include="UICamera.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
