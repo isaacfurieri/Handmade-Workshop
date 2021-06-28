@@ -139,16 +139,11 @@
     <None Include="Shaders\ADS.vert" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Axes2D.h" />
-    <ClInclude Include="Axes3D.h" />
     <ClInclude Include="Circle.h" />
     <ClInclude Include="Cuboid.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
-    <ClInclude Include="Grid2D.h" />
-    <ClInclude Include="Grid3D.h" />
-    <ClInclude Include="HUD.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Element.h" />
@@ -159,17 +154,12 @@
     <ClInclude Include="SplashScreen.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Axes2D.cpp" />
-    <ClCompile Include="Axes3D.cpp" />
     <ClCompile Include="Circle.cpp" />
     <ClCompile Include="Cuboid.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="Grid2D.cpp" />
-    <ClCompile Include="Grid3D.cpp" />
-    <ClCompile Include="HUD.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="Element.cpp" />
