@@ -34,12 +34,6 @@
     <Filter Include="Source Files\Managers">
       <UniqueIdentifier>{2e826b70-23c4-4de0-be3a-90618f193e31}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\GameObjects\Primitives">
-      <UniqueIdentifier>{b5cac0ab-c499-411e-9d0c-5f3ffb6df275}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\GameObjects\Primitives">
-      <UniqueIdentifier>{4126045c-d924-49f0-aa9d-700be4fd1a64}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Default.frag">
@@ -77,21 +71,6 @@
     <ClInclude Include="Shader.h">
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="Element.h">
-      <Filter>Header Files\GameObjects\Primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="Quad.h">
-      <Filter>Header Files\GameObjects\Primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="Cuboid.h">
-      <Filter>Header Files\GameObjects\Primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="Sphere.h">
-      <Filter>Header Files\GameObjects\Primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="Circle.h">
-      <Filter>Header Files\GameObjects\Primitives</Filter>
-    </ClInclude>
     <ClInclude Include="Light.h">
       <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
@@ -123,21 +102,6 @@
     </ClCompile>
     <ClCompile Include="Shader.cpp">
       <Filter>Source Files\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Element.cpp">
-      <Filter>Source Files\GameObjects\Primitives</Filter>
-    </ClCompile>
-    <ClCompile Include="Quad.cpp">
-      <Filter>Source Files\GameObjects\Primitives</Filter>
-    </ClCompile>
-    <ClCompile Include="Cuboid.cpp">
-      <Filter>Source Files\GameObjects\Primitives</Filter>
-    </ClCompile>
-    <ClCompile Include="Sphere.cpp">
-      <Filter>Source Files\GameObjects\Primitives</Filter>
-    </ClCompile>
-    <ClCompile Include="Circle.cpp">
-      <Filter>Source Files\GameObjects\Primitives</Filter>
     </ClCompile>
     <ClCompile Include="Light.cpp">
       <Filter>Source Files\GameObjects</Filter>
