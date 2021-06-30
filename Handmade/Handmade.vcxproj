@@ -138,18 +138,6 @@
     <None Include="Shaders\ADS.frag" />
     <None Include="Shaders\ADS.vert" />
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Debug.h" />
-    <ClInclude Include="Input.h" />
-    <ClInclude Include="Shader.h" />
-    <ClInclude Include="Screen.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Debug.cpp" />
-    <ClCompile Include="Input.cpp" />
-    <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="Screen.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
