@@ -78,6 +78,10 @@ int CHandmadeView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 	}
 
+	//Remove the thick edge from the main window. Not 
+	//sure if there is another method of doing this?
+	ModifyStyleEx(WS_EX_CLIENTEDGE, 0);
+
 	//===================================================================
 
 	Utility::SetWindowHandle(GetSafeHwnd());

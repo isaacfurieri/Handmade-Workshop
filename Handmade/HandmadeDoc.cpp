@@ -1,70 +1,55 @@
-
-// HandmadeDoc.cpp : implementation of the CHandmadeDoc class
-//
-
 #include "framework.h"
-// SHARED_HANDLERS can be defined in an ATL project implementing preview, thumbnail
-// and search filter handlers and allows sharing of document code with that project.
+#include <propkey.h>
+#include "HandmadeDoc.h"
+
+//SHARED_HANDLERS can be defined in an ATL project implementing preview, thumbnail
+//and search filter handlers and allows sharing of document code with that project.
 #ifndef SHARED_HANDLERS
 #include "Handmade.h"
 #endif
 
-#include "HandmadeDoc.h"
-
-#include <propkey.h>
-
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
-
-// CHandmadeDoc
 
 IMPLEMENT_DYNCREATE(CHandmadeDoc, CDocument)
 
 BEGIN_MESSAGE_MAP(CHandmadeDoc, CDocument)
 END_MESSAGE_MAP()
 
-
-// CHandmadeDoc construction/destruction
-
+//======================================================================================================
 CHandmadeDoc::CHandmadeDoc() noexcept
 {
-	// TODO: add one-time construction code here
-
 }
-
+//======================================================================================================
 CHandmadeDoc::~CHandmadeDoc()
 {
 }
-
+//======================================================================================================
 BOOL CHandmadeDoc::OnNewDocument()
 {
 	if (!CDocument::OnNewDocument())
 		return FALSE;
 
-	// TODO: add reinitialization code here
-	// (SDI documents will reuse this document)
+	//TODO: add reinitialization code here
+	//(SDI documents will reuse this document)
 
 	return TRUE;
 }
-
-
-
-
-// CHandmadeDoc serialization
-
+//======================================================================================================
 void CHandmadeDoc::Serialize(CArchive& ar)
 {
 	if (ar.IsStoring())
 	{
 		// TODO: add storing code here
 	}
+
 	else
 	{
 		// TODO: add loading code here
 	}
 }
-
+//======================================================================================================
 #ifdef SHARED_HANDLERS
 
 // Support for thumbnails
@@ -76,7 +61,7 @@ void CHandmadeDoc::OnDrawThumbnail(CDC& dc, LPRECT lprcBounds)
 	CString strText = _T("TODO: implement thumbnail drawing here");
 	LOGFONT lf;
 
-	CFont* pDefaultGUIFont = CFont::FromHandle((HFONT) GetStockObject(DEFAULT_GUI_FONT));
+	CFont* pDefaultGUIFont = CFont::FromHandle((HFONT)GetStockObject(DEFAULT_GUI_FONT));
 	pDefaultGUIFont->GetLogFont(&lf);
 	lf.lfHeight = 36;
 
@@ -87,7 +72,7 @@ void CHandmadeDoc::OnDrawThumbnail(CDC& dc, LPRECT lprcBounds)
 	dc.DrawText(strText, lprcBounds, DT_CENTER | DT_WORDBREAK);
 	dc.SelectObject(pOldFont);
 }
-
+//======================================================================================================
 // Support for Search Handlers
 void CHandmadeDoc::InitializeSearchContent()
 {
@@ -98,7 +83,7 @@ void CHandmadeDoc::InitializeSearchContent()
 	// For example:  strSearchContent = _T("point;rectangle;circle;ole object;");
 	SetSearchContent(strSearchContent);
 }
-
+//======================================================================================================
 void CHandmadeDoc::SetSearchContent(const CString& value)
 {
 	if (value.IsEmpty())
@@ -107,7 +92,7 @@ void CHandmadeDoc::SetSearchContent(const CString& value)
 	}
 	else
 	{
-		CMFCFilterChunkValueImpl *pChunk = nullptr;
+		CMFCFilterChunkValueImpl* pChunk = nullptr;
 		ATLTRY(pChunk = new CMFCFilterChunkValueImpl);
 		if (pChunk != nullptr)
 		{
@@ -116,22 +101,21 @@ void CHandmadeDoc::SetSearchContent(const CString& value)
 		}
 	}
 }
-
+//======================================================================================================
 #endif // SHARED_HANDLERS
-
-// CHandmadeDoc diagnostics
 
 #ifdef _DEBUG
 void CHandmadeDoc::AssertValid() const
 {
 	CDocument::AssertValid();
 }
-
+//======================================================================================================
 void CHandmadeDoc::Dump(CDumpContext& dc) const
 {
 	CDocument::Dump(dc);
 }
 #endif //_DEBUG
 
-
-// CHandmadeDoc commands
+//======================================================================================================
+//CHandmadeDoc commands
+//======================================================================================================

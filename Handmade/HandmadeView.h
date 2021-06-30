@@ -17,6 +17,7 @@ class CHandmadeView : public CView
 protected: // create from serialization only
 
 	CHandmadeView() noexcept;
+	virtual ~CHandmadeView();
 	DECLARE_DYNCREATE(CHandmadeView)
 
 public:
@@ -33,8 +34,6 @@ protected:
 	virtual void OnEndPrinting(CDC* pDC, CPrintInfo* pInfo);
 
 public:
-
-	virtual ~CHandmadeView();
 
 #ifdef _DEBUG
 	virtual void AssertValid() const;
