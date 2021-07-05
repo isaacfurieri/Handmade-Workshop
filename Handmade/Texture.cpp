@@ -5,10 +5,46 @@
 
 std::map<std::string, GLuint>* Texture::s_textureIDMap = new std::map<std::string, GLuint>;
 
+//std::map<std::string, Texture>*
+//Texture::s_textureMap = new std::map<std::string, Texture>;
+
+//======================================================================================================
+//bool Texture::GetTexture(const std::string& textureID, Texture& texture)
+//{
+//	//First check if texture object exists in map and if not then
+//	//display a warning message, otherwise go ahead and assign the
+//	//texture object. We return a bool flag for success/failure and 
+//	//use passed texture reference to store the found texture object
+//
+//	auto it = s_textureMap->find(textureID);
+//
+//	if (it == s_textureMap->end())
+//	{
+//		Debug::Log("Texture object '" + textureID + "' not found.", Debug::WARNING);
+//		Debug::Log("===============================================================");
+//		return false;
+//	}
+//
+//	texture = it->second;
+//	return true;
+//}
 //======================================================================================================
 Texture::Texture()
 {
 	m_ID = 0;
+}
+//======================================================================================================
+const std::string& Texture::GetName() const
+{
+	return m_name;
+}
+//======================================================================================================
+void Texture::SetWrapping(WrapSetting wrapSetting)
+{
+	glBindTexture(GL_TEXTURE_2D, m_ID);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapSetting);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapSetting);
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 //======================================================================================================
 void Texture::SetTexture(const std::string& textureID)
@@ -34,16 +70,15 @@ void Texture::SetTexture(const std::string& textureID)
 	}
 }
 //======================================================================================================
+void Texture::SetFilter(FilterType filterType, FilterSetting filterSetting)
+{
+	glBindTexture(GL_TEXTURE_2D, m_ID);
+	glTexParameteri(GL_TEXTURE_2D, filterType, filterSetting);
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+//======================================================================================================
 bool Texture::Load(const std::string& filename, const std::string& textureID)
 {
-	//variables to hold property values of raw image data
-	unsigned char* pixels = 0;
-	unsigned int width = 0;
-	unsigned int height = 0;
-	unsigned int depth = 0;
-	unsigned int format = 0;
-	SDL_Surface* textureData = 0;
-
 	//display text to state that file is being opened and read
 	//Debug::Log("Opening and reading texture file: '" + filename + "'");
 
@@ -57,7 +92,7 @@ bool Texture::Load(const std::string& filename, const std::string& textureID)
 	}
 
 	//load texture from file using SDL image load function
-	textureData = IMG_Load(filename.c_str());
+	SDL_Surface* textureData = IMG_Load(filename.c_str());
 
 	//if texture loading failed, display error message 
 	if (!textureData)
@@ -67,13 +102,13 @@ bool Texture::Load(const std::string& filename, const std::string& textureID)
 		return false;
 	}
 
-	//use SDL image pointer to aquire raw image data 
-	//from image and assign that data to the variables
-	pixels = (unsigned char*)textureData->pixels;
-	width = textureData->w;
-	height = textureData->h;
-	depth = textureData->format->BytesPerPixel;
-	format = ((depth == 4) ? GL_RGBA : GL_RGB);
+	//Use SDL image pointer to extract raw image data 
+	//and assign that to local variables for use below
+	GLsizei width = textureData->w;
+	GLsizei height = textureData->h;
+	Uint8* pixels = (Uint8*)textureData->pixels;
+	Uint8 depth = textureData->format->BytesPerPixel;
+	GLint format = ((depth == 4) ? GL_RGBA : GL_RGB);
 
 	//create an OpenGL texture ID and store it
 	glGenTextures(1, &m_ID);
@@ -105,6 +140,7 @@ bool Texture::Load(const std::string& filename, const std::string& textureID)
 	//assign texture ID to map now the ID
 	//is linked to the image data in OpenGL
 	(*s_textureIDMap)[textureID] = m_ID;
+	//s_textureMap->insert(std::pair<std::string, Texture>(textureID, *this));
 
 	//display text to state that file has been opened and read
 	//Debug::Log("File opened and read successfully.", Debug::ErrorCode::SUCCESS);
@@ -115,6 +151,12 @@ bool Texture::Load(const std::string& filename, const std::string& textureID)
 //======================================================================================================
 void Texture::Bind() const
 {
+	glBindTexture(GL_TEXTURE_2D, m_ID);
+}
+//======================================================================================================
+void Texture::Bind(TextureUnit textureUnit)
+{
+	glActiveTexture(textureUnit);
 	glBindTexture(GL_TEXTURE_2D, m_ID);
 }
 //======================================================================================================
