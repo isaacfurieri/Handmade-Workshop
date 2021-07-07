@@ -35,6 +35,9 @@ void Axes::Render(Shader& shader)
 	m_buffer.LinkVBO(shader.GetAttributeID("vertexIn"), Buffer::VERTEX_BUFFER, Buffer::XYZ, Buffer::INT);
 	m_buffer.LinkVBO(shader.GetAttributeID("colorIn"), Buffer::COLOR_BUFFER, Buffer::RGBA, Buffer::FLOAT);
 
+	shader.SendData("isTextured", false);
+	shader.SendData("model", m_transform.GetMatrix());
+
 	m_buffer.Render(Buffer::LINES);
 }
 //======================================================================================================
