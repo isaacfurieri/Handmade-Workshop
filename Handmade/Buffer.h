@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Buffer' source files last updated on 23 June 2021                 |
+| 'Buffer' source files last updated on 7 July 2021                  |
 #===================================================================*/
 
 #include <map>
@@ -66,9 +66,11 @@ public:
 
 	Buffer();
 
-	void SetBuffer(const std::string& bufferID);
+	const std::string& GetTag() const;
 
-	void Create(const std::string& bufferID, GLsizei totalVertices, bool hasEBO = false);
+	void SetBuffer(const std::string& tag);
+
+	void Create(const std::string& tag, GLsizei totalVertices, bool hasEBO = false);
 
 	void FillVBO(VBOType vboType, const GLint* data, GLsizeiptr bufferSize, FillFrequency fillFrequency = FILL_ONCE);
 	void FillVBO(VBOType vboType, const GLuint* data, GLsizeiptr bufferSize, FillFrequency fillFrequency = FILL_ONCE);
@@ -89,17 +91,17 @@ public:
 	void Render(RenderMode renderMode);
 
 	void Destroy();
-	void Destroy(const std::string& bufferID);
+	void Destroy(const std::string& tag);
 
 private:
 
-	static std::map<std::string, Buffer> s_buffers;
-	
 	bool m_hasEBO;
+	std::string m_tag;
 
 	GLuint m_VAO;
 	GLuint m_EBO;
 	GLsizei m_totalVertices;
 	GLuint m_VBOs[TOTAL_BUFFERS];
-	
+
+	static std::map<std::string, Buffer> s_buffers;
 };

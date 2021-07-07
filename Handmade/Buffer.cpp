@@ -32,34 +32,23 @@ Buffer::Buffer()
 	m_VBOs[NORMAL_BUFFER] = 0;
 }
 //======================================================================================================
-void Buffer::SetBuffer(const std::string& bufferID)
+const std::string& Buffer::GetTag() const
 {
-	//Debug::Log("Setting buffers to: '" + bufferID + "'");
-
-	//first check if buffer ID exists in map and if not display
-	//error message, otherwise go ahead and assign the buffer ID
-
-	auto it = s_buffers.find(bufferID);
-
-	if (it == s_buffers.end())
-	{
-		//Debug::Log("Buffer IDs not found. Please enter a valid ID.", Debug::ErrorCode::WARNING);
-		//Debug::Log("===============================================================");
-	}
-
-	else
-	{
-		*this = it->second;
-		//Debug::Log("Buffer IDs assigned successfully.", Debug::ErrorCode::SUCCESS);
-		//Debug::Log("===============================================================");
-	}
+	return m_tag;
 }
 //======================================================================================================
-void Buffer::Create(const std::string& bufferID, GLsizei totalVertices, bool hasEBO)
+void Buffer::SetBuffer(const std::string& tag)
+{
+	auto it = s_buffers.find(tag);
+	assert(it != s_buffers.end());
+	*this = it->second;
+}
+//======================================================================================================
+void Buffer::Create(const std::string& tag, GLsizei totalVertices, bool hasEBO)
 {
 	//If buffer ID exists in map halt creation because 
 	//we don't want to replace the existing buffers
-	assert(s_buffers.find(bufferID) == s_buffers.end());
+	assert(s_buffers.find(tag) == s_buffers.end());
 
 	glGenVertexArrays(1, &m_VAO);
 	glGenBuffers(TOTAL_BUFFERS, m_VBOs);
@@ -71,6 +60,9 @@ void Buffer::Create(const std::string& bufferID, GLsizei totalVertices, bool has
 
 	m_hasEBO = hasEBO;
 	m_totalVertices = totalVertices;
+
+	m_tag = tag;
+	s_buffers[tag] = *this;
 }
 //======================================================================================================
 void Buffer::FillVBO(VBOType vboType, const GLint* data, GLsizeiptr bufferSize, FillFrequency fillFrequency)
@@ -130,19 +122,16 @@ void Buffer::LinkEBO()
 //======================================================================================================
 void Buffer::LinkVBO(GLint attributeID, VBOType vboType, ComponentSize componentSize, DataType dataType)
 {
-	if (attributeID > -1)
-	{
-		glBindVertexArray(m_VAO);
+	assert(attributeID > -1);
+	
+	glBindVertexArray(m_VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOs[vboType]);
 
-		glBindBuffer(GL_ARRAY_BUFFER, m_VBOs[vboType]);
+	glVertexAttribPointer(attributeID, static_cast<GLint>(componentSize),
+		static_cast<GLenum>(dataType), GL_FALSE, 0, nullptr);
 
-		glVertexAttribPointer(attributeID, static_cast<GLint>(componentSize),
-			static_cast<GLenum>(dataType), GL_FALSE, 0, nullptr);
-
-		glEnableVertexAttribArray(attributeID);
-
-		glBindVertexArray(0);
-	}
+	glEnableVertexAttribArray(attributeID);
+	glBindVertexArray(0);
 }
 //======================================================================================================
 void Buffer::Render(RenderMode renderMode)
@@ -171,11 +160,13 @@ void Buffer::Destroy()
 
 	glDeleteBuffers(TOTAL_BUFFERS, m_VBOs);
 	glDeleteVertexArrays(1, &m_VAO);
+
+	s_buffers.erase(s_buffers.find(m_tag));
 }
 //======================================================================================================
-void Buffer::Destroy(const std::string& bufferID)
+void Buffer::Destroy(const std::string& tag)
 {
 	//TODO - Destroy a specific buffer element (make this static?)
-	//TODO - Destroy THIS buffer (and remove it from the map
+	//TODO - Destroy THIS buffer (and remove it from the map)
 	//TODO - Destroy ALL buffers (make this static?)
 }
