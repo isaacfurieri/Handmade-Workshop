@@ -8,9 +8,11 @@
 #include <vector>
 #include <glm.hpp>
 #include "Axes.h"
+#include "Cuboid.h"
 #include "FreeCamera.h"
 #include "Grid.h"
 #include "Quad.h"
+#include "Sphere.h"
 
 class CHandmadeView : public CView
 {
@@ -60,7 +62,6 @@ protected:
 	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnMButtonDown(UINT nFlags, CPoint point);
 
-
 private:
 
 	bool m_isScreenInitialized;
@@ -75,7 +76,10 @@ private:
 
 	std::unique_ptr<Grid> m_grid;
 	std::unique_ptr<Axes> m_axes;
-	std::unique_ptr<Quad> m_quad;
+
+	//std::unique_ptr<Quad> m_quad;
+	//std::unique_ptr<Cuboid> m_cube;
+	//std::unique_ptr<Sphere> m_sphere;
 
 	std::unique_ptr<FreeCamera> m_mainCamera;
 

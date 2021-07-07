@@ -145,9 +145,10 @@ int CHandmadeView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_grid->GetTransform().SetRotation(45.0f, -30.0f, 0.0f);
 
 	m_axes = std::make_unique<Axes>();
-	m_axes->GetTransform().SetRotation(m_grid->GetTransform().GetRotation());
-
-	//m_quad = std::make_unique<Quad>(1.0f, 1.0f);
+	
+	//m_quad = std::make_unique<Quad>();
+	//m_cube = std::make_unique<Cuboid>();
+	//m_sphere = std::make_unique<Sphere>(10.0f, 50.0f, 50.0f);
 
 	m_mainCamera = std::make_unique<FreeCamera>();
 	m_mainCamera->SetVelocity(0.0f);
@@ -245,10 +246,19 @@ void CHandmadeView::OnDraw(CDC* pDC)
 	m_mainCamera->SendToShader(*Shader::Instance());
 
 	m_grid->Render(*Shader::Instance());
+	
+	m_axes->GetTransform().SetRotation(m_grid->GetTransform().GetRotation());
 	m_axes->Render(*Shader::Instance());
 	
+	//m_quad->GetTransform().SetRotation(m_grid->GetTransform().GetRotation());
 	//m_quad->Render(*Shader::Instance());
 
+	//m_cube->GetTransform().SetRotation(m_grid->GetTransform().GetRotation());
+	//m_cube->Render(*Shader::Instance());
+	
+	//m_sphere->GetTransform().SetRotation(m_grid->GetTransform().GetRotation());
+	//m_sphere->Render(*Shader::Instance());
+	
 	//TODO - calculate elapsed time
 	static GLfloat deltaTime = 0.0f;
 
@@ -271,7 +281,6 @@ void CHandmadeView::OnDraw(CDC* pDC)
 	{
 		Screen::Instance()->Present();
 	}
-
 }
 //======================================================================================================
 BOOL CHandmadeView::OnPreparePrinting(CPrintInfo* pInfo)
