@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'HandmadeView' source files last updated on 30 June 2021           |
+| 'HandmadeView' source files last updated on 7 July 2021            |
 #===================================================================*/
 
 #include <memory>
@@ -44,7 +44,7 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 	afx_msg void OnSize(UINT nType, int cx, int cy);
-	
+
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnDestroy();
 

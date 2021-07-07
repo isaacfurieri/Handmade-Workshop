@@ -35,6 +35,11 @@ void Screen::SetResolution(GLuint width, GLuint height)
 	glm::max(m_resolution, 1U);
 }
 //======================================================================================================
+void Screen::SetClearColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
+{
+	glClearColor(r, g, b, a);
+}
+//======================================================================================================
 void Screen::SetViewport(GLint x, GLint y, GLsizei width, GLsizei height)
 {
 	glViewport(x, y, width, height);
@@ -155,7 +160,7 @@ void Screen::DeactivateContext()
 	wglMakeCurrent(nullptr, nullptr);
 }
 //======================================================================================================
-void Screen::Update()
+void Screen::Refresh()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }

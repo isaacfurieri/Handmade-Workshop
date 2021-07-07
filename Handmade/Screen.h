@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Screen' source files last updated on 30 June 2021                 |
+| 'Screen' source files last updated on 6 July 2021                  |
 #===================================================================*/
 
 #include <Windows.h>
@@ -26,8 +26,10 @@ public:
 	static Screen* Instance();
 
 	const glm::vec2& GetResolution() const;
-	
+
 	void SetResolution(GLuint width, GLuint height);
+	void SetClearColor(GLfloat r = 0.0f, GLfloat g = 0.0f,
+		GLfloat b = 0.0f, GLfloat a = 1.0f);
 	void SetViewport(GLint x, GLint y, GLsizei width, GLsizei height);
 
 	void IsDepthTestEnabled(bool flag);
@@ -37,7 +39,7 @@ public:
 	void ActivateContext();
 	void DeactivateContext();
 
-	void Update();
+	void Refresh();
 	void Present();
 	void ShutDown();
 
@@ -48,7 +50,7 @@ private:
 	Screen& operator=(const Screen&);
 
 	GLint m_pixelFormat;
-	
+
 	glm::ivec4 m_viewport;
 	glm::uvec2 m_resolution;
 

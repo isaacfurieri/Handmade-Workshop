@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <fstream>
 #include "Shader.h"
 #include "Utility.h"
@@ -16,36 +17,28 @@ Shader::Shader()
 	m_fragmentShaderID = 0;
 }
 //======================================================================================================
-GLint Shader::GetUniformID(const std::string& uniform)
+GLuint Shader::GetUniformID(const std::string& uniform) const
 {
 	auto it = m_uniforms.find(uniform);
+	assert(it != m_uniforms.end());
+	return it->second;
 
-	if (it == m_uniforms.end())
-	{
+	/*{
 		Utility::Log(FILE, "Shader uniform '" + uniform + "' not bound", Utility::WARNING);
 		return -1;
-	}
-
-	else
-	{
-		return it->second;
-	}
+	}*/
 }
 //======================================================================================================
-GLint Shader::GetAttributeID(const std::string& attribute)
+GLuint Shader::GetAttributeID(const std::string& attribute) const
 {
 	auto it = m_attributes.find(attribute);
+	assert(it != m_attributes.end());
+	return it->second;
 
-	if (it == m_attributes.end())
-	{
+	/*{
 		Utility::Log(FILE, "Vertex attribute '" + attribute + "' not bound", Utility::WARNING);
 		return -1;
-	}
-
-	else
-	{
-		return it->second;
-	}
+	}*/
 }
 //======================================================================================================
 void Shader::BindUniform(const std::string& uniform)
@@ -54,26 +47,23 @@ void Shader::BindUniform(const std::string& uniform)
 
 	if (it == m_uniforms.end())
 	{
-
 		GLint ID = glGetUniformLocation(m_shaderProgramID, uniform.c_str());
 
-		if (ID == -1)
-		{
+		//Unbound shader uniforms are either 
+		//not present in the shader or unused
+		assert(ID != -1);
+
+		m_uniforms[uniform] = ID;
+
+		/*{
 			Utility::Log(FILE, "Shader uniform '" + uniform + "' not bound", Utility::WARNING);
-		}
-
-		else
-		{
-			m_uniforms[uniform] = ID;
-			Utility::Log(FILE, "Shader uniform '" + uniform + "' bound", Utility::DEFAULT);
-		}
-
+		}*/
 	}
 
-	else
+	/*else
 	{
 		Utility::Log(FILE, "Shader uniform '" + uniform + "' already bound", Utility::WARNING);
-	}
+	}*/
 }
 //======================================================================================================
 void Shader::BindAttribute(const std::string& attribute)
@@ -82,135 +72,60 @@ void Shader::BindAttribute(const std::string& attribute)
 
 	if (it == m_attributes.end())
 	{
-
 		GLint ID = glGetAttribLocation(m_shaderProgramID, attribute.c_str());
 
-		if (ID == -1)
-		{
+		//Unbound shader attributes are either 
+		//not present in the shader or unused
+		assert(ID != -1);
+
+		m_attributes[attribute] = ID;
+		/*{
 			Utility::Log(FILE, "Vertex attribute '" + attribute + "' not bound",
 				Utility::WARNING);
-		}
-
-		else
-		{
-			m_attributes[attribute] = ID;
-			Utility::Log(FILE, "Vertex attribute '" + attribute + "' bound",
-				Utility::DEFAULT);
-		}
-
-	}
-
-	else
-	{
-		Utility::Log(FILE, "Vertex attribute '" + attribute + "' already bound",
-			Utility::WARNING);
+		}*/
 	}
 }
 //======================================================================================================
-bool Shader::SendData(const std::string& uniform, GLint intData)
+void Shader::SendData(const std::string& uniform, GLint intData) const
 {
-	GLint ID = GetUniformID(uniform);
-
-	if (ID > -1)
-	{
-		glUniform1i(ID, intData);
-		return true;
-	}
-
-	return false;
+	glUniform1i(GetUniformID(uniform), intData);
 }
 //======================================================================================================
-bool Shader::SendData(const std::string& uniform, GLuint uintData)
+void Shader::SendData(const std::string& uniform, GLuint uintData) const
 {
-	GLint ID = GetUniformID(uniform);
-
-	if (ID > -1)
-	{
-		glUniform1ui(ID, uintData);
-		return true;
-	}
-
-	return false;
+	glUniform1ui(GetUniformID(uniform), uintData);
 }
 //======================================================================================================
-bool Shader::SendData(const std::string& uniform, GLfloat floatData)
+void Shader::SendData(const std::string& uniform, GLfloat floatData) const
 {
-	GLint ID = GetUniformID(uniform);
-
-	if (ID > -1)
-	{
-		glUniform1f(ID, floatData);
-		return true;
-	}
-
-	return false;
+	glUniform1f(GetUniformID(uniform), floatData);
 }
 //======================================================================================================
-bool Shader::SendData(const std::string& uniform, const glm::vec2& vec2Data)
+void Shader::SendData(const std::string& uniform, const glm::vec2& vec2Data) const
 {
-	GLint ID = GetUniformID(uniform);
-
-	if (ID > -1)
-	{
-		glUniform2fv(ID, 1, &vec2Data.x);
-		return true;
-	}
-
-	return false;
+	glUniform2fv(GetUniformID(uniform), 1, &vec2Data.x);
 }
 //======================================================================================================
-bool Shader::SendData(const std::string& uniform, const glm::vec3& vec3Data)
+void Shader::SendData(const std::string& uniform, const glm::vec3& vec3Data) const
 {
-	GLint ID = GetUniformID(uniform);
-
-	if (ID > -1)
-	{
-		glUniform3fv(ID, 1, &vec3Data.x);
-		return true;
-	}
-
-	return false;
+	glUniform3fv(GetUniformID(uniform), 1, &vec3Data.x);
 }
 //======================================================================================================
-bool Shader::SendData(const std::string& uniform, const glm::vec4& vec4Data)
+void Shader::SendData(const std::string& uniform, const glm::vec4& vec4Data) const
 {
-	GLint ID = GetUniformID(uniform);
-
-	if (ID > -1)
-	{
-		glUniform4fv(ID, 1, &vec4Data.x);
-		return true;
-	}
-
-	return false;
+	glUniform4fv(GetUniformID(uniform), 1, &vec4Data.x);
 }
 //======================================================================================================
-bool Shader::SendData(const std::string& uniform,
-	const glm::mat3& matrix3x3, bool transposed)
+void Shader::SendData(const std::string& uniform,
+	const glm::mat3& matrix3x3, bool transposed) const
 {
-	GLint ID = GetUniformID(uniform);
-
-	if (ID > -1)
-	{
-		glUniformMatrix3fv(ID, 1, transposed, &matrix3x3[0][0]);
-		return true;
-	}
-
-	return false;
+	glUniformMatrix3fv(GetUniformID(uniform), 1, transposed, &matrix3x3[0][0]);
 }
 //======================================================================================================
-bool Shader::SendData(const std::string& uniform,
-	const glm::mat4& matrix4x4, bool transposed)
+void Shader::SendData(const std::string& uniform,
+	const glm::mat4& matrix4x4, bool transposed) const
 {
-	GLint ID = GetUniformID(uniform);
-
-	if (ID > -1)
-	{
-		glUniformMatrix4fv(ID, 1, transposed, &matrix4x4[0][0]);
-		return true;
-	}
-
-	return false;
+	glUniformMatrix4fv(GetUniformID(uniform), 1, transposed, &matrix4x4[0][0]);
 }
 //======================================================================================================
 bool Shader::CreateProgram()

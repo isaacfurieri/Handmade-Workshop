@@ -132,7 +132,7 @@ int CHandmadeView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	Shader::Instance()->BindUniform("view");
 	Shader::Instance()->BindUniform("projection");
 
-	Shader::Instance()->BindUniform("isText");
+	//Shader::Instance()->BindUniform("isText");
 	Shader::Instance()->BindUniform("isTextured");
 
 	//initialize FMOD audio sub-system and return false if error occured
@@ -238,7 +238,7 @@ void CHandmadeView::OnDraw(CDC* pDC)
 
 	AudioManager::Instance()->Update();
 
-	Screen::Instance()->Update();
+	Screen::Instance()->Refresh();
 	
 	m_mainCamera->CreatePerspView();
 	m_mainCamera->Update();
