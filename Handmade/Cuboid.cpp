@@ -79,23 +79,23 @@ Cuboid::Cuboid(GLfloat width, GLfloat height, GLfloat depth,
 					  1.0f, 0.0f, 0.0f, 0.0f };    //Bottom face
 
 
-	GLfloat normals[] = { 0.0f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,  
-		                  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,      //Front face 
+	GLfloat normals[] = { 0.0f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
+						  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,      //Front face 
 
-						   0.0f,  0.0f, -1.0f,  0.0f,  0.0f, -1.0f,  
-		                   0.0f,  0.0f, -1.0f,  0.0f,  0.0f, -1.0f,	    //Back face
+						   0.0f,  0.0f, -1.0f,  0.0f,  0.0f, -1.0f,
+						   0.0f,  0.0f, -1.0f,  0.0f,  0.0f, -1.0f,	    //Back face
 
-						  -1.0f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f, 
-		                  -1.0f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,	    //Left face
+						  -1.0f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
+						  -1.0f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,	    //Left face
 
-						   1.0f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,  
-		                   1.0f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,	    //Right face
+						   1.0f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
+						   1.0f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,	    //Right face
 
-						   0.0f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,  
-		                   0.0f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,	    //Top face
+						   0.0f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+						   0.0f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,	    //Top face
 
-						   0.0f, -1.0f,  0.0f,  0.0f, -1.0f,  0.0f,  
-		                   0.0f, -1.0f,  0.0f,  0.0f, -1.0f,  0.0f };   //Bottom face
+						   0.0f, -1.0f,  0.0f,  0.0f, -1.0f,  0.0f,
+						   0.0f, -1.0f,  0.0f,  0.0f, -1.0f,  0.0f };   //Bottom face
 
 
 	GLuint indices[] = { 0,  1,  3,  3,  1,  2,      //Front face
@@ -105,6 +105,8 @@ Cuboid::Cuboid(GLfloat width, GLfloat height, GLfloat depth,
 						16, 17, 19, 19, 17, 18,      //Top face
 						20, 21, 23, 23, 21, 22 };    //Bottom face
 
+	//TODO - Find a way to only create one single 
+	//buffer to be shared amongst subsequent cuboids
 	m_buffer.Create("Cuboid", 36, true);
 
 	m_buffer.FillVBO(Buffer::VERTEX_BUFFER, vertices, sizeof(vertices), Buffer::FILL_MANY);
@@ -114,15 +116,29 @@ Cuboid::Cuboid(GLfloat width, GLfloat height, GLfloat depth,
 	m_buffer.FillEBO(indices, sizeof(indices), Buffer::FILL_ONCE);
 
 	m_buffer.LinkEBO();
-
-	//m_texture.Load("Crate_1.png");
-	//m_material.SetMaterial("Chrome");
 }
 //======================================================================================================
 Cuboid::~Cuboid()
 {
 	m_buffer.Destroy();
-	//m_texture.Unload();
+}
+//======================================================================================================
+void Cuboid::SetTextureScale(GLfloat width, GLfloat height)
+{
+	GLfloat UVs[] = { 0.0f,  0.0f,   width, 0.0f,
+					  width, height, 0.0f,  height, 	//front face
+					  width, 0.0f,   0.0f,  0.0f,
+					  0.0f,  height, width, height, 	//back face	
+					  0.0f,  0.0f,   width, 0.0f,
+					  width, height, 0.0f,  height,		//left face 			 
+					  width, 0.0f,   0.0f,  0.0f,
+					  0.0f,  height, width, height,		//right face 			 
+					  0.0f,  0.0f,   width, 0.0f,
+					  width, height, 0.0f,  height,		//top face 			 
+					  0.0f,  height, width, height,
+					  width, 0.0f,   0.0f,  0.0f };   	//bottom face
+
+	m_buffer.FillVBO(Buffer::TEXTURE_BUFFER, UVs, sizeof(UVs), Buffer::FILL_MANY);
 }
 //======================================================================================================
 void Cuboid::SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
@@ -186,40 +202,19 @@ void Cuboid::SetDimension(GLfloat width, GLfloat height, GLfloat depth)
 	m_buffer.FillVBO(Buffer::VERTEX_BUFFER, vertices, sizeof(vertices), Buffer::FILL_MANY);
 }
 //======================================================================================================
-//void Cuboid::Update(GLfloat deltaTime)
-//{
-//	glm::ivec2 mouseWheel = Input::Instance()->GetMouseWheel();
-//	glm::ivec2 mouseMotion = Input::Instance()->GetMouseMotion();
-//
-//	if (Input::Instance()->IsLeftButtonDown())
-//	{
-//		m_transform.Rotate(static_cast<GLfloat>(mouseMotion.y), 0, 0, Transform::Space::GLOBAL);
-//		m_transform.Rotate(0, static_cast<GLfloat>(mouseMotion.x), 0, Transform::Space::LOCAL);
-//	}
-//
-//	/*static GLfloat zoomDistance = 0.0f;
-//	zoomDistance += static_cast<GLfloat>(mouseWheel.y);
-//	zoomDistance = glm::clamp(zoomDistance, -5.0f, 1.0f);
-//	m_transform.SetPosition(0.0f, 0.0f, zoomDistance);*/
-//}
-//======================================================================================================
 void Cuboid::Render(Shader& shader)
 {
 	//TODO - Find a way to do this only once
 	m_buffer.LinkVBO(shader.GetAttributeID("vertexIn"), Buffer::VERTEX_BUFFER, Buffer::XYZ, Buffer::FLOAT);
 	m_buffer.LinkVBO(shader.GetAttributeID("colorIn"), Buffer::COLOR_BUFFER, Buffer::RGBA, Buffer::FLOAT);
 	m_buffer.LinkVBO(shader.GetAttributeID("textureIn"), Buffer::TEXTURE_BUFFER, Buffer::UV, Buffer::FLOAT);
-	m_buffer.LinkVBO(shader.GetAttributeID("normalIn"), Buffer::NORMAL_BUFFER, Buffer::XYZ, Buffer::FLOAT);
-
-	//m_material.SendToShader(shader);
+	//m_buffer.LinkVBO(shader.GetAttributeID("normalIn"), Buffer::NORMAL_BUFFER, Buffer::XYZ, Buffer::FLOAT);
 
 	m_normalMatrix = glm::inverse(glm::mat3(m_transform.GetMatrix()));
 
-	shader.SendData("normal", m_normalMatrix);
+	//shader.SendData("normal", m_normalMatrix);
 	shader.SendData("model", m_transform.GetMatrix());
 	shader.SendData("isTextured", static_cast<GLuint>(m_isTextured));
 
-	//m_texture.Bind();
 	m_buffer.Render(Buffer::TRIANGLES);
-	//m_texture.Unbind();
 }

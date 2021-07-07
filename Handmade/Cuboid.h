@@ -6,10 +6,6 @@
 
 #include "Buffer.h"
 #include "Object.h"
-//#include "Material.h"
-//#include "Texture.h"
-
-//TODO - Add 'BoxCollider' component to the 'Quad' and 'Cuboid' classes
 
 class Cuboid : public Object
 {
@@ -20,8 +16,9 @@ public:
 		GLfloat r = 0.5f, GLfloat g = 0.5f, GLfloat b = 0.5f, GLfloat a = 1.0f);
 	virtual ~Cuboid();
 
+	void SetTextureScale(GLfloat width, GLfloat height);
 	void SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
-
+	
 	void SetDimension(const glm::vec3& dimension);
 	void SetDimension(GLfloat width, GLfloat height, GLfloat depth);
 
@@ -32,9 +29,6 @@ public:
 private:
 
 	Buffer m_buffer;
-	//Texture m_texture;
-	//Material m_material;
-
 	glm::vec4 m_color;
 	glm::vec3 m_dimension;
 
