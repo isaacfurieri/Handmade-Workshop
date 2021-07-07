@@ -134,13 +134,21 @@ void Buffer::LinkVBO(GLint attributeID, VBOType vboType, ComponentSize component
 	glBindVertexArray(0);
 }
 //======================================================================================================
-void Buffer::Render(RenderMode renderMode)
+void Buffer::Render(RenderMode renderMode, GLuint index, GLuint totalVertices)
 {
 	glBindVertexArray(m_VAO);
 
 	if (m_hasEBO)
 	{
-		glDrawElements(renderMode, m_totalVertices, GL_UNSIGNED_INT, nullptr);
+		if (index > 0)
+		{
+			glDrawElements(renderMode, totalVertices, GL_UNSIGNED_INT, (const void*)(index));
+		}
+
+		else
+		{
+			glDrawElements(renderMode, m_totalVertices, GL_UNSIGNED_INT, (const void*)(nullptr));
+		}
 	}
 
 	else

@@ -88,7 +88,7 @@ public:
 
 	void LinkVBO(GLint attributeID, VBOType vboType, ComponentSize componentSize, DataType dataType);
 
-	void Render(RenderMode renderMode);
+	void Render(RenderMode renderMode, GLuint index = 0, GLuint totalVertices = 0);
 
 	void Destroy();
 	void Destroy(const std::string& tag);
