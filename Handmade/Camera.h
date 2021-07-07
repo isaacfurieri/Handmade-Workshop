@@ -28,13 +28,8 @@ public:
 	Camera();
 	virtual ~Camera() = 0 {}
 
-	//const glm::vec3& GetPosition() const;
-
 	void SetVelocity(GLfloat velocity);
 	void SetFieldOfView(GLfloat fieldOfView);
-
-	//void SetPosition(const glm::vec3& position);
-	//void SetPosition(GLfloat x, GLfloat y, GLfloat z);
 
 	void CreatePerspView();
 	void CreateOrthoView(Origin2D origin = Origin2D::BOTTOM_LEFT);
@@ -44,8 +39,6 @@ public:
 
 	void Reset();
 	
-	//void SendToShader(Shader& shader);
-
 	virtual void Render(Shader& shader) = 0;
 	virtual void Update(GLfloat deltaTime) = 0;
 	virtual void SendToShader(Shader& shader);
@@ -57,8 +50,7 @@ protected:
 
 	glm::vec3 m_up;
 	glm::vec3 m_lookAt;
-	//glm::vec3 m_position;
-
+	
 	glm::mat4 m_viewMatrix;
 	glm::mat4 m_projectionMatrix;
 

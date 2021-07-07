@@ -57,7 +57,9 @@ void FreeCamera::Update(GLfloat deltaTime)
 	//the cross product of forward/up create a left/right direction of movement
 	//when flying about, a new temporary 'up' vector is calculated to move it
 
+	//==============================================================================
 	//TODO - Make sure all camera movement control and key bindings are external
+	//==============================================================================
 
 	//if (keyDown == HM_KEY_W)
 	//{
@@ -123,18 +125,17 @@ void FreeCamera::Update(GLfloat deltaTime)
 		CreatePerspView();
 	}
 
-	//update camera's view matrix
 	m_viewMatrix = glm::lookAt(m_transform.GetPosition(), m_transform.GetPosition() + forward, m_up);
-	//m_viewMatrix = glm::lookAt(m_position, m_position + forward, m_up);
 }
 //======================================================================================================
 void FreeCamera::SendToShader(Shader& shader)
 {
 	Camera::SendToShader(shader);
 }
-//======================================================================================================
-// OLD code that makes use of rotation matrices - not ideal but good for learning
 
+//======================================================================================================
+//OLD code that makes use of rotation matrices - not ideal but good for learning
+//======================================================================================================
 //void FreeCamera::RotateMatrix()
 //{
 //	//create rotation matrices for x/y rotation
