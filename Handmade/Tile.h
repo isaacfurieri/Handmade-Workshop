@@ -19,9 +19,14 @@ public:
 		GLuint spriteSheetCol = 1, GLuint spriteSheetRow = 1);
 	virtual ~Tile();
 
+	bool IsAnimationDead() const;
+	bool IsAnimationLooping() const;
+
 	void IsAnimated(bool flag);
-	void SetTile(GLuint tileIndex);
-	void SetTile(GLuint column, GLuint row);
+	void IsAnimationLooping(bool flag);
+
+	void SetTileIndex(GLuint tileIndex);
+	void SetTileIndex(GLuint column, GLuint row);
 	void SetAnimationVelocity(GLfloat velocity);
 
 	void SetDimension(const glm::vec3& dimension);
@@ -35,16 +40,18 @@ public:
 private:
 
 	bool m_isAnimated;
+	bool m_isAnimationDead;
+	bool m_isAnimationLooping;
+	bool m_isAnimationLoopFinal;
 
 	GLuint m_tileIndex;
 	GLuint m_spriteSheetCol;
 	GLuint m_spriteSheetRow;
 	GLfloat m_animationVelocity;
 
+	Buffer m_buffer;
 	glm::vec4 m_color;
 	glm::vec2 m_dimension;
-
-	Buffer m_buffer;
 
 	const GLuint CORNERS = 4;
 	const GLuint VERTICES_PER_TILE = 6;

@@ -7,12 +7,16 @@
 Tile::Tile(GLfloat width, GLfloat height, GLuint spriteSheetCol, GLuint spriteSheetRow)
 {
 	m_tileIndex = 0;
-	m_isAnimated = false;
 	m_color = glm::vec4(1.0f);
 	m_animationVelocity = 0.1f;
 	m_spriteSheetCol = spriteSheetCol;
 	m_spriteSheetRow = spriteSheetRow;
 	m_dimension = glm::vec2(width, height);
+
+	m_isAnimated = false;
+	m_isAnimationDead = false;
+	m_isAnimationLooping = false;
+	m_isAnimationLoopFinal = false;
 
 	GLuint offsetUV = 0;
 	GLuint offsetVert = 0;
@@ -90,17 +94,32 @@ Tile::~Tile()
 	m_buffer.Destroy();
 }
 //======================================================================================================
+bool Tile::IsAnimationDead() const
+{
+	return m_isAnimationDead;
+}
+//======================================================================================================
+bool Tile::IsAnimationLooping() const
+{
+	return m_isAnimationLooping;
+}
+//======================================================================================================
 void Tile::IsAnimated(bool flag)
 {
 	m_isAnimated = flag;
 }
 //======================================================================================================
-void Tile::SetTile(GLuint tileIndex)
+void Tile::IsAnimationLooping(bool flag)
+{
+	m_isAnimationLooping = flag;
+}
+//======================================================================================================
+void Tile::SetTileIndex(GLuint tileIndex)
 {
 	m_tileIndex = tileIndex;
 }
 //======================================================================================================
-void Tile::SetTile(GLuint column, GLuint row)
+void Tile::SetTileIndex(GLuint column, GLuint row)
 {
 	//Because everything is zero-based, we must decrement
 	m_tileIndex = ((row - 1) * m_spriteSheetCol) + column;
@@ -151,12 +170,42 @@ void Tile::Render(Shader& shader)
 	//Store size of each EBO partition for each tile
 	const GLuint BYTES_PER_TILE_INDEX = VERTICES_PER_TILE * sizeof(GLuint);
 
+	m_buffer.LinkVBO(shader.GetAttributeID("vertexIn"), Buffer::VERTEX_BUFFER, Buffer::XYZ, Buffer::FLOAT);
+	m_buffer.LinkVBO(shader.GetAttributeID("colorIn"), Buffer::COLOR_BUFFER, Buffer::RGBA, Buffer::FLOAT);
+	m_buffer.LinkVBO(shader.GetAttributeID("textureIn"), Buffer::TEXTURE_BUFFER, Buffer::UV, Buffer::FLOAT);
+	//m_buffer.LinkVBO(shader.GetAttributeID("normalIn"), Buffer::NORMAL_BUFFER, Buffer::XYZ, Buffer::FLOAT);
+
 	//This will render each individual 'cel' making it look like an animation
 	if (m_isAnimated)
 	{
-		//use fake 60FPS 'delta time'
+		//Use fake 60FPS 'delta time'
 		static GLfloat timeElapsed = 0.0f;
 		timeElapsed += 0.16f;
+
+		//If animation is set to cycle endlessly then set the kill and final flags
+		//to false so that no other final checks are made and that the animation loops
+		if (m_isAnimationLooping)
+		{
+			m_isAnimationDead = false;
+			m_isAnimationLoopFinal = false;
+		}
+
+		//Otherwise if animation is set to cycle once and the last image
+		//cel has been reached then flag this as the final animation loop
+		else if (!m_isAnimationLooping &&
+			m_tileIndex == (m_spriteSheetCol * m_spriteSheetRow - 1))
+		{
+			m_isAnimationLoopFinal = true;
+		}
+
+		//If this is the final animation, flag to kill entire animation
+		//because even though the animation is marked final, a few more 
+		//frames will be called with the last image cel set, so only
+		//mark it dead when the first image cel comes around again
+		if (m_isAnimationLoopFinal && m_tileIndex == 0)
+		{
+			m_isAnimationDead = true;
+		}
 
 		//We need to be able to pick the correct portion
 		//of the EBO to use to render the correct tile
