@@ -14,24 +14,23 @@ Sphere::Sphere(GLfloat radius, GLuint segments, GLuint slices,
 	GLuint offsetColor = 0;
 	GLuint offsetIndex = 0;
 
-	const int BYTES_PER_VERTEX = 3 * sizeof(GLfloat);
-	const int BYTES_PER_COLOR = 4 * sizeof(GLfloat);
-	const int BYTES_PER_TRIANGLE = 3 * sizeof(GLuint);
+	const GLuint BYTES_PER_VERTEX = Buffer::ComponentSize::XYZ * sizeof(GLfloat);
+	const GLuint BYTES_PER_COLOR = Buffer::ComponentSize::RGBA * sizeof(GLfloat);
+	const GLuint BYTES_PER_TRIANGLE = Buffer::ComponentSize::XYZ * sizeof(GLuint);
 
-	const int TOTAL_BYTES_VERTEX_VBO = (m_slices + 1) * (m_segments + 1) * BYTES_PER_VERTEX;
-	const int TOTAL_BYTES_COLOR_VBO = (m_slices + 1) * (m_segments + 1) * BYTES_PER_COLOR;
-	const int TOTAL_BYTES_EBO = (m_slices - 1) * (m_segments)*BYTES_PER_TRIANGLE * 2;
+	const GLuint TOTAL_BYTES_EBO = (m_slices - 1) * m_segments * BYTES_PER_TRIANGLE * 2;
+	const GLuint TOTAL_BYTES_VERTEX_VBO = (m_slices + 1) * (m_segments + 1) * BYTES_PER_VERTEX;
+	const GLuint TOTAL_BYTES_COLOR_VBO = (m_slices + 1) * (m_segments + 1) * BYTES_PER_COLOR;
 
 	//We multiply by 6 because each slice creates 1 quad (2 triangles)
-	//This is slightly different to the cuboid which has a static 36 vertices
 	m_buffer.Create("Sphere", m_segments * (m_slices - 1) * 6, true);
 	m_buffer.LinkEBO();
 
-	m_buffer.FillEBO((GLuint*)nullptr, TOTAL_BYTES_EBO, Buffer::FILL_MANY);
-	m_buffer.FillVBO(Buffer::VERTEX_BUFFER, (GLfloat*)nullptr, TOTAL_BYTES_VERTEX_VBO, Buffer::FILL_MANY);
-	m_buffer.FillVBO(Buffer::COLOR_BUFFER, (GLfloat*)nullptr, TOTAL_BYTES_COLOR_VBO, Buffer::FILL_MANY);
+	m_buffer.FillEBO(static_cast<GLuint*>(nullptr), TOTAL_BYTES_EBO, Buffer::FILL_MANY);
+	m_buffer.FillVBO(Buffer::VERTEX_BUFFER, static_cast<GLfloat*>(nullptr), TOTAL_BYTES_VERTEX_VBO, Buffer::FILL_MANY);
+	m_buffer.FillVBO(Buffer::COLOR_BUFFER, static_cast<GLfloat*>(nullptr), TOTAL_BYTES_COLOR_VBO, Buffer::FILL_MANY);
 
-	//use this as a reference for sphere equation:
+	//Use this as a reference for sphere equation:
 	//http://mathworld.wolfram.com/Sphere.html
 
 	//We first need to calculate the longitude and latitude angle
@@ -60,15 +59,13 @@ Sphere::Sphere(GLfloat radius, GLuint segments, GLuint slices,
 	{
 		for (GLuint j = 0; j < m_slices - 1; j++)
 		{
-			//triangle 1
-			GLuint indices[] = { (i * (m_slices + 1)) + j,                               //X
-								 (i * (m_slices + 1)) + j + 1,						     //Y
-								 (i * (m_slices + 1)) + j + m_slices + 2,                //Z
+			GLuint indices[] = { (i * (m_slices + 1)) + j,                           //triangle 1 - X
+								 (i * (m_slices + 1)) + j + 1,						 //triangle 1 - Y
+								 (i * (m_slices + 1)) + j + m_slices + 2,            //triangle 1 - Z
 
-								 //triangle 2
-								 (i * (m_slices + 1)) + ((m_slices * 2) + 1) - j,        //X
-								 (i * (m_slices + 1)) + ((m_slices * 2)) - j,		     //Y
-								 (i * (m_slices + 1)) + ((m_slices - 1)) - j };	         //Z
+								 (i * (m_slices + 1)) + ((m_slices * 2) + 1) - j,    //triangle 2 - X
+								 (i * (m_slices + 1)) + ((m_slices * 2)) - j,		 //triangle 2 - Y
+								 (i * (m_slices + 1)) + ((m_slices - 1)) - j };	     //triangle 2 - Z
 
 			m_buffer.AppendEBO(indices, sizeof(indices), offsetIndex);
 			offsetIndex += BYTES_PER_TRIANGLE * 2;
@@ -122,6 +119,8 @@ void Sphere::Render(Shader& shader)
 	m_buffer.LinkVBO(shader.GetAttributeID("vertexIn"), Buffer::VERTEX_BUFFER, Buffer::XYZ, Buffer::FLOAT);
 	m_buffer.LinkVBO(shader.GetAttributeID("colorIn"), Buffer::COLOR_BUFFER, Buffer::RGBA, Buffer::FLOAT);
 
-	//SendToShader(false, false);
+	shader.SendData("model", m_transform.GetMatrix());
+	shader.SendData("isTextured", static_cast<GLuint>(m_isTextured));
+
 	m_buffer.Render(Buffer::TRIANGLES);
 }

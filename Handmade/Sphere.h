@@ -9,8 +9,6 @@
 #include "Buffer.h"
 #include "Object.h"
 
-//TODO - Add 'SphereCollider' component to the 'Circle' and 'Sphere' classes
-
 class Sphere : public Object
 {
 
