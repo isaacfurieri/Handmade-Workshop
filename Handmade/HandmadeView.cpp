@@ -149,7 +149,8 @@ int CHandmadeView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_mainCamera = std::make_unique<FreeCamera>();
 	m_mainCamera->SetVelocity(0.0f);
 	m_mainCamera->SetSensitivity(0.0f);
-	m_mainCamera->SetPosition(0.0f, 0.0f, 50.0f);
+	m_mainCamera->GetTransform().SetPosition(0.0f, 0.0f, 50.0f);
+	//m_mainCamera->SetPosition(0.0f, 0.0f, 50.0f);
 
 	return 0;
 }
@@ -241,7 +242,7 @@ void CHandmadeView::OnDraw(CDC* pDC)
 	Screen::Instance()->Refresh();
 	
 	m_mainCamera->CreatePerspView();
-	m_mainCamera->Update();
+	m_mainCamera->Update(16.0f);
 	m_mainCamera->SendToShader(*Shader::Instance());
 
 	m_grid->Render(*Shader::Instance());

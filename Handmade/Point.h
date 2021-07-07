@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Point' source files last updated on 29 June 2021                  |
+| 'Point' source files last updated on 7 July 2021                   |
 #===================================================================*/
 
 #include <glm.hpp>
@@ -16,15 +16,15 @@ class Point : public Object
 
 public:
 
-	Point(GLfloat pointSize = 5.0f, 
+	Point(GLfloat pointSize = 5.0f,
 		GLfloat r = 1.0f, GLfloat g = 1.0f, GLfloat b = 1.0f, GLfloat a = 1.0f);
 	virtual ~Point();
 
 	void SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
 
-	virtual void SendToShader() {}
-	virtual void Update(GLfloat deltaTime) {}
 	virtual void Render(Shader& shader);
+	virtual void Update(GLfloat deltaTime) {}
+	virtual void SendToShader(Shader& shader) {}
 
 private:
 

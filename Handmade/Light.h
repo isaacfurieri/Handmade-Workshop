@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Light' source files last updated on 29 June 2021                  |
+| 'Light' source files last updated on 7 July 2021                   |
 #===================================================================*/
 
 #include "glad.h"
@@ -29,9 +29,9 @@ public:
 	void SetSpecular(GLfloat r, GLfloat g, GLfloat b);
 	void SetPosition(GLfloat x, GLfloat y, GLfloat z);
 
-	virtual void SendToShader();
+	virtual void Render(Shader& shader); /*debug only*/
 	virtual void Update(GLfloat deltaTime) { /*debug only*/ }
-	virtual void Render(Shader& shader);
+	virtual void SendToShader(Shader& shader);
 
 private:
 

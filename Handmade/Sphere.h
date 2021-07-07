@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Sphere' source files last updated on 29 June 2021                 |
+| 'Sphere' source files last updated on 7 July 2021                  |
 #===================================================================*/
 
 #include <glm.hpp>
@@ -23,10 +23,10 @@ public:
 	void SetRadius(GLfloat radius);
 	void SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
 
-	virtual void SendToShader() {}
-	virtual void Update(GLfloat deltaTime) {}
 	virtual void Render(Shader& shader);
-	
+	virtual void Update(GLfloat deltaTime) {}
+	virtual void SendToShader(Shader& shader) {}
+
 private:
 
 	GLuint m_slices;

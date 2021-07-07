@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Cuboid' source files last updated on 29 June 2021                 |
+| 'Cuboid' source files last updated on 7 July 2021                  |
 #===================================================================*/
 
 #include "Buffer.h"
@@ -25,9 +25,9 @@ public:
 	void SetDimension(const glm::vec3& dimension);
 	void SetDimension(GLfloat width, GLfloat height, GLfloat depth);
 
-	virtual void SendToShader() {}
-	virtual void Update(GLfloat deltaTime) {}
 	virtual void Render(Shader& shader);
+	virtual void Update(GLfloat deltaTime) {}
+	virtual void SendToShader(Shader& shader) {}
 
 private:
 

@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'OrbitCamera' source files last updated on 24 June 2021            |
+| 'OrbitCamera' source files last updated on 7 July 2021             |
 #===================================================================*/
 
 #include "Camera.h"

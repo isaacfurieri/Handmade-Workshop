@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Object' source files last updated on 29 June 2021                 |
+| 'Object' source files last updated on 7 July 2021                  |
 #===================================================================*/
 
 #include "glad.h"
@@ -38,9 +38,9 @@ public:
 	void SetPriority(GLuint priority);
 	void SetTag(const std::string& tag);
 
-	virtual void SendToShader() = 0;
-	virtual void Update(GLfloat deltaTime) = 0;
 	virtual void Render(Shader& shader) = 0;
+	virtual void Update(GLfloat deltaTime) = 0;
+	virtual void SendToShader(Shader& shader) = 0;
 
 protected:
 

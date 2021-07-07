@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Grid' source files last updated on 29 June 2021                   |
+| 'Grid' source files last updated on 7 July 2021                    |
 #===================================================================*/
 
 #include "glad.h"
@@ -16,7 +16,7 @@ class Grid : public Object
 public:
 
 	Grid(GLint size = 15, GLfloat lineWidth = 2.0f);
-	~Grid();
+	virtual ~Grid();
 
 	void SetSize(GLint size);
 	void SetLineWidth(GLfloat lineWidth);
@@ -24,9 +24,9 @@ public:
 
 	//Transform& GetTransform();
 
-	virtual void SendToShader() {}
-	virtual void Update(GLfloat deltaTime) {}
 	virtual void Render(Shader& shader);
+	virtual void Update(GLfloat deltaTime) {}
+	virtual void SendToShader(Shader& shader) {}
 
 private:
 

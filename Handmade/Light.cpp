@@ -87,7 +87,7 @@ void Light::Render(Shader& shader)
 	m_buffer.Render(Buffer::POINTS);
 }
 //======================================================================================================
-void Light::SendToShader()
+void Light::SendToShader(Shader& shader)
 {
 	//send total amount of lights to fragment shader so it can loop through them all
 	Shader::Instance()->SendData("totalLights", s_totalLights);

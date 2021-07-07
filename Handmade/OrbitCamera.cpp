@@ -32,9 +32,11 @@ void OrbitCamera::Update()
 	m_zoomDistance -= mouseWheel.y;
 	m_zoomDistance = glm::clamp(m_zoomDistance, 0.5f, 50.0f);
 
-	m_position.x = glm::cos(glm::radians(m_azimuth)) * glm::cos(glm::radians(m_elevation)) * m_zoomDistance;
-	m_position.y = glm::sin(glm::radians(m_elevation)) * m_zoomDistance;
-	m_position.z = glm::sin(glm::radians(m_azimuth)) * glm::cos(glm::radians(m_elevation)) * m_zoomDistance;
+	glm::vec3 position;
 
-	m_viewMatrix = glm::lookAt(m_position, glm::vec3(0.0f), m_up);
+	position.x = glm::cos(glm::radians(m_azimuth)) * glm::cos(glm::radians(m_elevation)) * m_zoomDistance;
+	position.y = glm::sin(glm::radians(m_elevation)) * m_zoomDistance;
+	position.z = glm::sin(glm::radians(m_azimuth)) * glm::cos(glm::radians(m_elevation)) * m_zoomDistance;
+
+	m_viewMatrix = glm::lookAt(position, glm::vec3(0.0f), m_up);
 }

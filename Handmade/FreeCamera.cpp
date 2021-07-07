@@ -26,7 +26,7 @@ void FreeCamera::SetSensitivity(GLfloat sensitivity)
 	m_sensitivity = sensitivity;
 }
 //======================================================================================================
-void FreeCamera::Update()
+void FreeCamera::Update(GLfloat deltaTime)
 {
 	//get keyboard and mouse data from input manager
 	//KeyState keys = Input::Instance()->GetKeyStates();
@@ -57,46 +57,48 @@ void FreeCamera::Update()
 	//the cross product of forward/up create a left/right direction of movement
 	//when flying about, a new temporary 'up' vector is calculated to move it
 
-	if (keyDown == HM_KEY_W)
-	{
-		m_position += forward * m_velocity;
-	}
+	//TODO - Make sure all camera movement control and key bindings are external
 
-	else if (keyDown == HM_KEY_S)
-	{
-		m_position -= forward * m_velocity;
-	}
+	//if (keyDown == HM_KEY_W)
+	//{
+	//	m_position += forward * m_velocity;
+	//}
 
-	else if (keyDown == HM_KEY_A)
-	{
-		m_position -= glm::normalize(glm::cross(forward, m_up)) * m_velocity;
-	}
+	//else if (keyDown == HM_KEY_S)
+	//{
+	//	m_position -= forward * m_velocity;
+	//}
 
-	else if (keyDown == HM_KEY_D)
-	{
-		m_position += glm::normalize(glm::cross(forward, m_up)) * m_velocity;
-	}
+	//else if (keyDown == HM_KEY_A)
+	//{
+	//	m_position -= glm::normalize(glm::cross(forward, m_up)) * m_velocity;
+	//}
 
-	else if (keyDown == HM_KEY_Q && m_isFlying)
-	{
-		glm::vec3 right = glm::cross(forward, m_up);
-		glm::vec3 up = glm::normalize(glm::cross(forward, right));
-		m_position -= up * m_velocity;
-	}
+	//else if (keyDown == HM_KEY_D)
+	//{
+	//	m_position += glm::normalize(glm::cross(forward, m_up)) * m_velocity;
+	//}
 
-	else if (keyDown == HM_KEY_E && m_isFlying)
-	{
-		glm::vec3 right = glm::cross(forward, m_up);
-		glm::vec3 up = glm::normalize(glm::cross(forward, right));
-		m_position += up * m_velocity;
-	}
+	//else if (keyDown == HM_KEY_Q && m_isFlying)
+	//{
+	//	glm::vec3 right = glm::cross(forward, m_up);
+	//	glm::vec3 up = glm::normalize(glm::cross(forward, right));
+	//	m_position -= up * m_velocity;
+	//}
 
-	//if the camera is not free-flying then 
-	//clamp the y position to the ground
-	if (!m_isFlying)
-	{
-		m_position.y = 1.0f;
-	}
+	//else if (keyDown == HM_KEY_E && m_isFlying)
+	//{
+	//	glm::vec3 right = glm::cross(forward, m_up);
+	//	glm::vec3 up = glm::normalize(glm::cross(forward, right));
+	//	m_position += up * m_velocity;
+	//}
+
+	////if the camera is not free-flying then 
+	////clamp the y position to the ground
+	//if (!m_isFlying)
+	//{
+	//	m_position.y = 1.0f;
+	//}
 
 	//TODO - Fix the camera so that if not in 'fly' mode the camera still moves correctly====================
 	//if camera is in debug/fly mode, transform the forward vector based on
@@ -122,7 +124,13 @@ void FreeCamera::Update()
 	}
 
 	//update camera's view matrix
-	m_viewMatrix = glm::lookAt(m_position, m_position + forward, m_up);
+	m_viewMatrix = glm::lookAt(m_transform.GetPosition(), m_transform.GetPosition() + forward, m_up);
+	//m_viewMatrix = glm::lookAt(m_position, m_position + forward, m_up);
+}
+//======================================================================================================
+void FreeCamera::SendToShader(Shader& shader)
+{
+	Camera::SendToShader(shader);
 }
 //======================================================================================================
 // OLD code that makes use of rotation matrices - not ideal but good for learning
