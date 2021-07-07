@@ -4,8 +4,6 @@
 | 'Axes' source files last updated on 7 July 2021                    |
 #===================================================================*/
 
-#include <string>
-#include <glm.hpp>
 #include "Buffer.h"
 #include "Object.h"
 #include "Shader.h"
@@ -30,5 +28,7 @@ private:
 	GLint m_size;
 	Buffer m_buffer;
 	GLfloat m_lineWidth;
+
+	void Create();
 
 };

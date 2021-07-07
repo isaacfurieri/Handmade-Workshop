@@ -7,6 +7,7 @@
 #include <memory>
 #include <vector>
 #include <glm.hpp>
+#include "Axes.h"
 #include "FreeCamera.h"
 #include "Grid.h"
 #include "Quad.h"
@@ -72,8 +73,9 @@ private:
 	glm::ivec2 m_mouseMotion;
 	glm::ivec2 m_mousePosition;
 
-	std::unique_ptr<Quad> m_quad;
 	std::unique_ptr<Grid> m_grid;
+	std::unique_ptr<Axes> m_axes;
+	std::unique_ptr<Quad> m_quad;
 
 	std::unique_ptr<FreeCamera> m_mainCamera;
 

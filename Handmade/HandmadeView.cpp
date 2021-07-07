@@ -144,24 +144,23 @@ int CHandmadeView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_grid = std::make_unique<Grid>();
 	m_grid->GetTransform().SetRotation(45.0f, -30.0f, 0.0f);
 
-	m_quad = std::make_unique<Quad>(1.0f, 1.0f);
+	m_axes = std::make_unique<Axes>();
+	m_axes->GetTransform().SetRotation(m_grid->GetTransform().GetRotation());
+
+	//m_quad = std::make_unique<Quad>(1.0f, 1.0f);
 
 	m_mainCamera = std::make_unique<FreeCamera>();
 	m_mainCamera->SetVelocity(0.0f);
 	m_mainCamera->SetSensitivity(0.0f);
 	m_mainCamera->GetTransform().SetPosition(0.0f, 0.0f, 50.0f);
-	//m_mainCamera->SetPosition(0.0f, 0.0f, 50.0f);
 
 	return 0;
 }
 //======================================================================================================
 void CHandmadeView::OnDestroy()
 {
-
 	m_objects.clear();
-
 	AudioManager::Instance()->ShutDown();
-
 }
 //======================================================================================================
 void CHandmadeView::OnMouseMove(UINT nFlags, CPoint point)
@@ -246,6 +245,8 @@ void CHandmadeView::OnDraw(CDC* pDC)
 	m_mainCamera->SendToShader(*Shader::Instance());
 
 	m_grid->Render(*Shader::Instance());
+	m_axes->Render(*Shader::Instance());
+	
 	//m_quad->Render(*Shader::Instance());
 
 	//TODO - calculate elapsed time
