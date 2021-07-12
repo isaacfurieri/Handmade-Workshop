@@ -9,8 +9,6 @@ Light::Light()
 	m_attConstant = 0.2f;
 	m_attQuadratic = 0.05f;
 
-	m_position = glm::vec3(0.0f);
-
 	m_ambient = glm::vec3(1.0f);
 	m_diffuse = glm::vec3(1.0f);
 	m_specular = glm::vec3(1.0f);
@@ -64,11 +62,6 @@ void Light::SetSpecular(GLfloat r, GLfloat g, GLfloat b)
 	m_specular = glm::vec3(r, g, b);
 }
 //======================================================================================================
-void Light::SetPosition(GLfloat x, GLfloat y, GLfloat z)
-{
-	m_position = glm::vec3(x, y, z);
-}
-//======================================================================================================
 void Light::Render(Shader& shader)
 {
 	//transform light in scene and apply to model matrix
@@ -93,13 +86,20 @@ void Light::SendToShader(Shader& shader)
 	Shader::Instance()->SendData("totalLights", s_totalLights);
 
 	//send light position and color to fragment shader
-	Shader::Instance()->SendData("light[" + std::to_string(m_lightNumber) + "].ambient", m_ambient);
-	Shader::Instance()->SendData("light[" + std::to_string(m_lightNumber) + "].diffuse", m_diffuse);
-	Shader::Instance()->SendData("light[" + std::to_string(m_lightNumber) + "].specular", m_specular);
-	Shader::Instance()->SendData("light[" + std::to_string(m_lightNumber) + "].position", m_position);
+	Shader::Instance()->SendData("light[" +
+		std::to_string(m_lightNumber) + "].ambient", m_ambient);
+	Shader::Instance()->SendData("light[" +
+		std::to_string(m_lightNumber) + "].diffuse", m_diffuse);
+	Shader::Instance()->SendData("light[" +
+		std::to_string(m_lightNumber) + "].specular", m_specular);
+	Shader::Instance()->SendData("light[" +
+		std::to_string(m_lightNumber) + "].position", m_transform.GetPosition());
 
 	//send light attenuationo fragment shader
-	Shader::Instance()->SendData("light[" + std::to_string(m_lightNumber) + "].attLinear", m_attLinear);
-	Shader::Instance()->SendData("light[" + std::to_string(m_lightNumber) + "].attConstant", m_attConstant);
-	Shader::Instance()->SendData("light[" + std::to_string(m_lightNumber) + "].attQuadratic", m_attQuadratic);
+	Shader::Instance()->SendData("light[" +
+		std::to_string(m_lightNumber) + "].attLinear", m_attLinear);
+	Shader::Instance()->SendData("light[" +
+		std::to_string(m_lightNumber) + "].attConstant", m_attConstant);
+	Shader::Instance()->SendData("light[" +
+		std::to_string(m_lightNumber) + "].attQuadratic", m_attQuadratic);
 }

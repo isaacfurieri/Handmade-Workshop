@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Light' source files last updated on 7 July 2021                   |
+| 'Light' source files last updated on 12 July 2021                  |
 #===================================================================*/
 
 #include "glad.h"
@@ -27,7 +27,6 @@ public:
 	void SetAmbient(GLfloat r, GLfloat g, GLfloat b);
 	void SetDiffuse(GLfloat r, GLfloat g, GLfloat b);
 	void SetSpecular(GLfloat r, GLfloat g, GLfloat b);
-	void SetPosition(GLfloat x, GLfloat y, GLfloat z);
 
 	virtual void Render(Shader& shader); /*debug only*/
 	virtual void Update(GLfloat deltaTime) { /*debug only*/ }
@@ -43,7 +42,6 @@ private:
 	GLfloat m_attConstant;
 	GLfloat m_attQuadratic;
 
-	glm::vec3 m_position;
 	glm::vec3 m_ambient;
 	glm::vec3 m_diffuse;
 	glm::vec3 m_specular;
