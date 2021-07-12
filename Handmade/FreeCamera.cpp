@@ -151,6 +151,18 @@ void FreeCamera::SendToShader(Shader& shader)
 //	//initial viewing target based on FreeCamera's total rotation
 //	m_lookAt = glm::vec3(totalRotation * glm::vec4(m_target, 1.0f));
 //
+//	//apply total rotation to move direction vector for correct movement
+//	moveDirection = glm::vec3(totalRotation * glm::vec4(moveDirection, 1.0f));
+
+	////update camera position based on move direction only if camera is set to move
+	//if (moveDirection != glm::vec3(0.0f))
+	//{
+	//	m_position += moveDirection * m_velocity;
+	//}
+
+	////update camera's view matrix
+	//m_viewMatrix = glm::lookAt(m_position, m_position + lookAtDirection, glm::vec3(0.0f, 1.0f, 0.0f));
+
 //	//if camera is in debug/fly mode, transform the forward vector based on
 //	//the overall rotation, so that camera moves forward in any direction
 //	if (m_isFlying)
