@@ -121,11 +121,11 @@ bool Model::Load(const std::string& filename, bool isNormalized, const std::stri
 			{
 				if (!m_materials.empty())
 				{
-					for (size_t i = 0; i < m_materials.size(); ++i)
+					for (const auto& material : m_materials)
 					{
-						if (m_materials[i].GetName() == subStrings[1])
+						if (material.GetName() == subStrings[1])
 						{
-							lastMaterial = m_materials[i];
+							lastMaterial = material;
 							break;
 						}
 					}
@@ -207,9 +207,9 @@ bool Model::Load(const std::string& filename, bool isNormalized, const std::stri
 		Material material;
 		material.SetMaterial(defaultMaterial);
 
-		for (size_t i = 0; i < m_meshes.size(); i++)
+		for (auto& mesh : m_meshes)
 		{
-			m_meshes[i].material = material;
+			mesh.material = material;
 		}
 	}
 
@@ -224,12 +224,12 @@ bool Model::Load(const std::string& filename, bool isNormalized, const std::stri
 	glm::vec3 minValues = glm::vec3(0.0f);
 	glm::vec3 maxValues = glm::vec3(0.0f);
 
-	for (size_t i = 0; i < m_meshes.size(); i++)
+	for (const auto& mesh : m_meshes)
 	{
-		for (size_t j = 0; j < m_meshes[i].vertices.size(); j++)
+		for (const auto& vertex : mesh.vertices)
 		{
-			maxValues = glm::max(maxValues, m_meshes[i].vertices[j]);
-			minValues = glm::min(minValues, m_meshes[i].vertices[j]);
+			maxValues = glm::max(maxValues, vertex);
+			minValues = glm::min(minValues, vertex);
 		}
 	}
 
@@ -251,16 +251,17 @@ void Model::SetColor(const glm::vec4& color)
 //======================================================================================================
 void Model::SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
 {
-	for (size_t i = 0; i < m_meshes.size(); i++)
+	auto count = 0;
+	for (auto& mesh : m_meshes)
 	{
-		for (size_t j = 0; j < m_meshes[i].colors.size(); j++)
+		for (auto& color : mesh.colors)
 		{
-			glm::vec4 color(r, g, b, a);
-			m_meshes[i].colors[j] = color;
+			glm::vec4 newColor(r, g, b, a);
+			color = newColor;
 		}
 
-		m_buffers[i].FillVBO(Buffer::COLOR_BUFFER, &m_meshes[i].colors[0].x, 
-			m_meshes[i].colors.size() * sizeof(glm::vec4));
+		m_buffers[count++].FillVBO(Buffer::COLOR_BUFFER, &mesh.colors[0].x,
+			mesh.colors.size() * sizeof(glm::vec4));
 	}
 }
 //======================================================================================================
@@ -269,32 +270,32 @@ void Model::FillBuffers()
 	//We have to create separate buffer objects if the .obj file data has separate groups
 	//because of how the indices have been set up. Single group models will use one buffer
 	//We can use one buffer for all data but then the indices have to be calculated differently
-	for (size_t i = 0; i < m_meshes.size(); i++)
+	for (auto& mesh : m_meshes)
 	{
 		Buffer buffer;
 
 		//TODO - Need to label each buffer object properly
 		static auto count = 0;
-		buffer.Create("Mesh_" + std::to_string(count++), m_meshes[i].indices.size(), true);
+		buffer.Create("Mesh_" + std::to_string(count++), mesh.indices.size(), true);
 
-		buffer.FillEBO(&m_meshes[i].indices[0], m_meshes[i].indices.size() * sizeof(GLuint));
-		buffer.FillVBO(Buffer::VERTEX_BUFFER, &m_meshes[i].vertices[0].x, m_meshes[i].vertices.size() * sizeof(glm::vec3));
-		buffer.FillVBO(Buffer::NORMAL_BUFFER, &m_meshes[i].normals[0].x, m_meshes[i].normals.size() * sizeof(glm::vec3));
+		buffer.FillEBO(&mesh.indices[0], mesh.indices.size() * sizeof(GLuint));
+		buffer.FillVBO(Buffer::VERTEX_BUFFER, &mesh.vertices[0].x, mesh.vertices.size() * sizeof(glm::vec3));
+		buffer.FillVBO(Buffer::NORMAL_BUFFER, &mesh.normals[0].x, mesh.normals.size() * sizeof(glm::vec3));
 
 		//Fill the color buffer with a default white color 
 		//For each vertex in the mesh there is a color value
-		for (size_t j = 0; j < m_meshes[i].vertices.size(); j++)
+		for (const auto& vertex : mesh.vertices)
 		{
 			glm::vec4 color(1.0f, 1.0f, 1.0f, 1.0f);
-			m_meshes[i].colors.push_back(color);
+			mesh.colors.push_back(color);
 		}
 
-		buffer.FillVBO(Buffer::COLOR_BUFFER, &m_meshes[i].colors[0].x, m_meshes[i].colors.size() * sizeof(glm::vec4));
+		buffer.FillVBO(Buffer::COLOR_BUFFER, &mesh.colors[0].x, mesh.colors.size() * sizeof(glm::vec4));
 
-		if (!m_meshes[i].textureCoords.empty())
+		if (!mesh.textureCoords.empty())
 		{
-			buffer.FillVBO(Buffer::TEXTURE_BUFFER, &m_meshes[i].textureCoords[0].x, 
-				m_meshes[i].textureCoords.size() * sizeof(glm::vec2));
+			buffer.FillVBO(Buffer::TEXTURE_BUFFER, &mesh.textureCoords[0].x,
+				mesh.textureCoords.size() * sizeof(glm::vec2));
 		}
 
 		m_buffers.push_back(buffer);
@@ -304,38 +305,38 @@ void Model::FillBuffers()
 void Model::SortVertexData(Mesh& newMesh, const Mesh& oldMesh, const std::vector<Face>& faces)
 {
 	GLuint count = 0;
-	std::unordered_map<VertexGroup, GLuint, HashFunction> map; 
+	std::unordered_map<VertexGroup, GLuint, HashFunction> map;
 
 	//Because the .obj file does not have any EBO data or any indices
 	//this needs to be manually created. The raw .obj data will consist
 	//of different amounts of vertex, UV and normal data. To use an EBO
 	//we need to make sure the v/t/n VBO buffer sizes are all equal
-	for (size_t i = 0; i < faces.size(); i++)
+	for (const auto& face : faces)
 	{
 		//We need to loop through all three v/t/n groupings for each face
 		//because all three v/t/n groupings together make up a face triangle
 		//We then see if the grouping is already in the map because groupings
 		//can duplicate in the .obj. For example we could have 2/2/2 in the
 		//.obj file multiple times, so we don't want to store duplicates
-		for (size_t j = 0; j < 3; j++)
+		for (auto i = 0; i < 3; i++)
 		{
-			auto it = map.find(faces[i][j]);
+			auto it = map.find(face[i]);
 
 			if (it == map.end())
 			{
-				glm::vec3 v = oldMesh.vertices[faces[i][j].v];
+				glm::vec3 v = oldMesh.vertices[face[i].v];
 				newMesh.vertices.push_back(v);
 
 				//Some .obj files do not have texture coordinates 
 				if (!oldMesh.textureCoords.empty())
 				{
-					newMesh.textureCoords.push_back(oldMesh.textureCoords[faces[i][j].t]);
+					newMesh.textureCoords.push_back(oldMesh.textureCoords[face[i].t]);
 				}
 
-				newMesh.normals.push_back(oldMesh.normals[faces[i][j].n]);
+				newMesh.normals.push_back(oldMesh.normals[face[i].n]);
 				newMesh.indices.push_back(count);
 
-				map[faces[i][j]] = count;
+				map[face[i]] = count;
 
 				count++;
 
@@ -355,20 +356,26 @@ void Model::SortVertexData(Mesh& newMesh, const Mesh& oldMesh, const std::vector
 //======================================================================================================
 void Model::Render(Shader& shader)
 {
-	for (size_t i = 0; i < m_meshes.size(); i++)
+	auto count = 0;
+
+	for (auto& mesh : m_meshes)
 	{
-		m_buffers[i].LinkEBO();
-		m_buffers[i].LinkVBO(shader.GetAttributeID("vertexIn"), Buffer::VERTEX_BUFFER, Buffer::XYZ, Buffer::FLOAT);
-		m_buffers[i].LinkVBO(shader.GetAttributeID("colorIn"), Buffer::COLOR_BUFFER, Buffer::RGBA, Buffer::FLOAT);
-		m_buffers[i].LinkVBO(shader.GetAttributeID("textureIn"), Buffer::TEXTURE_BUFFER, Buffer::UV, Buffer::FLOAT);
-		m_buffers[i].LinkVBO(shader.GetAttributeID("normalIn"), Buffer::NORMAL_BUFFER, Buffer::XYZ, Buffer::FLOAT);
+		m_buffers[count].LinkEBO();
+		m_buffers[count].LinkVBO(shader.GetAttributeID("vertexIn"),
+			Buffer::VERTEX_BUFFER, Buffer::XYZ, Buffer::FLOAT);
+		m_buffers[count].LinkVBO(shader.GetAttributeID("colorIn"),
+			Buffer::COLOR_BUFFER, Buffer::RGBA, Buffer::FLOAT);
+		m_buffers[count].LinkVBO(shader.GetAttributeID("textureIn"),
+			Buffer::TEXTURE_BUFFER, Buffer::UV, Buffer::FLOAT);
+		m_buffers[count].LinkVBO(shader.GetAttributeID("normalIn"),
+			Buffer::NORMAL_BUFFER, Buffer::XYZ, Buffer::FLOAT);
 
-		m_meshes[i].material.SendToShader(shader);
+		mesh.material.SendToShader(shader);
 
-		if (m_meshes[i].material.IsTextured())
+		if (mesh.material.IsTextured())
 		{
 			shader.SendData("isTextured", true);
-			m_meshes[i].material.GetDiffuseMap().Bind();
+			mesh.material.GetDiffuseMap().Bind();
 		}
 
 		else
@@ -376,15 +383,15 @@ void Model::Render(Shader& shader)
 			shader.SendData("isTextured", false);
 		}
 
-		m_buffers[i].Render(Buffer::TRIANGLES);
+		m_buffers[count++].Render(Buffer::TRIANGLES);
 	}
 }
 //======================================================================================================
 void Model::Unload()
 {
-	for (size_t i = 0; i < m_buffers.size(); i++)
+	for (auto& buffer : m_buffers)
 	{
-		m_buffers[i].Destroy();
+		buffer.Destroy();
 	}
 
 	m_meshes.clear();
@@ -396,9 +403,9 @@ void Model::Normalize()
 	glm::vec3 minValues = glm::vec3(0.0f);
 	glm::vec3 maxValues = glm::vec3(0.0f);
 
-	for (auto& mesh : m_meshes)
+	for (const auto& mesh : m_meshes)
 	{
-		for (auto& vertex : mesh.vertices)
+		for (const auto& vertex : mesh.vertices)
 		{
 			maxValues = glm::max(maxValues, vertex);
 			minValues = glm::min(minValues, vertex);

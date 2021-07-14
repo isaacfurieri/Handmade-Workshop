@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Model' source files last updated on 24 June 2021                  |
+| 'Model' source files last updated on 14 July 2021                  |
 #===================================================================*/
 
 #include "glad.h"

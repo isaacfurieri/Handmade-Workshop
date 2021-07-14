@@ -29,8 +29,10 @@ bool Material::LoadMaterials(const std::string& filename)
 
 	std::string line;
 	Material material;
+
 	std::vector<std::string> subStrings_1;
 	std::vector<std::string> subStrings_2;
+
 	subStrings_1.reserve(5);
 	subStrings_2.reserve(5);
 
