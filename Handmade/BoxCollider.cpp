@@ -29,21 +29,21 @@ const glm::vec3& BoxCollider::GetDimension() const
 	return m_dimension;
 }
 //======================================================================================================--
-void BoxCollider::SetScale(float x, float y, float z)
+void BoxCollider::SetScale(GLfloat x, GLfloat y, GLfloat z)
 {
 	m_scale.x = x;
 	m_scale.y = y;
 	m_scale.z = z;
 }
 //======================================================================================================
-void BoxCollider::SetPosition(float x, float y, float z)
+void BoxCollider::SetPosition(GLfloat x, GLfloat y, GLfloat z)
 {
 	m_position.x = x;
 	m_position.y = y;
 	m_position.z = z;
 }
 //======================================================================================================
-void BoxCollider::SetDimension(float width, float height, float depth)
+void BoxCollider::SetDimension(GLfloat width, GLfloat height, GLfloat depth)
 {
 	m_dimension.x = width;
 	m_dimension.y = height;
@@ -71,7 +71,7 @@ bool BoxCollider::IsColliding(const SphereCollider& secondSphere) const
 	return (glm::length(distanceFromBox) <= secondSphere.GetRadius());
 }
 //======================================================================================================
-const glm::vec3& BoxCollider::PointOnBox(float x, float y, float z) const
+glm::vec3 BoxCollider::PointOnBox(GLfloat x, GLfloat y, GLfloat z) const
 {
 	glm::vec3 clampValue;
 	glm::vec3 distanceFromObject;
@@ -104,11 +104,4 @@ void BoxCollider::Update()
 	m_max.x = m_position.x + m_halfDimension.x;
 	m_max.y = m_position.y + m_halfDimension.y;
 	m_max.z = m_position.z + m_halfDimension.z;
-}
-//======================================================================================================
-void BoxCollider::Draw()
-{
-	//draw bound based on dimension and color set 
-	//TheDebug::Instance()->DrawCube3D(m_dimension.x, m_dimension.y, m_dimension.z, 
-								   //  m_color.r, m_color.g, m_color.b, m_color.a);
 }

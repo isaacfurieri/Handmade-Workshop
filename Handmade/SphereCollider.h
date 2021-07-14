@@ -1,9 +1,11 @@
 #pragma once
 
 /*===================================================================#
-| 'SphereCollider' source files last updated on 23 June 2021         |
+| 'SphereCollider' source files last updated on 14 July 2021         |
 #===================================================================*/
 
+#include "glad.h"
+#include <glm.hpp>
 #include "BoxCollider.h"
 
 //TODO - Add some kind of 'central system' to render all colliders in the scene
@@ -15,26 +17,28 @@ public:
 
 	SphereCollider();
 
-	float GetScale() const;
-	float GetRadius() const;
-	float GetRadiusScaled() const;
+	GLfloat GetScale() const;
+	GLfloat GetRadius() const;
+	GLfloat GetRadiusScaled() const;
 	const glm::vec3& GetPosition() const;
 
-	void SetScale(float scale);
-	void SetRadius(float radius);
-	void SetPosition(float x, float y, float z);
+	void SetScale(GLfloat scale);
+	void SetRadius(GLfloat radius);
+	
+	void SetPosition(const glm::vec3& position);
+	void SetPosition(GLfloat x, GLfloat y, GLfloat z);
 
 	bool IsColliding(const BoxCollider& secondBox) const;
 	bool IsColliding(const SphereCollider& secondSphere) const;
 
 	void Update();
-	void Draw();
+	void Render() { /*debug only*/ }
 
 private:
 
-	float m_scale;
-	float m_radius;
-	float m_radiusScaled;
+	GLfloat m_scale;
+	GLfloat m_radius;
+	GLfloat m_radiusScaled;
 
 	glm::vec4 m_color;
 	glm::vec3 m_position;

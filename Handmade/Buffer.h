@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Buffer' source files last updated on 7 July 2021                  |
+| 'Buffer' source files last updated on 14 July 2021                 |
 #===================================================================*/
 
 #include <map>
@@ -72,21 +72,28 @@ public:
 
 	void Create(const std::string& tag, GLsizei totalVertices, bool hasEBO = false);
 
-	void FillVBO(VBOType vboType, const GLint* data, GLsizeiptr bufferSize, FillFrequency fillFrequency = FILL_ONCE);
-	void FillVBO(VBOType vboType, const GLuint* data, GLsizeiptr bufferSize, FillFrequency fillFrequency = FILL_ONCE);
-	void FillVBO(VBOType vboType, const GLfloat* data, GLsizeiptr bufferSize, FillFrequency fillFrequency = FILL_ONCE);
+	void FillVBO(VBOType vboType,
+		const GLint* data, GLsizeiptr bufferSize, FillFrequency fillFrequency = FILL_ONCE);
+	void FillVBO(VBOType vboType,
+		const GLuint* data, GLsizeiptr bufferSize, FillFrequency fillFrequency = FILL_ONCE);
+	void FillVBO(VBOType vboType,
+		const GLfloat* data, GLsizeiptr bufferSize, FillFrequency fillFrequency = FILL_ONCE);
 
-	void FillEBO(const GLuint* data, GLsizeiptr bufferSize, FillFrequency fillFrequency = FILL_ONCE);
+	void FillEBO(const GLuint* data,
+		GLsizeiptr bufferSize, FillFrequency fillFrequency = FILL_ONCE);
 
-	void AppendVBO(VBOType vboType, const GLint* data, GLsizeiptr size, GLuint offset);
-	void AppendVBO(VBOType vboType, const GLuint* data, GLsizeiptr size, GLuint offset);
-	void AppendVBO(VBOType vboType, const GLfloat* data, GLsizeiptr size, GLuint offset);
+	void AppendVBO(VBOType vboType,
+		const GLint* data, GLsizeiptr size, GLuint offset);
+	void AppendVBO(VBOType vboType,
+		const GLuint* data, GLsizeiptr size, GLuint offset);
+	void AppendVBO(VBOType vboType,
+		const GLfloat* data, GLsizeiptr size, GLuint offset);
 
 	void AppendEBO(const GLuint* data, GLsizeiptr size, GLuint offset);
 
 	void LinkEBO();
-
-	void LinkVBO(GLint attributeID, VBOType vboType, ComponentSize componentSize, DataType dataType);
+	void LinkVBO(GLint attributeID,
+		VBOType vboType, ComponentSize componentSize, DataType dataType);
 
 	void Render(RenderMode renderMode, GLuint index = 0, GLuint totalVertices = 0);
 
