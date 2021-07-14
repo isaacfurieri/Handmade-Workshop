@@ -23,7 +23,10 @@ bool Model::Load(const std::string& filename, bool isNormalized, const std::stri
 
 	if (!file)
 	{
-		Utility::Log(MESSAGE_BOX, "Error loading model file \"" + (s_rootFolder + filename) + "\"", Utility::Severity::FAILURE);
+		Utility::Log(MESSAGE_BOX,
+			"Error loading model file \"" + (s_rootFolder + filename) + "\"."
+			"Possible causes could be a corrupt or missing file. It could also be "
+			"that the filename and/or path are incorrectly spelt.", Utility::Severity::FAILURE);
 		return false;
 	}
 
@@ -225,7 +228,6 @@ bool Model::Load(const std::string& filename, bool isNormalized, const std::stri
 	{
 		for (size_t j = 0; j < m_meshes[i].vertices.size(); j++)
 		{
-			
 			maxValues = glm::max(maxValues, m_meshes[i].vertices[j]);
 			minValues = glm::min(minValues, m_meshes[i].vertices[j]);
 		}
@@ -237,9 +239,14 @@ bool Model::Load(const std::string& filename, bool isNormalized, const std::stri
 	return true;
 }
 //======================================================================================================
-const glm::vec3& Model::GetDimension()
+const glm::vec3& Model::GetDimension() const
 {
 	return m_dimension;
+}
+//======================================================================================================
+void Model::SetColor(const glm::vec4& color)
+{
+	SetColor(color.r, color.g, color.b, color.a);
 }
 //======================================================================================================
 void Model::SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
@@ -267,7 +274,8 @@ void Model::FillBuffers()
 		Buffer buffer;
 
 		//TODO - Need to label each buffer object properly
-		buffer.Create("Mesh", m_meshes[i].indices.size(), true);
+		static auto count = 0;
+		buffer.Create("Mesh_" + std::to_string(count++), m_meshes[i].indices.size(), true);
 
 		buffer.FillEBO(&m_meshes[i].indices[0], m_meshes[i].indices.size() * sizeof(GLuint));
 		buffer.FillVBO(Buffer::VERTEX_BUFFER, &m_meshes[i].vertices[0].x, m_meshes[i].vertices.size() * sizeof(glm::vec3));

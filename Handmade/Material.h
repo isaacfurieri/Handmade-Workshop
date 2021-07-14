@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Material' source files last updated on 24 June 2021               |
+| 'Material' source files last updated on 14 July 2021               |
 #===================================================================*/
 
 #include <map>
@@ -33,7 +33,7 @@ public:
 	void SetName(const std::string& name);
 	void SetMaterial(const std::string& name);
 
-	bool IsTextured();
+	bool IsTextured() const;
 
 	void SetNormalMap(const std::string& filename);
 	void SetAmbientMap(const std::string& filename);

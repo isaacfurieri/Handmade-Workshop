@@ -18,14 +18,12 @@ bool Material::LoadMaterials(const std::string& filename)
 
 	std::fstream file(s_rootFolder + filename, std::ios_base::in);
 
-	//If your application breaks here it means that the material file could 
-	//not be loaded. Possible causes can be a corrupt or missing file. It
-	//could also be that the filename and/or path are incorrectly spelt.
-	assert(file);
-
 	if (!file)
 	{
-		Utility::Log(MESSAGE_BOX, "Error loading material file \"" + (s_rootFolder + filename) + "\"", Utility::Severity::FAILURE);
+		Utility::Log(MESSAGE_BOX, 
+			"Error loading material file \"" + (s_rootFolder + filename) + "\"." 
+			"Possible causes could be a corrupt or missing file. It could also be " 
+			"that the filename and/or path are incorrectly spelt.", Utility::Severity::FAILURE);
 		return false;
 	}
 
@@ -105,17 +103,12 @@ bool Material::LoadMaterials(std::vector<Material>& materials, const std::string
 
 	std::fstream file(s_rootFolder + filename, std::ios_base::in);
 
-	//If your application breaks here it means that the material file could 
-	//not be loaded. Possible causes can be a corrupt or missing file. It
-	//could also be that the filename and/or path are incorrectly spelt.
-	//assert(file);
-
 	if (!file)
 	{
-		Utility::Log(MESSAGE_BOX, "Error loading material file \"" + (s_rootFolder + filename) + "\". "
-			"Possible causes could be a corrupt or missing file or the filename "
-			"and/or path are incorrectly spelt.",
-			Utility::Severity::FAILURE);
+		Utility::Log(MESSAGE_BOX,
+			"Error loading material file \"" + (s_rootFolder + filename) + "\"."
+			"Possible causes could be a corrupt or missing file. It could also be "
+			"that the filename and/or path are incorrectly spelt.", Utility::Severity::FAILURE);
 		return false;
 	}
 
@@ -292,7 +285,7 @@ void Material::SetMaterial(const std::string& name)
 	*this = s_materials[name];
 }
 //======================================================================================================
-bool Material::IsTextured()
+bool Material::IsTextured() const
 {
 	return m_isTextured;
 }

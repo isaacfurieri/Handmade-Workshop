@@ -69,8 +69,9 @@ public:
 		bool isNormalized = false,
 		const std::string& defaultMaterial = "Chrome");
 
-	const glm::vec3& GetDimension();
+	const glm::vec3& GetDimension() const;
 
+	void SetColor(const glm::vec4& color);
 	void SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
 	void Render(Shader& shader);
 
