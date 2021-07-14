@@ -51,14 +51,14 @@ void Axes::Create()
 	}
 
 	m_buffer.Create("Axes", 6);
-	
-	GLint vertices[] = { -m_size,     0,     0, m_size,    0,    0,          //X axis
-							 0, -m_size,     0,    0, m_size,    0,          //Y axis
-							 0,     0, -m_size,    0,    0, m_size };        //Z axis
 
-	GLfloat colors[] = { 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,     //X axis
-						 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f,	 //Y axis	 
-						 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f };	 //Z axis
+	GLint vertices[] = { -m_size,     0,     0, m_size,    0,    0,           //X axis
+							 0, -m_size,     0,    0, m_size,    0,           //Y axis
+							 0,     0, -m_size,    0,    0, m_size };         //Z axis
+
+	GLfloat colors[] = { 0.75f, 0.0f, 0.0f, 1.0f, 0.75f, 0.0f, 0.0f, 1.0f,    //X axis
+						 0.0f, 0.75f, 0.0f, 1.0f, 0.0f, 0.75f, 0.0f, 1.0f,	  //Y axis	 
+						 0.0f, 0.0f, 0.75f, 1.0f, 0.0f, 0.0f, 0.75f, 1.0f };  //Z axis
 
 	m_buffer.FillVBO(Buffer::VERTEX_BUFFER, vertices, sizeof(vertices), Buffer::FILL_ONCE);
 	m_buffer.FillVBO(Buffer::COLOR_BUFFER, colors, sizeof(colors), Buffer::FILL_ONCE);

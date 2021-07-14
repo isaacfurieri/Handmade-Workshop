@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Cuboid' source files last updated on 7 July 2021                  |
+| 'Cuboid' source files last updated on 14 July 2021                 |
 #===================================================================*/
 
 #include "Buffer.h"
@@ -17,8 +17,10 @@ public:
 	virtual ~Cuboid();
 
 	void SetTextureScale(GLfloat width, GLfloat height);
-	void SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
 	
+	void SetColor(const glm::vec4& color);
+	void SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a = 1.0f);
+
 	void SetDimension(const glm::vec3& dimension);
 	void SetDimension(GLfloat width, GLfloat height, GLfloat depth);
 
@@ -29,7 +31,6 @@ public:
 private:
 
 	Buffer m_buffer;
-	glm::vec4 m_color;
 	glm::vec3 m_dimension;
 
 };

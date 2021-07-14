@@ -5,17 +5,22 @@ Point::Point(GLfloat pointSize, GLfloat r, GLfloat g, GLfloat b, GLfloat a)
 {
 	m_pointSize = pointSize;
 	m_buffer.Create("Point", 1);	
-	m_color = glm::vec4(r, g, b, a);
 
 	glm::vec3 vertex = glm::vec3(0.0f);
+	glm::vec4 color = glm::vec4(r, g, b, a);
 
 	m_buffer.FillVBO(Buffer::VERTEX_BUFFER, &vertex.x, sizeof(vertex), Buffer::FILL_MANY);
-	m_buffer.FillVBO(Buffer::COLOR_BUFFER, &m_color.r, sizeof(m_color), Buffer::FILL_MANY);
+	m_buffer.FillVBO(Buffer::COLOR_BUFFER, &color.r, sizeof(color), Buffer::FILL_MANY);
 }
 //======================================================================================================
 Point::~Point()
 {
-	m_buffer.Destroy("Point");
+	m_buffer.Destroy();
+}
+//======================================================================================================
+void Point::SetColor(const glm::vec4& color)
+{
+	SetColor(color.r, color.g, color.b, color.a);
 }
 //======================================================================================================
 void Point::SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a)

@@ -1,15 +1,11 @@
 #pragma once
 
 /*===================================================================#
-| 'Circle' source files last updated on 7 July 2021                  |
+| 'Circle' source files last updated on 14 July 2021                 |
 #===================================================================*/
 
-#include <glm.hpp>
-#include "glad.h"
 #include "Buffer.h"
 #include "Object.h"
-
-//TODO - Add 'SphereCollider' component to the 'Circle' and 'Sphere' classes
 
 class Circle : public Object
 {
@@ -21,7 +17,8 @@ public:
 	virtual ~Circle();
 
 	void SetRadius(GLfloat radius);
-	void SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
+	void SetColor(const glm::vec4& color);
+	void SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a = 1.0f);
 
 	virtual void Render(Shader& shader);
 	virtual void Update(GLfloat deltaTime) {}
@@ -32,6 +29,5 @@ private:
 	GLuint m_slices;
 	GLfloat m_radius;
 	Buffer m_buffer;
-	glm::vec4 m_color;
 
 };

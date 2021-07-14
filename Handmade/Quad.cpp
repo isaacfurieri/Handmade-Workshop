@@ -4,7 +4,6 @@
 //======================================================================================================
 Quad::Quad(GLfloat width, GLfloat height, GLfloat r, GLfloat g, GLfloat b, GLfloat a)
 {
-	m_color = glm::vec4(r, g, b, a);
 	m_dimension = glm::vec2(width, height);
 
 	glm::vec2 halfDimension = m_dimension * 0.5f;
@@ -32,6 +31,8 @@ Quad::Quad(GLfloat width, GLfloat height, GLfloat r, GLfloat g, GLfloat b, GLflo
 	GLuint indices[] = { 0, 1, 3,
 						 3, 1, 2 };
 
+	//TODO - Find a way to only create one single 
+	//buffer to be shared amongst subsequent quads
 	m_buffer.Create("Quad", 6, true);
 
 	m_buffer.LinkEBO();
@@ -72,6 +73,11 @@ void Quad::SetTextureScale(GLfloat width, GLfloat height)
 					  0.0f, height };
 
 	m_buffer.FillVBO(Buffer::TEXTURE_BUFFER, UVs, sizeof(UVs), Buffer::FILL_MANY);
+}
+//======================================================================================================
+void Quad::SetColor(const glm::vec4& color)
+{
+	SetColor(color.r, color.g, color.b, color.a);
 }
 //======================================================================================================
 void Quad::SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a)

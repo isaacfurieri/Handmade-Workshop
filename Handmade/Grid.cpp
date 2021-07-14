@@ -27,6 +27,11 @@ void Grid::SetLineWidth(GLfloat lineWidth)
 	m_lineWidth = lineWidth;
 }
 //======================================================================================================
+void Grid::SetColor(const glm::vec4& color)
+{
+	SetColor(color.r, color.g, color.b, color.a);
+}
+//======================================================================================================
 void Grid::SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
 {
 	GLuint offset = 0;
@@ -34,7 +39,6 @@ void Grid::SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
 	for (int i = 0; i < m_size * QUADRANTS; i++)
 	{
 		GLfloat colors[] = { r, g, b, a, r, g, b, a };
-
 		m_buffer.AppendVBO(Buffer::COLOR_BUFFER, colors, sizeof(colors), offset);
 		offset += sizeof(colors);
 	}
@@ -65,7 +69,7 @@ void Grid::Create()
 	//objects everytime the grid is resized
 	if (!m_buffer.GetTag().empty())
 	{
-		m_buffer.Destroy();		
+		m_buffer.Destroy();
 	}
 
 	//We multiply by 2 to represent each line's vertex 
@@ -89,8 +93,8 @@ void Grid::Create()
 		GLint vertices[] = { -m_size + i, 0,  m_size,      //first vertex
 							 -m_size + i, 0, -m_size };    //second vertex
 
-		GLfloat colors[] = { 1.0f, 1.0f, 1.0f, 1.0f,
-							 1.0f, 1.0f, 1.0f, 1.0f };
+		GLfloat colors[] = { 0.5f, 0.5f, 0.5f, 0.5f,
+							 0.5f, 0.5f, 0.5f, 0.5f };
 
 		m_buffer.AppendVBO(Buffer::VERTEX_BUFFER, vertices, sizeof(vertices), offsetVertex);
 		m_buffer.AppendVBO(Buffer::COLOR_BUFFER, colors, sizeof(colors), offsetColor);
@@ -108,8 +112,8 @@ void Grid::Create()
 		GLint vertices[] = { 0 + i, 0,  m_size,      //first vertex
 							 0 + i, 0, -m_size };    //second vertex
 
-		GLfloat colors[] = { 1.0f, 1.0f, 1.0f, 1.0f,
-							 1.0f, 1.0f, 1.0f, 1.0f };
+		GLfloat colors[] = { 0.5f, 0.5f, 0.5f, 0.5f,
+							 0.5f, 0.5f, 0.5f, 0.5f };
 
 		m_buffer.AppendVBO(Buffer::VERTEX_BUFFER, vertices, sizeof(vertices), offsetVertex);
 		m_buffer.AppendVBO(Buffer::COLOR_BUFFER, colors, sizeof(colors), offsetColor);
@@ -127,8 +131,8 @@ void Grid::Create()
 		GLint vertices[] = { -m_size, 0, -m_size + i,        //first vertex
 							  m_size, 0, -m_size + i };     //second vertex
 
-		GLfloat colors[] = { 1.0f, 1.0f, 1.0f, 1.0f,
-							 1.0f, 1.0f, 1.0f, 1.0f };
+		GLfloat colors[] = { 0.5f, 0.5f, 0.5f, 0.5f,
+							 0.5f, 0.5f, 0.5f, 0.5f };
 
 		m_buffer.AppendVBO(Buffer::VERTEX_BUFFER, vertices, sizeof(vertices), offsetVertex);
 		m_buffer.AppendVBO(Buffer::COLOR_BUFFER, colors, sizeof(colors), offsetColor);
@@ -146,8 +150,8 @@ void Grid::Create()
 		GLint vertices[] = { -m_size, 0, 0 + i,     //first vertex
 							  m_size, 0, 0 + i };     //second vertex
 
-		GLfloat colors[] = { 1.0f, 1.0f, 1.0f, 1.0f,
-							 1.0f, 1.0f, 1.0f, 1.0f };
+		GLfloat colors[] = { 0.5f, 0.5f, 0.5f, 0.5f,
+							 0.5f, 0.5f, 0.5f, 0.5f };
 
 		m_buffer.AppendVBO(Buffer::VERTEX_BUFFER, vertices, sizeof(vertices), offsetVertex);
 		m_buffer.AppendVBO(Buffer::COLOR_BUFFER, colors, sizeof(colors), offsetColor);

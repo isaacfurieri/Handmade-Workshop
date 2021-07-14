@@ -5,23 +5,28 @@ Line::Line(GLfloat lineWidth, GLfloat r, GLfloat g, GLfloat b, GLfloat a)
 {
 	m_lineWidth = lineWidth;
 	m_buffer.Create("Line", 2);
-	m_color = glm::vec4(r, g, b, a);
 
+	GLfloat color[] = { r, g, b, a, r, g, b, a };
 	GLfloat vertices[] = { 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f };
 
 	m_buffer.FillVBO(Buffer::VERTEX_BUFFER, vertices, sizeof(vertices), Buffer::FILL_MANY);
-	m_buffer.FillVBO(Buffer::COLOR_BUFFER, &m_color.r, sizeof(m_color), Buffer::FILL_MANY);
+	m_buffer.FillVBO(Buffer::COLOR_BUFFER, color, sizeof(color), Buffer::FILL_MANY);
 }
 //======================================================================================================
 Line::~Line()
 {
-	m_buffer.Destroy("Line");
+	m_buffer.Destroy();
 }
 //======================================================================================================
 void Line::SetEndPoints(GLfloat x1, GLfloat y1, GLfloat z1, GLfloat x2, GLfloat y2, GLfloat z2)
 {
 	GLfloat vertices[] = { x1, y1, z1, x2, y2, z2 };
 	m_buffer.FillVBO(Buffer::VERTEX_BUFFER, vertices, sizeof(vertices), Buffer::FILL_MANY);
+}
+//======================================================================================================
+void Line::SetColor(const glm::vec4& color)
+{
+	SetColor(color.r, color.g, color.b, color.a);
 }
 //======================================================================================================
 void Line::SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a)

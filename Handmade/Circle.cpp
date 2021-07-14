@@ -5,7 +5,6 @@ Circle::Circle(GLfloat radius, GLuint slices, GLfloat r, GLfloat g, GLfloat b, G
 {
 	m_slices = slices;
 	m_radius = radius;
-	m_color = glm::vec4(r, g, b, a);
 
 	GLuint offsetVertex = 0;
 	GLuint offsetColor = 0;
@@ -49,7 +48,7 @@ Circle::Circle(GLfloat radius, GLuint slices, GLfloat r, GLfloat g, GLfloat b, G
 							   m_radius * sin(tempAngle * (i + 1)),      //Y coord
 							   0.0f };  //Z coord
 
-		GLfloat colors[] = { m_color.r, m_color.g, m_color.b, m_color.a };
+		GLfloat colors[] = { r, g, b, a };
 
 		m_buffer.AppendVBO(Buffer::VERTEX_BUFFER, vertices, sizeof(vertices), offsetVertex);
 		m_buffer.AppendVBO(Buffer::COLOR_BUFFER, colors, sizeof(colors), offsetColor);
@@ -71,13 +70,18 @@ void Circle::SetRadius(GLfloat radius)
 
 	for (GLuint i = 0; i < m_slices + 1; i++)
 	{
-		GLfloat vertices[] = { radius * cos(tempAngle * (i + 1)),      
-							   radius * sin(tempAngle * (i + 1)),      
-							   0.0f };  
+		GLfloat vertices[] = { radius * cos(tempAngle * (i + 1)),
+							   radius * sin(tempAngle * (i + 1)),
+							   0.0f };
 
 		m_buffer.AppendVBO(Buffer::VERTEX_BUFFER, vertices, sizeof(vertices), offset);
 		offset += sizeof(vertices);
 	}
+}
+//======================================================================================================
+void Circle::SetColor(const glm::vec4& color)
+{
+	SetColor(color.r, color.g, color.b, color.a);
 }
 //======================================================================================================
 void Circle::SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a)

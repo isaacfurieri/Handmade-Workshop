@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Line' source files last updated on 7 July 2021                    |
+| 'Line' source files last updated on 14 July 2021                   |
 #===================================================================*/
 
 #include <glm.hpp>
@@ -24,7 +24,8 @@ public:
 	void SetEndPoints(GLfloat x1, GLfloat y1, GLfloat z1,
 		GLfloat x2, GLfloat y2, GLfloat z2);
 
-	void SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
+	void SetColor(const glm::vec4& color);
+	void SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a = 1.0f);
 
 	virtual void Render(Shader& shader);
 	virtual void Update(GLfloat deltaTime) {}
@@ -33,7 +34,6 @@ public:
 private:
 
 	Buffer m_buffer;
-	glm::vec4 m_color;
 	GLfloat m_lineWidth;
 
 };

@@ -5,7 +5,6 @@
 Cuboid::Cuboid(GLfloat width, GLfloat height, GLfloat depth,
 	GLfloat r, GLfloat g, GLfloat b, GLfloat a)
 {
-	m_color = glm::vec4(r, g, b, a);
 	m_dimension = glm::vec3(width, height, depth);
 
 	glm::vec3 halfDimension = m_dimension * 0.5f;
@@ -109,13 +108,12 @@ Cuboid::Cuboid(GLfloat width, GLfloat height, GLfloat depth,
 	//buffer to be shared amongst subsequent cuboids
 	m_buffer.Create("Cuboid", 36, true);
 
+	m_buffer.LinkEBO();
 	m_buffer.FillVBO(Buffer::VERTEX_BUFFER, vertices, sizeof(vertices), Buffer::FILL_MANY);
 	m_buffer.FillVBO(Buffer::COLOR_BUFFER, colors, sizeof(colors), Buffer::FILL_MANY);
 	m_buffer.FillVBO(Buffer::TEXTURE_BUFFER, UVs, sizeof(UVs), Buffer::FILL_ONCE);
 	m_buffer.FillVBO(Buffer::NORMAL_BUFFER, normals, sizeof(normals), Buffer::FILL_ONCE);
 	m_buffer.FillEBO(indices, sizeof(indices), Buffer::FILL_ONCE);
-
-	m_buffer.LinkEBO();
 }
 //======================================================================================================
 Cuboid::~Cuboid()
@@ -139,6 +137,11 @@ void Cuboid::SetTextureScale(GLfloat width, GLfloat height)
 					  width, 0.0f,   0.0f,  0.0f };   	//bottom face
 
 	m_buffer.FillVBO(Buffer::TEXTURE_BUFFER, UVs, sizeof(UVs), Buffer::FILL_MANY);
+}
+//======================================================================================================
+void Cuboid::SetColor(const glm::vec4& color)
+{
+	SetColor(color.r, color.g, color.b, color.a);
 }
 //======================================================================================================
 void Cuboid::SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a)

@@ -98,6 +98,11 @@ void Sphere::SetRadius(GLfloat radius)
 	}
 }
 //======================================================================================================
+void Sphere::SetColor(const glm::vec4& color)
+{
+	SetColor(color.r, color.g, color.b, color.a);
+}
+//======================================================================================================
 void Sphere::SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
 {
 	GLuint offset = 0;

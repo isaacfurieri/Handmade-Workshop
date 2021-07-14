@@ -20,7 +20,8 @@ public:
 		GLfloat r = 1.0f, GLfloat g = 1.0f, GLfloat b = 1.0f, GLfloat a = 1.0f);
 	virtual ~Point();
 
-	void SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
+	void SetColor(const glm::vec4& color);
+	void SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a = 1.0f);
 
 	virtual void Render(Shader& shader);
 	virtual void Update(GLfloat deltaTime) {}
@@ -29,7 +30,6 @@ public:
 private:
 
 	Buffer m_buffer;
-	glm::vec4 m_color;
 	GLfloat m_pointSize;
 
 };

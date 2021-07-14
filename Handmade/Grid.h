@@ -1,12 +1,11 @@
 #pragma once
 
 /*===================================================================#
-| 'Grid' source files last updated on 7 July 2021                    |
+| 'Grid' source files last updated on 14 July 2021                   |
 #===================================================================*/
 
 #include "Buffer.h"
 #include "Object.h"
-#include "Shader.h"
 
 class Grid : public Object
 {
@@ -18,6 +17,8 @@ public:
 
 	void SetSize(GLint size);
 	void SetLineWidth(GLfloat lineWidth);
+
+	void SetColor(const glm::vec4& color);
 	void SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a = 1.0f);
 
 	virtual void Render(Shader& shader);
@@ -26,6 +27,8 @@ public:
 
 private:
 
+	void Create();
+	
 	GLint m_size;
 	Buffer m_buffer;
 	GLfloat m_lineWidth;
@@ -33,7 +36,5 @@ private:
 	const GLuint QUADRANTS = 4;
 	const GLuint BYTES_PER_VERTEX = Buffer::ComponentSize::XYZ * sizeof(GLint);
 	const GLuint BYTES_PER_COLOR = Buffer::ComponentSize::RGBA * sizeof(GLfloat);
-
-	void Create();
 
 };
