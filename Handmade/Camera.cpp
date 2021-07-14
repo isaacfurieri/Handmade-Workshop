@@ -17,8 +17,6 @@ Camera::Camera()
 //======================================================================================================
 glm::vec2 Camera::ConvertWorldToScreen(const glm::vec3& worldPosition)
 {
-	glm::vec2 resolution = Screen::Instance()->GetResolution();
-
 	//convert to clip space
 	glm::vec4 clipCoordinate = m_projectionMatrix * m_viewMatrix * glm::vec4(worldPosition, 1.0f);
 
@@ -26,11 +24,12 @@ glm::vec2 Camera::ConvertWorldToScreen(const glm::vec3& worldPosition)
 	clipCoordinate /= clipCoordinate.w;
 
 	//convert to screen space
+	glm::vec2 resolution = Screen::Instance()->GetResolution();
 	return glm::vec2((clipCoordinate.x + 1.0f) * resolution.x * 0.5f,
 					 (clipCoordinate.y + 1.0f) * resolution.y * 0.5f);
 }
 //======================================================================================================
-glm::vec3 Camera::ConvertScreenToWorld(const glm::vec2& screenPosition, float zNDC)
+glm::vec3 Camera::ConvertScreenToWorld(const glm::vec2& screenPosition, GLfloat zNDC)
 {
 	glm::vec2 resolution = Screen::Instance()->GetResolution();
 
@@ -80,13 +79,10 @@ void Camera::CreatePerspView()
 	Screen::Instance()->IsDepthTestEnabled(true);
 
 	glm::vec2 resolution = Screen::Instance()->GetResolution();
-
-	GLfloat aspectRatio = static_cast<GLfloat>(resolution.x) / 
-						  static_cast<GLfloat>(resolution.y);
+	auto aspectRatio = (resolution.x) / (resolution.y);
 
 	m_projectionMatrix = glm::perspective(glm::radians(m_fieldOfView), 
-										  aspectRatio, 
-										  NEAR_CLIP, FAR_CLIP);
+		aspectRatio, NEAR_CLIP, FAR_CLIP);
 }
 //======================================================================================================
 void Camera::Reset()
@@ -95,6 +91,7 @@ void Camera::Reset()
 	m_up = glm::vec3(0.0f, 1.0f, 0.0f);
 	m_projectionMatrix = glm::mat4(1.0f);
 	m_lookAt = glm::vec3(0.0f, 0.0f, -1.0f);
+	m_transform.SetPosition(glm::vec3(0.0f));
 }
 //======================================================================================================
 void Camera::SendToShader(Shader& shader)

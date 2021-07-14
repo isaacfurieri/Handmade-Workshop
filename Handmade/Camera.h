@@ -1,13 +1,10 @@
 #pragma once
 
 /*===================================================================#
-| 'Camera' source files last updated on 7 July 2021                  |
+| 'Camera' source files last updated on 14 July 2021                 |
 #===================================================================*/
 
-#include <glm.hpp>
-#include "glad.h"
 #include "Object.h"
-#include "Shader.h"
 
 const GLfloat MIN_FOV = 1.0f;
 const GLfloat MAX_FOV = 100.0f;
@@ -35,10 +32,10 @@ public:
 	void CreateOrthoView(Origin2D origin = Origin2D::BOTTOM_LEFT);
 
 	glm::vec2 ConvertWorldToScreen(const glm::vec3& worldPosition);
-	glm::vec3 ConvertScreenToWorld(const glm::vec2& screenPosition, float zNDC);
+	glm::vec3 ConvertScreenToWorld(const glm::vec2& screenPosition, GLfloat zNDC);
 
 	void Reset();
-	
+
 	virtual void Render(Shader& shader) = 0;
 	virtual void Update(GLfloat deltaTime) = 0;
 	virtual void SendToShader(Shader& shader);
@@ -50,7 +47,7 @@ protected:
 
 	glm::vec3 m_up;
 	glm::vec3 m_lookAt;
-	
+
 	glm::mat4 m_viewMatrix;
 	glm::mat4 m_projectionMatrix;
 

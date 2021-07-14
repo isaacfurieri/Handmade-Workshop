@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'FreeCamera' source files last updated on 12 July 2021             |
+| 'FreeCamera' source files last updated on 14 July 2021             |
 #===================================================================*/
 
 #include "Camera.h"
