@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'HandmadeView' source files last updated on 7 July 2021            |
+| 'HandmadeView' source files last updated on 14 July 2021           |
 #===================================================================*/
 
 #include <memory>
@@ -13,6 +13,9 @@
 #include "Grid.h"
 #include "Quad.h"
 #include "Sphere.h"
+
+#include "Light.h"
+#include "Model.h"
 
 class CHandmadeView : public CView
 {
@@ -77,6 +80,9 @@ private:
 	std::unique_ptr<Grid> m_grid;
 	std::unique_ptr<Axes> m_axes;
 
+	//For current testing
+	//std::unique_ptr<Light> m_light;
+	//std::unique_ptr<Model> m_model;
 	//std::unique_ptr<Quad> m_quad;
 	//std::unique_ptr<Cuboid> m_cube;
 	//std::unique_ptr<Sphere> m_sphere;

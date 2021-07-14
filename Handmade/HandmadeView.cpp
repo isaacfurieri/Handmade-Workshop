@@ -127,13 +127,34 @@ int CHandmadeView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	Shader::Instance()->BindAttribute("vertexIn");
 	Shader::Instance()->BindAttribute("colorIn");
 	Shader::Instance()->BindAttribute("textureIn");
+	//Shader::Instance()->BindAttribute("normalIn");
 
 	Shader::Instance()->BindUniform("model");
 	Shader::Instance()->BindUniform("view");
 	Shader::Instance()->BindUniform("projection");
+	//Shader::Instance()->BindUniform("normal");
 
 	//Shader::Instance()->BindUniform("isText");
 	Shader::Instance()->BindUniform("isTextured");
+	Shader::Instance()->BindUniform("textureImage");
+	
+	/*Shader::Instance()->BindUniform("light.ambient");
+	Shader::Instance()->BindUniform("light.diffuse");
+	Shader::Instance()->BindUniform("light.specular");
+	Shader::Instance()->BindUniform("light.position");
+					
+	Shader::Instance()->BindUniform("material.ambient");
+	Shader::Instance()->BindUniform("material.diffuse");
+	Shader::Instance()->BindUniform("material.specular");
+	Shader::Instance()->BindUniform("material.shininess");*/
+
+	//Shader::Instance()->BindUniform("light.attenuationLinear");
+	//Shader::Instance()->BindUniform("light.attenuationConstant");
+	//Shader::Instance()->BindUniform("light.attenuationQuadratic");
+
+	//Shader::Instance()->BindUniform("cameraPosition");
+
+	//Material::LoadMaterials("Materials.mat");
 
 	//initialize FMOD audio sub-system and return false if error occured
 	if (!(AudioManager::Instance()->Initialize()))
@@ -146,6 +167,14 @@ int CHandmadeView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	m_axes = std::make_unique<Axes>();
 	
+
+	//For current testing
+	//m_light = std::make_unique<Light>();
+
+	//m_model = std::make_unique<Model>();
+	//m_model->Load("Teapot.obj");
+	//m_model->SetColor(1, 0, 1, 1);
+
 	//m_quad = std::make_unique<Quad>();
 	//m_cube = std::make_unique<Cuboid>();
 	//m_sphere = std::make_unique<Sphere>(10.0f, 50.0f, 50.0f);
@@ -245,11 +274,18 @@ void CHandmadeView::OnDraw(CDC* pDC)
 	m_mainCamera->Update(16.0f);
 	m_mainCamera->SendToShader(*Shader::Instance());
 
+	//==============================================================================
+
 	m_grid->Render(*Shader::Instance());
 	
 	m_axes->GetTransform().SetRotation(m_grid->GetTransform().GetRotation());
 	m_axes->Render(*Shader::Instance());
 	
+	//For current testing
+	//m_light->SendToShader(*Shader::Instance());
+
+	//m_model->Render(*Shader::Instance());
+
 	//m_quad->GetTransform().SetRotation(m_grid->GetTransform().GetRotation());
 	//m_quad->Render(*Shader::Instance());
 
