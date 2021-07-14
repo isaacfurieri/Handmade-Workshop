@@ -8,9 +8,9 @@ struct Light
 	vec3 specular;
 	vec3 position;
 
-	float attenuationLinear;
-	float attenuationConstant;
-	float attenuationQuadratic;
+	//float attenuationLinear;
+	//float attenuationConstant;
+	//float attenuationQuadratic;
 };
 
 struct Material
@@ -31,9 +31,10 @@ out vec4 pixelColor;
 uniform bool isTextured;
 uniform sampler2D textureImage;
 
+uniform Light light;
 uniform Material material;
 uniform vec3 cameraPosition;
-uniform Light lights[TOTAL_LIGHTS];
+//uniform Light lights[TOTAL_LIGHTS];
 
 //=====================================================================
 vec3 AmbientColor(in Light light)
@@ -71,21 +72,21 @@ vec3 SpecularColor(in Light light)
 	return light.specular * material.specular * specularTerm;
 }
 //=====================================================================
-float Attenuation(in Light light)
-{
-	float lightDistance = length(light.position - vertexOut);
-	return 1.0 / (light.attenuationConstant + 
-	              light.attenuationLinear * lightDistance + 
-	              light.attenuationQuadratic * lightDistance * lightDistance);
-}
+//float Attenuation(in Light light)
+//{
+//	float lightDistance = length(light.position - vertexOut);
+//	return 1.0 / (light.attenuationConstant + 
+//	              light.attenuationLinear * lightDistance + 
+//	              light.attenuationQuadratic * lightDistance * lightDistance);
+//}
 //=====================================================================
 void main(void)
 {
 	for(int i = 0; i < TOTAL_LIGHTS; i++)
 	{
-		vec3 totalColor = AmbientColor(lights[i]) + 
-							DiffuseColor(lights[i]) + 
-							SpecularColor(lights[i]);
+		vec3 totalColor = AmbientColor(light) + 
+							DiffuseColor(light) + 
+							SpecularColor(light);
 
 		//make sure the RGB components never exceed 1.0
 		totalColor.r = min(totalColor.r, 1.0);
