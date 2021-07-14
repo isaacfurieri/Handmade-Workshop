@@ -5,21 +5,15 @@
 LineCollider::LineCollider()
 {
 	m_scale = 1.0f;
-	m_length = 0.0f;
 	m_endPoint = glm::vec3(0.0f);
 	m_startPoint = glm::vec3(0.0f);
 	m_color = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);
 }
 //======================================================================================================
-//void LineCollider::SetScale(float scale)
-//{
-//	m_scale = scale;
-//}
-//======================================================================================================
-//void LineCollider::SetLength(float length)
-//{
-//	m_length = length;
-//}
+void LineCollider::SetScale(GLfloat scale)
+{
+	m_scale = scale;
+}
 //======================================================================================================
 void LineCollider::SetStartPoint(const glm::vec3& startPoint)
 {
@@ -47,58 +41,42 @@ void LineCollider::SetEndPoint(GLfloat x, GLfloat y, GLfloat z)
 //======================================================================================================
 bool LineCollider::IsColliding(const SphereCollider& secondSphere) const
 {
-	glm::vec3 distanceFromLine;
-
-	//calculate the distance the sphere and point on line segment are apart from each other
-	//this makes use of inner function that calculates the point on line segment closest to sphere 
-	distanceFromLine = secondSphere.GetPosition() - PointOnLine(secondSphere.GetPosition().x,
-		secondSphere.GetPosition().y,
-		secondSphere.GetPosition().z);
-
 	//TODO - Should the radius not be scaled?
-	return (glm::length(distanceFromLine) <= secondSphere.GetRadius());
+	return (glm::length(secondSphere.GetPosition() - PointOnLine(secondSphere.GetPosition())) <= 
+		secondSphere.GetRadius());
 }
 //======================================================================================================
-glm::vec3 LineCollider::PointOnLine(GLfloat positionX, GLfloat positionY, GLfloat positionZ) const
+glm::vec3 LineCollider::PointOnLine(const glm::vec3& point) const
 {
-	//variable to store normalized portion of line segment that point uses up
-	float lineSegmentPortion;
+	return PointOnLine(point.x, point.y, point.z);
+}
+//======================================================================================================
+glm::vec3 LineCollider::PointOnLine(GLfloat x, GLfloat y, GLfloat z) const
+{
+	glm::vec3 lineSegment = m_endPoint - m_startPoint;
+	
+	GLfloat dot = glm::dot(lineSegment, 
+		(glm::vec3(x, y, z) - m_startPoint)) / glm::dot(lineSegment, lineSegment);
 
-	//first calculate distance vector between line segment's start and end point
-	//also create a position vector out of the position X, Y and Z values passed
-	glm::vec3 distance = m_endPoint - m_startPoint;
-	glm::vec3 tempPosition(positionX, positionY, positionZ);
-
-	//calculate the line segment portion using a dot
-	//product formula and distance vector created above
-	lineSegmentPortion = glm::dot(distance, (tempPosition - m_startPoint)) /
-		glm::dot(distance, distance);
-
-	//if the line segment portion is zero or less the
-	//point closest to the sphere is the line's start point
-	if (lineSegmentPortion <= 0.0f)
+	if (dot <= 0.0f)
 	{
 		return m_startPoint;
 	}
 
-	//if the line segment portion is one or more the
-	//point closest to the sphere is the line's end point
-	else if (lineSegmentPortion >= 1.0f)
+	else if (dot >= 1.0f)
 	{
 		return m_endPoint;
 	}
 
-	//otherwise the line segment portion is a value between 0 and 1 
-	//meaning that the point closest to the sphere is on the line 
-	//somewhere, so use another formula to calculate that point exactly
 	else
 	{
-		return (m_startPoint + lineSegmentPortion * distance);
+		return (m_startPoint + dot * lineSegment);
 	}
 }
 //======================================================================================================
 void LineCollider::Update()
 {
+	//TODO - Figure out what is still required and clean this up 
 	////use the right vector to calculate line's end point below
 	//glm::vec3 rightAxis = glm::vec3(1.0f, 0.0f, 0.0f); 
 

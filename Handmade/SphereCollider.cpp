@@ -58,14 +58,15 @@ bool SphereCollider::IsColliding(const BoxCollider& secondBox) const
 	return (secondBox.IsColliding(*this));
 }
 //======================================================================================================
+bool SphereCollider::IsColliding(const LineCollider& secondLine) const
+{
+	return (secondLine.IsColliding(*this));
+}
+//======================================================================================================
 bool SphereCollider::IsColliding(const SphereCollider& secondSphere) const
 {
-	//first calculate distance between both SphereColliders and store that temporarily
-	//we have to temporarily remove the constness to make the formula below work
-	float distance = glm::length(m_position - secondSphere.m_position);
-
-	//return collision flag based on distance and radii formula  
-	return (distance <= (m_radius + secondSphere.m_radius));
+	return (glm::length(m_position - secondSphere.m_position) <= 
+		(m_radius + secondSphere.m_radius));
 }
 //======================================================================================================
 void SphereCollider::Update()

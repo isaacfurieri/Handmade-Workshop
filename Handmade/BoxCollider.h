@@ -22,12 +22,19 @@ public:
 	const glm::vec3& GetPosition() const;
 	const glm::vec3& GetDimension() const;
 
+	void SetScale(const glm::vec3& scale);
 	void SetScale(GLfloat x, GLfloat y, GLfloat z);
+
+	void SetPosition(const glm::vec3& position);
 	void SetPosition(GLfloat x, GLfloat y, GLfloat z);
+
+	void SetDimension(const glm::vec3& dimension);
 	void SetDimension(GLfloat width, GLfloat height, GLfloat depth);
 
 	bool IsColliding(const BoxCollider& secondBox) const;
 	bool IsColliding(const SphereCollider& secondSphere) const;
+	
+	glm::vec3 PointOnBox(const glm::vec3& point) const;
 	glm::vec3 PointOnBox(GLfloat x, GLfloat y, GLfloat z) const;
 
 	void Update();

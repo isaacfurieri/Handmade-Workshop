@@ -28,6 +28,11 @@ const glm::vec3& BoxCollider::GetDimension() const
 {
 	return m_dimension;
 }
+//======================================================================================================
+void BoxCollider::SetScale(const glm::vec3& scale)
+{
+	m_scale = scale;
+}
 //======================================================================================================--
 void BoxCollider::SetScale(GLfloat x, GLfloat y, GLfloat z)
 {
@@ -36,11 +41,21 @@ void BoxCollider::SetScale(GLfloat x, GLfloat y, GLfloat z)
 	m_scale.z = z;
 }
 //======================================================================================================
+void BoxCollider::SetPosition(const glm::vec3& position)
+{
+	m_position = position;
+}
+//======================================================================================================
 void BoxCollider::SetPosition(GLfloat x, GLfloat y, GLfloat z)
 {
 	m_position.x = x;
 	m_position.y = y;
 	m_position.z = z;
+}
+//======================================================================================================
+void BoxCollider::SetDimension(const glm::vec3& dimension)
+{
+	m_dimension = dimension;
 }
 //======================================================================================================
 void BoxCollider::SetDimension(GLfloat width, GLfloat height, GLfloat depth)
@@ -59,45 +74,25 @@ bool BoxCollider::IsColliding(const BoxCollider& secondBox) const
 //======================================================================================================
 bool BoxCollider::IsColliding(const SphereCollider& secondSphere) const
 {
-	glm::vec3 distanceFromBox;
-
-	//calculate the distance the sphere and point on box edge are apart from each other
-	//this makes use of inner function that calculates the point on box edge closest to sphere 
-	distanceFromBox = secondSphere.GetPosition() - PointOnBox(secondSphere.GetPosition().x,
-		secondSphere.GetPosition().y,
-		secondSphere.GetPosition().z);
-
-	//return flag based on if box intersects with sphere
-	return (glm::length(distanceFromBox) <= secondSphere.GetRadius());
+	return (glm::length(secondSphere.GetPosition() - PointOnBox(secondSphere.GetPosition())) <=
+		secondSphere.GetRadius());
+}
+//======================================================================================================
+glm::vec3 BoxCollider::PointOnBox(const glm::vec3& point) const
+{
+	return PointOnBox(point.x, point.y, point.z);
 }
 //======================================================================================================
 glm::vec3 BoxCollider::PointOnBox(GLfloat x, GLfloat y, GLfloat z) const
 {
-	glm::vec3 clampValue;
-	glm::vec3 distanceFromObject;
-	glm::vec3 position(x, y, z);
-
-	//first calculate distance between the box's position and passed position
-	distanceFromObject = m_position - position;
-
-	//now clamp the distance vector between the half dimensions 
-	//the half dimensions already have the scale factor included
-	clampValue.x = glm::clamp(distanceFromObject.x, -m_halfDimension.x, m_halfDimension.x);
-	clampValue.y = glm::clamp(distanceFromObject.y, -m_halfDimension.y, m_halfDimension.y);
-	clampValue.z = glm::clamp(distanceFromObject.z, -m_halfDimension.z, m_halfDimension.z);
-
-	//the clamp value is used to determine the exact point on the 
-	//edge of the box that lines up with the passed position point
-	return m_position - clampValue;
+	return m_position -
+		glm::clamp((m_position - glm::vec3(x, y, z)), -m_halfDimension, m_halfDimension);
 }
 //======================================================================================================
 void BoxCollider::Update()
 {
-	//first determine the half width, height and depth based on scale value  
-	m_halfDimension = m_dimension * m_scale / 2.0f;
+	m_halfDimension = m_dimension * m_scale * 0.5f;
 
-	//calculate min and max X, Y and Z values based on 
-	//bound's centre position and its half dimension
 	m_min.x = m_position.x - m_halfDimension.x;
 	m_min.y = m_position.y - m_halfDimension.y;
 	m_min.z = m_position.z - m_halfDimension.z;
