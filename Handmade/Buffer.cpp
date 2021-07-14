@@ -1,7 +1,6 @@
 #include <assert.h>
 #include "Buffer.h"
 
-//TODO - create this map on the heap
 std::map<std::string, Buffer> Buffer::s_buffers;
 
 //======================================================================================================

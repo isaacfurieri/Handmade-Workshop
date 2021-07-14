@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Texture' source files last updated on 5 July 2021                 |
+| 'Texture' source files last updated on 14 July 2021                |
 #===================================================================*/
 
 #include <map>
@@ -45,34 +45,29 @@ public:
 		TEXTURE_4 = GL_TEXTURE3
 	};
 
-	//static bool GetTexture(const std::string& textureID, Texture& texture);
-
 	Texture();
 
-	const std::string& GetName() const;
+	const std::string& GetTag() const;
 
 	void SetWrapping(WrapSetting wrapSetting);
-	void SetTexture(const std::string& textureID);
+	void SetTexture(const std::string& tag);
 	void SetFilter(FilterType filterType, FilterSetting filterSetting);
 
-	bool Load(const std::string& filename, const std::string& textureID);
-	
+	bool Load(const std::string& filename, const std::string& tag);
+
 	void Bind() const;
-	void Bind(TextureUnit textureUnit);
+	void Bind(TextureUnit textureUnit) const;
 
 	void Unbind() const;
-	void Unload();
-	void Unload(const std::string& textureID);
+	void Unload() const;
+	void Unload(const std::string& tag) const;
 
 private:
 
-	static std::string s_rootFolder;
-	static std::map<std::string, GLuint>* s_textureIDMap;
-	
-	//TODO - We want to store textures as objects and not IDs
-	//static std::map<std::string, Texture>* s_textureMap;
-
 	GLuint m_ID;
-	std::string m_name;
+	std::string m_tag;
+
+	static std::string s_rootFolder;
+	static std::map<std::string, Texture> s_textures;
 
 };
