@@ -189,6 +189,9 @@
     <ClInclude Include="Tile.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
+    <ClInclude Include="LineCollider.h">
+      <Filter>Header Files\Components\Physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Screen.cpp">
@@ -289,6 +292,9 @@
     </ClCompile>
     <ClCompile Include="Tile.cpp">
       <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="LineCollider.cpp">
+      <Filter>Source Files\Components\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
