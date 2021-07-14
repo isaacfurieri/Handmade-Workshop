@@ -3,7 +3,7 @@
 GLuint Light::s_totalLights = 0;
 
 //======================================================================================================
-Light::Light()
+Light::Light(GLfloat x, GLfloat y, GLfloat z)
 {
 	m_attenuationLinear = 0.05f;
 	m_attenuationConstant = 0.2f;
@@ -12,7 +12,10 @@ Light::Light()
 	m_ambient = glm::vec3(1.0f);
 	m_diffuse = glm::vec3(1.0f);
 	m_specular = glm::vec3(1.0f);
+	m_transform.SetPosition(x, y, z);
 
+	//TODO - Find a way to only create one single 
+	//buffer to be shared amongst subsequent lights
 	m_buffer.Create("Light", 1);
 
 	GLfloat vertex[] = { 0.0f, 0.0f, 0.0f };
@@ -26,7 +29,7 @@ Light::Light()
 //======================================================================================================
 Light::~Light()
 {
-	m_buffer.Destroy("Light");
+	m_buffer.Destroy();
 	s_totalLights--;
 }
 //======================================================================================================
@@ -52,21 +55,42 @@ void Light::SetAttenuation(GLfloat constant, GLfloat linear, GLfloat quadratic)
 	m_attenuationQuadratic = quadratic;
 }
 //======================================================================================================
+void Light::SetAmbient(const glm::vec3& ambient)
+{
+	m_ambient = ambient;
+}
+//======================================================================================================
 void Light::SetAmbient(GLfloat r, GLfloat g, GLfloat b)
 {
 	//the ambient color will also be the color of the actual light bulb (for now)
-	m_ambient = glm::vec3(r, g, b);
+	m_ambient.r = r;
+	m_ambient.g = g;
+	m_ambient.b = b;
 	m_buffer.FillVBO(Buffer::COLOR_BUFFER, &m_ambient[0], sizeof(m_ambient), Buffer::FILL_MANY);
+}
+//======================================================================================================
+void Light::SetDiffuse(const glm::vec3& diffuse)
+{
+	m_diffuse = diffuse;
 }
 //======================================================================================================
 void Light::SetDiffuse(GLfloat r, GLfloat g, GLfloat b)
 {
-	m_diffuse = glm::vec3(r, g, b);
+	m_diffuse.r = r;
+	m_diffuse.g = g;
+	m_diffuse.b = b;
+}
+//======================================================================================================
+void Light::SetSpecular(const glm::vec3& specular)
+{
+	m_specular = specular;
 }
 //======================================================================================================
 void Light::SetSpecular(GLfloat r, GLfloat g, GLfloat b)
 {
-	m_specular = glm::vec3(r, g, b);
+	m_specular.r = r;
+	m_specular.g = g;
+	m_specular.b = b;
 }
 //======================================================================================================
 void Light::Render(Shader& shader)

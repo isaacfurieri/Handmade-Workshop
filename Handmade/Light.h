@@ -17,7 +17,7 @@ class Light : public Object
 
 public:
 
-	Light();
+	Light(GLfloat x = 0, GLfloat y = 0, GLfloat z = 0);
 	virtual ~Light();
 
 	void SetAttenuationLinear(GLfloat linear);
@@ -25,8 +25,13 @@ public:
 	void SetAttenuationQuadratic(GLfloat quadratic);
 	void SetAttenuation(GLfloat constant, GLfloat linear, GLfloat quadratic);
 
+	void SetAmbient(const glm::vec3& ambient);
 	void SetAmbient(GLfloat r, GLfloat g, GLfloat b);
+
+	void SetDiffuse(const glm::vec3& diffuse);
 	void SetDiffuse(GLfloat r, GLfloat g, GLfloat b);
+
+	void SetSpecular(const glm::vec3& specular);
 	void SetSpecular(GLfloat r, GLfloat g, GLfloat b);
 
 	virtual void Render(Shader& shader); /*debug only*/
