@@ -53,6 +53,8 @@ bool Texture::Load(const std::string& filename, const std::string& tag)
 	//map and we don't want to replace the existing texture
 	assert(it == s_textures.end());
 
+	//TODO - Find a way to load the image the right way up, 
+	//else we have to add conversion to flip the raw pixel data
 	SDL_Surface* textureData = IMG_Load(filename.c_str());
 
 	if (!textureData)

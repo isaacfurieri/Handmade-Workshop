@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Object' source files last updated on 23 June 2021                 |
+| 'Object' source files last updated on 14 July 2021                 |
 #===================================================================*/
 
 #include "glad.h"
@@ -27,9 +27,9 @@ public:
 	Transform& operator*=(const Transform& rhs);
 
 	glm::vec3 GetEulerAngles();
-	const glm::vec3& GetPosition();
-	const glm::quat& GetRotation();
-	const glm::vec3& GetScale();
+	const glm::vec3& GetPosition() const;
+	const glm::quat& GetRotation() const;
+	const glm::vec3& GetScale() const;
 	const glm::mat4& GetMatrix();
 
 	void SetIdentity();

@@ -27,17 +27,17 @@ glm::vec3 Transform::GetEulerAngles()
 	return glm::degrees(glm::eulerAngles(m_rotation));
 }
 //======================================================================================================
-const glm::vec3& Transform::GetPosition()
+const glm::vec3& Transform::GetPosition() const
 {
 	return m_position;
 }
 //======================================================================================================
-const glm::quat& Transform::GetRotation()
+const glm::quat& Transform::GetRotation() const
 {
 	return m_rotation;
 }
 //======================================================================================================
-const glm::vec3& Transform::GetScale()
+const glm::vec3& Transform::GetScale() const
 {
 	return m_scale;
 }
@@ -51,10 +51,10 @@ const glm::mat4& Transform::GetMatrix()
 void Transform::SetIdentity()
 {
 	m_isDirty = false;
-	m_position = glm::vec3(0.0f);
-	m_rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
 	m_scale = glm::vec3(1.0f);
 	m_matrix = glm::mat4(1.0f);
+	m_position = glm::vec3(0.0f);
+	m_rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
 }
 //======================================================================================================
 void Transform::SetPosition(const glm::vec3& position)
