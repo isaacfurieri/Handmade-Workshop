@@ -8,9 +8,9 @@ struct Light
 	vec3 specular;
 	vec3 position;
 
-	//float attenuationLinear;
-	//float attenuationConstant;
-	//float attenuationQuadratic;
+	float attenuationLinear;
+	float attenuationConstant;
+	float attenuationQuadratic;
 };
 
 struct Material
@@ -36,14 +36,11 @@ uniform vec3 cameraPosition;
 uniform Light lights[TOTAL_LIGHTS];
 
 //=====================================================================
-
 vec3 AmbientColor(in Light light)
 {
 	return light.ambient * material.ambient;
 }
-
 //=====================================================================
-
 vec3 DiffuseColor(in Light light)
 {
 	//calculate the vector between light position and each vertex
@@ -55,9 +52,7 @@ vec3 DiffuseColor(in Light light)
 	//final diffuse color value
 	return light.diffuse * material.diffuse * lightIntensity;
 }
-
 //=====================================================================
-
 vec3 SpecularColor(in Light light)
 {
 	//calculate the vector between light position and each vertex
@@ -75,20 +70,15 @@ vec3 SpecularColor(in Light light)
 	//final specular color
 	return light.specular * material.specular * specularTerm;
 }
-
 //=====================================================================
-
-//float Attenuation(in Light light)
-//{
-//	//attenuation algorithm
-//	float lightDistance = length(light.position - vertexOut);
-//	return 1.0 / (light.attenuationConstant + 
-//	              light.attenuationLinear * lightDistance + 
-//	              light.attenuationQuadratic * lightDistance * lightDistance);
-//}
-
+float Attenuation(in Light light)
+{
+	float lightDistance = length(light.position - vertexOut);
+	return 1.0 / (light.attenuationConstant + 
+	              light.attenuationLinear * lightDistance + 
+	              light.attenuationQuadratic * lightDistance * lightDistance);
+}
 //=====================================================================
-
 void main(void)
 {
 	for(int i = 0; i < TOTAL_LIGHTS; i++)

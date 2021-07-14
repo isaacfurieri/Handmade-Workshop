@@ -5,9 +5,9 @@ GLuint Light::s_totalLights = 0;
 //======================================================================================================
 Light::Light()
 {
-	m_attLinear = 0.05f;
-	m_attConstant = 0.2f;
-	m_attQuadratic = 0.05f;
+	m_attenuationLinear = 0.05f;
+	m_attenuationConstant = 0.2f;
+	m_attenuationQuadratic = 0.05f;
 
 	m_ambient = glm::vec3(1.0f);
 	m_diffuse = glm::vec3(1.0f);
@@ -30,19 +30,26 @@ Light::~Light()
 	s_totalLights--;
 }
 //======================================================================================================
-void Light::SetAttenuationLinear(GLfloat attLinear)
+void Light::SetAttenuationLinear(GLfloat linear)
 {
-	m_attLinear = attLinear;
+	m_attenuationLinear = linear;
 }
 //======================================================================================================
-void Light::SetAttenuationConstant(GLfloat attConstant)
+void Light::SetAttenuationConstant(GLfloat constant)
 {
-	m_attConstant = attConstant;
+	m_attenuationConstant = constant;
 }
 //======================================================================================================
-void Light::SetAttenuationQuadratic(GLfloat attQuadratic)
+void Light::SetAttenuationQuadratic(GLfloat quadratic)
 {
-	m_attQuadratic = attQuadratic;
+	m_attenuationQuadratic = quadratic;
+}
+//======================================================================================================
+void Light::SetAttenuation(GLfloat constant, GLfloat linear, GLfloat quadratic)
+{
+	m_attenuationLinear = linear;
+	m_attenuationConstant = constant;
+	m_attenuationQuadratic = quadratic;
 }
 //======================================================================================================
 void Light::SetAmbient(GLfloat r, GLfloat g, GLfloat b)
@@ -82,10 +89,8 @@ void Light::Render(Shader& shader)
 //======================================================================================================
 void Light::SendToShader(Shader& shader)
 {
-	//send total amount of lights to fragment shader so it can loop through them all
 	Shader::Instance()->SendData("totalLights", s_totalLights);
 
-	//send light position and color to fragment shader
 	Shader::Instance()->SendData("light[" +
 		std::to_string(m_lightNumber) + "].ambient", m_ambient);
 	Shader::Instance()->SendData("light[" +
@@ -95,11 +100,10 @@ void Light::SendToShader(Shader& shader)
 	Shader::Instance()->SendData("light[" +
 		std::to_string(m_lightNumber) + "].position", m_transform.GetPosition());
 
-	//send light attenuationo fragment shader
 	Shader::Instance()->SendData("light[" +
-		std::to_string(m_lightNumber) + "].attLinear", m_attLinear);
+		std::to_string(m_lightNumber) + "].attLinear", m_attenuationLinear);
 	Shader::Instance()->SendData("light[" +
-		std::to_string(m_lightNumber) + "].attConstant", m_attConstant);
+		std::to_string(m_lightNumber) + "].attConstant", m_attenuationConstant);
 	Shader::Instance()->SendData("light[" +
-		std::to_string(m_lightNumber) + "].attQuadratic", m_attQuadratic);
+		std::to_string(m_lightNumber) + "].attQuadratic", m_attenuationQuadratic);
 }

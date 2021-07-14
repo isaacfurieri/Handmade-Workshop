@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Light' source files last updated on 12 July 2021                  |
+| 'Light' source files last updated on 14 July 2021                  |
 #===================================================================*/
 
 #include "glad.h"
@@ -20,9 +20,10 @@ public:
 	Light();
 	virtual ~Light();
 
-	void SetAttenuationLinear(GLfloat attLinear);
-	void SetAttenuationConstant(GLfloat attConstant);
-	void SetAttenuationQuadratic(GLfloat attQuadratic);
+	void SetAttenuationLinear(GLfloat linear);
+	void SetAttenuationConstant(GLfloat constant);
+	void SetAttenuationQuadratic(GLfloat quadratic);
+	void SetAttenuation(GLfloat constant, GLfloat linear, GLfloat quadratic);
 
 	void SetAmbient(GLfloat r, GLfloat g, GLfloat b);
 	void SetDiffuse(GLfloat r, GLfloat g, GLfloat b);
@@ -38,9 +39,9 @@ private:
 
 	GLuint m_lightNumber;
 
-	GLfloat m_attLinear;
-	GLfloat m_attConstant;
-	GLfloat m_attQuadratic;
+	GLfloat m_attenuationLinear;
+	GLfloat m_attenuationConstant;
+	GLfloat m_attenuationQuadratic;
 
 	glm::vec3 m_ambient;
 	glm::vec3 m_diffuse;
