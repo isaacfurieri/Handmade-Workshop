@@ -58,9 +58,9 @@ void Axes::Create()
 						  0, -m_size, 0, 0, m_size, 0,
 						  0, 0, -m_size, 0, 0, m_size };
 
-	GLfloat colors[] = { 0.996f, 0.415f, 0.403f, 1.0f, 0.996f, 0.415f, 0.403f, 1.0f,
-						 0.650f, 0.909f, 0.666f, 1.0f, 0.650f, 0.909f, 0.666f, 1.0f,
-						 0.690f, 0.811f, 0.996f, 1.0f, 0.690f, 0.811f, 0.996f, 1.0f };
+	GLfloat colors[] = { 1.0f, 0.0f, 0.196f, 1.0f, 1.0f, 0.0f, 0.196f, 1.0f,
+						 0.196f, 1.0f, 0.0f, 1.0f, 0.196f, 1.0f, 0.0f, 1.0f,
+						 0.0f, 0.564f, 1.0f, 1.0f, 0.0f, 0.564f, 1.0f, 1.0f };
 
 	m_buffer.FillVBO(Buffer::VBO::VertexBuffer, vertices, sizeof(vertices), Buffer::Fill::Once);
 	m_buffer.FillVBO(Buffer::VBO::ColorBuffer, colors, sizeof(colors), Buffer::Fill::Once);
