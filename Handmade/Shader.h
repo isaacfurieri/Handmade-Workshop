@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Shader' source files last updated on 6 July 2021                  |
+| 'Shader' source files last updated on 20 July 2021                 |
 #===================================================================*/
 
 #include <map>
@@ -14,16 +14,14 @@ class Shader
 
 public:
 
-	enum class ShaderType
-	{
-		VERTEX_SHADER = GL_VERTEX_SHADER,
-		FRAGMENT_SHADER = GL_FRAGMENT_SHADER
-	};
-
-	static Shader* Instance();
+	Shader();
+	~Shader();
 
 	GLuint GetUniformID(const std::string& uniform) const;
 	GLuint GetAttributeID(const std::string& attribute) const;
+
+	bool Create(const std::string& vertexShaderFilename,
+		const std::string& fragmentShaderFilename);
 
 	void BindUniform(const std::string& uniform);
 	void BindAttribute(const std::string& attribute);
@@ -41,27 +39,18 @@ public:
 	void SendData(const std::string& uniform,
 		const glm::mat4& matrix4x4, bool transposed = false) const;
 
-	bool CreateProgram();
-	bool CreateShaders();
-
-	bool CompileShader(const std::string& filename, ShaderType shaderType);
-	void AttachShaders();
-	bool LinkProgram();
-
-	void DetachShaders();
-	void DestroyShaders();
-	void DestroyProgram();
+	void Use();
+	void Destroy();
 
 private:
 
-	Shader();
-	Shader(const Shader&);
-	Shader& operator=(Shader&);
+	bool LinkProgram();
+	bool CompileShaders(const std::string& filename);
+
+	static GLint s_vertexShaderID;
+	static GLint s_fragmentShaderID;
 
 	GLuint m_shaderProgramID;
-	GLuint m_vertexShaderID;
-	GLuint m_fragmentShaderID;
-
 	std::map<std::string, GLuint> m_uniforms;
 	std::map<std::string, GLuint> m_attributes;
 

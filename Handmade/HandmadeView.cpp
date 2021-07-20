@@ -97,66 +97,65 @@ int CHandmadeView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	m_isScreenInitialized = true;
 
-	if (!Shader::Instance()->CreateProgram())
+	//===================================================================
+
+	m_mainShader = std::make_unique<Shader>();
+
+	if (!m_mainShader->Create("Shaders/Main.vert", "Shaders/Main.frag"))
 	{
 		return -1;
 	}
 
-	if (!Shader::Instance()->CreateShaders())
+	m_mainShader->BindAttribute("vertexIn");
+	m_mainShader->BindAttribute("colorIn");
+	m_mainShader->BindAttribute("textureIn");
+
+	m_mainShader->BindUniform("model");
+	m_mainShader->BindUniform("view");
+	m_mainShader->BindUniform("projection");
+	m_mainShader->BindUniform("isTextured");
+
+	//===================================================================
+
+	m_lightShader = std::make_unique<Shader>();
+
+	if (!m_lightShader->Create("Shaders/Light.vert", "Shaders/Light.frag"))
 	{
-		return -1;
+		return false;
 	}
 
-	if (!Shader::Instance()->CompileShader("Shaders/Main.vert",
-		Shader::ShaderType::VERTEX_SHADER))
-	{
-		return -1;
-	}
+	m_lightShader->BindAttribute("vertexIn");
+	m_lightShader->BindAttribute("colorIn");
+	m_lightShader->BindAttribute("textureIn");
+	m_lightShader->BindAttribute("normalIn");
 
-	if (!Shader::Instance()->CompileShader("Shaders/Main.frag",
-		Shader::ShaderType::FRAGMENT_SHADER))
-	{
-		return -1;
-	}
+	m_lightShader->BindUniform("model");
+	m_lightShader->BindUniform("view");
+	m_lightShader->BindUniform("projection");
+	m_lightShader->BindUniform("normal");
 
-	Shader::Instance()->AttachShaders();
+	m_lightShader->BindUniform("isTextured");
+	m_lightShader->BindUniform("cameraPosition");
 
-	if (!Shader::Instance()->LinkProgram())
-	{
-		return -1;
-	}
-
-	Shader::Instance()->BindAttribute("vertexIn");
-	Shader::Instance()->BindAttribute("colorIn");
-	Shader::Instance()->BindAttribute("textureIn");
-	//Shader::Instance()->BindAttribute("normalIn");
-
-	Shader::Instance()->BindUniform("model");
-	Shader::Instance()->BindUniform("view");
-	Shader::Instance()->BindUniform("projection");
-	//Shader::Instance()->BindUniform("normal");
-
-	//Shader::Instance()->BindUniform("isText");
-	Shader::Instance()->BindUniform("isTextured");
-	Shader::Instance()->BindUniform("textureImage");
+	m_lightShader->BindUniform("light.ambient");
+	m_lightShader->BindUniform("light.diffuse");
+	m_lightShader->BindUniform("light.specular");
+	m_lightShader->BindUniform("light.position");
 	
-	/*Shader::Instance()->BindUniform("light.ambient");
-	Shader::Instance()->BindUniform("light.diffuse");
-	Shader::Instance()->BindUniform("light.specular");
-	Shader::Instance()->BindUniform("light.position");
-					
-	Shader::Instance()->BindUniform("material.ambient");
-	Shader::Instance()->BindUniform("material.diffuse");
-	Shader::Instance()->BindUniform("material.specular");
-	Shader::Instance()->BindUniform("material.shininess");*/
+	m_lightShader->BindUniform("material.ambient");
+	m_lightShader->BindUniform("material.diffuse");
+	m_lightShader->BindUniform("material.specular");
+	m_lightShader->BindUniform("material.shininess");
 
-	//Shader::Instance()->BindUniform("light.attenuationLinear");
-	//Shader::Instance()->BindUniform("light.attenuationConstant");
-	//Shader::Instance()->BindUniform("light.attenuationQuadratic");
+	//m_lightShader->BindUniform("light.attenuationLinear");
+	//m_lightShader->BindUniform("light.attenuationConstant");
+	//m_lightShader->BindUniform("light.attenuationQuadratic");
 
-	//Shader::Instance()->BindUniform("cameraPosition");
+	//===================================================================
 
-	//Material::LoadMaterials("Materials.mat");
+	Material::LoadMaterials("Materials.mat");
+
+	//===================================================================
 
 	//initialize FMOD audio sub-system and return false if error occured
 	if (!(AudioManager::Instance()->Initialize()))
@@ -164,12 +163,13 @@ int CHandmadeView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return false;
 	}
 
+	//===================================================================
+
 	m_grid = std::make_unique<Grid>();
 	m_grid->GetTransform().SetRotation(45.0f, -30.0f, 0.0f);
 
 	m_axes = std::make_unique<Axes>();
 	
-
 	//For current testing
 	//m_light = std::make_unique<Light>();
 
@@ -272,16 +272,22 @@ void CHandmadeView::OnDraw(CDC* pDC)
 
 	Screen::Instance()->Refresh();
 	
+	Shader& mainShader = *m_mainShader.get();
+	Shader& lightShader = *m_lightShader.get();
+
+	lightShader.Use();
+	mainShader.Use();
+
 	m_mainCamera->CreatePerspView();
 	m_mainCamera->Update(16.0f);
-	m_mainCamera->SendToShader(*Shader::Instance());
+	m_mainCamera->SendToShader(mainShader);
 
 	//==============================================================================
 
-	m_grid->Render(*Shader::Instance());
+	m_grid->Render(mainShader);
 	
 	m_axes->GetTransform().SetRotation(m_grid->GetTransform().GetRotation());
-	m_axes->Render(*Shader::Instance());
+	m_axes->Render(mainShader);
 	
 	//For current testing
 	//m_light->SendToShader(*Shader::Instance());
@@ -309,7 +315,7 @@ void CHandmadeView::OnDraw(CDC* pDC)
 
 		if (object->IsVisible())
 		{
-			object->Render(*Shader::Instance());
+			object->Render(lightShader);
 		}
 	}
 

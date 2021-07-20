@@ -13,7 +13,7 @@
 #include "Grid.h"
 #include "Quad.h"
 #include "Sphere.h"
-
+#include "Shader.h"
 #include "Light.h"
 #include "Model.h"
 
@@ -79,6 +79,9 @@ private:
 
 	std::unique_ptr<Grid> m_grid;
 	std::unique_ptr<Axes> m_axes;
+
+	std::unique_ptr<Shader> m_mainShader;
+	std::unique_ptr<Shader> m_lightShader;
 
 	//For current testing
 	//std::unique_ptr<Light> m_light;

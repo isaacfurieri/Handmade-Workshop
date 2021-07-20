@@ -109,10 +109,10 @@ void Light::SendToShader(Shader& shader)
 {
 	//Shader::Instance()->SendData("totalLights", s_totalLights);
 
-	Shader::Instance()->SendData("light.ambient", m_ambient);
-	Shader::Instance()->SendData("light.diffuse", m_diffuse);
-	Shader::Instance()->SendData("light.specular", m_specular);
-	Shader::Instance()->SendData("light.position", m_transform.GetPosition());
+	shader.SendData("light.ambient", m_ambient);
+	shader.SendData("light.diffuse", m_diffuse);
+	shader.SendData("light.specular", m_specular);
+	shader.SendData("light.position", m_transform.GetPosition());
 
 	//Shader::Instance()->SendData("light.attenuationLinear", m_attenuationLinear);
 	//Shader::Instance()->SendData("light.attenuationConstant", m_attenuationConstant);
