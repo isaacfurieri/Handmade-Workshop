@@ -93,6 +93,8 @@ int CHandmadeView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 	}
 
+	Screen::Instance()->SetColor(23U, 24U, 23U);
+
 	m_isScreenInitialized = true;
 
 	if (!Shader::Instance()->CreateProgram())

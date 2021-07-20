@@ -35,9 +35,24 @@ void Screen::SetResolution(GLuint width, GLuint height)
 	glm::max(m_resolution, 1U);
 }
 //======================================================================================================
-void Screen::SetClearColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
+void Screen::SetColor(const glm::vec4& color)
+{
+	glClearColor(color.r, color.g, color.b, color.a);
+}
+//======================================================================================================
+void Screen::SetColor(const glm::uvec4& color)
+{
+	glClearColor(color.r / 255.0f, color.g / 255.0f, color.b / 255.0f, color.a / 255.0f);
+}
+//======================================================================================================
+void Screen::SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
 {
 	glClearColor(r, g, b, a);
+}
+//======================================================================================================
+void Screen::SetColor(GLuint r, GLuint g, GLuint b, GLuint a)
+{
+	glClearColor(r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
 }
 //======================================================================================================
 void Screen::SetViewport(GLint x, GLint y, GLsizei width, GLsizei height)
