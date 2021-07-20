@@ -3,9 +3,8 @@
 #include "Utility.h"
 
 HWND Utility::s_windowHandle = nullptr;
-//HANDLE Utility::s_consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 //======================================================================================================
-void Utility::GLError()
+void Utility::CheckGLError()
 {
 	//query OpenGL for errors which will return the first 
 	//error that occured since this function was last called
@@ -68,19 +67,19 @@ void Utility::GLError()
 //======================================================================================================
 void Utility::DisplayProfile()
 {
-	std::string profile;
+	const GLubyte* profile = nullptr;
 
-	profile = (const char*)(glGetString(GL_VENDOR));
-	Utility::Log(FILE, "Graphics card vendor: " + profile);
+	profile = reinterpret_cast<const GLubyte*>(glGetString(GL_VENDOR));
+	Utility::Log(Destination::LogFile, "Graphics card vendor: " + (*profile));
 
-	profile = (const char*)(glGetString(GL_RENDERER));
-	Utility::Log(FILE, "Graphics card model: " + profile);
+	profile = reinterpret_cast<const GLubyte*>(glGetString(GL_RENDERER));
+	Utility::Log(Destination::LogFile, "Graphics card model: " + (*profile));
 
-	profile = (const char*)(glGetString(GL_VERSION));
-	Utility::Log(FILE, "OpenGL version: " + profile);
+	profile = reinterpret_cast<const GLubyte*>(glGetString(GL_VERSION));
+	Utility::Log(Destination::LogFile, "OpenGL version: " + (*profile));
 
-	profile = (const char*)(glGetString(GL_SHADING_LANGUAGE_VERSION));
-	Utility::Log(FILE, "GLSL version: " + profile);
+	profile = reinterpret_cast<const GLubyte*>(glGetString(GL_SHADING_LANGUAGE_VERSION));
+	Utility::Log(Destination::LogFile, "GLSL version: " + (*profile));
 }
 //======================================================================================================
 void Utility::DisplayExtensions()
@@ -88,17 +87,11 @@ void Utility::DisplayExtensions()
 	GLint totalExtensions;
 	glGetIntegerv(GL_NUM_EXTENSIONS, &totalExtensions);
 
-	/*Debug::Log("===============================================================");
-	Debug::Log("The following extensions are supported by your graphics card:  ");
-	Debug::Log("===============================================================");*/
-
 	for (GLint i = 0; i < totalExtensions; i++)
 	{
-		std::string extension = (const char*)glGetStringi(GL_EXTENSIONS, i);
-		//Debug::Log("Extension #" + std::to_string(i + 1) + ": " + extension);
+		const GLubyte* extension = reinterpret_cast<const GLubyte*>(glGetStringi(GL_EXTENSIONS, i));
+		//Utility::Log(Destination::LogFile, std::to_string(i + 1) + (*extension));
 	}
-
-	//Debug::Log("===============================================================");
 }
 //======================================================================================================
 void Utility::SetWindowHandle(HWND windowHandle)
@@ -141,8 +134,6 @@ void Utility::ParseString(std::string& str, std::vector<std::string>& subStrings
 bool Utility::LoadConfigFile(const std::string& filename,
 	std::map<std::string, std::string>& dataMap)
 {
-	std::string lineText;
-	std::vector<std::string> subStrings;
 	std::fstream file(filename, std::ios_base::in);
 
 	if (!file.is_open())
@@ -150,13 +141,18 @@ bool Utility::LoadConfigFile(const std::string& filename,
 		return false;
 	}
 
+	std::string line;
+
 	while (!file.eof())
 	{
-		std::getline(file, lineText);
-		ParseString(lineText, subStrings, '=');
-		dataMap.insert(std::pair<std::string, std::string>(subStrings[KEY],
-			subStrings[VALUE]));
-		subStrings.clear();
+		std::getline(file, line);
+		std::vector<std::string> subStrings;
+		ParseString(line, subStrings, '=');
+
+		if (!subStrings.empty())
+		{
+			dataMap[subStrings[0]] = subStrings[1];
+		}
 	}
 
 	file.close();
@@ -165,7 +161,6 @@ bool Utility::LoadConfigFile(const std::string& filename,
 //======================================================================================================
 bool Utility::LoadShaderFile(const std::string& filename, std::string& sourceCode)
 {
-	std::string lineText;
 	std::fstream file(filename, std::ios_base::in);
 
 	if (!file.is_open())
@@ -173,31 +168,33 @@ bool Utility::LoadShaderFile(const std::string& filename, std::string& sourceCod
 		return false;
 	}
 
+	std::string line;
+
 	while (!file.eof())
 	{
-		getline(file, lineText);
-		sourceCode += lineText + "\n";
+		getline(file, line);
+		sourceCode += line + "\n";
 	}
 
 	file.close();
 	return true;
 }
 //======================================================================================================
-void Utility::Log(int destination, const glm::vec2& value, const std::string& label)
+void Utility::Log(Destination destination, const glm::vec2& value, const std::string& label)
 {
 	Log(destination, value.x, value.y, 0.0f, label);
 }
 //======================================================================================================
-void Utility::Log(int destination, const glm::vec3& value, const std::string& label)
+void Utility::Log(Destination destination, const glm::vec3& value, const std::string& label)
 {
 	Log(destination, value.x, value.y, value.z, label);
 }
 //======================================================================================================
-void Utility::Log(int destination, GLfloat value, const std::string& label)
+void Utility::Log(Destination destination, GLfloat value, const std::string& label)
 {
 	if (!label.empty())
 	{
-		if (destination == MESSAGE_BOX)
+		if (destination == Destination::WindowsMessageBox)
 		{
 			MessageBox(s_windowHandle,
 				reinterpret_cast<LPCWSTR>(std::to_wstring(value).c_str()),
@@ -205,14 +202,14 @@ void Utility::Log(int destination, GLfloat value, const std::string& label)
 				MB_ICONINFORMATION | MB_OK);
 		}
 
-		else if (destination == VS_OUTPUT)
+		else if (destination == Destination::OutputWindow)
 		{
 			std::string message = "[" + label + "] " + std::to_string(value) + "\n";
 			OutputDebugString(reinterpret_cast<LPCWSTR>
 				(std::wstring(message.begin(), message.end()).c_str()));
 		}
 
-		else if (destination == FILE)
+		else if (destination == Destination::LogFile)
 		{
 			std::fstream file("Data/Output.log", std::ios_base::out | std::ios_base::app);
 			std::string message = "[" + label + "] " + std::to_string(value) + "\n";
@@ -222,27 +219,27 @@ void Utility::Log(int destination, GLfloat value, const std::string& label)
 	}
 }
 //======================================================================================================
-void Utility::Log(int destination, const std::string& message, Severity severity)
+void Utility::Log(Destination destination, const std::string& message, Severity severity)
 {
 	if (!message.empty())
 	{
-		if (destination == MESSAGE_BOX)
+		if (destination == Destination::WindowsMessageBox)
 		{
 			MessageBox(s_windowHandle,
 				reinterpret_cast<LPCWSTR>(std::wstring(message.begin(), message.end()).c_str()),
-				L"Log", severity | MB_OK);
+				L"Log", static_cast<GLuint>(severity) | MB_OK);
 		}
 
-		else if (destination == VS_OUTPUT)
+		else if (destination == Destination::OutputWindow)
 		{
 			std::string finalMessage;
 
-			if (severity == FAILURE)
+			if (severity == Severity::Failure)
 			{
 				finalMessage = "[FAILURE] " + message + "\n";
 			}
 
-			else if (severity == WARNING)
+			else if (severity == Severity::Warning)
 			{
 				finalMessage = "[WARNING] " + message + "\n";
 			}
@@ -256,17 +253,17 @@ void Utility::Log(int destination, const std::string& message, Severity severity
 				(std::wstring(finalMessage.begin(), finalMessage.end()).c_str()));
 		}
 
-		else if (destination == FILE)
+		else if (destination == Destination::LogFile)
 		{
 			std::string finalMessage;
 			std::fstream file("Data/Output.log", std::ios_base::out | std::ios_base::app);
 
-			if (severity == FAILURE)
+			if (severity == Severity::Failure)
 			{
 				finalMessage = "[FAILURE] " + message + "\n";
 			}
 
-			else if (severity == WARNING)
+			else if (severity == Severity::Warning)
 			{
 				finalMessage = "[WARNING] " + message + "\n";
 			}
@@ -282,11 +279,11 @@ void Utility::Log(int destination, const std::string& message, Severity severity
 	}
 }
 //======================================================================================================
-void Utility::Log(int destination, GLfloat x, GLfloat y, GLfloat z, const std::string& label)
+void Utility::Log(Destination destination, GLfloat x, GLfloat y, GLfloat z, const std::string& label)
 {
 	if (!label.empty())
 	{
-		if (destination == MESSAGE_BOX)
+		if (destination == Destination::WindowsMessageBox)
 		{
 			std::string message = "x = " + std::to_string(x) +
 				", y = " + std::to_string(y) +
@@ -298,7 +295,7 @@ void Utility::Log(int destination, GLfloat x, GLfloat y, GLfloat z, const std::s
 				MB_ICONINFORMATION | MB_OK);
 		}
 
-		else if (destination == VS_OUTPUT)
+		else if (destination == Destination::OutputWindow)
 		{
 			std::string message = "[" + label + "] " + "x = " + std::to_string(x) +
 				", y = " + std::to_string(y) +
@@ -307,7 +304,7 @@ void Utility::Log(int destination, GLfloat x, GLfloat y, GLfloat z, const std::s
 				(std::wstring(message.begin(), message.end()).c_str()));
 		}
 
-		else if (destination == FILE)
+		else if (destination == Destination::LogFile)
 		{
 			std::fstream file("Data/Output.log", std::ios_base::out | std::ios_base::app);
 			std::string message = "[" + label + "] " + "x = " + std::to_string(x) +
@@ -318,68 +315,3 @@ void Utility::Log(int destination, GLfloat x, GLfloat y, GLfloat z, const std::s
 		}
 	}
 }
-
-//===================================================================================================================
-//OLD code for logging to the console window
-
-//======================================================================================================
-//void Debug::Log(GLfloat value, const std::string& label)
-//{
-//	//set color to a bright white
-//	SetConsoleTextAttribute(s_consoleHandle, static_cast<WORD>(ErrorCode::DEFAULT));
-//
-//	//display numeric data and if there is a label
-//	//to identify the data then display that first
-//
-//	if (!label.empty())
-//	{
-//		std::cout << "[" << label << "] ";
-//	}
-//
-//	std::cout << value << std::endl;
-//}
-////======================================================================================================
-//void Debug::Log(const glm::vec3& vector, const std::string& label)
-//{
-//	//set color to a bright white
-//	SetConsoleTextAttribute(s_consoleHandle, static_cast<WORD>(ErrorCode::DEFAULT));
-//
-//	//display vector data in coordinate format and if there
-//	//is a label to identify the data then display that first
-//
-//	if (!label.empty())
-//	{
-//		std::cout << "[" << label << "] ";
-//	}
-//
-//	std::cout << "x = " << vector.x << ", y = " << vector.y << ", z = " << vector.z << std::endl;
-//}
-////======================================================================================================
-//void Debug::Log(const std::string& message, ErrorCode errorCode)
-//{
-//	//set color based on the numeric error code passed
-//	SetConsoleTextAttribute(s_consoleHandle, static_cast<WORD>(errorCode));
-//
-//	//display the message on the console
-//	std::cout << message << std::endl;
-//
-//	//set color back to a bright white so that if the
-//	//text is output elsewhere it will be regular white
-//	SetConsoleTextAttribute(s_consoleHandle, static_cast<WORD>(ErrorCode::DEFAULT));
-//}
-////======================================================================================================
-//void Debug::Log(GLfloat x, GLfloat y, GLfloat z, const std::string& label)
-//{
-//	//set color to a bright white
-//	SetConsoleTextAttribute(s_consoleHandle, static_cast<WORD>(ErrorCode::DEFAULT));
-//
-//	//display vector data in coordinate format and if there
-//	//is a label to identify the data then display that first
-//
-//	if (!label.empty())
-//	{
-//		std::cout << "[" << label << "] ";
-//	}
-//
-//	std::cout << "x = " << x << ", y = " << y << ", z = " << z << std::endl;
-//}

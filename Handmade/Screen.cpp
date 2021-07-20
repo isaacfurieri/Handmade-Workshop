@@ -76,10 +76,8 @@ bool Screen::Initialize(HWND wnd, const std::string& filename)
 
 	if (!Utility::LoadConfigFile(filename, dataMap))
 	{
-		Utility::Log(FILE, "Error opening config file '" + filename + "'",
-			Utility::FAILURE);
-		Utility::Log(MESSAGE_BOX, "Error opening config file '" + filename + "'",
-			Utility::FAILURE);
+		Utility::Log(Utility::Destination::WindowsMessageBox,
+			"Error opening config file '" + filename + "'", Utility::Severity::Failure);
 		return false;
 	}
 
@@ -110,10 +108,8 @@ bool Screen::Initialize(HWND wnd, const std::string& filename)
 
 	if (!m_wglCreateContextAttribsARB)
 	{
-		Utility::Log(FILE, "Your graphics card does not support modern OpenGL",
-			Utility::FAILURE);
-		Utility::Log(MESSAGE_BOX, "Your graphics card does not support modern OpenGL",
-			Utility::FAILURE);
+		Utility::Log(Utility::Destination::WindowsMessageBox,
+			"Your graphics card does not support modern OpenGL", Utility::Severity::Failure);
 		return false;
 	}
 
@@ -137,13 +133,10 @@ bool Screen::Initialize(HWND wnd, const std::string& filename)
 
 	if (!m_renderContext)
 	{
-		Utility::Log(FILE, "OpenGL context could not be created. The context is "
-			"either invalid or not supported by your graphics card",
-			Utility::FAILURE);
-
-		Utility::Log(MESSAGE_BOX, "OpenGL context could not be created. The context is "
-			"either invalid or not supported by your graphics card",
-			Utility::FAILURE);
+		Utility::Log(Utility::Destination::WindowsMessageBox,
+			"OpenGL context could not be created. "
+			"The context is either invalid or not supported by your graphics card",
+			Utility::Severity::Failure);
 	}
 
 	wglMakeCurrent(m_deviceContext, m_renderContext);
@@ -152,8 +145,8 @@ bool Screen::Initialize(HWND wnd, const std::string& filename)
 
 	if (!gladLoadGL())
 	{
-		Utility::Log(FILE, "GLAD could not be initialized", Utility::FAILURE);
-		Utility::Log(MESSAGE_BOX, "GLAD could not be initialized", Utility::FAILURE);
+		Utility::Log(Utility::Destination::WindowsMessageBox,
+			"GLAD could not be initialized", Utility::Severity::Failure);
 		return false;
 	}
 

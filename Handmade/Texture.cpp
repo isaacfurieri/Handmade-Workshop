@@ -59,10 +59,10 @@ bool Texture::Load(const std::string& filename, const std::string& tag)
 
 	if (!textureData)
 	{
-		Utility::Log(MESSAGE_BOX,
+		Utility::Log(Utility::Destination::WindowsMessageBox,
 			"Error loading texture file \"" + (s_rootFolder + filename) + "\"."
 			"Possible causes could be a corrupt or missing file. It could also be "
-			"that the filename and/or path are incorrectly spelt.", Utility::Severity::FAILURE);
+			"that the filename and/or path are incorrectly spelt.", Utility::Severity::Failure);
 		return false;
 	}
 

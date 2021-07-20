@@ -23,10 +23,10 @@ bool Model::Load(const std::string& filename, bool isNormalized, const std::stri
 
 	if (!file)
 	{
-		Utility::Log(MESSAGE_BOX,
+		Utility::Log(Utility::Destination::WindowsMessageBox,
 			"Error loading model file \"" + (s_rootFolder + filename) + "\"."
 			"Possible causes could be a corrupt or missing file. It could also be "
-			"that the filename and/or path are incorrectly spelt.", Utility::Severity::FAILURE);
+			"that the filename and/or path are incorrectly spelt.", Utility::Severity::Failure);
 		return false;
 	}
 
@@ -279,9 +279,9 @@ void Model::FillBuffers()
 		buffer.Create("Mesh_" + std::to_string(count++), mesh.indices.size(), true);
 
 		buffer.FillEBO(&mesh.indices[0], mesh.indices.size() * sizeof(GLuint));
-		buffer.FillVBO(Buffer::VBO::VertexBuffer, 
+		buffer.FillVBO(Buffer::VBO::VertexBuffer,
 			&mesh.vertices[0].x, mesh.vertices.size() * sizeof(glm::vec3));
-		buffer.FillVBO(Buffer::VBO::NormalBuffer, 
+		buffer.FillVBO(Buffer::VBO::NormalBuffer,
 			&mesh.normals[0].x, mesh.normals.size() * sizeof(glm::vec3));
 
 		//Fill the color buffer with a default white color 
@@ -292,12 +292,12 @@ void Model::FillBuffers()
 			mesh.colors.push_back(color);
 		}
 
-		buffer.FillVBO(Buffer::VBO::ColorBuffer, 
+		buffer.FillVBO(Buffer::VBO::ColorBuffer,
 			&mesh.colors[0].x, mesh.colors.size() * sizeof(glm::vec4));
 
 		if (!mesh.textureCoords.empty())
 		{
-			buffer.FillVBO(Buffer::VBO::TextureBuffer, 
+			buffer.FillVBO(Buffer::VBO::TextureBuffer,
 				&mesh.textureCoords[0].x, mesh.textureCoords.size() * sizeof(glm::vec2));
 		}
 

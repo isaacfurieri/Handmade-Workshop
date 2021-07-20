@@ -30,9 +30,9 @@ public:
 	void SetColor(const glm::vec4& color);
 	void SetColor(const glm::uvec4& color);
 
-	void SetColor(GLfloat r = 0.0f, 
+	void SetColor(GLfloat r = 0.0f,
 		GLfloat g = 0.0f, GLfloat b = 0.0f, GLfloat a = 1.0f);
-	void SetColor(GLuint r = 0U, 
+	void SetColor(GLuint r = 0U,
 		GLuint g = 0U, GLuint b = 0U, GLuint a = 1U);
 
 	void SetViewport(GLint x, GLint y, GLsizei width, GLsizei height);

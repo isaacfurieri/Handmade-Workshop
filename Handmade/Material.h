@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Material' source files last updated on 14 July 2021               |
+| 'Material' source files last updated on 20 July 2021               |
 #===================================================================*/
 
 #include <map>

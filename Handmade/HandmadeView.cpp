@@ -319,8 +319,6 @@ void CHandmadeView::OnDraw(CDC* pDC)
 		}
 	}
 
-	Utility::Log(VS_OUTPUT, m_mouseWheelMotion, "MouseWheel");
-
 	if (!pDC->IsPrinting())
 	{
 		Screen::Instance()->Present();

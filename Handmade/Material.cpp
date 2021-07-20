@@ -20,10 +20,10 @@ bool Material::LoadMaterials(const std::string& filename)
 
 	if (!file)
 	{
-		Utility::Log(MESSAGE_BOX, 
-			"Error loading material file \"" + (s_rootFolder + filename) + "\"." 
-			"Possible causes could be a corrupt or missing file. It could also be " 
-			"that the filename and/or path are incorrectly spelt.", Utility::Severity::FAILURE);
+		Utility::Log(Utility::Destination::WindowsMessageBox,
+			"Error loading material file \"" + (s_rootFolder + filename) + "\"."
+			"Possible causes could be a corrupt or missing file. It could also be "
+			"that the filename and/or path are incorrectly spelt.", Utility::Severity::Failure);
 		return false;
 	}
 
@@ -107,10 +107,10 @@ bool Material::LoadMaterials(std::vector<Material>& materials, const std::string
 
 	if (!file)
 	{
-		Utility::Log(MESSAGE_BOX,
+		Utility::Log(Utility::Destination::WindowsMessageBox,
 			"Error loading material file \"" + (s_rootFolder + filename) + "\"."
 			"Possible causes could be a corrupt or missing file. It could also be "
-			"that the filename and/or path are incorrectly spelt.", Utility::Severity::FAILURE);
+			"that the filename and/or path are incorrectly spelt.", Utility::Severity::Failure);
 		return false;
 	}
 
