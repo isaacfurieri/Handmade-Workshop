@@ -95,7 +95,8 @@ void Grid::Create()
 	//Negative vertical lines
 	//==================================
 
-	for (int i = 0; i <= m_size; i++)
+	//Set 'i <= m_size' to close the grid lines
+	for (int i = 0; i < m_size; i++)
 	{
 		GLint vertices[] = { -m_size + i, 0,  m_size,      //first vertex
 							 -m_size + i, 0, -m_size };    //second vertex
@@ -133,7 +134,8 @@ void Grid::Create()
 	//Negative horizontal lines
 	//==================================
 
-	for (int i = 0; i <= m_size; i++)
+	//Set 'i <= m_size' to close the grid lines
+	for (int i = 0; i < m_size; i++)
 	{
 		GLint vertices[] = { -m_size, 0, -m_size + i,        //first vertex
 							  m_size, 0, -m_size + i };     //second vertex
