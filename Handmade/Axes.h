@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Axes' source files last updated on 14 July 2021                   |
+| 'Axes' source files last updated on 20 July 2021                   |
 #===================================================================*/
 
 #include "Buffer.h"
@@ -26,7 +26,7 @@ public:
 private:
 
 	void Create();
-	
+
 	GLint m_size;
 	Buffer m_buffer;
 	GLfloat m_lineWidth;

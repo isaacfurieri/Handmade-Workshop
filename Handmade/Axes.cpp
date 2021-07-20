@@ -32,13 +32,15 @@ void Axes::Render(Shader& shader)
 	Buffer::SetLineWidth(m_lineWidth);
 
 	//TODO - Find a way to do this only once
-	m_buffer.LinkVBO(shader.GetAttributeID("vertexIn"), Buffer::VERTEX_BUFFER, Buffer::XYZ, Buffer::INT);
-	m_buffer.LinkVBO(shader.GetAttributeID("colorIn"), Buffer::COLOR_BUFFER, Buffer::RGBA, Buffer::FLOAT);
+	m_buffer.LinkVBO(shader.GetAttributeID("vertexIn"),
+		Buffer::VBO::VertexBuffer, Buffer::ComponentSize::XYZ, Buffer::DataType::IntData);
+	m_buffer.LinkVBO(shader.GetAttributeID("colorIn"),
+		Buffer::VBO::ColorBuffer, Buffer::ComponentSize::RGBA, Buffer::DataType::FloatData);
 
 	shader.SendData("isTextured", false);
 	shader.SendData("model", m_transform.GetMatrix());
 
-	m_buffer.Render(Buffer::LINES);
+	m_buffer.Render(Buffer::RenderMode::Lines);
 }
 //======================================================================================================
 void Axes::Create()
@@ -60,6 +62,6 @@ void Axes::Create()
 						 0.0f, 0.75f, 0.0f, 1.0f, 0.0f, 0.75f, 0.0f, 1.0f,	  //Y axis	 
 						 0.0f, 0.0f, 0.75f, 1.0f, 0.0f, 0.0f, 0.75f, 1.0f };  //Z axis
 
-	m_buffer.FillVBO(Buffer::VERTEX_BUFFER, vertices, sizeof(vertices), Buffer::FILL_ONCE);
-	m_buffer.FillVBO(Buffer::COLOR_BUFFER, colors, sizeof(colors), Buffer::FILL_ONCE);
+	m_buffer.FillVBO(Buffer::VBO::VertexBuffer, vertices, sizeof(vertices), Buffer::Fill::Once);
+	m_buffer.FillVBO(Buffer::VBO::ColorBuffer, colors, sizeof(colors), Buffer::Fill::Once);
 }

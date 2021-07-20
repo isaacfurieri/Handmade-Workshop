@@ -16,7 +16,7 @@ void Buffer::SetLineWidth(GLfloat lineWidth)
 //======================================================================================================
 void Buffer::SetRenderStyle(RenderStyle renderStyle)
 {
-	glPolygonMode(GL_FRONT_AND_BACK, renderStyle == POLYGON_MODE ? GL_LINE : GL_FILL);
+	glPolygonMode(GL_FRONT_AND_BACK, renderStyle == RenderStyle::Polygonal ? GL_LINE : GL_FILL);
 }
 //======================================================================================================
 Buffer::Buffer()
@@ -25,10 +25,11 @@ Buffer::Buffer()
 	m_VAO = 0;
 	m_hasEBO = false;
 	m_totalVertices = 0;
-	m_VBOs[VERTEX_BUFFER] = 0;
-	m_VBOs[COLOR_BUFFER] = 0;
-	m_VBOs[TEXTURE_BUFFER] = 0;
-	m_VBOs[NORMAL_BUFFER] = 0;
+
+	for (auto i = 0; i < TOTAL_BUFFERS; i++)
+	{
+		m_VBOs[i] = 0;
+	}
 }
 //======================================================================================================
 const std::string& Buffer::GetTag() const
@@ -64,52 +65,28 @@ void Buffer::Create(const std::string& tag, GLsizei totalVertices, bool hasEBO)
 	s_buffers[tag] = *this;
 }
 //======================================================================================================
-void Buffer::FillVBO(VBOType vboType, const GLint* data, GLsizeiptr bufferSize, FillFrequency fillFrequency)
-{
-	glBindBuffer(GL_ARRAY_BUFFER, m_VBOs[vboType]);
-	glBufferData(GL_ARRAY_BUFFER, bufferSize, data, static_cast<GLenum>(fillFrequency));
-}
-//======================================================================================================
-void Buffer::FillVBO(VBOType vboType, const GLuint* data, GLsizeiptr bufferSize, FillFrequency fillFrequency)
-{
-	glBindBuffer(GL_ARRAY_BUFFER, m_VBOs[vboType]);
-	glBufferData(GL_ARRAY_BUFFER, bufferSize, data, static_cast<GLenum>(fillFrequency));
-}
-//======================================================================================================
-void Buffer::FillVBO(VBOType vboType, const GLfloat* data, GLsizeiptr bufferSize, FillFrequency fillFrequency)
-{
-	glBindBuffer(GL_ARRAY_BUFFER, m_VBOs[vboType]);
-	glBufferData(GL_ARRAY_BUFFER, bufferSize, data, static_cast<GLenum>(fillFrequency));
-}
-//======================================================================================================
-void Buffer::FillEBO(const GLuint* data, GLsizeiptr bufferSize, FillFrequency fillFrequency)
+void Buffer::FillEBO(const GLuint* data, GLsizeiptr bufferSize, Fill fill)
 {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, bufferSize, data, static_cast<GLenum>(fillFrequency));
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, bufferSize, data, static_cast<GLenum>(fill));
 }
 //======================================================================================================
-void Buffer::AppendVBO(VBOType vboType, const GLint* data, GLsizeiptr size, GLuint offset)
+void Buffer::FillVBO(VBO vbo, const void* data, GLsizeiptr bufferSize, Fill fill)
 {
-	glBindBuffer(GL_ARRAY_BUFFER, m_VBOs[vboType]);
-	glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
-}
-//======================================================================================================
-void Buffer::AppendVBO(VBOType vboType, const GLuint* data, GLsizeiptr size, GLuint offset)
-{
-	glBindBuffer(GL_ARRAY_BUFFER, m_VBOs[vboType]);
-	glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
-}
-//======================================================================================================
-void Buffer::AppendVBO(VBOType vboType, const GLfloat* data, GLsizeiptr size, GLuint offset)
-{
-	glBindBuffer(GL_ARRAY_BUFFER, m_VBOs[vboType]);
-	glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOs[static_cast<int>(vbo)]);
+	glBufferData(GL_ARRAY_BUFFER, bufferSize, data, static_cast<GLenum>(fill));
 }
 //======================================================================================================
 void Buffer::AppendEBO(const GLuint* data, GLsizeiptr size, GLuint offset)
 {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
 	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, size, data);
+}
+//======================================================================================================
+void Buffer::AppendVBO(VBO vbo, const void* data, GLsizeiptr size, GLuint offset)
+{
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOs[static_cast<int>(vbo)]);
+	glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
 }
 //======================================================================================================
 void Buffer::LinkEBO()
@@ -119,12 +96,12 @@ void Buffer::LinkEBO()
 	glBindVertexArray(0);
 }
 //======================================================================================================
-void Buffer::LinkVBO(GLint attributeID, VBOType vboType, ComponentSize componentSize, DataType dataType)
+void Buffer::LinkVBO(GLint attributeID, VBO vbo, ComponentSize componentSize, DataType dataType)
 {
 	assert(attributeID > -1);
 	
 	glBindVertexArray(m_VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, m_VBOs[vboType]);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOs[static_cast<int>(vbo)]);
 
 	glVertexAttribPointer(attributeID, static_cast<GLint>(componentSize),
 		static_cast<GLenum>(dataType), GL_FALSE, 0, nullptr);
@@ -141,18 +118,20 @@ void Buffer::Render(RenderMode renderMode, GLuint index, GLuint totalVertices)
 	{
 		if (index > 0)
 		{
-			glDrawElements(renderMode, totalVertices, GL_UNSIGNED_INT, (const void*)(index));
+			glDrawElements(static_cast<GLenum>(renderMode), 
+				totalVertices, GL_UNSIGNED_INT, (const void*)(index));
 		}
 
 		else
 		{
-			glDrawElements(renderMode, m_totalVertices, GL_UNSIGNED_INT, (const void*)(nullptr));
+			glDrawElements(static_cast<GLenum>(renderMode), 
+				m_totalVertices, GL_UNSIGNED_INT, (const void*)(nullptr));
 		}
 	}
 
 	else
 	{
-		glDrawArrays(renderMode, 0, m_totalVertices);
+		glDrawArrays(static_cast<GLenum>(renderMode), 0, m_totalVertices);
 	}
 
 	glBindVertexArray(0);

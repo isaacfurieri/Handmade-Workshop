@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Grid' source files last updated on 14 July 2021                   |
+| 'Grid' source files last updated on 20 July 2021                   |
 #===================================================================*/
 
 #include "Buffer.h"
@@ -28,13 +28,10 @@ public:
 private:
 
 	void Create();
-	
+
 	GLint m_size;
 	Buffer m_buffer;
 	GLfloat m_lineWidth;
 
 	const GLuint QUADRANTS = 4;
-	const GLuint BYTES_PER_VERTEX = Buffer::ComponentSize::XYZ * sizeof(GLint);
-	const GLuint BYTES_PER_COLOR = Buffer::ComponentSize::RGBA * sizeof(GLfloat);
-
 };

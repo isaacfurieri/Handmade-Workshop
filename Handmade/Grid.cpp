@@ -39,7 +39,7 @@ void Grid::SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
 	for (int i = 0; i < m_size * QUADRANTS; i++)
 	{
 		GLfloat colors[] = { r, g, b, a, r, g, b, a };
-		m_buffer.AppendVBO(Buffer::COLOR_BUFFER, colors, sizeof(colors), offset);
+		m_buffer.AppendVBO(Buffer::VBO::ColorBuffer, colors, sizeof(colors), offset);
 		offset += sizeof(colors);
 	}
 }
@@ -49,19 +49,26 @@ void Grid::Render(Shader& shader)
 	Buffer::SetLineWidth(m_lineWidth);
 
 	//TODO - Find a way to do this only once
-	m_buffer.LinkVBO(shader.GetAttributeID("vertexIn"), Buffer::VERTEX_BUFFER, Buffer::XYZ, Buffer::INT);
-	m_buffer.LinkVBO(shader.GetAttributeID("colorIn"), Buffer::COLOR_BUFFER, Buffer::RGBA, Buffer::FLOAT);
+	m_buffer.LinkVBO(shader.GetAttributeID("vertexIn"),
+		Buffer::VBO::VertexBuffer, Buffer::ComponentSize::XYZ, Buffer::DataType::IntData);
+	m_buffer.LinkVBO(shader.GetAttributeID("colorIn"),
+		Buffer::VBO::ColorBuffer, Buffer::ComponentSize::RGBA, Buffer::DataType::FloatData);
 
 	shader.SendData("isTextured", false);
 	shader.SendData("model", m_transform.GetMatrix());
 
-	m_buffer.Render(Buffer::LINES);
+	m_buffer.Render(Buffer::RenderMode::Lines);
 }
 //======================================================================================================
 void Grid::Create()
 {
 	//We need to add an extra line to close the grid 
 	//Each line has two vertex and two color groups
+	const GLuint BYTES_PER_VERTEX = 
+		static_cast<GLuint>(Buffer::ComponentSize::XYZ) * sizeof(GLint);
+	const GLuint BYTES_PER_COLOR =
+		static_cast<GLuint>(Buffer::ComponentSize::RGBA) * sizeof(GLfloat);
+
 	const GLuint TOTAL_BYTES_VERTEX_VBO = (m_size + 1) * QUADRANTS * BYTES_PER_VERTEX * 2;
 	const GLuint TOTAL_BYTES_COLOR_VBO = (m_size + 1) * QUADRANTS * BYTES_PER_COLOR * 2;
 
@@ -76,10 +83,10 @@ void Grid::Create()
 	//and add 4 for the two extra lines to close the grid
 	m_buffer.Create("Grid", (m_size * QUADRANTS * 2) + 4);
 
-	m_buffer.FillVBO(Buffer::VERTEX_BUFFER,
-		static_cast<GLfloat*>(nullptr), TOTAL_BYTES_VERTEX_VBO, Buffer::FILL_ONCE);
-	m_buffer.FillVBO(Buffer::COLOR_BUFFER,
-		static_cast<GLfloat*>(nullptr), TOTAL_BYTES_COLOR_VBO, Buffer::FILL_ONCE);
+	m_buffer.FillVBO(Buffer::VBO::VertexBuffer,
+		(GLfloat*)nullptr, TOTAL_BYTES_VERTEX_VBO, Buffer::Fill::Ongoing);
+	m_buffer.FillVBO(Buffer::VBO::ColorBuffer,
+		(GLfloat*)nullptr, TOTAL_BYTES_COLOR_VBO, Buffer::Fill::Ongoing);
 
 	GLuint offsetColor = 0;
 	GLuint offsetVertex = 0;
@@ -96,8 +103,8 @@ void Grid::Create()
 		GLfloat colors[] = { 0.5f, 0.5f, 0.5f, 0.5f,
 							 0.5f, 0.5f, 0.5f, 0.5f };
 
-		m_buffer.AppendVBO(Buffer::VERTEX_BUFFER, vertices, sizeof(vertices), offsetVertex);
-		m_buffer.AppendVBO(Buffer::COLOR_BUFFER, colors, sizeof(colors), offsetColor);
+		m_buffer.AppendVBO(Buffer::VBO::VertexBuffer, vertices, sizeof(vertices), offsetVertex);
+		m_buffer.AppendVBO(Buffer::VBO::ColorBuffer, colors, sizeof(colors), offsetColor);
 
 		offsetVertex += BYTES_PER_VERTEX * 2;
 		offsetColor += BYTES_PER_COLOR * 2;
@@ -115,8 +122,8 @@ void Grid::Create()
 		GLfloat colors[] = { 0.5f, 0.5f, 0.5f, 0.5f,
 							 0.5f, 0.5f, 0.5f, 0.5f };
 
-		m_buffer.AppendVBO(Buffer::VERTEX_BUFFER, vertices, sizeof(vertices), offsetVertex);
-		m_buffer.AppendVBO(Buffer::COLOR_BUFFER, colors, sizeof(colors), offsetColor);
+		m_buffer.AppendVBO(Buffer::VBO::VertexBuffer, vertices, sizeof(vertices), offsetVertex);
+		m_buffer.AppendVBO(Buffer::VBO::ColorBuffer, colors, sizeof(colors), offsetColor);
 
 		offsetVertex += BYTES_PER_VERTEX * 2;
 		offsetColor += BYTES_PER_COLOR * 2;
@@ -134,8 +141,8 @@ void Grid::Create()
 		GLfloat colors[] = { 0.5f, 0.5f, 0.5f, 0.5f,
 							 0.5f, 0.5f, 0.5f, 0.5f };
 
-		m_buffer.AppendVBO(Buffer::VERTEX_BUFFER, vertices, sizeof(vertices), offsetVertex);
-		m_buffer.AppendVBO(Buffer::COLOR_BUFFER, colors, sizeof(colors), offsetColor);
+		m_buffer.AppendVBO(Buffer::VBO::VertexBuffer, vertices, sizeof(vertices), offsetVertex);
+		m_buffer.AppendVBO(Buffer::VBO::ColorBuffer, colors, sizeof(colors), offsetColor);
 
 		offsetVertex += BYTES_PER_VERTEX * 2;
 		offsetColor += BYTES_PER_COLOR * 2;
@@ -153,8 +160,8 @@ void Grid::Create()
 		GLfloat colors[] = { 0.5f, 0.5f, 0.5f, 0.5f,
 							 0.5f, 0.5f, 0.5f, 0.5f };
 
-		m_buffer.AppendVBO(Buffer::VERTEX_BUFFER, vertices, sizeof(vertices), offsetVertex);
-		m_buffer.AppendVBO(Buffer::COLOR_BUFFER, colors, sizeof(colors), offsetColor);
+		m_buffer.AppendVBO(Buffer::VBO::VertexBuffer, vertices, sizeof(vertices), offsetVertex);
+		m_buffer.AppendVBO(Buffer::VBO::ColorBuffer, colors, sizeof(colors), offsetColor);
 
 		offsetVertex += BYTES_PER_VERTEX * 2;
 		offsetColor += BYTES_PER_COLOR * 2;

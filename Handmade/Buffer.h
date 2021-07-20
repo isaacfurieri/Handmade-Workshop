@@ -1,63 +1,66 @@
 #pragma once
 
 /*===================================================================#
-| 'Buffer' source files last updated on 14 July 2021                 |
+| 'Buffer' source files last updated on 20 July 2021                 |
 #===================================================================*/
 
 #include <map>
 #include <string>
 #include "glad.h"
 
+const int TOTAL_BUFFERS = 4;
+
 class Buffer
 {
 
 public:
 
-	enum FillFrequency
+	enum class Fill
 	{
-		FILL_ONCE = GL_STATIC_DRAW,
-		FILL_MANY = GL_DYNAMIC_DRAW
+		Once = GL_STATIC_DRAW,
+		Ongoing = GL_DYNAMIC_DRAW
 	};
 
-	enum ComponentSize
+	enum class ComponentSize
 	{
 		XY = 2,
 		XYZ = 3,
+		XYZW = 4,
 		RGB = 3,
 		RGBA = 4,
 		UV = 2
 	};
 
-	enum DataType
+	enum class DataType
 	{
-		INT = GL_INT,
-		FLOAT = GL_FLOAT,
-		UNSIGNED_INT = GL_UNSIGNED_INT
+		IntData = GL_INT,
+		FloatData = GL_FLOAT,
+		DoubleData = GL_DOUBLE,
+		UintData = GL_UNSIGNED_INT
 	};
 
-	enum VBOType
+	enum class VBO
 	{
-		VERTEX_BUFFER,
-		COLOR_BUFFER,
-		TEXTURE_BUFFER,
-		NORMAL_BUFFER,
-		TOTAL_BUFFERS
+		VertexBuffer,
+		ColorBuffer,
+		TextureBuffer,
+		NormalBuffer
 	};
 
-	enum RenderMode
+	enum class RenderMode
 	{
-		LINES = GL_LINES,
-		POINTS = GL_POINTS,
-		TRIANGLES = GL_TRIANGLES,
-		LINE_LOOP = GL_LINE_LOOP,
-		LINE_STRIP = GL_LINE_STRIP,
-		TRIANGLE_FAN = GL_TRIANGLE_FAN
+		Lines = GL_LINES,
+		Points = GL_POINTS,
+		Triangles = GL_TRIANGLES,
+		LineLoop = GL_LINE_LOOP,
+		LineStrip = GL_LINE_STRIP,
+		TriangleFan = GL_TRIANGLE_FAN
 	};
 
-	enum RenderStyle
+	enum class RenderStyle
 	{
-		FULL_SHADE = GL_FILL,
-		POLYGON_MODE = GL_LINE
+		Shaded = GL_FILL,
+		Polygonal = GL_LINE
 	};
 
 	static void SetPointSize(GLfloat size);
@@ -72,28 +75,14 @@ public:
 
 	void Create(const std::string& tag, GLsizei totalVertices, bool hasEBO = false);
 
-	void FillVBO(VBOType vboType,
-		const GLint* data, GLsizeiptr bufferSize, FillFrequency fillFrequency = FILL_ONCE);
-	void FillVBO(VBOType vboType,
-		const GLuint* data, GLsizeiptr bufferSize, FillFrequency fillFrequency = FILL_ONCE);
-	void FillVBO(VBOType vboType,
-		const GLfloat* data, GLsizeiptr bufferSize, FillFrequency fillFrequency = FILL_ONCE);
-
-	void FillEBO(const GLuint* data,
-		GLsizeiptr bufferSize, FillFrequency fillFrequency = FILL_ONCE);
-
-	void AppendVBO(VBOType vboType,
-		const GLint* data, GLsizeiptr size, GLuint offset);
-	void AppendVBO(VBOType vboType,
-		const GLuint* data, GLsizeiptr size, GLuint offset);
-	void AppendVBO(VBOType vboType,
-		const GLfloat* data, GLsizeiptr size, GLuint offset);
-
+	void FillEBO(const GLuint* data, GLsizeiptr bufferSize, Fill fill = Fill::Once);
+	void FillVBO(VBO vbo, const void* data, GLsizeiptr bufferSize, Fill fill = Fill::Once);
+	
 	void AppendEBO(const GLuint* data, GLsizeiptr size, GLuint offset);
+	void AppendVBO(VBO vbo,	const void* data, GLsizeiptr size, GLuint offset);
 
 	void LinkEBO();
-	void LinkVBO(GLint attributeID,
-		VBOType vboType, ComponentSize componentSize, DataType dataType);
+	void LinkVBO(GLint attributeID, VBO vbo, ComponentSize componentSize, DataType dataType);
 
 	void Render(RenderMode renderMode, GLuint index = 0, GLuint totalVertices = 0);
 
@@ -104,7 +93,7 @@ private:
 
 	bool m_hasEBO;
 	std::string m_tag;
-
+	
 	GLuint m_VAO;
 	GLuint m_EBO;
 	GLsizei m_totalVertices;

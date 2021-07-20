@@ -36,11 +36,11 @@ Quad::Quad(GLfloat width, GLfloat height, GLfloat r, GLfloat g, GLfloat b, GLflo
 	m_buffer.Create("Quad", 6, true);
 
 	m_buffer.LinkEBO();
-	m_buffer.FillVBO(Buffer::VERTEX_BUFFER, vertices, sizeof(vertices), Buffer::FILL_ONCE);
-	m_buffer.FillVBO(Buffer::COLOR_BUFFER, colors, sizeof(colors), Buffer::FILL_ONCE);
-	m_buffer.FillVBO(Buffer::TEXTURE_BUFFER, UVs, sizeof(UVs), Buffer::FILL_ONCE);
-	m_buffer.FillVBO(Buffer::NORMAL_BUFFER, normals, sizeof(normals), Buffer::FILL_ONCE);
-	m_buffer.FillEBO(indices, sizeof(indices), Buffer::FILL_ONCE);
+	m_buffer.FillVBO(Buffer::VBO::VertexBuffer, vertices, sizeof(vertices), Buffer::Fill::Ongoing);
+	m_buffer.FillVBO(Buffer::VBO::ColorBuffer, colors, sizeof(colors), Buffer::Fill::Ongoing);
+	m_buffer.FillVBO(Buffer::VBO::TextureBuffer, UVs, sizeof(UVs), Buffer::Fill::Ongoing);
+	m_buffer.FillVBO(Buffer::VBO::NormalBuffer, normals, sizeof(normals), Buffer::Fill::Ongoing);
+	m_buffer.FillEBO(indices, sizeof(indices), Buffer::Fill::Ongoing);
 }
 //======================================================================================================
 Quad::~Quad()
@@ -62,7 +62,7 @@ void Quad::SetDimension(GLfloat width, GLfloat height)
 							halfDimension.x, -halfDimension.y, 0.0f,
 						   -halfDimension.x, -halfDimension.y, 0.0f };
 
-	m_buffer.FillVBO(Buffer::VERTEX_BUFFER, vertices, sizeof(vertices), Buffer::FILL_MANY);
+	m_buffer.FillVBO(Buffer::VBO::VertexBuffer, vertices, sizeof(vertices), Buffer::Fill::Ongoing);
 }
 //======================================================================================================
 void Quad::SetTextureScale(GLfloat width, GLfloat height)
@@ -72,7 +72,7 @@ void Quad::SetTextureScale(GLfloat width, GLfloat height)
 					  width, height,
 					  0.0f, height };
 
-	m_buffer.FillVBO(Buffer::TEXTURE_BUFFER, UVs, sizeof(UVs), Buffer::FILL_MANY);
+	m_buffer.FillVBO(Buffer::VBO::TextureBuffer, UVs, sizeof(UVs), Buffer::Fill::Ongoing);
 }
 //======================================================================================================
 void Quad::SetColor(const glm::vec4& color)
@@ -87,16 +87,20 @@ void Quad::SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
 						 r, g, b, a,
 						 r, g, b, a };
 
-	m_buffer.FillVBO(Buffer::COLOR_BUFFER, colors, sizeof(colors), Buffer::FILL_MANY);
+	m_buffer.FillVBO(Buffer::VBO::ColorBuffer, colors, sizeof(colors), Buffer::Fill::Ongoing);
 }
 //======================================================================================================
 void Quad::Render(Shader& shader)
 {
 	//TODO - Find a way to do this only once
-	m_buffer.LinkVBO(shader.GetAttributeID("vertexIn"), Buffer::VERTEX_BUFFER, Buffer::XYZ, Buffer::FLOAT);
-	m_buffer.LinkVBO(shader.GetAttributeID("colorIn"), Buffer::COLOR_BUFFER, Buffer::RGBA, Buffer::FLOAT);
-	m_buffer.LinkVBO(shader.GetAttributeID("textureIn"), Buffer::TEXTURE_BUFFER, Buffer::UV, Buffer::FLOAT);
-	//m_buffer.LinkVBO(shader.GetAttributeID("normalIn"), Buffer::NORMAL_BUFFER, Buffer::XYZ, Buffer::FLOAT);
+	m_buffer.LinkVBO(shader.GetAttributeID("vertexIn"),
+		Buffer::VBO::VertexBuffer, Buffer::ComponentSize::XYZ, Buffer::DataType::FloatData);
+	m_buffer.LinkVBO(shader.GetAttributeID("colorIn"),
+		Buffer::VBO::ColorBuffer, Buffer::ComponentSize::RGBA, Buffer::DataType::FloatData);
+	m_buffer.LinkVBO(shader.GetAttributeID("textureIn"),
+		Buffer::VBO::VertexBuffer, Buffer::ComponentSize::UV, Buffer::DataType::FloatData);
+	//m_buffer.LinkVBO(shader.GetAttributeID("normalIn"),
+		//Buffer::VBO::ColorBuffer, Buffer::ComponentSize::XYZ, Buffer::DataType::FloatData);
 
 	//m_normalMatrix = glm::inverse(glm::mat3(m_transform.GetMatrix()));
 	//shader.SendData("normal", m_normalMatrix);
@@ -107,5 +111,5 @@ void Quad::Render(Shader& shader)
 	//shader.SendData("isText", false);
 	shader.SendData("isTextured", false);
 
-	m_buffer.Render(Buffer::TRIANGLES);
+	m_buffer.Render(Buffer::RenderMode::Triangles);
 }

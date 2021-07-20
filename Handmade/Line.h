@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Line' source files last updated on 14 July 2021                   |
+| 'Line' source files last updated on 20 July 2021                   |
 #===================================================================*/
 
 #include <glm.hpp>

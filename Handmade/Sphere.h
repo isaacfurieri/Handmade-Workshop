@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Sphere' source files last updated on 7 July 2021                  |
+| 'Sphere' source files last updated on 20 July 2021                 |
 #===================================================================*/
 
 #include <glm.hpp>
@@ -19,7 +19,7 @@ public:
 	virtual ~Sphere();
 
 	void SetRadius(GLfloat radius);
-	
+
 	void SetColor(const glm::vec4& color);
 	void SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a = 1.0f);
 

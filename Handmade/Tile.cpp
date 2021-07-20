@@ -19,20 +19,24 @@ Tile::Tile(GLfloat width, GLfloat height, GLuint spriteSheetCol, GLuint spriteSh
 	m_isAnimationLoopFinal = false;
 
 	GLuint offsetUV = 0;
-	GLuint offsetVert = 0;
 	GLuint offsetColor = 0;
 	GLuint offsetIndex = 0;
+	GLuint offsetVertex = 0;
 
-	const int TOTAL_DIMENSION = m_spriteSheetCol * m_spriteSheetRow;
-	const int BYTES_PER_TILE_UV = Buffer::ComponentSize::UV * CORNERS * sizeof(GLfloat);
-	const int BYTES_PER_TILE_COLOR = Buffer::ComponentSize::RGBA * CORNERS * sizeof(GLfloat);
-	const int BYTES_PER_TILE_VERTEX = Buffer::ComponentSize::XYZ * CORNERS * sizeof(GLfloat);
-	const int BYTES_PER_TILE_INDEX = Buffer::ComponentSize::XYZ * (CORNERS - 1) * sizeof(GLuint);
-
-	const int TOTAL_BYTES_VBO_VERT = TOTAL_DIMENSION * BYTES_PER_TILE_VERTEX;
-	const int TOTAL_BYTES_VBO_COLOR = TOTAL_DIMENSION * BYTES_PER_TILE_COLOR;
-	const int TOTAL_BYTES_VBO_UV = TOTAL_DIMENSION * BYTES_PER_TILE_UV;
-	const int TOTAL_BYTES_EBO = TOTAL_DIMENSION * BYTES_PER_TILE_INDEX;
+	const auto TOTAL_DIMENSION = m_spriteSheetCol * m_spriteSheetRow;
+	const auto BYTES_PER_TILE_UV = static_cast<GLuint>(Buffer::ComponentSize::UV) * 
+		CORNERS * sizeof(GLfloat);
+	const auto BYTES_PER_TILE_COLOR = static_cast<GLuint>(Buffer::ComponentSize::RGBA) * 
+		CORNERS * sizeof(GLfloat);
+	const auto BYTES_PER_TILE_VERTEX = static_cast<GLuint>(Buffer::ComponentSize::XYZ) * 
+		CORNERS * sizeof(GLfloat);
+	const auto BYTES_PER_TILE_INDEX = static_cast<GLuint>(Buffer::ComponentSize::XYZ) * 
+		(CORNERS - 1) * sizeof(GLuint);
+		  
+	const auto TOTAL_BYTES_VBO_VERT = TOTAL_DIMENSION * BYTES_PER_TILE_VERTEX;
+	const auto TOTAL_BYTES_VBO_COLOR = TOTAL_DIMENSION * BYTES_PER_TILE_COLOR;
+	const auto TOTAL_BYTES_VBO_UV = TOTAL_DIMENSION * BYTES_PER_TILE_UV;
+	const auto TOTAL_BYTES_EBO = TOTAL_DIMENSION * BYTES_PER_TILE_INDEX;
 
 	m_buffer.Create("Tile", TOTAL_DIMENSION * VERTICES_PER_TILE, true);
 	m_buffer.LinkEBO();
@@ -56,15 +60,15 @@ Tile::Tile(GLfloat width, GLfloat height, GLuint spriteSheetCol, GLuint spriteSh
 									halfDimension.x, -halfDimension.y, 0.0f,
 								   -halfDimension.x, -halfDimension.y, 0.0f };
 
-			m_buffer.AppendVBO(Buffer::VERTEX_BUFFER, vertices, sizeof(vertices), offsetVert);
-			offsetVert += BYTES_PER_TILE_VERTEX;
+			m_buffer.AppendVBO(Buffer::VBO::VertexBuffer, vertices, sizeof(vertices), offsetVertex);
+			offsetVertex += BYTES_PER_TILE_VERTEX;
 
 			GLfloat colors[] = { m_color.r, m_color.g, m_color.b, m_color.a,
 								 m_color.r, m_color.g, m_color.b, m_color.a,
 								 m_color.r, m_color.g, m_color.b, m_color.a,
 								 m_color.r, m_color.g, m_color.b, m_color.a };
 
-			m_buffer.AppendVBO(Buffer::COLOR_BUFFER, colors, sizeof(colors), offsetColor);
+			m_buffer.AppendVBO(Buffer::VBO::ColorBuffer, colors, sizeof(colors), offsetColor);
 			offsetColor += BYTES_PER_TILE_COLOR;
 
 			//Take the desired 'cel' to 'cut out' and multiply it by the cel's dimension value
@@ -76,7 +80,7 @@ Tile::Tile(GLfloat width, GLfloat height, GLuint spriteSheetCol, GLuint spriteSh
 							  UVOrigin.s + celDimension.x, UVOrigin.t + celDimension.y,
 							  UVOrigin.s,                  UVOrigin.t + celDimension.y };
 
-			m_buffer.AppendVBO(Buffer::TEXTURE_BUFFER, UVs, sizeof(UVs), offsetUV);
+			m_buffer.AppendVBO(Buffer::VBO::TextureBuffer, UVs, sizeof(UVs), offsetUV);
 			offsetUV += BYTES_PER_TILE_UV;
 
 			GLuint indices[] = { 0 + (count * 4), 1 + (count * 4), 3 + (count * 4),
@@ -146,7 +150,7 @@ void Tile::SetDimension(GLfloat width, GLfloat height)
 							halfWidth, -halfHeight, 0.0f,
 						   -halfWidth, -halfHeight, 0.0f };
 
-	m_buffer.FillVBO(Buffer::VERTEX_BUFFER, vertices, sizeof(vertices), Buffer::FILL_MANY);
+	m_buffer.FillVBO(Buffer::VBO::VertexBuffer, vertices, sizeof(vertices), Buffer::Fill::Ongoing);
 }
 //======================================================================================================
 void Tile::SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
@@ -160,7 +164,7 @@ void Tile::SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
 							 r, g, b, a,
 							 r, g, b, a };
 
-		m_buffer.FillVBO(Buffer::VERTEX_BUFFER, colors, sizeof(colors), Buffer::FILL_MANY);
+		m_buffer.FillVBO(Buffer::VBO::ColorBuffer, colors, sizeof(colors), Buffer::Fill::Ongoing);
 		offsetColor += sizeof(colors);
 	}
 }
@@ -170,10 +174,14 @@ void Tile::Render(Shader& shader)
 	//Store size of each EBO partition for each tile
 	const GLuint BYTES_PER_TILE_INDEX = VERTICES_PER_TILE * sizeof(GLuint);
 
-	m_buffer.LinkVBO(shader.GetAttributeID("vertexIn"), Buffer::VERTEX_BUFFER, Buffer::XYZ, Buffer::FLOAT);
-	m_buffer.LinkVBO(shader.GetAttributeID("colorIn"), Buffer::COLOR_BUFFER, Buffer::RGBA, Buffer::FLOAT);
-	m_buffer.LinkVBO(shader.GetAttributeID("textureIn"), Buffer::TEXTURE_BUFFER, Buffer::UV, Buffer::FLOAT);
-	//m_buffer.LinkVBO(shader.GetAttributeID("normalIn"), Buffer::NORMAL_BUFFER, Buffer::XYZ, Buffer::FLOAT);
+	m_buffer.LinkVBO(shader.GetAttributeID("vertexIn"),
+		Buffer::VBO::VertexBuffer, Buffer::ComponentSize::XYZ, Buffer::DataType::FloatData);
+	m_buffer.LinkVBO(shader.GetAttributeID("colorIn"),
+		Buffer::VBO::ColorBuffer, Buffer::ComponentSize::RGBA, Buffer::DataType::FloatData);
+	m_buffer.LinkVBO(shader.GetAttributeID("textureIn"),
+		Buffer::VBO::VertexBuffer, Buffer::ComponentSize::UV, Buffer::DataType::FloatData);
+	//m_buffer.LinkVBO(shader.GetAttributeID("normalIn"),
+		//Buffer::VBO::ColorBuffer, Buffer::ComponentSize::XYZ, Buffer::DataType::FloatData);
 
 	//This will render each individual 'cel' making it look like an animation
 	if (m_isAnimated)
@@ -213,7 +221,8 @@ void Tile::Render(Shader& shader)
 			(m_spriteSheetCol * m_spriteSheetRow);
 	}
 
-	m_buffer.Render(Buffer::TRIANGLES, (m_tileIndex * BYTES_PER_TILE_INDEX), VERTICES_PER_TILE);
+	m_buffer.Render(Buffer::RenderMode::Triangles, 
+		(m_tileIndex * BYTES_PER_TILE_INDEX), VERTICES_PER_TILE);
 }
 //======================================================================================================
 void Tile::SendToShader(Shader& shader)

@@ -14,21 +14,26 @@ Sphere::Sphere(GLfloat radius, GLuint segments, GLuint slices,
 	GLuint offsetColor = 0;
 	GLuint offsetIndex = 0;
 
-	const GLuint BYTES_PER_VERTEX = Buffer::ComponentSize::XYZ * sizeof(GLfloat);
-	const GLuint BYTES_PER_COLOR = Buffer::ComponentSize::RGBA * sizeof(GLfloat);
-	const GLuint BYTES_PER_TRIANGLE = Buffer::ComponentSize::XYZ * sizeof(GLuint);
+	const auto BYTES_PER_VERTEX =
+		static_cast<GLuint>(Buffer::ComponentSize::XYZ) * sizeof(GLfloat);
+	const auto BYTES_PER_COLOR =
+		static_cast<GLuint>(Buffer::ComponentSize::RGBA) * sizeof(GLfloat);
+	const auto BYTES_PER_TRIANGLE =
+		static_cast<GLuint>(Buffer::ComponentSize::XYZ) * sizeof(GLuint);
 
-	const GLuint TOTAL_BYTES_EBO = (m_slices - 1) * m_segments * BYTES_PER_TRIANGLE * 2;
-	const GLuint TOTAL_BYTES_VERTEX_VBO = (m_slices + 1) * (m_segments + 1) * BYTES_PER_VERTEX;
-	const GLuint TOTAL_BYTES_COLOR_VBO = (m_slices + 1) * (m_segments + 1) * BYTES_PER_COLOR;
+	const auto TOTAL_BYTES_EBO = (m_slices - 1) * m_segments * BYTES_PER_TRIANGLE * 2;
+	const auto TOTAL_BYTES_VERTEX_VBO = (m_slices + 1) * (m_segments + 1) * BYTES_PER_VERTEX;
+	const auto TOTAL_BYTES_COLOR_VBO = (m_slices + 1) * (m_segments + 1) * BYTES_PER_COLOR;
 
 	//We multiply by 6 because each slice creates 1 quad (2 triangles)
 	m_buffer.Create("Sphere", m_segments * (m_slices - 1) * 6, true);
 	m_buffer.LinkEBO();
 
-	m_buffer.FillEBO(static_cast<GLuint*>(nullptr), TOTAL_BYTES_EBO, Buffer::FILL_MANY);
-	m_buffer.FillVBO(Buffer::VERTEX_BUFFER, static_cast<GLfloat*>(nullptr), TOTAL_BYTES_VERTEX_VBO, Buffer::FILL_MANY);
-	m_buffer.FillVBO(Buffer::COLOR_BUFFER, static_cast<GLfloat*>(nullptr), TOTAL_BYTES_COLOR_VBO, Buffer::FILL_MANY);
+	m_buffer.FillEBO(nullptr, TOTAL_BYTES_EBO, Buffer::Fill::Ongoing);
+	m_buffer.FillVBO(Buffer::VBO::VertexBuffer,
+		nullptr, TOTAL_BYTES_VERTEX_VBO, Buffer::Fill::Ongoing);
+	m_buffer.FillVBO(Buffer::VBO::ColorBuffer,
+		nullptr, TOTAL_BYTES_COLOR_VBO, Buffer::Fill::Ongoing);
 
 	//Use this as a reference for sphere equation:
 	//http://mathworld.wolfram.com/Sphere.html
@@ -47,8 +52,8 @@ Sphere::Sphere(GLfloat radius, GLuint segments, GLuint slices,
 
 			GLfloat colors[] = { m_color.r, m_color.g, m_color.b, m_color.a };
 
-			m_buffer.AppendVBO(Buffer::VERTEX_BUFFER, vertices, sizeof(vertices), offsetVertex);
-			m_buffer.AppendVBO(Buffer::COLOR_BUFFER, colors, sizeof(colors), offsetColor);
+			m_buffer.AppendVBO(Buffer::VBO::VertexBuffer, vertices, sizeof(vertices), offsetVertex);
+			m_buffer.AppendVBO(Buffer::VBO::ColorBuffer, colors, sizeof(colors), offsetColor);
 
 			offsetVertex += BYTES_PER_VERTEX;
 			offsetColor += BYTES_PER_COLOR;
@@ -92,7 +97,7 @@ void Sphere::SetRadius(GLfloat radius)
 								   radius * sin(angleLongitude * i) * sin(angleLatitude * j),   //Y 
 								   radius * cos(angleLatitude * j) };                           //Z 
 
-			m_buffer.AppendVBO(Buffer::VERTEX_BUFFER, vertices, sizeof(vertices), offset);
+			m_buffer.AppendVBO(Buffer::VBO::VertexBuffer, vertices, sizeof(vertices), offset);
 			offset += sizeof(vertices);
 		}
 	}
@@ -112,7 +117,7 @@ void Sphere::SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
 		for (GLuint j = 0; j <= m_slices; j++)
 		{
 			GLfloat colors[] = { r, g, b, a };
-			m_buffer.AppendVBO(Buffer::COLOR_BUFFER, colors, sizeof(colors), offset);
+			m_buffer.AppendVBO(Buffer::VBO::ColorBuffer, colors, sizeof(colors), offset);
 			offset += sizeof(colors);
 		}
 	}
@@ -121,11 +126,13 @@ void Sphere::SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
 void Sphere::Render(Shader& shader)
 {
 	//TODO - Find a way to do this only once
-	m_buffer.LinkVBO(shader.GetAttributeID("vertexIn"), Buffer::VERTEX_BUFFER, Buffer::XYZ, Buffer::FLOAT);
-	m_buffer.LinkVBO(shader.GetAttributeID("colorIn"), Buffer::COLOR_BUFFER, Buffer::RGBA, Buffer::FLOAT);
+	m_buffer.LinkVBO(shader.GetAttributeID("vertexIn"),
+		Buffer::VBO::VertexBuffer, Buffer::ComponentSize::XYZ, Buffer::DataType::FloatData);
+	m_buffer.LinkVBO(shader.GetAttributeID("colorIn"),
+		Buffer::VBO::ColorBuffer, Buffer::ComponentSize::RGBA, Buffer::DataType::FloatData);
 
 	shader.SendData("model", m_transform.GetMatrix());
 	shader.SendData("isTextured", static_cast<GLuint>(m_isTextured));
 
-	m_buffer.Render(Buffer::TRIANGLES);
+	m_buffer.Render(Buffer::RenderMode::Triangles);
 }

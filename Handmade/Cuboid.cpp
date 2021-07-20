@@ -109,11 +109,11 @@ Cuboid::Cuboid(GLfloat width, GLfloat height, GLfloat depth,
 	m_buffer.Create("Cuboid", 36, true);
 
 	m_buffer.LinkEBO();
-	m_buffer.FillVBO(Buffer::VERTEX_BUFFER, vertices, sizeof(vertices), Buffer::FILL_MANY);
-	m_buffer.FillVBO(Buffer::COLOR_BUFFER, colors, sizeof(colors), Buffer::FILL_MANY);
-	m_buffer.FillVBO(Buffer::TEXTURE_BUFFER, UVs, sizeof(UVs), Buffer::FILL_ONCE);
-	m_buffer.FillVBO(Buffer::NORMAL_BUFFER, normals, sizeof(normals), Buffer::FILL_ONCE);
-	m_buffer.FillEBO(indices, sizeof(indices), Buffer::FILL_ONCE);
+	m_buffer.FillVBO(Buffer::VBO::VertexBuffer, vertices, sizeof(vertices), Buffer::Fill::Ongoing);
+	m_buffer.FillVBO(Buffer::VBO::ColorBuffer, colors, sizeof(colors), Buffer::Fill::Ongoing);
+	m_buffer.FillVBO(Buffer::VBO::TextureBuffer, UVs, sizeof(UVs), Buffer::Fill::Ongoing);
+	m_buffer.FillVBO(Buffer::VBO::NormalBuffer, normals, sizeof(normals), Buffer::Fill::Ongoing);
+	m_buffer.FillEBO(indices, sizeof(indices), Buffer::Fill::Ongoing);
 }
 //======================================================================================================
 Cuboid::~Cuboid()
@@ -136,7 +136,7 @@ void Cuboid::SetTextureScale(GLfloat width, GLfloat height)
 					  0.0f,  height, width, height,
 					  width, 0.0f,   0.0f,  0.0f };   	//bottom face
 
-	m_buffer.FillVBO(Buffer::TEXTURE_BUFFER, UVs, sizeof(UVs), Buffer::FILL_MANY);
+	m_buffer.FillVBO(Buffer::VBO::TextureBuffer, UVs, sizeof(UVs), Buffer::Fill::Ongoing);
 }
 //======================================================================================================
 void Cuboid::SetColor(const glm::vec4& color)
@@ -159,7 +159,7 @@ void Cuboid::SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
 						 r, g, b, a, r, g, b, a,
 						 r, g, b, a, r, g, b, a };     //bottom face 
 
-	m_buffer.FillVBO(Buffer::COLOR_BUFFER, colors, sizeof(colors), Buffer::FILL_MANY);
+	m_buffer.FillVBO(Buffer::VBO::ColorBuffer, colors, sizeof(colors), Buffer::Fill::Ongoing);
 }
 //======================================================================================================
 void Cuboid::SetDimension(const glm::vec3& dimension)
@@ -202,16 +202,20 @@ void Cuboid::SetDimension(GLfloat width, GLfloat height, GLfloat depth)
 							halfDimension.x, -halfDimension.y,  halfDimension.z,
 						   -halfDimension.x, -halfDimension.y,  halfDimension.z };    //Bottom face
 
-	m_buffer.FillVBO(Buffer::VERTEX_BUFFER, vertices, sizeof(vertices), Buffer::FILL_MANY);
+	m_buffer.FillVBO(Buffer::VBO::VertexBuffer, vertices, sizeof(vertices), Buffer::Fill::Ongoing);
 }
 //======================================================================================================
 void Cuboid::Render(Shader& shader)
 {
 	//TODO - Find a way to do this only once
-	m_buffer.LinkVBO(shader.GetAttributeID("vertexIn"), Buffer::VERTEX_BUFFER, Buffer::XYZ, Buffer::FLOAT);
-	m_buffer.LinkVBO(shader.GetAttributeID("colorIn"), Buffer::COLOR_BUFFER, Buffer::RGBA, Buffer::FLOAT);
-	m_buffer.LinkVBO(shader.GetAttributeID("textureIn"), Buffer::TEXTURE_BUFFER, Buffer::UV, Buffer::FLOAT);
-	//m_buffer.LinkVBO(shader.GetAttributeID("normalIn"), Buffer::NORMAL_BUFFER, Buffer::XYZ, Buffer::FLOAT);
+	m_buffer.LinkVBO(shader.GetAttributeID("vertexIn"),
+		Buffer::VBO::VertexBuffer, Buffer::ComponentSize::XYZ, Buffer::DataType::FloatData);
+	m_buffer.LinkVBO(shader.GetAttributeID("colorIn"),
+		Buffer::VBO::ColorBuffer, Buffer::ComponentSize::RGBA, Buffer::DataType::FloatData);
+	m_buffer.LinkVBO(shader.GetAttributeID("textureIn"),
+		Buffer::VBO::VertexBuffer, Buffer::ComponentSize::UV, Buffer::DataType::FloatData);
+	//m_buffer.LinkVBO(shader.GetAttributeID("normalIn"),
+		//Buffer::VBO::ColorBuffer, Buffer::ComponentSize::XYZ, Buffer::DataType::FloatData);
 
 	m_normalMatrix = glm::inverse(glm::mat3(m_transform.GetMatrix()));
 
@@ -219,5 +223,5 @@ void Cuboid::Render(Shader& shader)
 	shader.SendData("model", m_transform.GetMatrix());
 	shader.SendData("isTextured", static_cast<GLuint>(m_isTextured));
 
-	m_buffer.Render(Buffer::TRIANGLES);
+	m_buffer.Render(Buffer::RenderMode::Triangles);
 }

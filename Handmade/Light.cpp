@@ -21,8 +21,8 @@ Light::Light(GLfloat x, GLfloat y, GLfloat z)
 	GLfloat vertex[] = { 0.0f, 0.0f, 0.0f };
 	GLfloat color[] = { m_ambient.r, m_ambient.g, m_ambient.b };
 
-	m_buffer.FillVBO(Buffer::VERTEX_BUFFER, vertex, sizeof(vertex), Buffer::FILL_MANY);
-	m_buffer.FillVBO(Buffer::COLOR_BUFFER, color, sizeof(color), Buffer::FILL_MANY);
+	m_buffer.FillVBO(Buffer::VBO::VertexBuffer, vertex, sizeof(vertex), Buffer::Fill::Ongoing);
+	m_buffer.FillVBO(Buffer::VBO::ColorBuffer, color, sizeof(color), Buffer::Fill::Ongoing);
 
 	m_lightNumber = s_totalLights++;
 }
@@ -66,7 +66,7 @@ void Light::SetAmbient(GLfloat r, GLfloat g, GLfloat b)
 	m_ambient.r = r;
 	m_ambient.g = g;
 	m_ambient.b = b;
-	m_buffer.FillVBO(Buffer::COLOR_BUFFER, &m_ambient[0], sizeof(m_ambient), Buffer::FILL_MANY);
+	m_buffer.FillVBO(Buffer::VBO::ColorBuffer, &m_ambient.r, sizeof(m_ambient), Buffer::Fill::Ongoing);
 }
 //======================================================================================================
 void Light::SetDiffuse(const glm::vec3& diffuse)
@@ -95,20 +95,14 @@ void Light::SetSpecular(GLfloat r, GLfloat g, GLfloat b)
 //======================================================================================================
 void Light::Render(Shader& shader)
 {
-	//transform light in scene and apply to model matrix
-	//APPLY HERE...
-
-	//set flags in fragment shader - light bulb is not 
-	//affected by lighting calculations and not textured
-	//GameObject::SendToShader(false, false);
-
 	//TODO - Find a way to do this only once
-	m_buffer.LinkVBO(shader.GetAttributeID("vertexIn"), Buffer::VERTEX_BUFFER, Buffer::XYZ, Buffer::FLOAT);
-	m_buffer.LinkVBO(shader.GetAttributeID("colorIn"), Buffer::COLOR_BUFFER, Buffer::RGBA, Buffer::FLOAT);
+	m_buffer.LinkVBO(shader.GetAttributeID("vertexIn"),
+		Buffer::VBO::VertexBuffer, Buffer::ComponentSize::XYZ, Buffer::DataType::FloatData);
+	m_buffer.LinkVBO(shader.GetAttributeID("colorIn"),
+		Buffer::VBO::ColorBuffer, Buffer::ComponentSize::RGBA, Buffer::DataType::FloatData);
 
-	//render light bulb in scene 
 	Buffer::SetPointSize(25.0f);
-	m_buffer.Render(Buffer::POINTS);
+	m_buffer.Render(Buffer::RenderMode::Points);
 }
 //======================================================================================================
 void Light::SendToShader(Shader& shader)

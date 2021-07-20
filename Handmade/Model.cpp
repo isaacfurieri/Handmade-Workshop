@@ -260,7 +260,7 @@ void Model::SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
 			color = newColor;
 		}
 
-		m_buffers[count++].FillVBO(Buffer::COLOR_BUFFER, &mesh.colors[0].x,
+		m_buffers[count++].FillVBO(Buffer::VBO::ColorBuffer, &mesh.colors[0].x,
 			mesh.colors.size() * sizeof(glm::vec4));
 	}
 }
@@ -279,8 +279,10 @@ void Model::FillBuffers()
 		buffer.Create("Mesh_" + std::to_string(count++), mesh.indices.size(), true);
 
 		buffer.FillEBO(&mesh.indices[0], mesh.indices.size() * sizeof(GLuint));
-		buffer.FillVBO(Buffer::VERTEX_BUFFER, &mesh.vertices[0].x, mesh.vertices.size() * sizeof(glm::vec3));
-		buffer.FillVBO(Buffer::NORMAL_BUFFER, &mesh.normals[0].x, mesh.normals.size() * sizeof(glm::vec3));
+		buffer.FillVBO(Buffer::VBO::VertexBuffer, 
+			&mesh.vertices[0].x, mesh.vertices.size() * sizeof(glm::vec3));
+		buffer.FillVBO(Buffer::VBO::NormalBuffer, 
+			&mesh.normals[0].x, mesh.normals.size() * sizeof(glm::vec3));
 
 		//Fill the color buffer with a default white color 
 		//For each vertex in the mesh there is a color value
@@ -290,12 +292,13 @@ void Model::FillBuffers()
 			mesh.colors.push_back(color);
 		}
 
-		buffer.FillVBO(Buffer::COLOR_BUFFER, &mesh.colors[0].x, mesh.colors.size() * sizeof(glm::vec4));
+		buffer.FillVBO(Buffer::VBO::ColorBuffer, 
+			&mesh.colors[0].x, mesh.colors.size() * sizeof(glm::vec4));
 
 		if (!mesh.textureCoords.empty())
 		{
-			buffer.FillVBO(Buffer::TEXTURE_BUFFER, &mesh.textureCoords[0].x,
-				mesh.textureCoords.size() * sizeof(glm::vec2));
+			buffer.FillVBO(Buffer::VBO::TextureBuffer, 
+				&mesh.textureCoords[0].x, mesh.textureCoords.size() * sizeof(glm::vec2));
 		}
 
 		m_buffers.push_back(buffer);
@@ -362,13 +365,13 @@ void Model::Render(Shader& shader)
 	{
 		m_buffers[count].LinkEBO();
 		m_buffers[count].LinkVBO(shader.GetAttributeID("vertexIn"),
-			Buffer::VERTEX_BUFFER, Buffer::XYZ, Buffer::FLOAT);
+			Buffer::VBO::VertexBuffer, Buffer::ComponentSize::XYZ, Buffer::DataType::FloatData);
 		m_buffers[count].LinkVBO(shader.GetAttributeID("colorIn"),
-			Buffer::COLOR_BUFFER, Buffer::RGBA, Buffer::FLOAT);
+			Buffer::VBO::ColorBuffer, Buffer::ComponentSize::RGBA, Buffer::DataType::FloatData);
 		m_buffers[count].LinkVBO(shader.GetAttributeID("textureIn"),
-			Buffer::TEXTURE_BUFFER, Buffer::UV, Buffer::FLOAT);
+			Buffer::VBO::TextureBuffer, Buffer::ComponentSize::UV, Buffer::DataType::FloatData);
 		m_buffers[count].LinkVBO(shader.GetAttributeID("normalIn"),
-			Buffer::NORMAL_BUFFER, Buffer::XYZ, Buffer::FLOAT);
+			Buffer::VBO::NormalBuffer, Buffer::ComponentSize::XYZ, Buffer::DataType::FloatData);
 
 		mesh.material.SendToShader(shader);
 
@@ -383,7 +386,7 @@ void Model::Render(Shader& shader)
 			shader.SendData("isTextured", false);
 		}
 
-		m_buffers[count++].Render(Buffer::TRIANGLES);
+		m_buffers[count++].Render(Buffer::RenderMode::Triangles);
 	}
 }
 //======================================================================================================
