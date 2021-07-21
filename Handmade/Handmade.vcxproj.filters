@@ -82,6 +82,12 @@
     <Filter Include="Source Files\Components\Physics">
       <UniqueIdentifier>{87cba9ca-c62b-4a0f-bb44-f593c120d297}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Objects\2D">
+      <UniqueIdentifier>{1e5309b9-d2df-4a36-a4ea-e9fe0f7493a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Objects\2D">
+      <UniqueIdentifier>{e106f2b1-80e4-4092-89bd-1187bc28ccf1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Screen.h">
@@ -186,11 +192,14 @@
     <ClInclude Include="Light.h">
       <Filter>Header Files\Objects\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Tile.h">
-      <Filter>Header Files\Objects</Filter>
-    </ClInclude>
     <ClInclude Include="LineCollider.h">
       <Filter>Header Files\Components\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>Header Files\Objects\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Tile.h">
+      <Filter>Header Files\Objects\2D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -290,11 +299,14 @@
     <ClCompile Include="Light.cpp">
       <Filter>Source Files\Objects\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Tile.cpp">
-      <Filter>Source Files\Objects</Filter>
-    </ClCompile>
     <ClCompile Include="LineCollider.cpp">
       <Filter>Source Files\Components\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>Source Files\Objects\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Tile.cpp">
+      <Filter>Source Files\Objects\2D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -316,6 +328,12 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="Shaders\Light.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Text.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Text.vert">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

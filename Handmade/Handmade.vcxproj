@@ -225,6 +225,7 @@
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="SphereCollider.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Text.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="Transform.h" />
@@ -261,6 +262,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="SphereCollider.cpp" />
+    <ClCompile Include="Text.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="Transform.cpp" />
@@ -275,6 +277,8 @@
     <None Include="Shaders\Light.vert" />
     <None Include="Shaders\Main.frag" />
     <None Include="Shaders\Main.vert" />
+    <None Include="Shaders\Text.frag" />
+    <None Include="Shaders\Text.vert" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\Handmade.ico" />
