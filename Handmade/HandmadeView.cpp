@@ -61,7 +61,7 @@ CHandmadeView::~CHandmadeView()
 //======================================================================================================
 BOOL CHandmadeView::PreCreateWindow(CREATESTRUCT& cs)
 {
-	
+
 	return CView::PreCreateWindow(cs);
 }
 //======================================================================================================
@@ -141,7 +141,7 @@ int CHandmadeView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_lightShader->BindUniform("light.diffuse");
 	m_lightShader->BindUniform("light.specular");
 	m_lightShader->BindUniform("light.position");
-	
+
 	m_lightShader->BindUniform("material.ambient");
 	m_lightShader->BindUniform("material.diffuse");
 	m_lightShader->BindUniform("material.specular");
@@ -150,6 +150,20 @@ int CHandmadeView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	//m_lightShader->BindUniform("light.attenuationLinear");
 	//m_lightShader->BindUniform("light.attenuationConstant");
 	//m_lightShader->BindUniform("light.attenuationQuadratic");
+
+	//TEST CODE to be used later for multiple lights
+	/*for (size_t i = 0; i < TOTAL_LIGHTS; i++)
+	{
+		std::string index = std::to_string(i);
+
+		m_lightShader->BindUniform("lights[" + index + "].ambient");
+		m_lightShader->BindUniform("lights[" + index + "].diffuse");
+		m_lightShader->BindUniform("lights[" + index + "].specular");
+		m_lightShader->BindUniform("lights[" + index + "].position");
+		m_lightShader->BindUniform("lights[" + index + "].attenuationConstant");
+		m_lightShader->BindUniform("lights[" + index + "].attenuationLinear");
+		m_lightShader->BindUniform("lights[" + index + "].attenuationQuadratic");
+	}*/
 
 	//===================================================================
 
@@ -169,7 +183,7 @@ int CHandmadeView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_grid->GetTransform().SetRotation(45.0f, -30.0f, 0.0f);
 
 	m_axes = std::make_unique<Axes>();
-	
+
 	//For current testing
 	//m_light = std::make_unique<Light>();
 
@@ -271,7 +285,7 @@ void CHandmadeView::OnDraw(CDC* pDC)
 	AudioManager::Instance()->Update();
 
 	Screen::Instance()->Refresh();
-	
+
 	Shader& mainShader = *m_mainShader.get();
 	Shader& lightShader = *m_lightShader.get();
 
@@ -285,10 +299,10 @@ void CHandmadeView::OnDraw(CDC* pDC)
 	//==============================================================================
 
 	m_grid->Render(mainShader);
-	
+
 	m_axes->GetTransform().SetRotation(m_grid->GetTransform().GetRotation());
 	m_axes->Render(mainShader);
-	
+
 	//For current testing
 	//m_light->SendToShader(*Shader::Instance());
 
@@ -299,10 +313,26 @@ void CHandmadeView::OnDraw(CDC* pDC)
 
 	//m_cube->GetTransform().SetRotation(m_grid->GetTransform().GetRotation());
 	//m_cube->Render(*Shader::Instance());
-	
+
 	//m_sphere->GetTransform().SetRotation(m_grid->GetTransform().GetRotation());
 	//m_sphere->Render(*Shader::Instance());
-	
+
+	//TEST CODE to be used later on
+	/*m_UICamera->SetOrthoView();
+	m_UICamera->Update();
+
+	glm::vec2 pixels = m_mainCamera->ConvertWorldToScreen(m_axes->GetArrowTipPositionX());
+	m_labelX->GetTransform().SetPosition(pixels.x, pixels.y, 0.0f);
+	m_labelX->Render();
+
+	pixels = m_mainCamera->ConvertWorldToScreen(m_axes->GetArrowTipPositionY());
+	m_labelY->GetTransform().SetPosition(pixels.x, pixels.y, 0.0f);
+	m_labelY->Render();
+
+	pixels = m_mainCamera->ConvertWorldToScreen(m_axes->GetArrowTipPositionZ());
+	m_labelZ->GetTransform().SetPosition(pixels.x, pixels.y, 0.0f);
+	m_labelZ->Render();*/
+
 	//TODO - calculate elapsed time
 	static GLfloat deltaTime = 0.0f;
 

@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'HandmadeView' source files last updated on 14 July 2021           |
+| 'HandmadeView' source files last updated on 21 July 2021           |
 #===================================================================*/
 
 #include <memory>
@@ -83,13 +83,19 @@ private:
 	std::unique_ptr<Shader> m_mainShader;
 	std::unique_ptr<Shader> m_lightShader;
 
-	//For current testing
+	//For current testing================================
 	//std::unique_ptr<Light> m_light;
 	//std::unique_ptr<Model> m_model;
 	//std::unique_ptr<Quad> m_quad;
 	//std::unique_ptr<Cuboid> m_cube;
 	//std::unique_ptr<Sphere> m_sphere;
 
+	//std::unique_ptr<Tile> m_labelX;
+	//std::unique_ptr<Tile> m_labelY;
+	//std::unique_ptr<Tile> m_labelZ;
+	//==================================================
+
+	//std::unique_ptr<FreeCamera> m_UICamera;
 	std::unique_ptr<FreeCamera> m_mainCamera;
 
 	std::vector<std::unique_ptr<Object>> m_objects;
