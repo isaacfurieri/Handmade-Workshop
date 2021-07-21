@@ -6,59 +6,66 @@ HWND Utility::s_windowHandle = nullptr;
 //======================================================================================================
 void Utility::CheckGLError()
 {
-	//query OpenGL for errors which will return the first 
-	//error that occured since this function was last called
+	//This will return the first error that 
+	//occured since this function was last called
 	GLenum errorCode = glGetError();
 
-	//based on error code enum type returned output a more friendly error message
 	switch (errorCode)
 	{
 
 	case GL_NO_ERROR:
 	{
-		//Log("There are no errors.", ErrorCode::SUCCESS);
+		Log(Destination::LogFile, "There are no errors.", Severity::Default);
+		Log(Destination::OutputWindow, "There are no errors.", Severity::Default);
 		break;
 	}
 
 	case GL_INVALID_ENUM:
 	{
-		//Log("Invalid enumeration type passed.", ErrorCode::FAILURE);
+		Log(Destination::LogFile, "Invalid enumeration type passed.", Severity::Failure);
+		Log(Destination::OutputWindow, "Invalid enumeration type passed.", Severity::Failure);
 		break;
 	}
 
 	case GL_INVALID_VALUE:
 	{
-		//Log("Numeric value outside of accepted range.", ErrorCode::FAILURE);
+		Log(Destination::LogFile, "Numeric value outside of accepted range.", Severity::Failure);
+		Log(Destination::OutputWindow, "Numeric value outside of accepted range.", Severity::Failure);
 		break;
 	}
 
 	case GL_INVALID_OPERATION:
 	{
-		//Log("Invalid operation.", ErrorCode::FAILURE);
+		Log(Destination::LogFile, "Invalid operation.", Severity::Failure);
+		Log(Destination::OutputWindow, "Invalid operation.", Severity::Failure);
 		break;
 	}
 
 	case GL_INVALID_FRAMEBUFFER_OPERATION:
 	{
-		//Log("Framebuffer object incomplete.", ErrorCode::FAILURE);
+		Log(Destination::LogFile, "Framebuffer object incomplete.", Severity::Failure);
+		Log(Destination::OutputWindow, "Framebuffer object incomplete.", Severity::Failure);
 		break;
 	}
 
 	case GL_STACK_OVERFLOW:
 	{
-		//Log("Stack overflow.", ErrorCode::FAILURE);
+		Log(Destination::LogFile, "Stack overflow.", Severity::Failure);
+		Log(Destination::OutputWindow, "Stack overflow.", Severity::Failure);
 		break;
 	}
 
 	case GL_STACK_UNDERFLOW:
 	{
-		//Log("Stack underflow.", ErrorCode::FAILURE);
+		Log(Destination::LogFile, "Stack underflow.", Severity::Failure);
+		Log(Destination::OutputWindow, "Stack underflow.", Severity::Failure);
 		break;
 	}
 
 	case GL_OUT_OF_MEMORY:
 	{
-		//Log("Out of memory.", ErrorCode::FAILURE);
+		Log(Destination::LogFile, "Out of memory.", Severity::Failure);
+		Log(Destination::OutputWindow, "Out of memory.", Severity::Failure);
 		break;
 	}
 
