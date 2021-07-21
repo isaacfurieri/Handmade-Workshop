@@ -15,17 +15,12 @@ class Screen
 
 public:
 
-	enum class VSyncState
-	{
-		VSYNC_OFF,
-		VSYNC_ON
-	};
-
 	static Screen* Instance();
 
 	const glm::vec2& GetResolution() const;
 
 	void SetResolution(GLuint width, GLuint height);
+	void SetViewport(GLint x, GLint y, GLsizei width, GLsizei height);
 
 	void SetColor(const glm::vec4& color);
 	void SetColor(const glm::uvec4& color);
@@ -34,8 +29,6 @@ public:
 		GLfloat g = 0.0f, GLfloat b = 0.0f, GLfloat a = 1.0f);
 	void SetColor(GLuint r = 0U,
 		GLuint g = 0U, GLuint b = 0U, GLuint a = 1U);
-
-	void SetViewport(GLint x, GLint y, GLsizei width, GLsizei height);
 
 	void IsDepthTestEnabled(bool flag);
 
