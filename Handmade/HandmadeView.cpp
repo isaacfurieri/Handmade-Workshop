@@ -117,6 +117,24 @@ int CHandmadeView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	//===================================================================
 
+	m_textShader = std::make_unique<Shader>();
+
+	if (!m_textShader->Create("Shaders/Text.vert", "Shaders/Text.frag"))
+	{
+		return -1;
+	}
+
+	m_textShader->BindAttribute("vertexIn");
+	m_textShader->BindAttribute("colorIn");
+	m_textShader->BindAttribute("textureIn");
+	
+	m_textShader->BindUniform("model");
+	m_textShader->BindUniform("view");
+	m_textShader->BindUniform("projection");
+	m_textShader->BindUniform("textureImage");
+
+	//===================================================================
+
 	m_lightShader = std::make_unique<Shader>();
 
 	if (!m_lightShader->Create("Shaders/Light.vert", "Shaders/Light.frag"))
@@ -171,7 +189,11 @@ int CHandmadeView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	//===================================================================
 
-	//initialize FMOD audio sub-system and return false if error occured
+	if (!(Text::Initialize()))
+	{
+		return false;
+	}
+
 	if (!(AudioManager::Instance()->Initialize()))
 	{
 		return false;
@@ -183,6 +205,16 @@ int CHandmadeView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_grid->GetTransform().SetRotation(45.0f, -30.0f, 0.0f);
 
 	m_axes = std::make_unique<Axes>();
+
+	m_topText = std::make_unique<Text>();
+	m_topText->LoadFont("Assets/Fonts/Quikhand.ttf", 30);
+	m_topText->SetColor(1.0f, 0.0f, 0.196f, 1.0f);
+	m_topText->SetText("Handmade Alpha");
+	
+	m_bottomText = std::make_unique<Text>();
+	m_bottomText->LoadFont("Assets/Fonts/Quikhand.ttf", 30);
+	m_bottomText->SetColor(0.0f, 0.564f, 1.0f, 1.0f);
+	m_bottomText->SetText("Click/Drag the mouse to rotate the grid. Use the mouse wheel to zoom in/out");
 
 	//For current testing
 	//m_light = std::make_unique<Light>();
@@ -200,6 +232,10 @@ int CHandmadeView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_mainCamera->SetSensitivity(0.0f);
 	m_mainCamera->GetTransform().SetPosition(0.0f, 0.0f, 50.0f);
 
+	m_UICamera = std::make_unique<FreeCamera>();
+	m_UICamera->SetVelocity(0.0f);
+	m_UICamera->SetSensitivity(0.0f);
+
 	return 0;
 }
 //======================================================================================================
@@ -207,6 +243,7 @@ void CHandmadeView::OnDestroy()
 {
 	m_objects.clear();
 	AudioManager::Instance()->ShutDown();
+	Text::ShutDown();
 }
 //======================================================================================================
 void CHandmadeView::OnMouseMove(UINT nFlags, CPoint point)
@@ -232,6 +269,11 @@ BOOL CHandmadeView::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 {
 	zDelta /= 120;
 	m_mouseWheelMotion = -zDelta;
+
+	auto camPos = m_mainCamera->GetTransform().GetPosition();
+	camPos.z -= (zDelta * 2);
+	m_mainCamera->GetTransform().SetPosition(camPos);
+
 	Invalidate(FALSE);
 	return TRUE;
 }
@@ -287,6 +329,7 @@ void CHandmadeView::OnDraw(CDC* pDC)
 	Screen::Instance()->Refresh();
 
 	Shader& mainShader = *m_mainShader.get();
+	Shader& textShader = *m_textShader.get();
 	Shader& lightShader = *m_lightShader.get();
 
 	lightShader.Use();
@@ -302,6 +345,28 @@ void CHandmadeView::OnDraw(CDC* pDC)
 
 	m_axes->GetTransform().SetRotation(m_grid->GetTransform().GetRotation());
 	m_axes->Render(mainShader);
+
+	//==============================================================================
+	//Text rendering & UI
+	//==============================================================================
+
+	const auto PADDING = 25;
+	auto resolution = Screen::Instance()->GetResolution();
+
+	textShader.Use();
+	
+	m_UICamera->CreateOrthoView();
+	m_UICamera->Update(16.0f);
+	m_UICamera->SendToShader(textShader);
+
+	m_topText->GetTransform().SetPosition(resolution.x - m_topText->GetTotalWidth() - PADDING, 
+		resolution.y - 50.0f, 0.0f);
+	m_topText->SendToShader(textShader);
+	m_topText->Render(textShader);
+
+	m_bottomText->GetTransform().SetPosition(PADDING, PADDING, 0.0f);
+	m_bottomText->SendToShader(textShader);
+	m_bottomText->Render(textShader);
 
 	//For current testing
 	//m_light->SendToShader(*Shader::Instance());

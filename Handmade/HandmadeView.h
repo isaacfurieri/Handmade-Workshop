@@ -16,6 +16,7 @@
 #include "Shader.h"
 #include "Light.h"
 #include "Model.h"
+#include "Text.h"
 
 class CHandmadeView : public CView
 {
@@ -79,8 +80,12 @@ private:
 
 	std::unique_ptr<Grid> m_grid;
 	std::unique_ptr<Axes> m_axes;
+	
+	std::unique_ptr<Text> m_topText;
+	std::unique_ptr<Text> m_bottomText;
 
 	std::unique_ptr<Shader> m_mainShader;
+	std::unique_ptr<Shader> m_textShader;
 	std::unique_ptr<Shader> m_lightShader;
 
 	//For current testing================================
@@ -95,7 +100,7 @@ private:
 	//std::unique_ptr<Tile> m_labelZ;
 	//==================================================
 
-	//std::unique_ptr<FreeCamera> m_UICamera;
+	std::unique_ptr<FreeCamera> m_UICamera;
 	std::unique_ptr<FreeCamera> m_mainCamera;
 
 	std::vector<std::unique_ptr<Object>> m_objects;
