@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Screen' source files last updated on 20 July 2021                 |
+| 'Screen' source files last updated on 21 July 2021                 |
 #===================================================================*/
 
 #include <Windows.h>
@@ -39,7 +39,7 @@ public:
 
 	void Refresh();
 	void Present();
-	void ShutDown();
+	void Shutdown();
 
 private:
 

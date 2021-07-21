@@ -30,7 +30,7 @@ class Text : public Object
 public:
 
 	static bool Initialize();
-	static void ShutDown();
+	static void Shutdown();
 
 	Text();
 	virtual ~Text() {}

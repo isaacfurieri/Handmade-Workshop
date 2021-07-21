@@ -34,7 +34,7 @@ public:
 public:
 
 	void UnloadFromMemory(AudioType audioType, RemoveType removeType, const std::string& mapIndex = "");
-	void ShutDown();
+	void Shutdown();
 
 private:
 

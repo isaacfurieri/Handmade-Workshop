@@ -178,7 +178,7 @@ void Screen::Present()
 	SwapBuffers(m_deviceContext);
 }
 //======================================================================================================
-void Screen::ShutDown()
+void Screen::Shutdown()
 {
 	wglMakeCurrent(m_deviceContext, nullptr);
 	wglDeleteContext(m_renderContext);

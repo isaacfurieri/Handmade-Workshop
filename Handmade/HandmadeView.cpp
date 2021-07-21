@@ -242,8 +242,8 @@ int CHandmadeView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 void CHandmadeView::OnDestroy()
 {
 	m_objects.clear();
-	AudioManager::Instance()->ShutDown();
-	Text::ShutDown();
+	AudioManager::Instance()->Shutdown();
+	Text::Shutdown();
 }
 //======================================================================================================
 void CHandmadeView::OnMouseMove(UINT nFlags, CPoint point)

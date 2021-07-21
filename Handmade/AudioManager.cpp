@@ -195,7 +195,7 @@ void AudioManager::UnloadFromMemory(AudioType audioType,
 //------------------------------------------------------------------------------------------------------
 //function that closes down audio system
 //------------------------------------------------------------------------------------------------------
-void AudioManager::ShutDown()
+void AudioManager::Shutdown()
 {
 
 	m_audioSystem->release();

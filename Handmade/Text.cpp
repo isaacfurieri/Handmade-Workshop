@@ -93,7 +93,7 @@ void Text::UnloadFont()
 	m_glyphs.clear();
 }
 //================================================================================================
-void Text::ShutDown()
+void Text::Shutdown()
 {
 	FT_Done_FreeType(s_freetypeObject);
 }
