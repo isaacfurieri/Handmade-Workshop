@@ -98,7 +98,7 @@ void Quad::Render(Shader& shader)
 	m_buffer.LinkVBO(shader.GetAttributeID("colorIn"),
 		Buffer::VBO::ColorBuffer, Buffer::ComponentSize::RGBA, Buffer::DataType::FloatData);
 	m_buffer.LinkVBO(shader.GetAttributeID("textureIn"),
-		Buffer::VBO::VertexBuffer, Buffer::ComponentSize::UV, Buffer::DataType::FloatData);
+		Buffer::VBO::TextureBuffer, Buffer::ComponentSize::UV, Buffer::DataType::FloatData);
 	//m_buffer.LinkVBO(shader.GetAttributeID("normalIn"),
 		//Buffer::VBO::ColorBuffer, Buffer::ComponentSize::XYZ, Buffer::DataType::FloatData);
 
