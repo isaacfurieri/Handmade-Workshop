@@ -1,12 +1,12 @@
 #pragma once
 
 /*===================================================================#
-| 'Audio' source files last updated on 23 June 2021                  |
+| 'Audio' source files last updated on 22 July 2021                  |
 #===================================================================*/
 
+#include <map>
 #include <string>
 #include <fmod.hpp>
-#include "AudioManager.h"
 
 //TODO - Create component class similar to 'Texture' class
 //TODO - Blend older 'AudioManager' class with 'Audio' 
@@ -26,31 +26,37 @@ public:
 
 	enum class Loop
 	{
-		CUSTOM_LOOP = -2,
-		ENDLESS_LOOP = -1,
-		NO_LOOP = 0,
-		ONCE_LOOP = 1
+		None = 0,
+		Single = 1,
+		Endless = -1,
+		Custom = -2
 	};
 
 	enum class Position
 	{
-		CUSTOM_POSITION = 0,
-		START_POSITION = 1,
-		END_POSITION = 2
+		Start = 1,
+		End = 2,
+		Custom = 0
 	};
 
 	enum class Interval
 	{
-		SEMITONE_INTERVAL = 0,
-		OCTAVE_INTERVAL = 1
+		Semitone = 0,
+		Octave = 1
 	};
 
-	enum class AudioType
+	enum class Type
 	{
-		SFX_AUDIO,
-		MUSIC_AUDIO,
-		VOICE_AUDIO
+		Music,
+		Sound
 	};
+
+	static bool Initialize();
+	static void Shutdown();
+	static void Update();
+	static bool Load(const std::string& filename, Type type, const std::string& tag);
+	static void Unload(const std::string& tag = "", Type type = Type::Music);
+	
 
 	Audio();
 	~Audio() {}
@@ -67,8 +73,8 @@ public:
 	void SetFrequency(float frequency);
 
 	void IsMuted(bool flag);
-	void SetLoopCount(Loop loopType, Loop loopCount = Loop::NO_LOOP);
-	void SetAudioData(const std::string& mapIndex, AudioManager::AudioType audioType);
+	void SetAudio(const std::string& tag, Type type);
+	void SetLoopCount(Loop loopType, Loop loopCount = Loop::None);
 	void SetFrequencyRange(float minFrequency, float maxFrequency);
 	void SetFrequencyInterval(Interval intervalType, float interval = 1.0f);
 
@@ -76,8 +82,6 @@ public:
 	void Pause();
 	void Resume();
 	void Stop();
-
-	void Apply();
 	void Move(Position positionType, unsigned int position = 0);
 
 private:
@@ -88,12 +92,17 @@ private:
 
 	float m_minFrequency;
 	float m_maxFrequency;
-	
+
 	bool m_isMuted;
 	Loop m_loopCount;
 
 	FMOD::Sound* m_audioData;
 	FMOD::Channel* m_channel;
 	FMOD::ChannelGroup* m_channelGroup;
+	
+	static std::string s_rootFolder;
+	static FMOD::System* s_audioSystem;
+	static std::map<std::string, FMOD::Sound*> s_music;
+	static std::map<std::string, FMOD::Sound*> s_sounds;
 
 };

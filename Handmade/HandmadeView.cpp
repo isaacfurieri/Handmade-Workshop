@@ -6,7 +6,7 @@
 #include "Handmade.h"
 #endif
 
-#include "AudioManager.h"
+#include "Audio.h"
 #include "HandmadeDoc.h"
 #include "HandmadeView.h"
 #include "Screen.h"
@@ -194,7 +194,7 @@ int CHandmadeView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return false;
 	}
 
-	if (!(AudioManager::Instance()->Initialize()))
+	if (!(Audio::Initialize()))
 	{
 		return false;
 	}
@@ -242,7 +242,7 @@ int CHandmadeView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 void CHandmadeView::OnDestroy()
 {
 	m_objects.clear();
-	AudioManager::Instance()->Shutdown();
+	Audio::Shutdown();
 	Text::Shutdown();
 }
 //======================================================================================================
@@ -324,7 +324,7 @@ void CHandmadeView::OnDraw(CDC* pDC)
 		return;
 	}
 
-	AudioManager::Instance()->Update();
+	Audio::Update();
 
 	Screen::Instance()->Refresh();
 

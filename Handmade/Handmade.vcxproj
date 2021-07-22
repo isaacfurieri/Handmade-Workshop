@@ -194,7 +194,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Audio.h" />
-    <ClInclude Include="AudioManager.h" />
     <ClInclude Include="Axes.h" />
     <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="Buffer.h" />
@@ -233,7 +232,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio.cpp" />
-    <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="Axes.cpp" />
     <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="Buffer.cpp" />
