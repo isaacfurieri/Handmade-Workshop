@@ -337,6 +337,7 @@ void CHandmadeView::OnDraw(CDC* pDC)
 	Shader& mainShader = *m_mainShader.get();
 	Shader& textShader = *m_textShader.get();
 	Shader& lightShader = *m_lightShader.get();
+	Shader& testShader = *m_testShader.get();
 
 	lightShader.Use();
 	mainShader.Use();

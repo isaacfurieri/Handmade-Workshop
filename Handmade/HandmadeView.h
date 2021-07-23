@@ -88,6 +88,8 @@ private:
 	std::unique_ptr<Shader> m_mainShader;
 	std::unique_ptr<Shader> m_textShader;
 	std::unique_ptr<Shader> m_lightShader;
+	
+	std::unique_ptr<Shader> m_testShader;
 
 	//For current testing================================
 	//std::unique_ptr<Audio> m_audio;
