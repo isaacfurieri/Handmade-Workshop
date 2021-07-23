@@ -1,17 +1,17 @@
 #include "RigidBody.h"
 
 //======================================================================================================
-glm::vec3 RigidBody::GravityForce(double mass_1, double mass_2, glm::vec3 distance)
+glm::vec3 RigidBody::GravityForce(GLdouble mass_1, GLdouble mass_2, const glm::vec3& distance)
 {
-	//the formula uses scalar values, so first the scalar value is calculated
-	//and then applied to the normalised distance value passed, to retain direction
-	double gravityForce = (GRAVITY * mass_1 * mass_2) / glm::length(distance) * glm::length(distance);
-	return glm::normalize(distance) * (float)gravityForce;
+	GLdouble gravityForce = (GRAVITY * mass_1 * mass_2) /
+		glm::length(distance) * glm::length(distance);
+	return glm::normalize(distance) * static_cast<GLfloat>(gravityForce);
 }
 //======================================================================================================
-glm::vec3 RigidBody::TorqueForce(glm::vec3 force, glm::vec3 contactPosition, glm::vec3 centreOfMass)
+glm::vec3 RigidBody::TorqueForce(const glm::vec3& force,
+	const glm::vec3& contactPosition, const glm::vec3& centreOfMass)
 {
-	//the result produces a vector, used for the rotation axis and torque magnitude
+	//The result produces a vector, used for the rotation axis and torque magnitude
 	return glm::cross(force, (centreOfMass - contactPosition));
 }
 //======================================================================================================
@@ -19,9 +19,9 @@ RigidBody::RigidBody()
 {
 	m_mass = 0.0;
 	m_angle = 0.0;
-	m_angMass = 0.0;
-	m_angVelocity = 0.0;
-	m_angAcceleration = 0.0;
+	m_angularMass = 0.0;
+	m_angularVelocity = 0.0;
+	m_angularAcceleration = 0.0;
 
 	m_force = glm::vec3(0.0f);
 	m_torque = glm::vec3(0.0f);
@@ -30,67 +30,86 @@ RigidBody::RigidBody()
 	m_acceleration = glm::vec3(0.0f);
 }
 //======================================================================================================
-double& RigidBody::Angle()
+GLdouble RigidBody::GetAngle() const
 {
 	return m_angle;
 }
 //======================================================================================================
-double& RigidBody::AngVelocity()
+GLdouble RigidBody::GetAngularVelocity() const
 {
-	return m_angVelocity;
+	return m_angularVelocity;
 }
 //======================================================================================================
-glm::vec3& RigidBody::Force()
+const glm::vec3& RigidBody::GetForce() const
 {
 	return m_force;
 }
 //======================================================================================================
-glm::vec3& RigidBody::Torque()
+const glm::vec3& RigidBody::GetTorque() const
 {
 	return m_torque;
 }
 //======================================================================================================
-glm::vec3& RigidBody::Position()
+const glm::vec3& RigidBody::GetPosition() const
 {
 	return m_position;
 }
 //======================================================================================================
-glm::vec3& RigidBody::Velocity()
+const glm::vec3& RigidBody::GetVelocity() const
 {
 	return m_velocity;
 }
 //======================================================================================================
-void RigidBody::SetMass(double mass)
+void RigidBody::SetMass(GLdouble mass)
 {
 	m_mass = mass;
 }
 //======================================================================================================
-void RigidBody::SetAngMass(double mass)
+void RigidBody::SetAngle(GLdouble angle)
 {
-	m_angMass = mass;
+	m_angle = angle;
+}
+//======================================================================================================
+void RigidBody::SetAngularMass(GLdouble mass)
+{
+	m_angularMass = mass;
+}
+//======================================================================================================
+void RigidBody::SetAngularVelocity(GLdouble velocity)
+{
+	m_angularVelocity = velocity;
+}
+//======================================================================================================
+void RigidBody::SetForce(const glm::vec3& force)
+{
+	m_force = force;
+}
+//======================================================================================================
+void RigidBody::SetTorque(const glm::vec3& torque)
+{
+	m_torque = torque;
+}
+//======================================================================================================
+void RigidBody::SetPosition(const glm::vec3& position)
+{
+	m_position = position;
+}
+//======================================================================================================
+void RigidBody::SetVelocity(const glm::vec3& velocity)
+{
+	m_velocity = velocity;
 }
 //======================================================================================================
 void RigidBody::Update()
 {
-	//variables for storing old velocity values for 
-	//both displacement and rotational calculations below
-	double oldVel = 0.0;
-	glm::vec3 oldVelocity;
-
-	//calculate the movement and rotational acceleration
-	//the latter uses the torque vector's magnitude for scalar calculations below
 	if (m_mass > 0.0) m_acceleration = (m_force / (float)m_mass);
-	if (m_angMass > 0.0) m_angAcceleration = glm::length(m_torque) / m_angMass;
+	if (m_angularMass > 0.0) m_angularAcceleration = glm::length(m_torque) / m_angularMass;
 
-	//calculate the new position using Euler Integration
-	//this formula is frame independent and uses time for accurate calculations
-	oldVelocity = m_velocity;
-	m_velocity += m_acceleration * 0.16f; // ((float)Game::Instance()->GetElapsedTime() / 1000);
-	m_position += (m_velocity + oldVelocity) * 0.5f * 0.16f; // ((float)Game::Instance()->GetElapsedTime() / 1000);
+	glm::vec3 oldVelocity = m_velocity;
+	m_velocity += m_acceleration * 0.16f;
+	m_position += (m_velocity + oldVelocity) * 0.5f * 0.16f;
 
-	//calculate the new rotational angle using Euler Integration
-	//this formula is frame independent and uses time for accurate calculations	
-	oldVel = m_angVelocity;
-	m_angVelocity += m_angAcceleration * 0.16f; // Game::Instance()->GetElapsedTime() / 1000; //temp!
-	m_angle += (m_angVelocity + oldVel) * 0.5 * 0.16f; // Game::Instance()->GetElapsedTime() / 1000; //temp!
+	GLdouble oldAngularVelocity = m_angularVelocity;
+	m_angularVelocity += m_angularAcceleration * 0.16f;
+	m_angle += (m_angularVelocity + oldAngularVelocity) * 0.5 * 0.16f;
 }

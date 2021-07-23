@@ -1,45 +1,53 @@
 #pragma once
 
 /*===================================================================#
-| 'RigidBody' source files last updated on 23 June 2021              |
+| 'RigidBody' source files last updated on 23 July 2021              |
 #===================================================================*/
 
+#include "glad.h"
 #include <glm.hpp>
 
-const double GRAVITY = 1.0000000000667;
-
-//TODO - Add proper getter/setters
+const GLdouble GRAVITY = 1.0000000000667;
 
 class RigidBody
 {
 
 public:
 
-	static glm::vec3 GravityForce(double mass_1, double mass_2, glm::vec3 distance);
-	static glm::vec3 TorqueForce(glm::vec3 force, glm::vec3 contactPosition, glm::vec3 centreOfMass);
+	static glm::vec3 GravityForce(GLdouble mass_1,
+		GLdouble mass_2, const glm::vec3& distance);
+	static glm::vec3 TorqueForce(const glm::vec3& force,
+		const glm::vec3& contactPosition, const glm::vec3& centreOfMass);
 
 	RigidBody();
 
-	double& Angle();
-	double& AngVelocity();
+	GLdouble GetAngle() const;
+	GLdouble GetAngularVelocity() const;
 
-	glm::vec3& Force();
-	glm::vec3& Torque();
-	glm::vec3& Position();
-	glm::vec3& Velocity();
+	const glm::vec3& GetForce() const;
+	const glm::vec3& GetTorque() const;
+	const glm::vec3& GetPosition() const;
+	const glm::vec3& GetVelocity() const;
 
-	void SetMass(double mass);
-	void SetAngMass(double mass);
+	void SetMass(GLdouble mass);
+	void SetAngle(GLdouble angle);
+	void SetAngularMass(GLdouble mass);
+	void SetAngularVelocity(GLdouble velocity);
+
+	void SetForce(const glm::vec3& force);
+	void SetTorque(const glm::vec3& torque);
+	void SetPosition(const glm::vec3& position);
+	void SetVelocity(const glm::vec3& velocity);
 
 	void Update();
 
 private:
 
-	double m_mass;
-	double m_angle;
-	double m_angMass;
-	double m_angVelocity;
-	double m_angAcceleration;
+	GLdouble m_mass;
+	GLdouble m_angle;
+	GLdouble m_angularMass;
+	GLdouble m_angularVelocity;
+	GLdouble m_angularAcceleration;
 
 	glm::vec3 m_force;
 	glm::vec3 m_torque;
