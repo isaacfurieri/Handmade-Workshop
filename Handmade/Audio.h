@@ -1,16 +1,13 @@
 #pragma once
 
 /*===================================================================#
-| 'Audio' source files last updated on 22 July 2021                  |
+| 'Audio' source files last updated on 23 July 2021                  |
 #===================================================================*/
 
 #include <map>
 #include <string>
 #include <fmod.hpp>
 
-//TODO - Create component class similar to 'Texture' class
-//TODO - Blend older 'AudioManager' class with 'Audio' 
-//component class and remove 'AudioManager' class entirely
 //TODO - Test class fully with some audio samples
 
 const float LEFT_PAN = -1.0;
@@ -18,6 +15,8 @@ const float RIGHT_PAN = 1.0f;
 
 const float MIN_VOLUME = 0.0f;
 const float MAX_VOLUME = 1.0f;
+
+typedef unsigned int Fuint;
 
 class Audio
 {
@@ -56,17 +55,16 @@ public:
 	static void Update();
 	static bool Load(const std::string& filename, Type type, const std::string& tag);
 	static void Unload(const std::string& tag = "", Type type = Type::Music);
-	
 
 	Audio();
 	~Audio() {}
 
-	float GetPan();
-	float GetVolume();
-	float GetFrequency();
+	float GetPan() const;
+	float GetVolume() const;
+	float GetFrequency() const;
 
-	unsigned int GetLength();
-	unsigned int GetPosition();
+	Fuint GetLength() const;
+	Fuint GetPosition() const;
 
 	void SetPan(float pan);
 	void SetVolume(float volume);
@@ -82,14 +80,13 @@ public:
 	void Pause();
 	void Resume();
 	void Stop();
-	void Move(Position positionType, unsigned int position = 0);
+	void Move(Position position, Fuint positionValue = 0);
 
 private:
 
 	float m_pan;
 	float m_volume;
 	float m_frequency;
-
 	float m_minFrequency;
 	float m_maxFrequency;
 
@@ -99,7 +96,7 @@ private:
 	FMOD::Sound* m_audioData;
 	FMOD::Channel* m_channel;
 	FMOD::ChannelGroup* m_channelGroup;
-	
+
 	static std::string s_rootFolder;
 	static FMOD::System* s_audioSystem;
 	static std::map<std::string, FMOD::Sound*> s_music;

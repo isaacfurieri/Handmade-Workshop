@@ -17,7 +17,7 @@ bool Audio::Initialize()
 	if (s_audioSystem->init(100, FMOD_INIT_NORMAL, 0) != FMOD_OK)
 	{
 		Utility::Log(Utility::Destination::WindowsMessageBox,
-			"Error initializing the FMOD audio system", Utility::Severity::Failure);
+			"Error initializing the FMOD audio system.", Utility::Severity::Failure);
 		return false;
 	}
 
@@ -41,7 +41,7 @@ bool Audio::Load(const std::string& filename, Type type, const std::string& tag)
 	//Sound effects are loaded directly into memory
 	if (type == Type::Sound)
 	{
-		s_audioSystem->createSound(filename.c_str(), FMOD_DEFAULT, 0, &audio);
+		s_audioSystem->createSound((s_rootFolder + filename).c_str(), FMOD_DEFAULT, 0, &audio);
 
 		if (!audio)
 		{
@@ -58,7 +58,7 @@ bool Audio::Load(const std::string& filename, Type type, const std::string& tag)
 	//Music is streamed directly 
 	else
 	{
-		s_audioSystem->createStream(filename.c_str(), FMOD_LOOP_NORMAL | FMOD_2D, 0, &audio);
+		s_audioSystem->createStream((s_rootFolder + filename).c_str(), FMOD_LOOP_NORMAL | FMOD_2D, 0, &audio);
 
 		if (!audio)
 		{
@@ -108,7 +108,6 @@ Audio::Audio()
 	m_pan = 0.0f;
 	m_volume = 0.5f;
 	m_frequency = 44100.0f;
-
 	m_minFrequency = 11025.0f;
 	m_maxFrequency = 176400.0f;
 
@@ -120,24 +119,24 @@ Audio::Audio()
 	m_channelGroup = nullptr;
 }
 //======================================================================================================
-float Audio::GetPan()
+float Audio::GetPan() const
 {
 	return m_pan;
 }
 //======================================================================================================
-float Audio::GetVolume()
+float Audio::GetVolume() const
 {
 	return m_volume;
 }
 //======================================================================================================
-float Audio::GetFrequency()
+float Audio::GetFrequency() const
 {
 	return m_frequency;
 }
 //======================================================================================================
-unsigned int Audio::GetLength()
+Fuint Audio::GetLength() const
 {
-	unsigned int length = 0;
+	Fuint length = 0;
 
 	if (m_audioData)
 	{
@@ -147,9 +146,9 @@ unsigned int Audio::GetLength()
 	return length;
 }
 //======================================================================================================
-unsigned int Audio::GetPosition()
+Fuint Audio::GetPosition() const
 {
-	unsigned int tempPosition = 0;
+	Fuint tempPosition = 0;
 
 	if (m_channel)
 	{
@@ -232,6 +231,8 @@ void Audio::SetFrequencyInterval(Interval intervalType, float interval)
 	}
 
 	m_frequency *= pow(ratio, interval);
+	assert(m_channel != nullptr);
+	m_channel->setFrequency(m_frequency);
 }
 //======================================================================================================
 bool Audio::Play()
@@ -277,21 +278,21 @@ void Audio::Stop()
 	m_channel = nullptr;
 }
 //======================================================================================================
-void Audio::Move(Position positionType, unsigned int position)
+void Audio::Move(Position position, Fuint positionValue)
 {
 	if (m_channel)
 	{
-		if (positionType == Position::Custom)
+		if (position == Position::Custom)
 		{
-			m_channel->setPosition(position, FMOD_TIMEUNIT_MS);
+			m_channel->setPosition(positionValue, FMOD_TIMEUNIT_MS);
 		}
 
-		else if (positionType == Position::Start)
+		else if (position == Position::Start)
 		{
 			m_channel->setPosition(0, FMOD_TIMEUNIT_MS);
 		}
 
-		else if (positionType == Position::End)
+		else if (position == Position::End)
 		{
 			m_channel->setPosition(GetLength(), FMOD_TIMEUNIT_MS);
 		}
