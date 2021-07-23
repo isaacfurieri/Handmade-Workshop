@@ -216,7 +216,12 @@ int CHandmadeView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_bottomText->SetColor(0.0f, 0.564f, 1.0f, 1.0f);
 	m_bottomText->SetText("Click/Drag the mouse to rotate the grid. Use the mouse wheel to zoom in/out");
 
-	//For current testing
+	//For current testing=======================================================
+	/*m_audio = std::make_unique<Audio>();
+	m_audio->Load("Test.mp3", Audio::Type::Music, "Test");
+	m_audio->SetAudio("Test", Audio::Type::Music);
+	m_audio->Play();*/
+
 	//m_light = std::make_unique<Light>();
 
 	//m_model = std::make_unique<Model>();
@@ -226,6 +231,7 @@ int CHandmadeView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	//m_quad = std::make_unique<Quad>();
 	//m_cube = std::make_unique<Cuboid>();
 	//m_sphere = std::make_unique<Sphere>(10.0f, 50.0f, 50.0f);
+	//=========================================================================
 
 	m_mainCamera = std::make_unique<FreeCamera>();
 	m_mainCamera->SetVelocity(0.0f);

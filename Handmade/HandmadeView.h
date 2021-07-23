@@ -8,6 +8,7 @@
 #include <vector>
 #include <glm.hpp>
 #include "Axes.h"
+#include "Audio.h"
 #include "Cuboid.h"
 #include "FreeCamera.h"
 #include "Grid.h"
@@ -89,6 +90,8 @@ private:
 	std::unique_ptr<Shader> m_lightShader;
 
 	//For current testing================================
+	//std::unique_ptr<Audio> m_audio;
+
 	//std::unique_ptr<Light> m_light;
 	//std::unique_ptr<Model> m_model;
 	//std::unique_ptr<Quad> m_quad;
