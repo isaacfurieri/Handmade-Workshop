@@ -9,10 +9,12 @@ Camera::Camera()
 {
 	m_velocity = 0.0f;
 	m_fieldOfView = 45.0f;
+	
 	m_viewMatrix = glm::mat4(1.0f);
-	m_up = glm::vec3(0.0f, 1.0f, 0.0f);
 	m_projectionMatrix = glm::mat4(1.0f);
-	m_lookAt = glm::vec3(0.0f, 0.0f, -1.0f);
+	
+	m_up = glm::vec3(0.0f, 1.0f, 0.0f);
+	m_forward = glm::vec3(0.0f, 0.0f, -1.0f);
 }
 //======================================================================================================
 glm::vec2 Camera::ConvertWorldToScreen(const glm::vec3& worldPosition)
@@ -61,13 +63,13 @@ void Camera::CreateOrthoView(Origin2D origin)
 
 	glm::vec2 resolution = Screen::Instance()->GetResolution();
 
-	if (origin == Origin2D::TOP_LEFT)
+	if (origin == Origin2D::TopLeft)
 	{
 		m_projectionMatrix = glm::ortho(0.0f, static_cast<float>(resolution.x),
 											  static_cast<float>(resolution.y), 0.0f);
 	}
 
-	else if (origin == Origin2D::BOTTOM_LEFT)
+	else if (origin == Origin2D::BottomLeft)
 	{
 		m_projectionMatrix = glm::ortho(0.0f, static_cast<float>(resolution.x),
 									    0.0f, static_cast<float>(resolution.y));
@@ -90,7 +92,6 @@ void Camera::Reset()
 	m_viewMatrix = glm::mat4(1.0f);
 	m_up = glm::vec3(0.0f, 1.0f, 0.0f);
 	m_projectionMatrix = glm::mat4(1.0f);
-	m_lookAt = glm::vec3(0.0f, 0.0f, -1.0f);
 	m_transform.SetPosition(glm::vec3(0.0f));
 }
 //======================================================================================================

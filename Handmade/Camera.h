@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Camera' source files last updated on 14 July 2021                 |
+| 'Camera' source files last updated on 26 July 2021                 |
 #===================================================================*/
 
 #include "Object.h"
@@ -18,8 +18,8 @@ public:
 
 	enum class Origin2D
 	{
-		TOP_LEFT,
-		BOTTOM_LEFT
+		TopLeft,
+		BottomLeft
 	};
 
 	Camera();
@@ -29,7 +29,7 @@ public:
 	void SetFieldOfView(GLfloat fieldOfView);
 
 	void CreatePerspView();
-	void CreateOrthoView(Origin2D origin = Origin2D::BOTTOM_LEFT);
+	void CreateOrthoView(Origin2D origin = Origin2D::BottomLeft);
 
 	glm::vec2 ConvertWorldToScreen(const glm::vec3& worldPosition);
 	glm::vec3 ConvertScreenToWorld(const glm::vec2& screenPosition, GLfloat zNDC);
@@ -46,7 +46,7 @@ protected:
 	GLfloat m_fieldOfView;
 
 	glm::vec3 m_up;
-	glm::vec3 m_lookAt;
+	glm::vec3 m_forward;
 
 	glm::mat4 m_viewMatrix;
 	glm::mat4 m_projectionMatrix;

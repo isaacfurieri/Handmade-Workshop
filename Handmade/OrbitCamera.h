@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'OrbitCamera' source files last updated on 7 July 2021             |
+| 'OrbitCamera' source files last updated on 26 July 2021            |
 #===================================================================*/
 
 #include "Camera.h"
@@ -15,13 +15,25 @@ public:
 	virtual ~OrbitCamera() {}
 
 	void SetSensitivity(GLfloat sensitivity);
-	virtual void Update();
+	void SetPitchRange(const glm::vec2& range);
+	void SetPitchRange(GLfloat min, GLfloat max);
+
+	void SetZoomDistanceRange(const glm::vec2& range);
+	void SetZoomDistanceRange(GLfloat min, GLfloat max);
+
+	void Zoom(GLint motion);
+	void Rotate(const glm::ivec2& motion);
+	void Rotate(GLint motionX, GLint motionY);
+
+	virtual void Render(Shader& shader) {};
+	virtual void Update(GLfloat deltaTime);
+	virtual void SendToShader(Shader& shader);
 
 private:
 
-	GLfloat m_azimuth;
-	GLfloat m_elevation;
 	GLfloat m_sensitivity;
 	GLfloat m_zoomDistance;
+	glm::vec2 m_pitchRange;
+	glm::vec2 m_zoomDistanceRange;
 
 };

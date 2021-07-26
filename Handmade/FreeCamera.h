@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'FreeCamera' source files last updated on 14 July 2021             |
+| 'FreeCamera' source files last updated on 26 July 2021             |
 #===================================================================*/
 
 #include "Camera.h"
@@ -15,8 +15,20 @@ public:
 	virtual ~FreeCamera() {}
 
 	void IsFlying(bool isFlying);
-	void IsZooming(bool isZooming);
 	void SetSensitivity(GLfloat sensitivity);
+	void SetClampedYPosition(GLfloat position);
+	void SetPitchRange(const glm::vec2& range);
+	void SetPitchRange(GLfloat min, GLfloat max);
+
+	void MoveUp();
+	void MoveDown();
+	void MoveLeft();
+	void MoveRight();
+	void MoveForward();
+	void MoveBackward();
+	void Zoom(GLint motion);
+	void Rotate(const glm::ivec2& motion);
+	void Rotate(GLint motionX, GLint motionY);
 
 	virtual void Render(Shader& shader) {};
 	virtual void Update(GLfloat deltaTime);
@@ -25,7 +37,8 @@ public:
 private:
 
 	bool m_isFlying;
-	bool m_isZooming;
 	GLfloat m_sensitivity;
+	glm::vec2 m_pitchRange;
+	GLfloat m_clampedYPosition;
 
 };
