@@ -118,7 +118,7 @@ void Transform::Translate(GLfloat x, GLfloat y, GLfloat z, Space space)
 	//We use a 0 instead of a 1 when multiplying because if we use a 
 	//1 the vector would be treated as a vertex point and not a direction
 
-	if (space == Space::LOCAL)
+	if (space == Space::Local)
 	{
 		m_position += glm::vec3(m_matrix * glm::vec4(x, y, z, 0.0f));
 	}
@@ -135,7 +135,7 @@ void Transform::Rotate(const glm::quat& rotation, Space space)
 {
 	glm::quat tempRotation = rotation;
 
-	if (space == Space::LOCAL)
+	if (space == Space::Local)
 	{
 		m_rotation = m_rotation * tempRotation;
 	}
