@@ -33,6 +33,8 @@ private:
 
 	GLfloat m_sensitivity;
 	GLfloat m_zoomDistance;
+	
+	glm::vec3 m_target;
 	glm::vec2 m_pitchRange;
 	glm::vec2 m_zoomDistanceRange;
 

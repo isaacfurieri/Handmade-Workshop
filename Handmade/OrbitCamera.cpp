@@ -8,6 +8,7 @@ OrbitCamera::OrbitCamera()
 {
 	m_sensitivity = 0.0f;
 	m_zoomDistance = 5.0f;
+	m_target = glm::vec3(0.0f);
 	m_pitchRange = glm::vec2(-89.0f, 89.0f);
 	m_zoomDistanceRange = glm::vec2(0.5f, 50.0f);
 }
@@ -64,7 +65,7 @@ void OrbitCamera::Rotate(GLint motionX, GLint motionY)
 //======================================================================================================
 void OrbitCamera::SendToShader(Shader& shader)
 {
-	m_viewMatrix = glm::lookAt(m_transform.GetPosition(), glm::vec3(0.0f), m_up);
+	m_viewMatrix = glm::lookAt(m_transform.GetPosition(), m_target, m_up);
 	Camera::SendToShader(shader);
 }
 //======================================================================================================

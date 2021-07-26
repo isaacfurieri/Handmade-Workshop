@@ -159,6 +159,14 @@ void FreeCamera::SendToShader(Shader& shader)
 //	//we do a y rotation FIRST and then a local x rotation thereafter
 //	glm::mat4 totalRotation = m_rotationMatrixY * m_rotationMatrixX;
 //
+	//create a separate move rotation based on if camera is in freeflow mode or not
+	//this affects movement so that camera either moves freely or is bound to a Y plane 
+	//glm::mat4 moveRotation = (m_isFreeFlow) ? totalRotation : m_rotationMatrixY;
+
+	//apply same rotation to move direction vector so that
+	//the camera moves correctly based on camera orientation
+	//m_moveDirection = glm::vec3(moveRotation * glm::vec4(m_moveDirection, 1.0f));
+
 //	//calculate the FreeCamera's viewing vector by transforming the 
 //	//initial viewing target based on FreeCamera's total rotation
 //	m_lookAt = glm::vec3(totalRotation * glm::vec4(m_target, 1.0f));
@@ -193,4 +201,44 @@ void FreeCamera::SendToShader(Shader& shader)
 //	//calculate the new right vector based on the forward vector
 //	//so that camera can move local left/right based on rotation
 //	m_right = glm::normalize(glm::cross(m_forward, m_up));
+//}
+
+//=============================================================================
+//function that controls rotation of camera around local X axis
+//=============================================================================
+//void Camera::RotateX(short motionY)
+//{
+//
+//	//generate a rotation angle based on mouse motion and rotation sensitivity
+//	GLfloat angle = motionY * m_sensitivity;
+//
+//	//calculate the dot product between the "look at" vector and the up vector. This will
+//	//give us a value to determine how far up or down the X axis the camera is tilting
+//	double dot = glm::dot(m_lookAt, m_upVector);
+//
+//	//if the camera is tilting upwards or downwards and only if it is between its allowed 
+//	//threshold, then accumulate the current X axis rotation using the angle calculated
+//	if ((motionY > 0 && dot >= m_threshold.x) || (motionY < 0 && dot <= m_threshold.y))
+//	{
+//		m_rotationMatrixX = glm::rotate(m_rotationMatrixX,
+//			glm::radians(angle),
+//			glm::vec3(-1.0f, 0.0f, 0.0f));
+//	}
+//
+//}
+
+//=============================================================================
+//function that controls rotation of camera around global Y axis
+//=============================================================================
+//void Camera::RotateY(short motionX)
+//{
+//
+//	//generate a rotation angle based on mouse motion and rotation sensitivity
+//	GLfloat angle = motionX * m_sensitivity;
+//
+//	//accumulate the current Y axis rotation using the angle calculated
+//	m_rotationMatrixY = glm::rotate(m_rotationMatrixY,
+//		glm::radians(angle),
+//		glm::vec3(0.0f, -1.0f, 0.0f));
+//
 //}
