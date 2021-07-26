@@ -152,7 +152,6 @@ bool Screen::Initialize(HWND wnd, const std::string& filename)
 
 	glEnable(GL_BLEND);
 	glEnable(GL_LINE_SMOOTH);
-	glEnable(GL_POINT_SMOOTH);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	return true;

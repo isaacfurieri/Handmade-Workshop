@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Texture' source files last updated on 14 July 2021                |
+| 'Texture' source files last updated on 26 July 2021                |
 #===================================================================*/
 
 #include <map>
@@ -13,36 +13,36 @@ class Texture
 
 public:
 
-	enum WrapSetting
+	enum class WrapSetting
 	{
-		REPEAT = GL_REPEAT,
-		REPEAT_MIRROR = GL_MIRRORED_REPEAT,
-		CLAMP = GL_CLAMP_TO_EDGE
+		Repeat = GL_REPEAT,
+		RepeatMirror = GL_MIRRORED_REPEAT,
+		Clamp = GL_CLAMP_TO_EDGE
 	};
 
-	enum FilterType
+	enum class FilterType
 	{
-		MAG = GL_TEXTURE_MAG_FILTER,
-		MIN = GL_TEXTURE_MIN_FILTER,
-		//ANI = GL_TEXTURE_MAX_ANISOTROPY  //TODO - Find out why this is not recognized
+		Minification = GL_TEXTURE_MIN_FILTER,
+		Magnification = GL_TEXTURE_MAG_FILTER,
+		Anisotropic = GL_TEXTURE_MAX_ANISOTROPY  
 	};
 
-	enum FilterSetting
+	enum class FilterSetting
 	{
-		NEAREST = GL_NEAREST,
-		BILINEAR = GL_LINEAR,
-		TRILINEAR = GL_LINEAR_MIPMAP_LINEAR,
-		ANISOTROPIC_4 = 4,
-		ANISOTROPIC_8 = 8,
-		ANISOTROPIC_16 = 16
+		Nearest = GL_NEAREST,
+		Bilinear = GL_LINEAR,
+		Trilinear = GL_LINEAR_MIPMAP_LINEAR,
+		Anisotropic4 = 4,
+		Anisotropic8 = 8,
+		Anisotropic16 = 16
 	};
 
-	enum TextureUnit
+	enum class TextureUnit
 	{
-		TEXTURE_1 = GL_TEXTURE0,
-		TEXTURE_2 = GL_TEXTURE1,
-		TEXTURE_3 = GL_TEXTURE2,
-		TEXTURE_4 = GL_TEXTURE3
+		Texture1 = GL_TEXTURE0,
+		Texture2 = GL_TEXTURE1,
+		Texture3 = GL_TEXTURE2,
+		Texture4 = GL_TEXTURE3
 	};
 
 	Texture();

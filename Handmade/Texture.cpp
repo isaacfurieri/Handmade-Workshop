@@ -21,8 +21,8 @@ const std::string& Texture::GetTag() const
 void Texture::SetWrapping(WrapSetting wrapSetting)
 {
 	glBindTexture(GL_TEXTURE_2D, m_ID);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapSetting);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapSetting);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, static_cast<GLint>(wrapSetting));
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, static_cast<GLint>(wrapSetting));
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 //======================================================================================================
@@ -36,7 +36,8 @@ void Texture::SetTexture(const std::string& tag)
 void Texture::SetFilter(FilterType filterType, FilterSetting filterSetting)
 {
 	glBindTexture(GL_TEXTURE_2D, m_ID);
-	glTexParameteri(GL_TEXTURE_2D, filterType, filterSetting);
+	glTexParameteri(GL_TEXTURE_2D, 
+		static_cast<GLenum>(filterType), static_cast<GLint>(filterSetting));
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 //======================================================================================================
@@ -69,7 +70,7 @@ bool Texture::Load(const std::string& filename, const std::string& tag)
 	//This is all the raw image data 
 	auto width = textureData->w;
 	auto height = textureData->h;
-	auto pixels = (Uint8*)textureData->pixels;
+	auto pixels = reinterpret_cast<Uint8*>(textureData->pixels);
 	auto depth = textureData->format->BytesPerPixel;
 	auto format = ((depth == 4) ? GL_RGBA : GL_RGB);
 
@@ -100,7 +101,7 @@ void Texture::Bind() const
 //======================================================================================================
 void Texture::Bind(TextureUnit textureUnit) const
 {
-	glActiveTexture(textureUnit);
+	glActiveTexture(static_cast<GLenum>(textureUnit));
 	glBindTexture(GL_TEXTURE_2D, m_ID);
 }
 //======================================================================================================
