@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Object' source files last updated on 14 July 2021                 |
+| 'Object' source files last updated on 26 July 2021                 |
 #===================================================================*/
 
 #include "glad.h"
@@ -17,8 +17,8 @@ public:
 
 	enum class Space
 	{
-		LOCAL,
-		GLOBAL
+		Local,
+		Global
 	};
 
 	Transform(const glm::mat4& matrix = glm::mat4(1.0f));
