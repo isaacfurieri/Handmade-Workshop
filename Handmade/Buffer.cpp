@@ -118,8 +118,9 @@ void Buffer::Render(RenderMode renderMode, GLuint index, GLuint totalVertices)
 	{
 		if (index > 0)
 		{
-			glDrawElements(static_cast<GLenum>(renderMode), 
-				totalVertices, GL_UNSIGNED_INT, (const void*)(index));
+			glDrawElements(static_cast<GLenum>(renderMode),
+				totalVertices > 0 ? totalVertices : m_totalVertices,
+				GL_UNSIGNED_INT, (const void*)(index));
 		}
 
 		else
