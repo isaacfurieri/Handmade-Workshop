@@ -198,6 +198,9 @@
     <ClInclude Include="Tile.h">
       <Filter>Header Files\Objects\2D</Filter>
     </ClInclude>
+    <ClInclude Include="OBBCollider.h">
+      <Filter>Header Files\Components\Physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Screen.cpp">
@@ -301,6 +304,9 @@
     </ClCompile>
     <ClCompile Include="Tile.cpp">
       <Filter>Source Files\Objects\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="OBBCollider.cpp">
+      <Filter>Source Files\Components\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

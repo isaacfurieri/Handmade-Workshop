@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'SphereCollider' source files last updated on 14 July 2021         |
+| 'SphereCollider' source files last updated on 3 August 2021        |
 #===================================================================*/
 
 #include "glad.h"
@@ -25,7 +25,7 @@ public:
 
 	void SetScale(GLfloat scale);
 	void SetRadius(GLfloat radius);
-	
+
 	void SetPosition(const glm::vec3& position);
 	void SetPosition(GLfloat x, GLfloat y, GLfloat z);
 

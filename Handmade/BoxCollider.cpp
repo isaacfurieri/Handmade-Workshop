@@ -1,5 +1,6 @@
 #include <algorithm>
 #include "BoxCollider.h"
+#include "OBBCollider.h"
 #include "SphereCollider.h"
 
 //======================================================================================================
@@ -63,6 +64,11 @@ void BoxCollider::SetDimension(GLfloat width, GLfloat height, GLfloat depth)
 	m_dimension.x = width;
 	m_dimension.y = height;
 	m_dimension.z = depth;
+}
+//======================================================================================================
+bool BoxCollider::IsColliding(const OBBCollider& secondBox) const
+{
+	return secondBox.IsColliding(*this);
 }
 //======================================================================================================
 bool BoxCollider::IsColliding(const BoxCollider& secondBox) const

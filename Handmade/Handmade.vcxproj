@@ -213,6 +213,7 @@
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="OBBCollider.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="OrbitCamera.h" />
     <ClInclude Include="Point.h" />
@@ -251,6 +252,7 @@
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="OBBCollider.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="OrbitCamera.cpp" />
     <ClCompile Include="Point.cpp" />

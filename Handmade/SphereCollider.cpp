@@ -55,17 +55,17 @@ void SphereCollider::SetPosition(GLfloat x, GLfloat y, GLfloat z)
 //======================================================================================================
 bool SphereCollider::IsColliding(const BoxCollider& secondBox) const
 {
-	return (secondBox.IsColliding(*this));
+	return secondBox.IsColliding(*this);
 }
 //======================================================================================================
 bool SphereCollider::IsColliding(const LineCollider& secondLine) const
 {
-	return (secondLine.IsColliding(*this));
+	return secondLine.IsColliding(*this);
 }
 //======================================================================================================
 bool SphereCollider::IsColliding(const SphereCollider& secondSphere) const
 {
-	return (glm::length(m_position - secondSphere.m_position) <= 
+	return (glm::length(m_position - secondSphere.m_position) <=
 		(m_radius + secondSphere.m_radius));
 }
 //======================================================================================================
