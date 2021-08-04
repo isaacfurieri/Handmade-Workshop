@@ -1,13 +1,13 @@
 #pragma once
 
 /*===================================================================#
-| 'SphereCollider' source files last updated on 3 August 2021        |
+| 'SphereCollider' source files last updated on 4 August 2021        |
 #===================================================================*/
 
 #include "glad.h"
 #include <glm.hpp>
 #include "BoxCollider.h"
-#include "LineCollider.h"
+#include "LineSegment.h"
 
 //TODO - Add some kind of 'central system' to render all colliders in the scene
 
@@ -30,7 +30,7 @@ public:
 	void SetPosition(GLfloat x, GLfloat y, GLfloat z);
 
 	bool IsColliding(const BoxCollider& secondBox) const;
-	bool IsColliding(const LineCollider& secondLine) const;
+	bool IsColliding(const LineSegment& secondLine) const;
 	bool IsColliding(const SphereCollider& secondSphere) const;
 
 	void Update();

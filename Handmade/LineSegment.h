@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'LineCollider' source files last updated on 14 July 2021           |
+| 'LineSegment' source files last updated on 4 August 2021           |
 #===================================================================*/
 
 #include "glad.h"
@@ -9,12 +9,12 @@
 
 class SphereCollider;
 
-class LineCollider
+class LineSegment
 {
 
 public:
 
-	LineCollider();
+	LineSegment();
 
 	void SetScale(GLfloat scale);
 
@@ -25,11 +25,11 @@ public:
 	void SetEndPoint(GLfloat x, GLfloat y, GLfloat z);
 
 	bool IsColliding(const SphereCollider& secondSphere) const;
-	
+
 	glm::vec3 PointOnLine(const glm::vec3& point) const;
 	glm::vec3 PointOnLine(GLfloat x, GLfloat y, GLfloat z) const;
 
-	void Update();
+	void Update() {}
 	void Render() {}
 
 private:

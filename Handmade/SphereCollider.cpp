@@ -58,7 +58,7 @@ bool SphereCollider::IsColliding(const BoxCollider& secondBox) const
 	return secondBox.IsColliding(*this);
 }
 //======================================================================================================
-bool SphereCollider::IsColliding(const LineCollider& secondLine) const
+bool SphereCollider::IsColliding(const LineSegment& secondLine) const
 {
 	return secondLine.IsColliding(*this);
 }

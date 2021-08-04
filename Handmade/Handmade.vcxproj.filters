@@ -186,7 +186,7 @@
     <ClInclude Include="Light.h">
       <Filter>Header Files\Objects\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="LineCollider.h">
+    <ClInclude Include="LineSegment.h">
       <Filter>Header Files\Components\Physics</Filter>
     </ClInclude>
     <ClInclude Include="Text.h">
@@ -296,7 +296,7 @@
     <ClCompile Include="Light.cpp">
       <Filter>Source Files\Objects\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="LineCollider.cpp">
+    <ClCompile Include="LineSegment.cpp">
       <Filter>Source Files\Components\Physics</Filter>
     </ClCompile>
     <ClCompile Include="Text.cpp">
