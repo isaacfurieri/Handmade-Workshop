@@ -168,16 +168,14 @@ bool OBBCollider::IsColliding(const OBBCollider& secondBox) const
 //======================================================================================================
 bool OBBCollider::IsColliding(const BoxCollider& secondBox) const
 {
-	OBBCollider colliders[2];
+	OBBCollider collider;
 
-	colliders[0] = *this;
+	collider.SetScale(secondBox.GetScale());
+	collider.SetPosition(secondBox.GetPosition());
+	collider.SetDimension(secondBox.GetDimension());
+	collider.Update();
 
-	colliders[1].SetScale(secondBox.GetScale());
-	colliders[1].SetPosition(secondBox.GetPosition());
-	colliders[1].SetDimension(secondBox.GetDimension());
-	colliders[1].Update();
-
-	return IsColliding(colliders[1]);
+	return IsColliding(collider);
 }
 //======================================================================================================
 bool OBBCollider::IsColliding(const SphereCollider& secondSphere) const

@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'BoxCollider' source files last updated on 3 August 2021           |
+| 'BoxCollider' source files last updated on 4 August 2021           |
 #===================================================================*/
 
 #include "glad.h"
@@ -32,6 +32,9 @@ public:
 	void SetDimension(const glm::vec3& dimension);
 	void SetDimension(GLfloat width, GLfloat height, GLfloat depth);
 
+	bool IsColliding(const glm::vec3& point) const;
+	bool IsColliding(GLfloat x, GLfloat y, GLfloat z) const;
+	
 	bool IsColliding(const OBBCollider& secondBox) const;
 	bool IsColliding(const BoxCollider& secondBox) const;
 	bool IsColliding(const SphereCollider& secondSphere) const;

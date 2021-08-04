@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'OBBCollider' source files last updated on 3 August 2021           |
+| 'OBBCollider' source files last updated on 4 August 2021           |
 #===================================================================*/
 
 #include "glad.h"

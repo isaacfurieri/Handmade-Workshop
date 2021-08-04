@@ -66,6 +66,18 @@ void BoxCollider::SetDimension(GLfloat width, GLfloat height, GLfloat depth)
 	m_dimension.z = depth;
 }
 //======================================================================================================
+bool BoxCollider::IsColliding(const glm::vec3& point) const
+{
+	return IsColliding(point.x, point.y, point.z);
+}
+//======================================================================================================
+bool BoxCollider::IsColliding(GLfloat x, GLfloat y, GLfloat z) const
+{
+	return ((x >= m_min.x && x <= m_max.x) &&
+		(y >= m_min.y && y <= m_max.y) &&
+		(z >= m_min.z && z <= m_max.z));
+}
+//======================================================================================================
 bool BoxCollider::IsColliding(const OBBCollider& secondBox) const
 {
 	return secondBox.IsColliding(*this);
