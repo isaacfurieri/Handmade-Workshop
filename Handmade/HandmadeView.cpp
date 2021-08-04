@@ -339,7 +339,6 @@ void CHandmadeView::OnDraw(CDC* pDC)
 	Shader& lightShader = *m_lightShader.get();
 	Shader& testShader = *m_testShader.get();
 
-	lightShader.Use();
 	mainShader.Use();
 
 	m_mainCamera->CreatePerspView();
@@ -352,6 +351,19 @@ void CHandmadeView::OnDraw(CDC* pDC)
 
 	m_axes->GetTransform().SetRotation(m_grid->GetTransform().GetRotation());
 	m_axes->Render(mainShader);
+
+	lightShader.Use();
+	lightShader.SendData("cameraPosition", m_mainCamera->GetTransform().GetPosition());
+
+	m_light->SendToShader(lightShader);
+	m_light->Render(lightShader);
+	m_mainCamera->SendToShader(lightShader);
+	
+	//m_cube->GetTransform().SetRotation(m_grid->GetTransform().GetRotation());
+	//m_cube->Render(lightShader);
+
+	//m_model->GetTransform().SetRotation(m_grid->GetTransform().GetRotation());
+	//m_model->Render(lightShader);
 
 	//==============================================================================
 	//Text rendering & UI
@@ -376,15 +388,8 @@ void CHandmadeView::OnDraw(CDC* pDC)
 	m_bottomText->Render(textShader);
 
 	//For current testing
-	//m_light->SendToShader(*Shader::Instance());
-
-	//m_model->Render(*Shader::Instance());
-
 	//m_quad->GetTransform().SetRotation(m_grid->GetTransform().GetRotation());
 	//m_quad->Render(*Shader::Instance());
-
-	//m_cube->GetTransform().SetRotation(m_grid->GetTransform().GetRotation());
-	//m_cube->Render(*Shader::Instance());
 
 	//m_sphere->GetTransform().SetRotation(m_grid->GetTransform().GetRotation());
 	//m_sphere->Render(*Shader::Instance());
