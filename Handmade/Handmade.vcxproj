@@ -198,6 +198,7 @@
     <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Capsule.h" />
     <ClInclude Include="Circle.h" />
     <ClInclude Include="Cuboid.h" />
     <ClInclude Include="framework.h" />
@@ -237,6 +238,7 @@
     <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Capsule.cpp" />
     <ClCompile Include="Circle.cpp" />
     <ClCompile Include="Cuboid.cpp" />
     <ClCompile Include="FreeCamera.cpp" />
