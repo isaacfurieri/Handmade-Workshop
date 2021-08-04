@@ -95,17 +95,37 @@ bool Model::Load(const std::string& filename, bool isNormalized, const std::stri
 
 					vertexGroup.v = std::stoi(numbers[0]) - 1;
 
+					if (vertexGroup.v < 0)
+					{
+						vertexGroup.v = rawMesh.vertices.size() + (vertexGroup.v + 1);
+					}
+
 					//Some .obj files do not contain texture coordinate data 
 					//so only add a texture index if there is one present
 					if (numbers.size() > 2)
 					{
 						vertexGroup.t = std::stoi(numbers[1]) - 1;
 						vertexGroup.n = std::stoi(numbers[2]) - 1;
+						
+						if (vertexGroup.t < 0)
+						{
+							vertexGroup.t = rawMesh.textureCoords.size() + (vertexGroup.t + 1);
+						}
+
+						if (vertexGroup.n < 0)
+						{
+							vertexGroup.n = rawMesh.normals.size() + (vertexGroup.n + 1);
+						}
 					}
 
 					else
 					{
-						vertexGroup.n = std::stoi(numbers[1]) - 1;
+						vertexGroup.n = std::stoi(numbers[2]) - 1;
+						
+						if (vertexGroup.n < 0)
+						{
+							vertexGroup.n = rawMesh.normals.size() + (vertexGroup.n + 1);
+						}
 					}
 
 					face.push_back(vertexGroup);

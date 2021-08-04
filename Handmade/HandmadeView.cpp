@@ -355,9 +355,9 @@ void CHandmadeView::OnDraw(CDC* pDC)
 	lightShader.Use();
 	lightShader.SendData("cameraPosition", m_mainCamera->GetTransform().GetPosition());
 
-	m_light->SendToShader(lightShader);
-	m_light->Render(lightShader);
-	m_mainCamera->SendToShader(lightShader);
+	//m_light->SendToShader(lightShader);
+	//m_light->Render(lightShader);
+	//m_mainCamera->SendToShader(lightShader);
 	
 	//m_cube->GetTransform().SetRotation(m_grid->GetTransform().GetRotation());
 	//m_cube->Render(lightShader);
