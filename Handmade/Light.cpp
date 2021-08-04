@@ -19,7 +19,7 @@ Light::Light(GLfloat x, GLfloat y, GLfloat z)
 	m_buffer.Create("Light", 1);
 
 	GLfloat vertex[] = { 0.0f, 0.0f, 0.0f };
-	GLfloat color[] = { m_ambient.r, m_ambient.g, m_ambient.b };
+	GLfloat color[] = { m_ambient.r, m_ambient.g, m_ambient.b, 1.0f };
 
 	m_buffer.FillVBO(Buffer::VBO::VertexBuffer, vertex, sizeof(vertex), Buffer::Fill::Ongoing);
 	m_buffer.FillVBO(Buffer::VBO::ColorBuffer, color, sizeof(color), Buffer::Fill::Ongoing);
@@ -108,7 +108,7 @@ void Light::Render(Shader& shader)
 void Light::SendToShader(Shader& shader)
 {
 	//Shader::Instance()->SendData("totalLights", s_totalLights);
-
+	shader.SendData("model", m_transform.GetMatrix());
 	shader.SendData("light.ambient", m_ambient);
 	shader.SendData("light.diffuse", m_diffuse);
 	shader.SendData("light.specular", m_specular);
