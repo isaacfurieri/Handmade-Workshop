@@ -1,17 +1,14 @@
 #pragma once
 
 /*===================================================================#
-| 'Model' source files last updated on 20 July 2021                  |
+| 'Model' source files last updated on 4 August 2021                 |
 #===================================================================*/
 
-#include "glad.h"
 #include <map>
-#include <string>
 #include <vector>
-#include <glm.hpp>
 #include "Buffer.h"
 #include "Material.h"
-#include "Shader.h"
+#include "Object.h"
 #include "Texture.h"
 
 #define NOMINMAX
@@ -58,12 +55,13 @@ public:
 
 typedef std::vector<VertexGroup> Face;
 
-class Model
+class Model : public Object
 {
 
 public:
 
 	Model();
+	virtual ~Model() {}
 
 	bool Load(const std::string& filename,
 		bool isNormalized = false,
@@ -73,7 +71,10 @@ public:
 
 	void SetColor(const glm::vec4& color);
 	void SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
-	void Render(Shader& shader);
+
+	virtual void Render(Shader& shader);
+	virtual void Update(GLfloat deltaTime) {}
+	virtual void SendToShader(Shader& shader) {}
 
 	void Unload();
 

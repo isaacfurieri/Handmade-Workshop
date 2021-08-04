@@ -359,8 +359,11 @@ void Model::SortVertexData(Mesh& newMesh, const Mesh& oldMesh, const std::vector
 //======================================================================================================
 void Model::Render(Shader& shader)
 {
-	auto count = 0;
+	m_normalMatrix = glm::inverse(glm::mat3(m_transform.GetMatrix()));
+	shader.SendData("normal", m_normalMatrix, true);
+	shader.SendData("model", m_transform.GetMatrix());
 
+	auto count = 0;
 	for (auto& mesh : m_meshes)
 	{
 		m_buffers[count].LinkEBO();
