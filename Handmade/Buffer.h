@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Buffer' source files last updated on 20 July 2021                 |
+| 'Buffer' source files last updated on 5 August 2021                |
 #===================================================================*/
 
 #include <map>
@@ -63,8 +63,16 @@ public:
 		Polygonal = GL_LINE
 	};
 
+	enum class Culling
+	{
+		None = 0,
+		BackFace = GL_BACK,
+		FrontFace = GL_FRONT,
+	};
+
 	static void SetPointSize(GLfloat size);
 	static void SetLineWidth(GLfloat lineWidth);
+	static void SetCullingMode(Culling culling);
 	static void SetRenderStyle(RenderStyle renderStyle);
 
 	Buffer();
@@ -77,9 +85,9 @@ public:
 
 	void FillEBO(const GLuint* data, GLsizeiptr bufferSize, Fill fill = Fill::Once);
 	void FillVBO(VBO vbo, const void* data, GLsizeiptr bufferSize, Fill fill = Fill::Once);
-	
+
 	void AppendEBO(const GLuint* data, GLsizeiptr size, GLuint offset);
-	void AppendVBO(VBO vbo,	const void* data, GLsizeiptr size, GLuint offset);
+	void AppendVBO(VBO vbo, const void* data, GLsizeiptr size, GLuint offset);
 
 	void LinkEBO();
 	void LinkVBO(GLint attributeID, VBO vbo, ComponentSize componentSize, DataType dataType);
@@ -93,7 +101,7 @@ private:
 
 	bool m_hasEBO;
 	std::string m_tag;
-	
+
 	GLuint m_VAO;
 	GLuint m_EBO;
 	GLsizei m_totalVertices;

@@ -14,6 +14,21 @@ void Buffer::SetLineWidth(GLfloat lineWidth)
 	glLineWidth(lineWidth);
 }
 //======================================================================================================
+void Buffer::SetCullingMode(Culling culling)
+{
+	if (culling == Culling::None)
+	{
+		glDisable(GL_CULL_FACE);
+	}
+
+	else
+	{
+		glEnable(GL_CULL_FACE);
+		glCullFace(static_cast<GLenum>(culling));
+		glFrontFace(GL_CW);
+	}
+}
+//======================================================================================================
 void Buffer::SetRenderStyle(RenderStyle renderStyle)
 {
 	glPolygonMode(GL_FRONT_AND_BACK, renderStyle == RenderStyle::Polygonal ? GL_LINE : GL_FILL);
