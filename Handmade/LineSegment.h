@@ -1,12 +1,13 @@
 #pragma once
 
 /*===================================================================#
-| 'LineSegment' source files last updated on 4 August 2021           |
+| 'LineSegment' source files last updated on 5 August 2021           |
 #===================================================================*/
 
 #include "glad.h"
 #include <glm.hpp>
 
+class Plane;
 class SphereCollider;
 
 class LineSegment
@@ -24,6 +25,7 @@ public:
 	void SetEndPoint(const glm::vec3& endPoint);
 	void SetEndPoint(GLfloat x, GLfloat y, GLfloat z);
 
+	bool IsColliding(const Plane& secondPlane) const;
 	bool IsColliding(const SphereCollider& secondSphere) const;
 
 	glm::vec3 PointOnLine(const glm::vec3& point) const;

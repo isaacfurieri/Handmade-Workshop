@@ -1,5 +1,6 @@
 #include <assert.h>
 #include "LineSegment.h"
+#include "Plane.h"
 #include "SphereCollider.h"
 
 //======================================================================================================
@@ -45,6 +46,14 @@ bool LineSegment::IsColliding(const SphereCollider& secondSphere) const
 	//TODO - Should the radius not be scaled?
 	return (glm::length(secondSphere.GetPosition() - PointOnLine(secondSphere.GetPosition())) <= 
 		secondSphere.GetRadius());
+}
+//======================================================================================================
+bool LineSegment::IsColliding(const Plane& secondPlane) const
+{
+	//TODO - Complete this
+	//The line seg intersects the plane if the end points
+	//are on different sides, (or are on the plane)
+	return false;
 }
 //======================================================================================================
 glm::vec3 LineSegment::PointOnLine(const glm::vec3& point) const
