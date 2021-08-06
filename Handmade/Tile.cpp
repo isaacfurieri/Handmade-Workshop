@@ -4,7 +4,8 @@
 #include "Tile.h"
 
 //======================================================================================================
-Tile::Tile(GLfloat width, GLfloat height, GLuint spriteSheetCol, GLuint spriteSheetRow)
+Tile::Tile(const std::string& filename, 
+	GLfloat width, GLfloat height, GLuint spriteSheetCol, GLuint spriteSheetRow)
 {
 	m_tileIndex = 0;
 	m_color = glm::vec4(1.0f);
@@ -12,6 +13,9 @@ Tile::Tile(GLfloat width, GLfloat height, GLuint spriteSheetCol, GLuint spriteSh
 	m_spriteSheetCol = spriteSheetCol;
 	m_spriteSheetRow = spriteSheetRow;
 	m_dimension = glm::vec2(width, height);
+
+	//TODO - Find a better tag name
+	m_texture.Load(filename, filename);
 
 	m_isAnimated = false;
 	m_isAnimationDead = false;
@@ -179,7 +183,7 @@ void Tile::Render(Shader& shader)
 	m_buffer.LinkVBO(shader.GetAttributeID("colorIn"),
 		Buffer::VBO::ColorBuffer, Buffer::ComponentSize::RGBA, Buffer::DataType::FloatData);
 	m_buffer.LinkVBO(shader.GetAttributeID("textureIn"),
-		Buffer::VBO::VertexBuffer, Buffer::ComponentSize::UV, Buffer::DataType::FloatData);
+		Buffer::VBO::TextureBuffer, Buffer::ComponentSize::UV, Buffer::DataType::FloatData);
 	//m_buffer.LinkVBO(shader.GetAttributeID("normalIn"),
 		//Buffer::VBO::ColorBuffer, Buffer::ComponentSize::XYZ, Buffer::DataType::FloatData);
 
@@ -221,8 +225,10 @@ void Tile::Render(Shader& shader)
 			(m_spriteSheetCol * m_spriteSheetRow);
 	}
 
+	m_texture.Bind();
 	m_buffer.Render(Buffer::RenderMode::Triangles, 
 		(m_tileIndex * BYTES_PER_TILE_INDEX), VERTICES_PER_TILE);
+	m_texture.Unbind();
 }
 //======================================================================================================
 void Tile::SendToShader(Shader& shader)

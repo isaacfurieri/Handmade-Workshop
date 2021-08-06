@@ -1,7 +1,8 @@
 #pragma once
 
 /*===================================================================#
-| 'Tile' source files last updated on 20 July 2021                   |
+| 'Tile' source files last updated on 6 August 2021                  |
+| Not yet fully tested                                               |
 #===================================================================*/
 
 #include <string>
@@ -9,13 +10,15 @@
 #include "glad.h"
 #include "Buffer.h"
 #include "Object.h"
+#include "Texture.h"
 
 class Tile : public Object
 {
 
 public:
 
-	Tile(GLfloat width = 1.0f, GLfloat height = 1.0f,
+	Tile(const std::string& filename,
+		GLfloat width = 1.0f, GLfloat height = 1.0f,
 		GLuint spriteSheetCol = 1, GLuint spriteSheetRow = 1);
 	virtual ~Tile();
 
@@ -50,6 +53,8 @@ private:
 	GLfloat m_animationVelocity;
 
 	Buffer m_buffer;
+	Texture m_texture;
+
 	glm::vec4 m_color;
 	glm::vec2 m_dimension;
 
