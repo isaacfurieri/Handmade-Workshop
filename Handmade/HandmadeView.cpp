@@ -127,7 +127,7 @@ int CHandmadeView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_textShader->BindAttribute("vertexIn");
 	m_textShader->BindAttribute("colorIn");
 	m_textShader->BindAttribute("textureIn");
-	
+
 	m_textShader->BindUniform("model");
 	m_textShader->BindUniform("view");
 	m_textShader->BindUniform("projection");
@@ -204,17 +204,22 @@ int CHandmadeView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_grid = std::make_unique<Grid>();
 	m_grid->GetTransform().SetRotation(45.0f, -30.0f, 0.0f);
 
-	m_axes = std::make_unique<Axes>();
-
+	m_axes = std::make_unique<Axes>("Arrow.obj");
+	
 	m_topText = std::make_unique<Text>();
 	m_topText->LoadFont("Assets/Fonts/Quikhand.ttf", 30);
 	m_topText->SetColor(1.0f, 0.0f, 0.196f, 1.0f);
 	m_topText->SetText("Handmade Alpha");
-	
+
 	m_bottomText = std::make_unique<Text>();
 	m_bottomText->LoadFont("Assets/Fonts/Quikhand.ttf", 30);
 	m_bottomText->SetColor(0.0f, 0.564f, 1.0f, 1.0f);
 	m_bottomText->SetText("Click/Drag the mouse to rotate the grid. Use the mouse wheel to zoom in/out");
+
+	m_axesLabelText = std::make_unique<Text>();
+	m_axesLabelText->LoadFont("Assets/Fonts/Arial.ttf", 66);
+	m_axesLabelText->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
+	m_axesLabelText->SetText("X");
 
 	//For current testing=======================================================
 	/*m_audio = std::make_unique<Audio>();
@@ -222,10 +227,11 @@ int CHandmadeView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_audio->SetAudio("Test", Audio::Type::Music);
 	m_audio->Play();*/
 
-	//m_light = std::make_unique<Light>();
+	m_light = std::make_unique<Light>(0.0f, 7.5f, 0.0f);
 
-	//m_model = std::make_unique<Model>();
-	//m_model->Load("Teapot.obj");
+	m_model = std::make_unique<Model>();
+	m_model->Load("Teapot.obj", true);
+	//m_model->GetTransform().SetScale(5.0f, 5.0f, 5.0f);
 	//m_model->SetColor(1, 0, 1, 1);
 
 	//m_quad = std::make_unique<Quad>();
@@ -349,15 +355,15 @@ void CHandmadeView::OnDraw(CDC* pDC)
 
 	m_grid->Render(mainShader);
 
-	m_axes->GetTransform().SetRotation(m_grid->GetTransform().GetRotation());
-	m_axes->Render(mainShader);
-
 	lightShader.Use();
 	lightShader.SendData("cameraPosition", m_mainCamera->GetTransform().GetPosition());
 
-	//m_light->SendToShader(lightShader);
-	//m_light->Render(lightShader);
-	//m_mainCamera->SendToShader(lightShader);
+	m_light->SendToShader(lightShader);
+	m_light->Render(lightShader);
+	m_mainCamera->SendToShader(lightShader);
+
+	m_axes->GetTransform().SetRotation(m_grid->GetTransform().GetRotation());
+	m_axes->Render(lightShader);
 	
 	//m_cube->GetTransform().SetRotation(m_grid->GetTransform().GetRotation());
 	//m_cube->Render(lightShader);
@@ -373,12 +379,12 @@ void CHandmadeView::OnDraw(CDC* pDC)
 	auto resolution = Screen::Instance()->GetResolution();
 
 	textShader.Use();
-	
+
 	m_UICamera->CreateOrthoView();
 	m_UICamera->Update(16.0f);
 	m_UICamera->SendToShader(textShader);
 
-	m_topText->GetTransform().SetPosition(resolution.x - m_topText->GetTotalWidth() - PADDING, 
+	m_topText->GetTransform().SetPosition(resolution.x - m_topText->GetTotalWidth() - PADDING,
 		resolution.y - 50.0f, 0.0f);
 	m_topText->SendToShader(textShader);
 	m_topText->Render(textShader);
@@ -386,6 +392,24 @@ void CHandmadeView::OnDraw(CDC* pDC)
 	m_bottomText->GetTransform().SetPosition(PADDING, PADDING, 0.0f);
 	m_bottomText->SendToShader(textShader);
 	m_bottomText->Render(textShader);
+
+	auto labelPosition = m_mainCamera->ConvertWorldToScreen(m_axes->GetArrowTipPositionX());
+	m_axesLabelText->GetTransform().SetPosition(labelPosition.x, labelPosition.y, 0.0f);
+	m_axesLabelText->SendToShader(textShader);
+	m_axesLabelText->SetText("X");
+	m_axesLabelText->Render(textShader);
+
+	labelPosition = m_mainCamera->ConvertWorldToScreen(m_axes->GetArrowTipPositionY());
+	m_axesLabelText->GetTransform().SetPosition(labelPosition.x, labelPosition.y, 0.0f);
+	m_axesLabelText->SendToShader(textShader);
+	m_axesLabelText->SetText("Y");
+	m_axesLabelText->Render(textShader);
+
+	labelPosition = m_mainCamera->ConvertWorldToScreen(m_axes->GetArrowTipPositionZ());
+	m_axesLabelText->GetTransform().SetPosition(labelPosition.x, labelPosition.y, 0.0f);
+	m_axesLabelText->SendToShader(textShader);
+	m_axesLabelText->SetText("Z");
+	m_axesLabelText->Render(textShader);
 
 	//For current testing
 	//m_quad->GetTransform().SetRotation(m_grid->GetTransform().GetRotation());
