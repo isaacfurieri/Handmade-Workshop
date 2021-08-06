@@ -1,7 +1,8 @@
 #pragma once
 
 /*===================================================================#
-| 'Grid' source files last updated on 20 July 2021                   |
+| 'Grid' source files last updated on 6 August 2021                  |
+| Not yet fully tested                                               |
 #===================================================================*/
 
 #include "Buffer.h"
@@ -12,7 +13,7 @@ class Grid : public Object
 
 public:
 
-	Grid(GLint size = 15, GLfloat lineWidth = 1.5f);
+	Grid(bool hasSpaceForAxes = false, GLint size = 15, GLfloat lineWidth = 1.5f);
 	virtual ~Grid();
 
 	void SetSize(GLint size);
@@ -32,6 +33,7 @@ private:
 	GLint m_size;
 	Buffer m_buffer;
 	GLfloat m_lineWidth;
+	bool m_hasSpaceForAxes;
 
 	const GLuint QUADRANTS = 4;
 };

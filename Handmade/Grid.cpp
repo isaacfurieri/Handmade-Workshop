@@ -3,10 +3,11 @@
 #include "Shader.h"
 
 //======================================================================================================
-Grid::Grid(GLint size, GLfloat lineWidth)
+Grid::Grid(bool hasSpaceForAxes, GLint size, GLfloat lineWidth)
 {
 	m_size = size;
 	m_lineWidth = lineWidth;
+	m_hasSpaceForAxes = hasSpaceForAxes;
 	Create();
 }
 //======================================================================================================
@@ -95,8 +96,7 @@ void Grid::Create()
 	//Negative vertical lines
 	//==================================
 
-	//Set 'i <= m_size' to close the grid lines
-	for (int i = 0; i < m_size; i++)
+	for (int i = 0; m_hasSpaceForAxes ? i < m_size : i <= m_size; i++)
 	{
 		GLint vertices[] = { -m_size + i, 0,  m_size,      //first vertex
 							 -m_size + i, 0, -m_size };    //second vertex
@@ -134,8 +134,7 @@ void Grid::Create()
 	//Negative horizontal lines
 	//==================================
 
-	//Set 'i <= m_size' to close the grid lines
-	for (int i = 0; i < m_size; i++)
+	for (int i = 0; m_hasSpaceForAxes ? i < m_size : i <= m_size; i++)
 	{
 		GLint vertices[] = { -m_size, 0, -m_size + i,        //first vertex
 							  m_size, 0, -m_size + i };     //second vertex
