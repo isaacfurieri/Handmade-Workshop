@@ -1,7 +1,8 @@
 #pragma once
 
 /*===================================================================#
-| 'Texture' source files last updated on 26 July 2021                |
+| 'Texture' source files last updated on 6 August 2021               |
+| Not yet fully tested                                               |
 #===================================================================*/
 
 #include <map>
@@ -24,7 +25,7 @@ public:
 	{
 		Minification = GL_TEXTURE_MIN_FILTER,
 		Magnification = GL_TEXTURE_MAG_FILTER,
-		Anisotropic = GL_TEXTURE_MAX_ANISOTROPY  
+		Anisotropic = GL_TEXTURE_MAX_ANISOTROPY
 	};
 
 	enum class FilterSetting
