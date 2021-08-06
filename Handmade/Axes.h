@@ -1,13 +1,15 @@
 #pragma once
 
 /*===================================================================#
-| 'Axes' source files last updated on 21 July 2021                   |
+| 'Axes' source files last updated on 6 August 2021                  |
+| Not yet fully tested                                               |
 #===================================================================*/
 
 #include "Buffer.h"
 #include "Model.h"
 #include "Object.h"
 #include "Shader.h"
+#include "Tile.h"
 
 class Axes : public Object
 {
@@ -21,10 +23,9 @@ public:
 	void SetSize(GLint size);
 	void SetLineWidth(GLfloat lineWidth);
 
-	//Not currently used
-	//const glm::vec3& GetArrowTipPositionX();
-	//const glm::vec3& GetArrowTipPositionY();
-	//const glm::vec3& GetArrowTipPositionZ();
+	const glm::vec3& GetArrowTipPositionX() const;
+	const glm::vec3& GetArrowTipPositionY() const;
+	const glm::vec3& GetArrowTipPositionZ() const;
 
 	virtual void Render(Shader& shader);
 	virtual void Update(GLfloat deltaTime) {}
@@ -37,13 +38,12 @@ private:
 	GLint m_size;
 	bool m_isPrimitive;
 	GLfloat m_lineWidth;
-	
+
 	Model m_model;
 	Buffer m_buffer;
 
-	//Not currently used
-	//glm::vec3 m_arrowTipPositionX;
-	//glm::vec3 m_arrowTipPositionY;
-	//glm::vec3 m_arrowTipPositionZ;
+	glm::vec3 m_arrowTipPositionX;
+	glm::vec3 m_arrowTipPositionY;
+	glm::vec3 m_arrowTipPositionZ;
 
 };
