@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Object' source files last updated on 7 July 2021                  |
+| 'Object' source files last updated on 19 August 2021               |
 #===================================================================*/
 
 #include "glad.h"
@@ -15,7 +15,7 @@ class Object
 
 public:
 
-	Object();
+	Object(Object* parent = nullptr);
 	virtual ~Object() = 0 {}
 
 	bool IsLit() const;
@@ -50,6 +50,7 @@ protected:
 	bool m_isVisible;
 	bool m_isTextured;
 
+	Object* m_parent;
 	std::string m_tag;
 	GLuint m_priority;
 	Transform m_transform;
