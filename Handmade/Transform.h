@@ -1,14 +1,12 @@
 #pragma once
 
 /*===================================================================#
-| 'Transform' source files last updated on 27 July 2021              |
+| 'Transform' source files last updated on 19 August 2021            |
 #===================================================================*/
 
 #include "glad.h"
 #include <glm.hpp>
 #include <gtc/quaternion.hpp>
-
-//TODO - This class still needs to be fully tested
 
 class Transform
 {
@@ -42,17 +40,19 @@ public:
 	void SetRotation(GLfloat angle, const glm::vec3& axis);
 	void SetRotation(GLfloat pitch, GLfloat yaw, GLfloat roll);
 
+	void SetScale(GLfloat scale);
 	void SetScale(const glm::vec3& scale);
 	void SetScale(GLfloat x, GLfloat y, GLfloat z);
 
-	void Translate(const glm::vec3& translation, Space space);
-	void Translate(GLfloat x, GLfloat y, GLfloat z, Space space);
+	void Translate(const glm::vec3& translation, Space space = Space::Global);
+	void Translate(GLfloat x, GLfloat y, GLfloat z, Space space = Space::Global);
 
-	void Rotate(const glm::quat& rotation, Space space);
-	void Rotate(const glm::vec3& eulerAngles, Space space);
-	void Rotate(GLfloat angle, const glm::vec3& axis, Space space);
-	void Rotate(GLfloat pitch, GLfloat yaw, GLfloat roll, Space space);
+	void Rotate(const glm::quat& rotation, Space space = Space::Global);
+	void Rotate(const glm::vec3& eulerAngles, Space space = Space::Global);
+	void Rotate(GLfloat angle, const glm::vec3& axis, Space space = Space::Global);
+	void Rotate(GLfloat pitch, GLfloat yaw, GLfloat roll, Space space = Space::Global);
 
+	void Scale(GLfloat scale);
 	void Scale(const glm::vec3& scale);
 	void Scale(GLfloat x, GLfloat y, GLfloat z);
 

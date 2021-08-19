@@ -65,7 +65,9 @@ void Transform::SetPosition(const glm::vec3& position)
 //======================================================================================================
 void Transform::SetPosition(GLfloat x, GLfloat y, GLfloat z)
 {
-	m_position = glm::vec3(x, y, z);
+	m_position.x = x;
+	m_position.y = y;
+	m_position.z = z;
 	m_isDirty = true;
 }
 //======================================================================================================
@@ -93,6 +95,14 @@ void Transform::SetRotation(GLfloat pitch, GLfloat yaw, GLfloat roll)
 	m_isDirty = true;
 }
 //======================================================================================================
+void Transform::SetScale(GLfloat scale)
+{
+	m_scale.x = scale;
+	m_scale.y = scale;
+	m_scale.z = scale;
+	m_isDirty = true;
+}
+//======================================================================================================
 void Transform::SetScale(const glm::vec3& scale)
 {
 	m_scale = scale;
@@ -101,7 +111,9 @@ void Transform::SetScale(const glm::vec3& scale)
 //======================================================================================================
 void Transform::SetScale(GLfloat x, GLfloat y, GLfloat z)
 {
-	m_scale = glm::vec3(x, y, z);
+	m_scale.x = x;
+	m_scale.y = y;
+	m_scale.z = z;
 	m_isDirty = true;
 }
 //======================================================================================================
@@ -165,6 +177,12 @@ void Transform::Rotate(GLfloat pitch, GLfloat yaw, GLfloat roll, Space space)
 {
 	glm::quat tempRotation = glm::quat(glm::radians(glm::vec3(pitch, yaw, roll)));
 	Rotate(tempRotation, space);
+}
+//======================================================================================================
+void Transform::Scale(GLfloat scale)
+{
+	m_scale *= glm::vec3(scale, scale, scale);
+	m_isDirty = true;
 }
 //======================================================================================================
 void Transform::Scale(const glm::vec3& scale)
