@@ -11,17 +11,6 @@ Transform::Transform(const glm::mat4& matrix)
 	m_rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
 }
 //======================================================================================================
-Transform Transform::operator*(const Transform& rhs)
-{
-	return Transform(this->m_matrix * rhs.m_matrix);
-}
-//======================================================================================================
-Transform& Transform::operator*=(const Transform& rhs)
-{
-	*this = *this * rhs;
-	return *this;
-}
-//======================================================================================================
 glm::vec3 Transform::GetEulerAngles()
 {
 	return glm::degrees(glm::eulerAngles(m_rotation));

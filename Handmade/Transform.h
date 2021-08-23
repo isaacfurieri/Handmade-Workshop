@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Transform' source files last updated on 19 August 2021            |
+| 'Transform' source files last updated on 23 August 2021            |
 #===================================================================*/
 
 #include "glad.h"
@@ -20,9 +20,6 @@ public:
 	};
 
 	Transform(const glm::mat4& matrix = glm::mat4(1.0f));
-
-	Transform operator*(const Transform& rhs);
-	Transform& operator*=(const Transform& rhs);
 
 	glm::vec3 GetEulerAngles();
 	const glm::vec3& GetPosition() const;
