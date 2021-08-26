@@ -221,6 +221,9 @@ void Tile::Render(Shader& shader)
 
 		//We need to be able to pick the correct portion
 		//of the EBO to use to render the correct tile
+		//The index value is zero based and is a whole 
+		//number value counting from top left and going right
+		//and down the spritesheet, and is capable of 'wrapping'
 		m_tileIndex = (GLuint)(timeElapsed * m_animationVelocity) %
 			(m_spriteSheetCol * m_spriteSheetRow);
 	}

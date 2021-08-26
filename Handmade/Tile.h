@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Tile' source files last updated on 6 August 2021                  |
+| 'Tile' source files last updated on 26 August 2021                 |
 | Not yet fully tested                                               |
 #===================================================================*/
 
