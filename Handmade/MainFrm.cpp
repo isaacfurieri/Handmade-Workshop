@@ -21,14 +21,25 @@ CMainFrame::~CMainFrame()
 }
 //======================================================================================================
 BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
-{
-	if (!CFrameWnd::PreCreateWindow(cs))
-		return FALSE;
-	//TODO: Modify the Window class or styles here by modifying the CREATESTRUCT cs
-	//Make sure to do this AFTER the call above and append settings with |=
+{	
+	//Help with window styles:
+	//https://coding-examples.com/c/mfc/fixed-mfc-sdi-window-using-createstruct-precreatewindow/
 
+	if (!CFrameWnd::PreCreateWindow(cs))
+	{
+		return FALSE;
+	}
+
+	//Modify the Window class or styles here by modifying the 
+	//CREATESTRUCT cs and make sure to do this AFTER the call above 
+
+	//EXAMPLE:
 	/*cs.style |= WS_OVERLAPPED | WS_CAPTION | FWS_ADDTOTITLE
 		 | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_SYSMENU | WS_MAXIMIZE;*/
+
+	//Use cs.style |= STYLE to add a style
+	//Use cs.style &= ~STYLE to remove a style
+	//Use cs.style = STYLE to create new styles from scratch
 
 	return TRUE;
 }
