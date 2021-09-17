@@ -103,6 +103,7 @@ Text::Text()
 	m_fontSize = 0;
 	m_totalWidth = 0;
 	m_freetypeFace = nullptr;
+	m_isFirstLetterCentered = false;
 
 	static GLuint totalTextObjects = 0;
 
@@ -157,18 +158,39 @@ void Text::SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
 	m_buffer.FillVBO(Buffer::VBO::ColorBuffer, colors, sizeof(colors), Buffer::Fill::Ongoing);
 }
 //================================================================================================
+void Text::IsFirstLetterCentered(bool flag)
+{
+	m_isFirstLetterCentered = flag;
+}
+//================================================================================================
 void Text::Render(Shader& shader)
 {
-	GLfloat textOrigin = 0.0f;
+	glm::vec2 textOrigin = glm::vec2(0.0f);
 
 	for (const auto& character : m_text)
 	{
 		Glyph letter = m_glyphs[character];
 
-		GLfloat vertices[] = { textOrigin + letter.bearingX, letter.bearingY, 0.0f,
-			textOrigin + letter.bearingX + letter.width, letter.bearingY, 0.0f,
-			textOrigin + letter.bearingX + letter.width, letter.bearingY - letter.height, 0.0f,
-			textOrigin + letter.bearingX, letter.bearingY - letter.height, 0.0f };
+		auto halfWidth = letter.width * 0.5f;
+		auto halfBearingY = letter.bearingY * 0.5f;
+
+		if (m_isFirstLetterCentered)
+		{
+			GLfloat vertices[] = { textOrigin.x - halfWidth, textOrigin.y + halfBearingY, 0.0f,
+				textOrigin.x + halfWidth, textOrigin.y + halfBearingY, 0.0f,
+				textOrigin.x + halfWidth, textOrigin.y + halfBearingY - letter.height, 0.0f,
+				textOrigin.x - halfWidth, textOrigin.y + halfBearingY - letter.height, 0.0f };
+			m_buffer.FillVBO(Buffer::VBO::VertexBuffer, vertices, sizeof(vertices), Buffer::Fill::Ongoing);
+		}
+
+		else
+		{
+			GLfloat vertices[] = { textOrigin.x + letter.bearingX, letter.bearingY, 0.0f,
+				textOrigin.x + letter.bearingX + letter.width, letter.bearingY, 0.0f,
+				textOrigin.x + letter.bearingX + letter.width, letter.bearingY - letter.height, 0.0f,
+				textOrigin.x + letter.bearingX, letter.bearingY - letter.height, 0.0f };
+			m_buffer.FillVBO(Buffer::VBO::VertexBuffer, vertices, sizeof(vertices), Buffer::Fill::Ongoing);
+		}
 
 		GLfloat UVs[] = { 0.0f, 0.0f,
 						  1.0f, 0.0f,
@@ -179,7 +201,6 @@ void Text::Render(Shader& shader)
 							 3, 1, 2 };
 
 		m_buffer.FillEBO(indices, sizeof(indices));
-		m_buffer.FillVBO(Buffer::VBO::VertexBuffer, vertices, sizeof(vertices), Buffer::Fill::Ongoing);
 		m_buffer.FillVBO(Buffer::VBO::TextureBuffer, UVs, sizeof(UVs), Buffer::Fill::Ongoing);
 
 		//TODO - Find a way to do this only once
@@ -197,7 +218,7 @@ void Text::Render(Shader& shader)
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		//We have to divide by 64 because the value is a product of 64
-		textOrigin += letter.advance / 64.0f;
+		textOrigin.x += (letter.advance) / 64.0f;
 	}
 }
 //================================================================================================

@@ -85,9 +85,9 @@ void Axes::Render(Shader& shader)
 		m_model.Render(shader);
 	}
 
-	m_arrowTipPositionX = m_transform.GetRotation() * glm::vec3(0.75f, 0.0f, 0.0f);
-	m_arrowTipPositionY = m_transform.GetRotation() * glm::vec3(0.0f, 0.75f, 0.0f);
-	m_arrowTipPositionZ = m_transform.GetRotation() * glm::vec3(0.0f, 0.0f, -0.75f);
+	m_arrowTipPositionX = m_transform.GetRotation() * glm::vec3(0.9f, 0.0f, 0.0f);
+	m_arrowTipPositionY = m_transform.GetRotation() * glm::vec3(0.0f, 0.9f, 0.0f);
+	m_arrowTipPositionZ = m_transform.GetRotation() * glm::vec3(0.0f, 0.0f, -0.9f);
 }
 //======================================================================================================
 void Axes::Create()

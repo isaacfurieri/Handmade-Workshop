@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Text' source files last updated on 21 July 2021                   |
+| 'Text' source files last updated on 17 September 2021              |
 #===================================================================*/
 
 #include <map>
@@ -48,6 +48,8 @@ public:
 	void SetColor(const glm::vec4& color);
 	void SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a = 1.0f);
 
+	void IsFirstLetterCentered(bool flag);
+
 	virtual void Render(Shader& shader);
 	virtual void Update(GLfloat deltaTime) {}
 	virtual void SendToShader(Shader& shader);
@@ -62,6 +64,7 @@ private:
 	FT_Face m_freetypeFace;
 
 	std::string m_text;
+	bool m_isFirstLetterCentered;
 	std::map<GLchar, Glyph> m_glyphs;
 
 };

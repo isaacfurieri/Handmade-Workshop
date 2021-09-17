@@ -394,9 +394,10 @@ void CHandmadeView::OnDraw(CDC* pDC)
 	m_bottomText->Render(textShader);
 
 	auto labelPosition = m_mainCamera->ConvertWorldToScreen(m_axes->GetArrowTipPositionX());
+	m_axesLabelText->IsFirstLetterCentered(true);
 	m_axesLabelText->GetTransform().SetPosition(labelPosition.x, labelPosition.y, 0.0f);
-	m_axesLabelText->SendToShader(textShader);
 	m_axesLabelText->SetText("X");
+	m_axesLabelText->SendToShader(textShader);
 	m_axesLabelText->Render(textShader);
 
 	labelPosition = m_mainCamera->ConvertWorldToScreen(m_axes->GetArrowTipPositionY());
