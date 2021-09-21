@@ -22,6 +22,9 @@ struct Glyph
 	GLint advance;   //offset to advance to next glyph
 };
 
+//Would love to call it 'Font' but that name is reserved
+typedef std::map<GLchar, Glyph> FontType;
+
 class Text : public Object
 {
 
@@ -30,19 +33,20 @@ public:
 	static bool Initialize();
 	static void Shutdown();
 
-	Text();
-	virtual ~Text() {}
+	Text(const std::string& filename = "", int fontSize = 10, const std::string& tag = "");
+	Text(const Text& copy);
+	virtual ~Text();
 
 	bool LoadFont(const std::string& filename, int fontSize, const std::string& tag);
-	void UnloadFont();
+	void UnloadFont(const std::string& tag = "");
 
 	GLuint GetFontSize();
 	GLuint GetTotalWidth();
-	const std::string& GetTextString() const;
+	const std::string& GetString() const;
 
-	void SetText(const std::string& tag);
-	void SetTextString(const std::string& textString);
-	void AppendTextString(const std::string& textString);
+	void SetFont(const std::string& tag);
+	void SetString(const std::string& string);
+	void AppendString(const std::string& string);
 
 	void SetColor(const glm::vec4& color);
 	void SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a = 1.0f);
@@ -55,17 +59,19 @@ public:
 
 private:
 
-	static GLuint totalTextObjects;
+	static std::string s_rootFolder;
+	static GLuint s_totalTextObjects;
 	static FT_Library s_freetypeObject;
-	static std::map<std::string, Text> s_textObjects;
+	static std::map<std::string, FontType> s_fonts;
 
 	Buffer m_buffer;
+	FontType m_font;
+
 	glm::vec4 m_color;
 	GLuint m_fontSize;
 	GLuint m_totalWidth;
 
-	std::string m_textString;
+	std::string m_string;
 	bool m_isFirstLetterCentered;
-	std::map<GLchar, Glyph> m_glyphs;
 
 };

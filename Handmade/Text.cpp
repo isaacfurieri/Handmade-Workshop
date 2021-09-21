@@ -3,9 +3,10 @@
 #include "Text.h"
 #include "Utility.h"
 
-GLuint Text::totalTextObjects = 0;
+GLuint Text::s_totalTextObjects = 0;
 FT_Library Text::s_freetypeObject = nullptr;
-std::map<std::string, Text> Text::s_textObjects;
+std::map<std::string, FontType> Text::s_fonts;
+std::string Text::s_rootFolder = "Assets/Fonts/";
 
 //================================================================================================
 bool Text::Initialize()
@@ -25,37 +26,61 @@ void Text::Shutdown()
 	FT_Done_FreeType(s_freetypeObject);
 }
 //================================================================================================
-Text::Text()
+Text::Text(const std::string& filename, int fontSize, const std::string& tag)
 {
-	m_fontSize = 0;
+	m_tag = tag;
 	m_totalWidth = 0;
+	m_fontSize = fontSize;
 	m_isFirstLetterCentered = false;
 	m_color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
-	m_buffer.Create("Text_" + std::to_string(++totalTextObjects), 6, true);
+	m_buffer.Create("Text_" + std::to_string(++s_totalTextObjects), 6, true);
 	m_buffer.LinkEBO();
+
+	if (!filename.empty())
+	{
+		LoadFont(filename, fontSize, tag);
+	}
+}
+//================================================================================================
+Text::Text(const Text& copy)
+{
+	m_fontSize = copy.m_fontSize;
+	m_totalWidth = copy.m_totalWidth;
+	m_isFirstLetterCentered = copy.m_isFirstLetterCentered;
+	m_color = copy.m_color;
+
+	//We require our own copy ctor to control buffer 
+	//creation and to tally up the total text objects
+	m_buffer.Create("Text_" + std::to_string(++s_totalTextObjects), 6, true);
+	m_buffer.LinkEBO();
+
+	m_font = copy.m_font;
+	m_string = copy.m_string;
+}
+//================================================================================================
+Text::~Text()
+{
+	if (!m_tag.empty())
+	{
+		UnloadFont(m_tag);
+	}
+
+	m_buffer.Destroy();
 }
 //================================================================================================
 bool Text::LoadFont(const std::string& filename, int fontSize, const std::string& tag)
 {
-	if (filename.empty())
-	{
-		return false;
-	}
-
-	auto it = s_textObjects.find(tag);
-
-	//This means that the text object already exists in the 
-	//map and we don't want to replace the existing object
-	assert(it == s_textObjects.end());
+	auto it = s_fonts.find(tag);
+	assert(it == s_fonts.end());
 
 	FT_Face freetypeFace = nullptr;
 
-	if (FT_New_Face(s_freetypeObject, filename.c_str(), 0, &freetypeFace))
+	if (FT_New_Face(s_freetypeObject, (s_rootFolder + filename).c_str(), 0, &freetypeFace))
 	{
 		Utility::Log(Utility::Destination::WindowsMessageBox,
-			"Error loading font file \"" + (filename)+"\"."
-			"Possible causes could be a corrupt or missing file. It could also be "
+			"Error loading font file \"" + (s_rootFolder + filename) + "\"\n\n"
+			"Possible causes could be a corrupt or missing file. Another reason could be "
 			"that the filename and/or path are incorrectly spelt.", Utility::Severity::Failure);
 
 		return false;
@@ -66,6 +91,8 @@ bool Text::LoadFont(const std::string& filename, int fontSize, const std::string
 	//This is needed so that we don't follow the standard 4-byte alignment
 	//because the freetype glyph textures only use 1 byte of color data
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+	FontType font;
 
 	//Generate a glyph for all 128 ASCII characters
 	for (int i = 0; i < TOTAL_ASCII_CHARACTERS; i++)
@@ -107,28 +134,43 @@ bool Text::LoadFont(const std::string& filename, int fontSize, const std::string
 						static_cast<GLint>(freetypeFace->glyph->bitmap_top),
 						static_cast<GLint>(freetypeFace->glyph->advance.x) };
 
-		m_glyphs[i] = glyph;
+		
+		font[i] = glyph;
 	}
 
+	m_font = font;
 	FT_Done_Face(freetypeFace);
-	m_fontSize = fontSize;
-
-	//We use 'insert' instead of 's_textObjects[tag] = *this' because
-	//that will create a Text object in the map before assigning it
-	//TODO - Make sure other objects within engine follow same method
-	s_textObjects.insert(std::pair<std::string, Text>(tag, *this));
-
+	s_fonts.insert(std::pair<std::string, FontType>(tag, font));
 	return true;
 }
 //================================================================================================
-void Text::UnloadFont()
+void Text::UnloadFont(const std::string& tag)
 {
-	for (const auto& glyph : m_glyphs)
+	if (!tag.empty())
 	{
-		glDeleteTextures(1, &glyph.second.ID);
+		auto it = s_fonts.find(tag);
+		assert(it != s_fonts.end());
+
+		for (const auto& glyph : it->second)
+		{
+			glDeleteTextures(1, &glyph.second.ID);
+		}
 	}
 
-	m_glyphs.clear();
+	else
+	{
+		for (auto& font : s_fonts)
+		{
+			for (const auto& glyph : font.second)
+			{
+				glDeleteTextures(1, &glyph.second.ID);
+			}
+
+			font.second.clear();
+		}
+
+		s_fonts.clear();
+	}
 }
 //================================================================================================
 GLuint Text::GetFontSize()
@@ -140,34 +182,34 @@ GLuint Text::GetTotalWidth()
 {
 	m_totalWidth = 0;
 
-	for (const auto& character : m_textString)
+	for (const auto& character : m_string)
 	{
-		m_totalWidth += m_glyphs[character].advance / 64.0f;
+		m_totalWidth += m_font[character].advance / 64.0f;
 	}
 
 	return m_totalWidth;
 }
 //================================================================================================
-const std::string& Text::GetTextString() const
+const std::string& Text::GetString() const
 {
-	return m_textString;
+	return m_string;
 }
 //================================================================================================
-void Text::SetText(const std::string& tag)
+void Text::SetFont(const std::string& tag)
 {
-	auto it = s_textObjects.find(tag);
-	assert(it != s_textObjects.end());
-	*this = it->second;
+	auto it = s_fonts.find(tag);
+	assert(it != s_fonts.end());
+	m_font = it->second;
 }
 //================================================================================================
-void Text::SetTextString(const std::string& textString)
+void Text::SetString(const std::string& string)
 {
-	m_textString = textString;
+	m_string = string;
 }
 //================================================================================================
-void Text::AppendTextString(const std::string& textString)
+void Text::AppendString(const std::string& string)
 {
-	m_textString += textString;
+	m_string += string;
 }
 //================================================================================================
 void Text::SetColor(const glm::vec4& color)
@@ -189,9 +231,9 @@ void Text::Render(Shader& shader)
 {
 	glm::vec2 textOrigin = glm::vec2(0.0f);
 
-	for (const auto& character : m_textString)
+	for (const auto& character : m_string)
 	{
-		Glyph glyph = m_glyphs[character];
+		Glyph glyph = m_font[character];
 
 		auto halfWidth = glyph.width * 0.5f;
 		auto halfBearingY = glyph.bearingY * 0.5f;
