@@ -1,14 +1,12 @@
 #pragma once
 
 /*===================================================================#
-| 'Text' source files last updated on 17 September 2021              |
+| 'Text' source files last updated on 21 September 2021              |
 #===================================================================*/
 
 #include <map>
-#include <string>
 #include <ft2build.h>
 #include <freetype\freetype.h>
-#include "glad.h"
 #include "Buffer.h"
 #include "Object.h"
 
@@ -35,15 +33,16 @@ public:
 	Text();
 	virtual ~Text() {}
 
-	bool LoadFont(const std::string& filename, int fontSize);
+	bool LoadFont(const std::string& filename, int fontSize, const std::string& tag);
 	void UnloadFont();
 
 	GLuint GetFontSize();
 	GLuint GetTotalWidth();
-	const std::string& GetText() const;
+	const std::string& GetTextString() const;
 
-	void SetText(const std::string& text);
-	void AppendText(const std::string& text);
+	void SetText(const std::string& tag);
+	void SetTextString(const std::string& textString);
+	void AppendTextString(const std::string& textString);
 
 	void SetColor(const glm::vec4& color);
 	void SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a = 1.0f);
@@ -56,14 +55,16 @@ public:
 
 private:
 
+	static GLuint totalTextObjects;
 	static FT_Library s_freetypeObject;
+	static std::map<std::string, Text> s_textObjects;
 
 	Buffer m_buffer;
+	glm::vec4 m_color;
 	GLuint m_fontSize;
 	GLuint m_totalWidth;
-	FT_Face m_freetypeFace;
 
-	std::string m_text;
+	std::string m_textString;
 	bool m_isFirstLetterCentered;
 	std::map<GLchar, Glyph> m_glyphs;
 

@@ -207,19 +207,19 @@ int CHandmadeView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_axes = std::make_unique<Axes>("Arrow.obj");
 	
 	m_topText = std::make_unique<Text>();
-	m_topText->LoadFont("Assets/Fonts/Quikhand.ttf", 30);
+	m_topText->LoadFont("Assets/Fonts/Quikhand.ttf", 30, "Quickhand_30");
 	m_topText->SetColor(1.0f, 0.0f, 0.196f, 1.0f);
-	m_topText->SetText("Handmade Alpha");
+	m_topText->SetTextString("Handmade Alpha");
 
 	m_bottomText = std::make_unique<Text>();
-	m_bottomText->LoadFont("Assets/Fonts/Quikhand.ttf", 30);
+	m_bottomText->SetText("Quickhand_30");
 	m_bottomText->SetColor(0.0f, 0.564f, 1.0f, 1.0f);
-	m_bottomText->SetText("Click/Drag the mouse to rotate the grid. Use the mouse wheel to zoom in/out");
+	m_bottomText->SetTextString("Click/Drag the mouse to rotate the grid. Use the mouse wheel to zoom in/out");
 
 	m_axesLabelText = std::make_unique<Text>();
-	m_axesLabelText->LoadFont("Assets/Fonts/Arial.ttf", 66);
+	m_axesLabelText->LoadFont("Assets/Fonts/Arial.ttf", 66, "Arial_66");
 	m_axesLabelText->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
-	m_axesLabelText->SetText("X");
+	m_axesLabelText->SetTextString("X");
 
 	//For current testing=======================================================
 	/*m_audio = std::make_unique<Audio>();
@@ -396,20 +396,20 @@ void CHandmadeView::OnDraw(CDC* pDC)
 	auto labelPosition = m_mainCamera->ConvertWorldToScreen(m_axes->GetArrowTipPositionX());
 	m_axesLabelText->IsFirstLetterCentered(true);
 	m_axesLabelText->GetTransform().SetPosition(labelPosition.x, labelPosition.y, 0.0f);
-	m_axesLabelText->SetText("X");
+	m_axesLabelText->SetTextString("X");
 	m_axesLabelText->SendToShader(textShader);
 	m_axesLabelText->Render(textShader);
 
 	labelPosition = m_mainCamera->ConvertWorldToScreen(m_axes->GetArrowTipPositionY());
 	m_axesLabelText->GetTransform().SetPosition(labelPosition.x, labelPosition.y, 0.0f);
 	m_axesLabelText->SendToShader(textShader);
-	m_axesLabelText->SetText("Y");
+	m_axesLabelText->SetTextString("Y");
 	m_axesLabelText->Render(textShader);
 
 	labelPosition = m_mainCamera->ConvertWorldToScreen(m_axes->GetArrowTipPositionZ());
 	m_axesLabelText->GetTransform().SetPosition(labelPosition.x, labelPosition.y, 0.0f);
 	m_axesLabelText->SendToShader(textShader);
-	m_axesLabelText->SetText("Z");
+	m_axesLabelText->SetTextString("Z");
 	m_axesLabelText->Render(textShader);
 
 	//For current testing
