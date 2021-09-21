@@ -169,26 +169,26 @@ void Text::Render(Shader& shader)
 
 	for (const auto& character : m_text)
 	{
-		Glyph letter = m_glyphs[character];
+		Glyph glyph = m_glyphs[character];
 
-		auto halfWidth = letter.width * 0.5f;
-		auto halfBearingY = letter.bearingY * 0.5f;
+		auto halfWidth = glyph.width * 0.5f;
+		auto halfBearingY = glyph.bearingY * 0.5f;
 
 		if (m_isFirstLetterCentered)
 		{
 			GLfloat vertices[] = { textOrigin.x - halfWidth, textOrigin.y + halfBearingY, 0.0f,
 				textOrigin.x + halfWidth, textOrigin.y + halfBearingY, 0.0f,
-				textOrigin.x + halfWidth, textOrigin.y + halfBearingY - letter.height, 0.0f,
-				textOrigin.x - halfWidth, textOrigin.y + halfBearingY - letter.height, 0.0f };
+				textOrigin.x + halfWidth, textOrigin.y + halfBearingY - glyph.height, 0.0f,
+				textOrigin.x - halfWidth, textOrigin.y + halfBearingY - glyph.height, 0.0f };
 			m_buffer.FillVBO(Buffer::VBO::VertexBuffer, vertices, sizeof(vertices), Buffer::Fill::Ongoing);
 		}
 
 		else
 		{
-			GLfloat vertices[] = { textOrigin.x + letter.bearingX, letter.bearingY, 0.0f,
-				textOrigin.x + letter.bearingX + letter.width, letter.bearingY, 0.0f,
-				textOrigin.x + letter.bearingX + letter.width, letter.bearingY - letter.height, 0.0f,
-				textOrigin.x + letter.bearingX, letter.bearingY - letter.height, 0.0f };
+			GLfloat vertices[] = { textOrigin.x + glyph.bearingX, glyph.bearingY, 0.0f,
+				textOrigin.x + glyph.bearingX + glyph.width, glyph.bearingY, 0.0f,
+				textOrigin.x + glyph.bearingX + glyph.width, glyph.bearingY - glyph.height, 0.0f,
+				textOrigin.x + glyph.bearingX, glyph.bearingY - glyph.height, 0.0f };
 			m_buffer.FillVBO(Buffer::VBO::VertexBuffer, vertices, sizeof(vertices), Buffer::Fill::Ongoing);
 		}
 
@@ -211,14 +211,14 @@ void Text::Render(Shader& shader)
 		m_buffer.LinkVBO(shader.GetAttributeID("textureIn"),
 			Buffer::VBO::TextureBuffer, Buffer::ComponentSize::UV, Buffer::DataType::FloatData);
 
-		glBindTexture(GL_TEXTURE_2D, letter.ID);
+		glBindTexture(GL_TEXTURE_2D, glyph.ID);
 
 		m_buffer.Render(Buffer::RenderMode::Triangles);
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		//We have to divide by 64 because the value is a product of 64
-		textOrigin.x += (letter.advance) / 64.0f;
+		textOrigin.x += (glyph.advance) / 64.0f;
 	}
 }
 //================================================================================================
