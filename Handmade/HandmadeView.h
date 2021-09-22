@@ -105,6 +105,11 @@ private:
 	//std::unique_ptr<Tile> m_labelX;
 	//std::unique_ptr<Tile> m_labelY;
 	//std::unique_ptr<Tile> m_labelZ;
+
+	//Using static 'Text' objects will enforce more copies being 
+	//made especially if the vector container has not been reserved
+	//Prefer to use smart pointer Text objects instead to avoid copies
+	//std::vector<Text> m_text;
 	//==================================================
 
 	std::unique_ptr<FreeCamera> m_UICamera;

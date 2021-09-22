@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Text' source files last updated on 21 September 2021              |
+| 'Text' source files last updated on 22 September 2021              |
 #===================================================================*/
 
 #include <map>
@@ -14,12 +14,12 @@ const GLuint TOTAL_ASCII_CHARACTERS = 128;
 
 struct Glyph
 {
-	GLuint ID;       //texture freetypeTextureID for each letter 
-	GLint width;     //width of the letter
-	GLint height;    //height of the letter 
-	GLint bearingX;  //distance from the y-axis origin
-	GLint bearingY;  //distance from the x-axis baseline 
-	GLint advance;   //offset to advance to next glyph
+	GLuint ID;       //OGL texture ID for each letter 
+	GLint width;     //Width of the letter
+	GLint height;    //Height of the letter 
+	GLint bearingX;  //Distance from the y-axis origin
+	GLint bearingY;  //Distance from the x-axis baseline 
+	GLint advance;   //Offset to advance to next glyph
 };
 
 //Would love to call it 'Font' but that name is reserved
@@ -33,12 +33,14 @@ public:
 	static bool Initialize();
 	static void Shutdown();
 
-	Text(const std::string& filename = "", int fontSize = 10, const std::string& tag = "");
+	static bool LoadFont(const std::string& tag, 
+		const std::string& filename, GLuint fontSize);
+	static void UnloadFont(const std::string& tag = "");
+
+	Text(const std::string& tag = "", 
+		const std::string& filename = "", GLuint fontSize = 10U);
 	Text(const Text& copy);
 	virtual ~Text();
-
-	bool LoadFont(const std::string& filename, int fontSize, const std::string& tag);
-	void UnloadFont(const std::string& tag = "");
 
 	GLuint GetFontSize();
 	GLuint GetTotalWidth();

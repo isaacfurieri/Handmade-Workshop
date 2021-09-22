@@ -206,26 +206,37 @@ int CHandmadeView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	m_axes = std::make_unique<Axes>("Arrow.obj");
 	
-	m_topText = std::make_unique<Text>();
-	m_topText->LoadFont("Assets/Fonts/Quikhand.ttf", 30, "Quickhand_30");
+	m_topText = std::make_unique<Text>("Quikhand", "Quikhand.ttf", 30);
 	m_topText->SetColor(1.0f, 0.0f, 0.196f, 1.0f);
-	m_topText->SetTextString("Handmade Alpha");
+	m_topText->SetString("Handmade Alpha");
 
-	m_bottomText = std::make_unique<Text>();
-	m_bottomText->SetText("Quickhand_30");
+	m_bottomText = std::make_unique<Text>("Quikhand");
 	m_bottomText->SetColor(0.0f, 0.564f, 1.0f, 1.0f);
-	m_bottomText->SetTextString("Click/Drag the mouse to rotate the grid. Use the mouse wheel to zoom in/out");
+	m_bottomText->SetString("Click/Drag the mouse to rotate the grid. Use the mouse wheel to zoom in/out");
 
-	m_axesLabelText = std::make_unique<Text>();
-	m_axesLabelText->LoadFont("Assets/Fonts/Arial.ttf", 66, "Arial_66");
+	m_axesLabelText = std::make_unique<Text>("Arial", "Arial.ttf", 66);
 	m_axesLabelText->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
-	m_axesLabelText->SetTextString("X");
+	m_axesLabelText->SetString("X");
 
 	//For current testing=======================================================
+	/*m_text.push_back(Text("Quikhand", "Quickhand.ttf", 10));
+	m_text.back().SetColor(1.0f, 0.75f, 0.1f);
+	m_text.back().SetString("Text #1");
+
+	m_text.push_back(Text("Quikhand"));
+	m_text.back().SetColor(1.0f, 0.75f, 0.1f);
+	m_text.back().SetString("Text #2");
+
+	m_text.push_back(Text());
+	m_text.back().SetFont("Quickhand");
+	m_text.back().SetColor(1.0f, 0.75f, 0.1f);
+	m_text.back().SetString("Text #3");*/
+
 	/*m_audio = std::make_unique<Audio>();
 	m_audio->Load("Test.mp3", Audio::Type::Music, "Test");
 	m_audio->SetAudio("Test", Audio::Type::Music);
 	m_audio->Play();*/
+	//==========================================================================
 
 	m_light = std::make_unique<Light>(0.0f, 7.5f, 0.0f);
 
@@ -396,23 +407,33 @@ void CHandmadeView::OnDraw(CDC* pDC)
 	auto labelPosition = m_mainCamera->ConvertWorldToScreen(m_axes->GetArrowTipPositionX());
 	m_axesLabelText->IsFirstLetterCentered(true);
 	m_axesLabelText->GetTransform().SetPosition(labelPosition.x, labelPosition.y, 0.0f);
-	m_axesLabelText->SetTextString("X");
+	m_axesLabelText->SetString("X");
 	m_axesLabelText->SendToShader(textShader);
 	m_axesLabelText->Render(textShader);
 
 	labelPosition = m_mainCamera->ConvertWorldToScreen(m_axes->GetArrowTipPositionY());
 	m_axesLabelText->GetTransform().SetPosition(labelPosition.x, labelPosition.y, 0.0f);
 	m_axesLabelText->SendToShader(textShader);
-	m_axesLabelText->SetTextString("Y");
+	m_axesLabelText->SetString("Y");
 	m_axesLabelText->Render(textShader);
 
 	labelPosition = m_mainCamera->ConvertWorldToScreen(m_axes->GetArrowTipPositionZ());
 	m_axesLabelText->GetTransform().SetPosition(labelPosition.x, labelPosition.y, 0.0f);
 	m_axesLabelText->SendToShader(textShader);
-	m_axesLabelText->SetTextString("Z");
+	m_axesLabelText->SetString("Z");
 	m_axesLabelText->Render(textShader);
 
 	//For current testing
+	/*auto count = 0;
+
+	for (auto& text : m_text)
+	{
+		text.GetTransform().SetPosition(10.0f, (resolution.y - 50.0f - count * 100.0f), 0.0f);
+		text.SendToShader(textShader);
+		text.Render(textShader);
+		count++;
+	}*/
+
 	//m_quad->GetTransform().SetRotation(m_grid->GetTransform().GetRotation());
 	//m_quad->Render(*Shader::Instance());
 

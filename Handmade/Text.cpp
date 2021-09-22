@@ -23,53 +23,11 @@ bool Text::Initialize()
 //================================================================================================
 void Text::Shutdown()
 {
+	UnloadFont();
 	FT_Done_FreeType(s_freetypeObject);
 }
 //================================================================================================
-Text::Text(const std::string& filename, int fontSize, const std::string& tag)
-{
-	m_tag = tag;
-	m_totalWidth = 0;
-	m_fontSize = fontSize;
-	m_isFirstLetterCentered = false;
-	m_color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-
-	m_buffer.Create("Text_" + std::to_string(++s_totalTextObjects), 6, true);
-	m_buffer.LinkEBO();
-
-	if (!filename.empty())
-	{
-		LoadFont(filename, fontSize, tag);
-	}
-}
-//================================================================================================
-Text::Text(const Text& copy)
-{
-	m_fontSize = copy.m_fontSize;
-	m_totalWidth = copy.m_totalWidth;
-	m_isFirstLetterCentered = copy.m_isFirstLetterCentered;
-	m_color = copy.m_color;
-
-	//We require our own copy ctor to control buffer 
-	//creation and to tally up the total text objects
-	m_buffer.Create("Text_" + std::to_string(++s_totalTextObjects), 6, true);
-	m_buffer.LinkEBO();
-
-	m_font = copy.m_font;
-	m_string = copy.m_string;
-}
-//================================================================================================
-Text::~Text()
-{
-	if (!m_tag.empty())
-	{
-		UnloadFont(m_tag);
-	}
-
-	m_buffer.Destroy();
-}
-//================================================================================================
-bool Text::LoadFont(const std::string& filename, int fontSize, const std::string& tag)
+bool Text::LoadFont(const std::string& tag, const std::string& filename, GLuint fontSize)
 {
 	auto it = s_fonts.find(tag);
 	assert(it == s_fonts.end());
@@ -134,11 +92,9 @@ bool Text::LoadFont(const std::string& filename, int fontSize, const std::string
 						static_cast<GLint>(freetypeFace->glyph->bitmap_top),
 						static_cast<GLint>(freetypeFace->glyph->advance.x) };
 
-		
 		font[i] = glyph;
 	}
 
-	m_font = font;
 	FT_Done_Face(freetypeFace);
 	s_fonts.insert(std::pair<std::string, FontType>(tag, font));
 	return true;
@@ -155,6 +111,8 @@ void Text::UnloadFont(const std::string& tag)
 		{
 			glDeleteTextures(1, &glyph.second.ID);
 		}
+
+		s_fonts.erase(it);
 	}
 
 	else
@@ -165,12 +123,55 @@ void Text::UnloadFont(const std::string& tag)
 			{
 				glDeleteTextures(1, &glyph.second.ID);
 			}
-
-			font.second.clear();
 		}
 
 		s_fonts.clear();
 	}
+}
+//================================================================================================
+Text::Text(const std::string& tag, const std::string& filename, GLuint fontSize)
+{
+	m_tag = tag;
+	m_totalWidth = 0;
+	m_fontSize = fontSize;
+	m_isFirstLetterCentered = false;
+	m_color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+
+	m_buffer.Create("Text_" + std::to_string(++s_totalTextObjects), 6, true);
+	m_buffer.LinkEBO();
+
+	if (!filename.empty())
+	{
+		LoadFont(tag, filename, fontSize);
+		SetFont(tag);
+	}
+
+	else if (!tag.empty())
+	{
+		SetFont(tag);
+	}
+}
+//================================================================================================
+Text::Text(const Text& copy)
+{
+	m_color = copy.m_color;
+	m_fontSize = copy.m_fontSize;
+	m_totalWidth = copy.m_totalWidth;
+	m_isFirstLetterCentered = copy.m_isFirstLetterCentered;
+
+	//We require our own copy ctor to control buffer 
+	//creation and to tally up the total text objects
+	m_buffer.Create("Text_" + std::to_string(++s_totalTextObjects), 6, true);
+	m_buffer.LinkEBO();
+
+	m_font = copy.m_font;
+	m_string = copy.m_string;
+}
+//================================================================================================
+Text::~Text()
+{
+	m_font.clear();
+	m_buffer.Destroy();
 }
 //================================================================================================
 GLuint Text::GetFontSize()
