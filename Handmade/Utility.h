@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Utility' source files last updated on 21 July 2021                |
+| 'Utility' source files last updated on 22 September 2021           |
 #===================================================================*/
 
 #include <Windows.h>
@@ -36,9 +36,9 @@ public:
 	static void DisplayProfile();
 	static void DisplayExtensions();
 
-	static void RemoveCharacter(std::string& str, char character);
+	static void RemoveCharacter(std::string& string, char character);
 
-	static void ParseString(std::string& str,
+	static void ParseString(std::string& string,
 		std::vector<std::string>& subStrings, char token);
 
 	static bool LoadConfigFile(const std::string& filename,
