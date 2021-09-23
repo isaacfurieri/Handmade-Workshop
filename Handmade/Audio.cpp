@@ -26,6 +26,7 @@ bool Audio::Initialize()
 //======================================================================================================
 void Audio::Shutdown()
 {
+	Unload();
 	s_audioSystem->release();
 }
 //======================================================================================================
@@ -34,7 +35,7 @@ void Audio::Update()
 	s_audioSystem->update();
 }
 //======================================================================================================
-bool Audio::Load(const std::string& filename, Type type, const std::string& tag)
+bool Audio::Load(Type type, const std::string& tag, const std::string& filename)
 {
 	FMOD::Sound* audio = nullptr;
 
@@ -46,8 +47,8 @@ bool Audio::Load(const std::string& filename, Type type, const std::string& tag)
 		if (!audio)
 		{
 			Utility::Log(Utility::Destination::WindowsMessageBox,
-				"Error loading sound file \"" + (s_rootFolder + filename) + "\"."
-				"Possible causes could be a corrupt or missing file. It could also be "
+				"Error loading sound file \"" + (s_rootFolder + filename) + "\"\n\n"
+				"Possible causes could be a corrupt or missing file. Another reason could be "
 				"that the filename and/or path are incorrectly spelt.", Utility::Severity::Failure);
 			return false;
 		}
@@ -63,8 +64,8 @@ bool Audio::Load(const std::string& filename, Type type, const std::string& tag)
 		if (!audio)
 		{
 			Utility::Log(Utility::Destination::WindowsMessageBox,
-				"Error loading music file \"" + (s_rootFolder + filename) + "\"."
-				"Possible causes could be a corrupt or missing file. It could also be "
+				"Error loading music file \"" + (s_rootFolder + filename) + "\"\n\n"
+				"Possible causes could be a corrupt or missing file. Another reason could be "
 				"that the filename and/or path are incorrectly spelt.", Utility::Severity::Failure);
 			return false;
 		}
@@ -75,15 +76,25 @@ bool Audio::Load(const std::string& filename, Type type, const std::string& tag)
 	return true;
 }
 //======================================================================================================
-void Audio::Unload(const std::string& tag, Type type)
+void Audio::Unload(const std::string& tag)
 {
 	if (!tag.empty())
 	{
-		auto& audioMap = (type == Type::Music) ? s_music : s_sounds;
-		auto it = audioMap.find(tag);
-		assert(it != audioMap.end());
-		it->second->release();
-		audioMap.erase(it);
+		auto it = s_music.find(tag);
+
+		if (it == s_music.end())
+		{
+			it = s_sounds.find(tag);
+			assert(it != s_sounds.end());
+			it->second->release();
+			s_sounds.erase(it);
+		}
+
+		else
+		{
+			it->second->release();
+			s_music.erase(it);
+		}
 	}
 
 	else
@@ -103,7 +114,7 @@ void Audio::Unload(const std::string& tag, Type type)
 	}
 }
 //======================================================================================================
-Audio::Audio()
+Audio::Audio(Type type, const std::string& tag, const std::string& filename)
 {
 	m_pan = 0.0f;
 	m_volume = 0.5f;
@@ -111,12 +122,42 @@ Audio::Audio()
 	m_minFrequency = 11025.0f;
 	m_maxFrequency = 176400.0f;
 
+	m_tag = tag;
+	m_type = type;
 	m_isMuted = false;
 	m_loopCount = Loop::None;
 
 	m_channel = nullptr;
 	m_audioData = nullptr;
 	m_channelGroup = nullptr;
+
+	if (!filename.empty())
+	{
+		Load(type, tag, filename);
+		SetAudio(tag, type);
+	}
+
+	else if (!tag.empty())
+	{
+		SetAudio(tag, type);
+	}
+}
+//======================================================================================================
+Audio::Audio(const Audio& copy)
+{
+	m_pan = copy.m_pan;
+	m_volume = copy.m_volume;
+	m_frequency = copy.m_frequency;
+	m_minFrequency = copy.m_minFrequency;
+	m_maxFrequency = copy.m_maxFrequency;
+
+	m_isMuted = copy.m_isMuted;
+	m_loopCount = copy.m_loopCount;
+
+	m_channel = nullptr;
+	m_channelGroup = nullptr;
+
+	SetAudio(copy.m_tag, copy.m_type);
 }
 //======================================================================================================
 float Audio::GetPan() const

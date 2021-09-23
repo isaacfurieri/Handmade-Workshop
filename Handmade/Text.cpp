@@ -14,7 +14,7 @@ bool Text::Initialize()
 	if (FT_Init_FreeType(&s_freetypeObject))
 	{
 		Utility::Log(Utility::Destination::WindowsMessageBox,
-			"Error initializing the FreeType library", Utility::Severity::Failure);
+			"Error initializing the FreeType font system.", Utility::Severity::Failure);
 		return false;
 	}
 

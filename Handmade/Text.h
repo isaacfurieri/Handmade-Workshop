@@ -3,7 +3,7 @@
 /*===================================================================#
 | 'Text' source files last updated on 23 September 2021              |
 #====================================================================#
-| Class has not been fully tested. No known issues found.            |
+| Class has gone through initial tests. No known issues found.       |
 #===================================================================*/
 
 #include <map>
@@ -35,11 +35,11 @@ public:
 	static bool Initialize();
 	static void Shutdown();
 
-	static bool Load(const std::string& tag, 
+	static bool Load(const std::string& tag,
 		const std::string& filename, GLuint fontSize);
 	static void Unload(const std::string& tag = "");
 
-	Text(const std::string& tag = "", 
+	Text(const std::string& tag = "",
 		const std::string& filename = "", GLuint fontSize = 10U);
 	Text(const Text& copy);
 	virtual ~Text();

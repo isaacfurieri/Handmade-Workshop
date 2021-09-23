@@ -54,10 +54,14 @@ public:
 	static bool Initialize();
 	static void Shutdown();
 	static void Update();
-	static bool Load(const std::string& filename, Type type, const std::string& tag);
-	static void Unload(const std::string& tag = "", Type type = Type::Music);
+	
+	static bool Load(Type type, const std::string& tag,
+		const std::string& filename);
+	static void Unload(const std::string& tag = "");
 
-	Audio();
+	Audio(Type type = Type::Music, const std::string& tag = "",
+		const std::string& filename = "");
+	Audio(const Audio& copy);
 	~Audio() {}
 
 	float GetPan() const;
@@ -91,8 +95,10 @@ private:
 	float m_minFrequency;
 	float m_maxFrequency;
 
+	Type m_type;
 	bool m_isMuted;
 	Loop m_loopCount;
+	std::string m_tag;
 
 	FMOD::Sound* m_audioData;
 	FMOD::Channel* m_channel;
