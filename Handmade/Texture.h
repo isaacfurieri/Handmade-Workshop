@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Texture' source files last updated on 6 August 2021               |
+| 'Texture' source files last updated on 23 September 2021           |
 #====================================================================#
 | Class has not been fully tested. No known issues found.            |
 #===================================================================*/

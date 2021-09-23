@@ -20,7 +20,8 @@ class Material
 public:
 
 	static bool Load(const std::string& filename);
-	static bool Load(std::vector<Material>& materials, const std::string& filename);
+	static bool Load(std::vector<Material>& materials, 
+		const std::string& filename);
 
 	Material();
 	~Material();

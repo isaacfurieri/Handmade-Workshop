@@ -123,10 +123,7 @@ void Texture::Unload() const
 void Texture::Unload(const std::string& tag) const
 {
 	auto it = s_textures.find(tag);
-
-	//This means that the texture was not found in the map
 	assert(it != s_textures.end());
-
 	glDeleteTextures(1, &(it->second.m_ID));
 	s_textures.erase(it);
 }
