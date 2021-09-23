@@ -2,7 +2,8 @@
 
 /*===================================================================#
 | 'Axes' source files last updated on 6 August 2021                  |
-| Not yet fully tested                                               |
+#====================================================================#
+| Class has not been fully tested. No known issues found.            |
 #===================================================================*/
 
 #include "Buffer.h"

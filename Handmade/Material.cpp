@@ -9,7 +9,7 @@ std::map<std::string, Material> Material::s_materials;
 //======================================================================================================
 //This function will load a .mat file with a set of 
 //pre-defined materials in there for default settings
-bool Material::LoadMaterials(const std::string& filename)
+bool Material::Load(const std::string& filename)
 {
 	if (filename.empty())
 	{
@@ -96,7 +96,7 @@ bool Material::LoadMaterials(const std::string& filename)
 //======================================================================================================
 //This function will load a .mtl file and store 
 //all materials into the passed material container
-bool Material::LoadMaterials(std::vector<Material>& materials, const std::string& filename)
+bool Material::Load(std::vector<Material>& materials, const std::string& filename)
 {
 	if (filename.empty())
 	{

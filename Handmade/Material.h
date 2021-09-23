@@ -1,7 +1,9 @@
 #pragma once
 
 /*===================================================================#
-| 'Material' source files last updated on 20 July 2021               |
+| 'Material' source files last updated on 23 September 2021          |
+#====================================================================#
+| Class has not been fully tested. No known issues found.            |
 #===================================================================*/
 
 #include <map>
@@ -17,8 +19,8 @@ class Material
 
 public:
 
-	static bool LoadMaterials(const std::string& filename);
-	static bool LoadMaterials(std::vector<Material>& materials, const std::string& filename);
+	static bool Load(const std::string& filename);
+	static bool Load(std::vector<Material>& materials, const std::string& filename);
 
 	Material();
 	~Material();
@@ -63,13 +65,9 @@ public:
 
 private:
 
-	static std::string s_rootFolder;
-	static std::map<std::string, Material> s_materials;
-
 	bool m_isTextured;
-	//Shader& m_shader;
-
 	std::string m_name;
+
 	GLfloat m_shininess;
 	GLfloat m_refractiveIndex;
 
@@ -83,5 +81,8 @@ private:
 	glm::vec3 m_specular;
 	glm::vec3 m_emission;
 	glm::vec3 m_transmittance;
+
+	static std::string s_rootFolder;
+	static std::map<std::string, Material> s_materials;
 
 };

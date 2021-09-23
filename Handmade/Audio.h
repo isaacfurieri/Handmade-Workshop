@@ -1,14 +1,14 @@
 #pragma once
 
 /*===================================================================#
-| 'Audio' source files last updated on 23 July 2021                  |
+| 'Audio' source files last updated on 23 September 2021             |
+#====================================================================#
+| Class has not been fully tested. No known issues found.            |
 #===================================================================*/
 
 #include <map>
 #include <string>
 #include <fmod.hpp>
-
-//TODO - Test class fully with some audio samples
 
 const float LEFT_PAN = -1.0;
 const float RIGHT_PAN = 1.0f;
@@ -16,6 +16,7 @@ const float RIGHT_PAN = 1.0f;
 const float MIN_VOLUME = 0.0f;
 const float MAX_VOLUME = 1.0f;
 
+//Better to have a shorter data type name
 typedef unsigned int Fuint;
 
 class Audio

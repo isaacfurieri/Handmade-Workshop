@@ -159,7 +159,7 @@ bool Model::Load(const std::string& filename, bool isNormalized, const std::stri
 			//Note that sometimes the material file might not be found
 			if (subStrings[0] == "mtllib")
 			{
-				Material::LoadMaterials(m_materials, subStrings[1]);
+				Material::Load(m_materials, subStrings[1]);
 				continue;
 			}
 

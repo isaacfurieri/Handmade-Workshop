@@ -185,7 +185,7 @@ int CHandmadeView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	//===================================================================
 
-	Material::LoadMaterials("Materials.mat");
+	Material::Load("Materials.mat");
 
 	//===================================================================
 

@@ -23,11 +23,11 @@ bool Text::Initialize()
 //================================================================================================
 void Text::Shutdown()
 {
-	UnloadFont();
+	Unload();
 	FT_Done_FreeType(s_freetypeObject);
 }
 //================================================================================================
-bool Text::LoadFont(const std::string& tag, const std::string& filename, GLuint fontSize)
+bool Text::Load(const std::string& tag, const std::string& filename, GLuint fontSize)
 {
 	auto it = s_fonts.find(tag);
 	assert(it == s_fonts.end());
@@ -100,7 +100,7 @@ bool Text::LoadFont(const std::string& tag, const std::string& filename, GLuint 
 	return true;
 }
 //================================================================================================
-void Text::UnloadFont(const std::string& tag)
+void Text::Unload(const std::string& tag)
 {
 	if (!tag.empty())
 	{
@@ -142,7 +142,7 @@ Text::Text(const std::string& tag, const std::string& filename, GLuint fontSize)
 
 	if (!filename.empty())
 	{
-		LoadFont(tag, filename, fontSize);
+		Load(tag, filename, fontSize);
 		SetFont(tag);
 	}
 
