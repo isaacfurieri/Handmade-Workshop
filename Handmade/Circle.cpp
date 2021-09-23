@@ -1,7 +1,8 @@
 #include "Circle.h"
 
 //======================================================================================================
-Circle::Circle(GLfloat radius, GLuint slices, GLfloat r, GLfloat g, GLfloat b, GLfloat a)
+Circle::Circle(GLfloat radius, GLuint slices, GLfloat r, GLfloat g, GLfloat b, GLfloat a) 
+	: m_buffer("Circle", slices + 1)
 {
 	m_slices = slices;
 	m_radius = radius;
@@ -18,7 +19,7 @@ Circle::Circle(GLfloat radius, GLuint slices, GLfloat r, GLfloat g, GLfloat b, G
 	const int TOTAL_BYTES_COLOR_VBO = (m_slices + 1) * BYTES_PER_COLOR;
 
 	//An extra vertex is added to accomodate the middle point
-	m_buffer.Create("Circle", m_slices + 1);
+	//m_buffer.Create("Circle", m_slices + 1);
 
 	m_buffer.FillVBO(Buffer::VBO::VertexBuffer, 
 		nullptr, TOTAL_BYTES_VERTEX_VBO, Buffer::Fill::Ongoing);

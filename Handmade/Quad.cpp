@@ -2,7 +2,8 @@
 #include "Quad.h"
 
 //======================================================================================================
-Quad::Quad(GLfloat width, GLfloat height, GLfloat r, GLfloat g, GLfloat b, GLfloat a)
+Quad::Quad(GLfloat width, GLfloat height, GLfloat r, GLfloat g, GLfloat b, GLfloat a) 
+	: m_buffer("Quad", 6, true)
 {
 	m_dimension = glm::vec2(width, height);
 
@@ -33,7 +34,7 @@ Quad::Quad(GLfloat width, GLfloat height, GLfloat r, GLfloat g, GLfloat b, GLflo
 
 	//TODO - Find a way to only create one single 
 	//buffer to be shared amongst subsequent quads
-	m_buffer.Create("Quad", 6, true);
+	//m_buffer.Create("Quad", 6, true);
 
 	m_buffer.LinkEBO();
 	m_buffer.FillVBO(Buffer::VBO::VertexBuffer, vertices, sizeof(vertices), Buffer::Fill::Ongoing);

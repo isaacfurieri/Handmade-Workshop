@@ -29,9 +29,7 @@ void Text::Shutdown()
 //================================================================================================
 bool Text::Load(const std::string& tag, const std::string& filename, GLuint fontSize)
 {
-	auto it = s_fonts.find(tag);
-	assert(it == s_fonts.end());
-
+	assert(s_fonts.find(tag) == s_fonts.end());
 	FT_Face freetypeFace = nullptr;
 
 	if (FT_New_Face(s_freetypeObject, (s_rootFolder + filename).c_str(), 0, &freetypeFace))
@@ -129,7 +127,8 @@ void Text::Unload(const std::string& tag)
 	}
 }
 //================================================================================================
-Text::Text(const std::string& tag, const std::string& filename, GLuint fontSize)
+Text::Text(const std::string& tag, const std::string& filename, GLuint fontSize) 
+	: m_buffer("Text_" + std::to_string(++s_totalTextObjects), 6, true)
 {
 	m_tag = tag;
 	m_totalWidth = 0;
@@ -137,7 +136,7 @@ Text::Text(const std::string& tag, const std::string& filename, GLuint fontSize)
 	m_isFirstLetterCentered = false;
 	m_color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
-	m_buffer.Create("Text_" + std::to_string(++s_totalTextObjects), 6, true);
+	//m_buffer.Create("Text_" + std::to_string(++s_totalTextObjects), 6, true);
 	m_buffer.LinkEBO();
 
 	if (!filename.empty())
@@ -152,7 +151,7 @@ Text::Text(const std::string& tag, const std::string& filename, GLuint fontSize)
 	}
 }
 //================================================================================================
-Text::Text(const Text& copy)
+Text::Text(const Text& copy) : m_buffer("Text_" + std::to_string(++s_totalTextObjects), 6, true)
 {
 	m_color = copy.m_color;
 	m_fontSize = copy.m_fontSize;
@@ -161,7 +160,7 @@ Text::Text(const Text& copy)
 
 	//We require our own copy ctor to control buffer 
 	//creation and to tally up the total text objects
-	m_buffer.Create("Text_" + std::to_string(++s_totalTextObjects), 6, true);
+	//m_buffer.Create("Text_" + std::to_string(++s_totalTextObjects), 6, true);
 	m_buffer.LinkEBO();
 
 	m_font = copy.m_font;

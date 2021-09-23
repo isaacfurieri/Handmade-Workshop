@@ -3,7 +3,7 @@
 
 //======================================================================================================
 Sphere::Sphere(GLfloat radius, GLuint segments, GLuint slices,
-	GLfloat r, GLfloat g, GLfloat b, GLfloat a)
+	GLfloat r, GLfloat g, GLfloat b, GLfloat a) : m_buffer("Sphere", segments * (slices - 1) * 6, true)
 {
 	m_slices = slices;
 	m_radius = radius;
@@ -26,7 +26,7 @@ Sphere::Sphere(GLfloat radius, GLuint segments, GLuint slices,
 	const auto TOTAL_BYTES_COLOR_VBO = (m_slices + 1) * (m_segments + 1) * BYTES_PER_COLOR;
 
 	//We multiply by 6 because each slice creates 1 quad (2 triangles)
-	m_buffer.Create("Sphere", m_segments * (m_slices - 1) * 6, true);
+	//m_buffer.Create("Sphere", m_segments * (m_slices - 1) * 6, true);
 	m_buffer.LinkEBO();
 
 	m_buffer.FillEBO(nullptr, TOTAL_BYTES_EBO, Buffer::Fill::Ongoing);

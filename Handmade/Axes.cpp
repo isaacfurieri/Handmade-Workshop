@@ -3,7 +3,7 @@
 #include "Shader.h"
 
 //======================================================================================================
-Axes::Axes(const std::string& filenameModel)
+Axes::Axes(const std::string& filenameModel) : m_buffer("Axes", 6)
 {
 	m_size = 0.0f;
 	m_lineWidth = 0.0f;
@@ -14,7 +14,7 @@ Axes::Axes(const std::string& filenameModel)
 	m_arrowTipPositionZ = glm::vec3(0.0f);
 }
 //======================================================================================================
-Axes::Axes(GLint size, GLfloat lineWidth)
+Axes::Axes(GLint size, GLfloat lineWidth) : m_buffer("Axes", 6)
 {
 	m_size = size;
 	m_isPrimitive = true;
@@ -99,7 +99,7 @@ void Axes::Create()
 		m_buffer.Destroy();
 	}
 
-	m_buffer.Create("Axes", 6);
+	//m_buffer.Create("Axes", 6);
 
 	GLint vertices[] = { -m_size, 0, 0, m_size, 0, 0,
 						  0, -m_size, 0, 0, m_size, 0,

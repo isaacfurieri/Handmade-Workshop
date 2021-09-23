@@ -4,6 +4,7 @@
 
 //======================================================================================================
 Grid::Grid(bool hasSpaceForAxes, GLint size, GLfloat lineWidth)
+	: m_buffer("Grid", (size * 4 * 2) + 4)  //QUADRANTS = 4
 {
 	m_size = size;
 	m_lineWidth = lineWidth;
@@ -65,7 +66,7 @@ void Grid::Create()
 {
 	//We need to add an extra line to close the grid 
 	//Each line has two vertex and two color groups
-	const GLuint BYTES_PER_VERTEX = 
+	const GLuint BYTES_PER_VERTEX =
 		static_cast<GLuint>(Buffer::ComponentSize::XYZ) * sizeof(GLint);
 	const GLuint BYTES_PER_COLOR =
 		static_cast<GLuint>(Buffer::ComponentSize::RGBA) * sizeof(GLfloat);
@@ -75,14 +76,14 @@ void Grid::Create()
 
 	//We don't want to create new buffer 
 	//objects everytime the grid is resized
-	if (!m_buffer.GetTag().empty())
+	/*if (!m_buffer.GetTag().empty())
 	{
 		m_buffer.Destroy();
-	}
+	}*/
 
 	//We multiply by 2 to represent each line's vertex 
 	//and add 4 for the two extra lines to close the grid
-	m_buffer.Create("Grid", (m_size * QUADRANTS * 2) + 4);
+	//m_buffer.Create("Grid", (m_size * QUADRANTS * 2) + 4);
 
 	m_buffer.FillVBO(Buffer::VBO::VertexBuffer,
 		(GLfloat*)nullptr, TOTAL_BYTES_VERTEX_VBO, Buffer::Fill::Ongoing);

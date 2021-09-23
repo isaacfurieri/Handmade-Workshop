@@ -29,21 +29,78 @@ void Buffer::SetCullingMode(Culling culling)
 	}
 }
 //======================================================================================================
+void Buffer::Destroy(const std::string& tag)
+{
+	if (!tag.empty())
+	{
+		auto it = s_buffers.find(tag);
+		assert(it != s_buffers.end());
+
+		if (it->second.m_hasEBO)
+		{
+			glDeleteBuffers(1, &it->second.m_EBO);
+		}
+
+		glDeleteBuffers(4, it->second.m_VBOs);
+		glDeleteVertexArrays(1, &it->second.m_VAO);
+
+		s_buffers.erase(it);
+	}
+
+	else
+	{
+		for (auto& buffer : s_buffers)
+		{
+			if (buffer.second.m_hasEBO)
+			{
+				glDeleteBuffers(1, &buffer.second.m_EBO);
+			}
+
+			glDeleteBuffers(4, buffer.second.m_VBOs);
+			glDeleteVertexArrays(1, &buffer.second.m_VAO);
+		}
+
+		s_buffers.clear();
+	}
+}
+//======================================================================================================
 void Buffer::SetRenderStyle(RenderStyle renderStyle)
 {
 	glPolygonMode(GL_FRONT_AND_BACK, renderStyle == RenderStyle::Polygonal ? GL_LINE : GL_FILL);
 }
 //======================================================================================================
-Buffer::Buffer()
+Buffer::Buffer(const std::string& tag, GLsizei totalVertices, bool hasEBO)
 {
-	m_EBO = 0;
 	m_VAO = 0;
-	m_hasEBO = false;
-	m_totalVertices = 0;
-
-	for (auto i = 0; i < TOTAL_BUFFERS; i++)
+	m_EBO = 0;
+	m_tag = tag;
+	m_hasEBO = hasEBO;
+	m_totalVertices = totalVertices;
+	
+	for (auto& ID : m_VBOs)
 	{
-		m_VBOs[i] = 0;
+		ID = 0;
+	}
+	
+	if (totalVertices > 0)
+	{
+		assert(s_buffers.find(tag) == s_buffers.end());
+
+		glGenVertexArrays(1, &m_VAO);
+		glGenBuffers(4, m_VBOs);
+
+		if (hasEBO)
+		{
+			glGenBuffers(1, &m_EBO);
+		}
+
+		Buffer b(*this);
+		s_buffers[tag] = b;
+	}
+
+	else if (!tag.empty())
+	{
+		SetBuffer(tag);
 	}
 }
 //======================================================================================================
@@ -57,27 +114,7 @@ void Buffer::SetBuffer(const std::string& tag)
 	auto it = s_buffers.find(tag);
 	assert(it != s_buffers.end());
 	*this = it->second;
-}
-//======================================================================================================
-void Buffer::Create(const std::string& tag, GLsizei totalVertices, bool hasEBO)
-{
-	//If buffer ID exists in map halt creation because 
-	//we don't want to replace the existing buffers
-	assert(s_buffers.find(tag) == s_buffers.end());
-
-	glGenVertexArrays(1, &m_VAO);
-	glGenBuffers(TOTAL_BUFFERS, m_VBOs);
-
-	if (hasEBO)
-	{
-		glGenBuffers(1, &m_EBO);
-	}
-
-	m_hasEBO = hasEBO;
-	m_totalVertices = totalVertices;
-
 	m_tag = tag;
-	s_buffers[tag] = *this;
 }
 //======================================================================================================
 void Buffer::FillEBO(const GLuint* data, GLsizeiptr bufferSize, Fill fill)
@@ -151,24 +188,4 @@ void Buffer::Render(RenderMode renderMode, GLuint index, GLuint totalVertices)
 	}
 
 	glBindVertexArray(0);
-}
-//======================================================================================================
-void Buffer::Destroy()
-{
-	if (m_hasEBO)
-	{
-		glDeleteBuffers(1, &m_EBO);
-	}
-
-	glDeleteBuffers(TOTAL_BUFFERS, m_VBOs);
-	glDeleteVertexArrays(1, &m_VAO);
-
-	s_buffers.erase(s_buffers.find(m_tag));
-}
-//======================================================================================================
-void Buffer::Destroy(const std::string& tag)
-{
-	//TODO - Destroy a specific buffer element (make this static?)
-	//TODO - Destroy THIS buffer (and remove it from the map)
-	//TODO - Destroy ALL buffers (make this static?)
 }

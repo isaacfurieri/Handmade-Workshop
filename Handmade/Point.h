@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Point' source files last updated on 20 July 2021                  |
+| 'Point' source files last updated on 23 September 2021             |
 #====================================================================#
 | Class has not been fully tested. No known issues found.            |
 #===================================================================*/

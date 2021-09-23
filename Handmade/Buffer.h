@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Buffer' source files last updated on 5 August 2021                |
+| 'Buffer' source files last updated on 23 September 2021            |
 #====================================================================#
 | Class has not been fully tested. No known issues found.            |
 #===================================================================*/
@@ -9,8 +9,6 @@
 #include <map>
 #include <string>
 #include "glad.h"
-
-const int TOTAL_BUFFERS = 4;
 
 class Buffer
 {
@@ -75,39 +73,41 @@ public:
 	static void SetPointSize(GLfloat size);
 	static void SetLineWidth(GLfloat lineWidth);
 	static void SetCullingMode(Culling culling);
+	static void Destroy(const std::string& tag = "");
 	static void SetRenderStyle(RenderStyle renderStyle);
 
-	Buffer();
+	Buffer(const std::string& tag = "",
+		GLsizei totalVertices = 0, bool hasEBO = false);
 
 	const std::string& GetTag() const;
-
 	void SetBuffer(const std::string& tag);
 
-	void Create(const std::string& tag, GLsizei totalVertices, bool hasEBO = false);
+	void FillEBO(const GLuint* data, 
+		GLsizeiptr bufferSize, Fill fill = Fill::Once);
+	void FillVBO(VBO vbo, const void* data, 
+		GLsizeiptr bufferSize, Fill fill = Fill::Once);
 
-	void FillEBO(const GLuint* data, GLsizeiptr bufferSize, Fill fill = Fill::Once);
-	void FillVBO(VBO vbo, const void* data, GLsizeiptr bufferSize, Fill fill = Fill::Once);
-
-	void AppendEBO(const GLuint* data, GLsizeiptr size, GLuint offset);
-	void AppendVBO(VBO vbo, const void* data, GLsizeiptr size, GLuint offset);
+	void AppendEBO(const GLuint* data, 
+		GLsizeiptr size, GLuint offset);
+	void AppendVBO(VBO vbo, 
+		const void* data, GLsizeiptr size, GLuint offset);
 
 	void LinkEBO();
-	void LinkVBO(GLint attributeID, VBO vbo, ComponentSize componentSize, DataType dataType);
+	void LinkVBO(GLint attributeID, 
+		VBO vbo, ComponentSize componentSize, DataType dataType);
 
-	void Render(RenderMode renderMode, GLuint index = 0, GLuint totalVertices = 0);
-
-	void Destroy();
-	void Destroy(const std::string& tag);
+	void Render(RenderMode renderMode, 
+		GLuint index = 0, GLuint totalVertices = 0);
 
 private:
 
-	bool m_hasEBO;
-	std::string m_tag;
-
 	GLuint m_VAO;
 	GLuint m_EBO;
+	bool m_hasEBO;
+	GLuint m_VBOs[4];
+	std::string m_tag;
 	GLsizei m_totalVertices;
-	GLuint m_VBOs[TOTAL_BUFFERS];
 
 	static std::map<std::string, Buffer> s_buffers;
+
 };

@@ -3,7 +3,7 @@
 GLuint Light::s_totalLights = 0;
 
 //======================================================================================================
-Light::Light(GLfloat x, GLfloat y, GLfloat z)
+Light::Light(GLfloat x, GLfloat y, GLfloat z) : m_buffer("Light", 1)
 {
 	m_attenuationLinear = 0.05f;
 	m_attenuationConstant = 0.2f;
@@ -16,7 +16,7 @@ Light::Light(GLfloat x, GLfloat y, GLfloat z)
 
 	//TODO - Find a way to only create one single 
 	//buffer to be shared amongst subsequent lights
-	m_buffer.Create("Light", 1);
+	//m_buffer.Create("Light", 1);
 
 	GLfloat vertex[] = { 0.0f, 0.0f, 0.0f };
 	GLfloat color[] = { m_ambient.r, m_ambient.g, m_ambient.b, 1.0f };

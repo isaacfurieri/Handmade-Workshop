@@ -5,7 +5,8 @@
 
 //======================================================================================================
 Tile::Tile(const std::string& filename, 
-	GLfloat width, GLfloat height, GLuint spriteSheetCol, GLuint spriteSheetRow)
+	GLfloat width, GLfloat height, GLuint spriteSheetCol, GLuint spriteSheetRow) 
+	: m_buffer("Tile", spriteSheetCol * spriteSheetRow * 6, true)  // VERTICES_PER_TILE = 6;
 {
 	m_tileIndex = 0;
 	m_color = glm::vec4(1.0f);
@@ -42,7 +43,7 @@ Tile::Tile(const std::string& filename,
 	const auto TOTAL_BYTES_VBO_UV = TOTAL_DIMENSION * BYTES_PER_TILE_UV;
 	const auto TOTAL_BYTES_EBO = TOTAL_DIMENSION * BYTES_PER_TILE_INDEX;
 
-	m_buffer.Create("Tile", TOTAL_DIMENSION * VERTICES_PER_TILE, true);
+	//m_buffer.Create("Tile", TOTAL_DIMENSION * VERTICES_PER_TILE, true);
 	m_buffer.LinkEBO();
 
 	glm::vec2 halfDimension = m_dimension * 0.5f;

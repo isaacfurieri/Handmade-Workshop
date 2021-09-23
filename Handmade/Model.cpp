@@ -292,11 +292,12 @@ void Model::FillBuffers()
 	//We can use one buffer for all data but then the indices have to be calculated differently
 	for (auto& mesh : m_meshes)
 	{
-		Buffer buffer;
-
 		//TODO - Need to label each buffer object properly
 		static auto count = 0;
-		buffer.Create("Mesh_" + std::to_string(count++), mesh.indices.size(), true);
+
+		Buffer buffer("Mesh_" + std::to_string(count++), mesh.indices.size(), true);
+
+		//buffer.Create("Mesh_" + std::to_string(count++), mesh.indices.size(), true);
 
 		buffer.FillEBO(&mesh.indices[0], mesh.indices.size() * sizeof(GLuint));
 		buffer.FillVBO(Buffer::VBO::VertexBuffer,
