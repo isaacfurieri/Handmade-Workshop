@@ -42,9 +42,7 @@ bool Audio::Load(Type type, const std::string& tag, const std::string& filename)
 	//Sound effects are loaded directly into memory
 	if (type == Type::Sound)
 	{
-		auto it = s_sounds.find(tag);
-		assert(it == s_sounds.end());
-
+		assert(s_sounds.find(tag) == s_sounds.end());
 		s_audioSystem->createSound((s_rootFolder + filename).c_str(), FMOD_DEFAULT, 0, &audio);
 
 		if (!audio)
@@ -62,9 +60,7 @@ bool Audio::Load(Type type, const std::string& tag, const std::string& filename)
 	//Music is streamed directly from the folder on drive
 	else
 	{
-		auto it = s_music.find(tag);
-		assert(it == s_music.end());
-
+		assert(s_music.find(tag) == s_music.end());
 		s_audioSystem->createStream((s_rootFolder + filename).c_str(), FMOD_LOOP_NORMAL | FMOD_2D, 0, &audio);
 
 		if (!audio)
