@@ -42,6 +42,9 @@ bool Audio::Load(Type type, const std::string& tag, const std::string& filename)
 	//Sound effects are loaded directly into memory
 	if (type == Type::Sound)
 	{
+		auto it = s_sounds.find(tag);
+		assert(it == s_sounds.end());
+
 		s_audioSystem->createSound((s_rootFolder + filename).c_str(), FMOD_DEFAULT, 0, &audio);
 
 		if (!audio)
@@ -56,9 +59,12 @@ bool Audio::Load(Type type, const std::string& tag, const std::string& filename)
 		s_sounds[tag] = audio;
 	}
 
-	//Music is streamed directly 
+	//Music is streamed directly from the folder on drive
 	else
 	{
+		auto it = s_music.find(tag);
+		assert(it == s_music.end());
+
 		s_audioSystem->createStream((s_rootFolder + filename).c_str(), FMOD_LOOP_NORMAL | FMOD_2D, 0, &audio);
 
 		if (!audio)
@@ -151,13 +157,15 @@ Audio::Audio(const Audio& copy)
 	m_minFrequency = copy.m_minFrequency;
 	m_maxFrequency = copy.m_maxFrequency;
 
+	m_tag = copy.m_tag;
+	m_type = copy.m_type;
 	m_isMuted = copy.m_isMuted;
 	m_loopCount = copy.m_loopCount;
 
 	m_channel = nullptr;
 	m_channelGroup = nullptr;
 
-	SetAudio(copy.m_tag, copy.m_type);
+	SetAudio(m_tag, m_type);
 }
 //======================================================================================================
 float Audio::GetPan() const

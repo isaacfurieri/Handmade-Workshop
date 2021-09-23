@@ -96,7 +96,7 @@ bool Text::Load(const std::string& tag, const std::string& filename, GLuint font
 	}
 
 	FT_Done_Face(freetypeFace);
-	s_fonts.insert(std::pair<std::string, FontType>(tag, font));
+	s_fonts[tag] = font;
 	return true;
 }
 //================================================================================================
