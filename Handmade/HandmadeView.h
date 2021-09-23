@@ -93,7 +93,9 @@ private:
 	std::unique_ptr<Shader> m_testShader;
 
 	//For current testing================================
-	//std::unique_ptr<Audio> m_audio;
+	/*std::unique_ptr<Audio> m_audio1;
+	std::unique_ptr<Audio> m_audio2;
+	std::unique_ptr<Audio> m_audio3;*/
 
 	std::unique_ptr<Light> m_light;
 	std::unique_ptr<Model> m_model;
@@ -106,10 +108,11 @@ private:
 	//std::unique_ptr<Tile> m_labelY;
 	//std::unique_ptr<Tile> m_labelZ;
 
-	//Using static 'Text' objects will enforce more copies being 
-	//made especially if the vector container has not been reserved
-	//Prefer to use smart pointer Text objects instead to avoid copies
+	//Using static objects will enforce more copies being made 
+	//especially if the vector container has not been reserved
+	//Prefer to use smart pointer objects instead to avoid copies
 	//std::vector<Text> m_text;
+	//std::vector<Audio> m_audio;
 	//==================================================
 
 	std::unique_ptr<FreeCamera> m_UICamera;
