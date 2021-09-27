@@ -94,8 +94,7 @@ Buffer::Buffer(const std::string& tag, GLsizei totalVertices, bool hasEBO)
 			glGenBuffers(1, &m_EBO);
 		}
 
-		Buffer b(*this);
-		s_buffers[tag] = b;
+		s_buffers[tag] = *this;
 	}
 
 	else if (!tag.empty())
