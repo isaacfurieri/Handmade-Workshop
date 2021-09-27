@@ -5,8 +5,8 @@
 
 GLuint Text::s_totalTextObjects = 0;
 FT_Library Text::s_freetypeObject = nullptr;
-std::map<std::string, FontType> Text::s_fonts;
 std::string Text::s_rootFolder = "Assets/Fonts/";
+std::map<std::string, Text::FontType> Text::s_fonts;
 
 //================================================================================================
 bool Text::Initialize()
@@ -132,12 +132,10 @@ Text::Text(const std::string& tag, const std::string& filename, GLuint fontSize)
 {
 	m_tag = tag;
 	m_totalWidth = 0;
+	m_buffer.LinkEBO();
 	m_fontSize = fontSize;
 	m_isFirstLetterCentered = false;
 	m_color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-
-	//m_buffer.Create("Text_" + std::to_string(++s_totalTextObjects), 6, true);
-	m_buffer.LinkEBO();
 
 	if (!filename.empty())
 	{
@@ -153,18 +151,13 @@ Text::Text(const std::string& tag, const std::string& filename, GLuint fontSize)
 //================================================================================================
 Text::Text(const Text& copy) : m_buffer("Text_" + std::to_string(++s_totalTextObjects), 6, true)
 {
+	m_buffer.LinkEBO();
+	m_font = copy.m_font;
 	m_color = copy.m_color;
+	m_string = copy.m_string;
 	m_fontSize = copy.m_fontSize;
 	m_totalWidth = copy.m_totalWidth;
 	m_isFirstLetterCentered = copy.m_isFirstLetterCentered;
-
-	//We require our own copy ctor to control buffer 
-	//creation and to tally up the total text objects
-	//m_buffer.Create("Text_" + std::to_string(++s_totalTextObjects), 6, true);
-	m_buffer.LinkEBO();
-
-	m_font = copy.m_font;
-	m_string = copy.m_string;
 }
 //================================================================================================
 Text::~Text()

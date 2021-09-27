@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Text' source files last updated on 23 September 2021              |
+| 'Text' source files last updated on 27 September 2021              |
 #====================================================================#
 | Class has gone through initial tests. No known issues found.       |
 #===================================================================*/
@@ -13,19 +13,6 @@
 #include "Object.h"
 
 const GLuint TOTAL_ASCII_CHARACTERS = 128;
-
-struct Glyph
-{
-	GLuint ID;       //OGL texture ID for each letter 
-	GLint width;     //Width of the letter
-	GLint height;    //Height of the letter 
-	GLint bearingX;  //Distance from the y-axis origin
-	GLint bearingY;  //Distance from the x-axis baseline 
-	GLint advance;   //Offset to advance to next glyph
-};
-
-//Would love to call it 'Font' but that name is reserved
-typedef std::map<GLchar, Glyph> FontType;
 
 class Text : public Object
 {
@@ -62,6 +49,19 @@ public:
 	virtual void SendToShader(Shader& shader);
 
 private:
+
+	struct Glyph
+	{
+		GLuint ID;       //OGL texture ID for each letter 
+		GLint width;     //Width of the letter
+		GLint height;    //Height of the letter 
+		GLint bearingX;  //Distance from the y-axis origin
+		GLint bearingY;  //Distance from the x-axis baseline 
+		GLint advance;   //Offset to advance to next glyph
+	};
+
+	//Would love to call it 'Font' but that name is reserved
+	typedef std::map<GLchar, Glyph> FontType;
 
 	static std::string s_rootFolder;
 	static GLuint s_totalTextObjects;
