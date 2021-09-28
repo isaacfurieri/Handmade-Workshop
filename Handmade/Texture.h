@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Texture' source files last updated on 23 September 2021           |
+| 'Texture' source files last updated on 28 September 2021           |
 #====================================================================#
 | Class has not been fully tested. No known issues found.            |
 #===================================================================*/
@@ -47,7 +47,11 @@ public:
 		Texture4 = GL_TEXTURE3
 	};
 
-	Texture();
+	static bool Load(const std::string& tag, const std::string& filename);
+	static void Unload(const std::string& tag = "");
+
+	Texture(const std::string& tag = "", const std::string& filename = "");
+	~Texture() {}
 
 	const std::string& GetTag() const;
 
@@ -55,14 +59,9 @@ public:
 	void SetTexture(const std::string& tag);
 	void SetFilter(FilterType filterType, FilterSetting filterSetting);
 
-	bool Load(const std::string& filename, const std::string& tag);
-
 	void Bind() const;
 	void Bind(TextureUnit textureUnit) const;
-
 	void Unbind() const;
-	void Unload() const;
-	void Unload(const std::string& tag) const;
 
 private:
 
