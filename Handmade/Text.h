@@ -63,11 +63,6 @@ private:
 	//Would love to call it 'Font' but that name is reserved
 	typedef std::map<GLchar, Glyph> FontType;
 
-	static std::string s_rootFolder;
-	static GLuint s_totalTextObjects;
-	static FT_Library s_freetypeObject;
-	static std::map<std::string, FontType> s_fonts;
-
 	Buffer m_buffer;
 	FontType m_font;
 
@@ -77,5 +72,10 @@ private:
 
 	std::string m_string;
 	bool m_isFirstLetterCentered;
+
+	static std::string s_rootFolder;
+	static GLuint s_totalTextObjects;
+	static FT_Library s_freetypeObject;
+	static std::map<std::string, FontType> s_fonts;
 
 };
