@@ -34,6 +34,7 @@ bool Texture::Load(const std::string& tag, const std::string& filename)
 	auto format = ((depth == 4) ? GL_RGBA : GL_RGB);
 
 	Texture texture;
+	texture.m_tag = tag;
 
 	glGenTextures(1, &texture.m_ID);
 	glBindTexture(GL_TEXTURE_2D, texture.m_ID);
