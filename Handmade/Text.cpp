@@ -130,7 +130,6 @@ void Text::Unload(const std::string& tag)
 Text::Text(const std::string& tag, const std::string& filename, GLuint fontSize) 
 	: m_buffer("Text_" + std::to_string(++s_totalTextObjects), 6, true)
 {
-	m_tag = tag;
 	m_totalWidth = 0;
 	m_buffer.LinkEBO();
 	m_fontSize = fontSize;
@@ -163,7 +162,7 @@ Text::Text(const Text& copy) : m_buffer("Text_" + std::to_string(++s_totalTextOb
 Text::~Text()
 {
 	m_font.clear();
-	m_buffer.Destroy();
+	m_buffer.Destroy(m_buffer.GetTag());
 }
 //================================================================================================
 GLuint Text::GetFontSize()
@@ -193,6 +192,7 @@ void Text::SetFont(const std::string& tag)
 	auto it = s_fonts.find(tag);
 	assert(it != s_fonts.end());
 	m_font = it->second;
+	m_tag = tag;
 }
 //================================================================================================
 void Text::SetString(const std::string& string)

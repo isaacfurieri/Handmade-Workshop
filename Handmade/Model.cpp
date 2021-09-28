@@ -418,7 +418,8 @@ void Model::Unload()
 {
 	for (auto& buffer : m_buffers)
 	{
-		buffer.Destroy();
+		//TODO - Unload buffer properly
+		//buffer.Destroy();
 	}
 
 	m_meshes.clear();

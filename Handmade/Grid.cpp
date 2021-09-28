@@ -14,7 +14,7 @@ Grid::Grid(bool hasSpaceForAxes, GLint size, GLfloat lineWidth)
 //======================================================================================================
 Grid::~Grid()
 {
-	m_buffer.Destroy();
+	m_buffer.Destroy("Grid");
 }
 //======================================================================================================
 void Grid::SetSize(GLint size)

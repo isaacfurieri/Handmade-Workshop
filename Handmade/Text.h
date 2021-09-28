@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Text' source files last updated on 27 September 2021              |
+| 'Text' source files last updated on 28 September 2021              |
 #====================================================================#
 | Class has gone through initial tests. No known issues found.       |
 #===================================================================*/

@@ -15,7 +15,7 @@ Line::Line(GLfloat lineWidth, GLfloat r, GLfloat g, GLfloat b, GLfloat a) : m_bu
 //======================================================================================================
 Line::~Line()
 {
-	m_buffer.Destroy();
+	m_buffer.Destroy("Line");
 }
 //======================================================================================================
 void Line::SetEndPoints(GLfloat x1, GLfloat y1, GLfloat z1, GLfloat x2, GLfloat y2, GLfloat z2)

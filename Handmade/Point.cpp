@@ -15,7 +15,7 @@ Point::Point(GLfloat pointSize, GLfloat r, GLfloat g, GLfloat b, GLfloat a) : m_
 //======================================================================================================
 Point::~Point()
 {
-	m_buffer.Destroy();
+	m_buffer.Destroy("Point");
 }
 //======================================================================================================
 void Point::SetColor(const glm::vec4& color)

@@ -118,7 +118,7 @@ Cuboid::Cuboid(GLfloat width, GLfloat height, GLfloat depth,
 //======================================================================================================
 Cuboid::~Cuboid()
 {
-	m_buffer.Destroy();
+	m_buffer.Destroy("Cuboid");
 }
 //======================================================================================================
 void Cuboid::SetTextureScale(GLfloat width, GLfloat height)

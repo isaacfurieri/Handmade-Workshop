@@ -24,14 +24,15 @@ Axes::Axes(GLint size, GLfloat lineWidth) : m_buffer("Axes", 6)
 //======================================================================================================
 Axes::~Axes()
 {
-	if (m_isPrimitive)
+	//TODO - Unload buffer and model properly
+	/*if (m_isPrimitive)
 	{
 		m_buffer.Destroy();
 	}
 	else
 	{
 		m_model.Unload();
-	}
+	}*/
 }
 //======================================================================================================
 void Axes::SetSize(GLint size)
@@ -94,10 +95,11 @@ void Axes::Create()
 {
 	//We don't want to create new buffer 
 	//objects everytime the axes are resized
-	if (!m_buffer.GetTag().empty())
+	//TODO - Implement RAII properly
+	/*if (!m_buffer.GetTag().empty())
 	{
 		m_buffer.Destroy();
-	}
+	}*/
 
 	//m_buffer.Create("Axes", 6);
 

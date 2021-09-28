@@ -46,7 +46,7 @@ Quad::Quad(GLfloat width, GLfloat height, GLfloat r, GLfloat g, GLfloat b, GLflo
 //======================================================================================================
 Quad::~Quad()
 {
-	m_buffer.Destroy();
+	m_buffer.Destroy("Quad");
 }
 //======================================================================================================
 void Quad::SetDimension(const glm::vec2& dimension)
