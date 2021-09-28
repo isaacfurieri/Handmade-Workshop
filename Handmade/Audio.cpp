@@ -124,7 +124,6 @@ Audio::Audio(Type type, const std::string& tag, const std::string& filename)
 	m_minFrequency = 11025.0f;
 	m_maxFrequency = 176400.0f;
 
-	m_tag = tag;
 	m_type = type;
 	m_isMuted = false;
 	m_loopCount = Loop::None;
@@ -253,6 +252,7 @@ void Audio::SetAudio(const std::string& tag, Type type)
 	auto it = audioMap.find(tag);
 	assert(it != audioMap.end());
 	m_audioData = (*it).second;
+	m_tag = tag;
 }
 //======================================================================================================
 void Audio::SetFrequencyRange(float minFrequency, float maxFrequency)
