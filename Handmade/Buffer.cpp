@@ -113,7 +113,6 @@ void Buffer::SetBuffer(const std::string& tag)
 	auto it = s_buffers.find(tag);
 	assert(it != s_buffers.end());
 	*this = it->second;
-	m_tag = tag;
 }
 //======================================================================================================
 void Buffer::FillEBO(const GLuint* data, GLsizeiptr bufferSize, Fill fill)
