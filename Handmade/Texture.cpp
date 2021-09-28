@@ -121,11 +121,13 @@ void Texture::SetFilter(FilterType filterType, FilterSetting filterSetting)
 //======================================================================================================
 void Texture::Bind() const
 {
+	assert(m_ID > 0);
 	glBindTexture(GL_TEXTURE_2D, m_ID);
 }
 //======================================================================================================
 void Texture::Bind(TextureUnit textureUnit) const
 {
+	assert(m_ID > 0);
 	glActiveTexture(static_cast<GLenum>(textureUnit));
 	glBindTexture(GL_TEXTURE_2D, m_ID);
 }
