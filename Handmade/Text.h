@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Text' source files last updated on 28 September 2021              |
+| 'Text' source files last updated on 30 September 2021              |
 #====================================================================#
 | Class has gone through initial tests. No known issues found.       |
 #===================================================================*/
@@ -73,8 +73,8 @@ private:
 	std::string m_string;
 	bool m_isFirstLetterCentered;
 
+	static GLuint s_totalObjects;
 	static std::string s_rootFolder;
-	static GLuint s_totalTextObjects;
 	static FT_Library s_freetypeObject;
 	static std::map<std::string, FontType> s_fonts;
 

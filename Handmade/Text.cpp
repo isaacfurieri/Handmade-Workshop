@@ -3,7 +3,7 @@
 #include "Text.h"
 #include "Utility.h"
 
-GLuint Text::s_totalTextObjects = 0;
+GLuint Text::s_totalObjects = 0;
 FT_Library Text::s_freetypeObject = nullptr;
 std::string Text::s_rootFolder = "Assets/Fonts/";
 std::map<std::string, Text::FontType> Text::s_fonts;
@@ -128,7 +128,7 @@ void Text::Unload(const std::string& tag)
 }
 //================================================================================================
 Text::Text(const std::string& tag, const std::string& filename, GLuint fontSize) 
-	: m_buffer("Text_" + std::to_string(++s_totalTextObjects), 6, true)
+	: m_buffer("Text_" + std::to_string(++s_totalObjects), 6, true)
 {
 	m_totalWidth = 0;
 	m_buffer.LinkEBO();
@@ -148,7 +148,7 @@ Text::Text(const std::string& tag, const std::string& filename, GLuint fontSize)
 	}
 }
 //================================================================================================
-Text::Text(const Text& copy) : m_buffer("Text_" + std::to_string(++s_totalTextObjects), 6, true)
+Text::Text(const Text& copy) : m_buffer("Text_" + std::to_string(++s_totalObjects), 6, true)
 {
 	m_buffer.LinkEBO();
 	m_font = copy.m_font;
