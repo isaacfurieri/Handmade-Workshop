@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Audio' source files last updated on 28 September 2021             |
+| 'Audio' source files last updated on 30 September 2021             |
 #====================================================================#
 | Class has not been fully tested. No known issues found.            |
 #===================================================================*/
@@ -58,6 +58,8 @@ public:
 	static bool Load(Type type, const std::string& tag,
 		const std::string& filename);
 	static void Unload(const std::string& tag = "");
+
+	static void SetRootFolder(const std::string& rootFolder);
 
 	Audio(Type type = Type::Music, const std::string& tag = "",
 		const std::string& filename = "");

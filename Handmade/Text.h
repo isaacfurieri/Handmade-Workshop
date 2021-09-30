@@ -26,6 +26,8 @@ public:
 		const std::string& filename, GLuint fontSize);
 	static void Unload(const std::string& tag = "");
 
+	static void SetRootFolder(const std::string& rootFolder);
+
 	Text(const std::string& tag = "",
 		const std::string& filename = "", GLuint fontSize = 10U);
 	Text(const Text& copy);

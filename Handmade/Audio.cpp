@@ -116,6 +116,11 @@ void Audio::Unload(const std::string& tag)
 	}
 }
 //======================================================================================================
+void Audio::SetRootFolder(const std::string& rootFolder)
+{
+	s_rootFolder = rootFolder;
+}
+//======================================================================================================
 Audio::Audio(Type type, const std::string& tag, const std::string& filename)
 {
 	m_pan = 0.0f;

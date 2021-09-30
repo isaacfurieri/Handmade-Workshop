@@ -76,6 +76,11 @@ void Texture::Unload(const std::string& tag)
 	}
 }
 //======================================================================================================
+void Texture::SetRootFolder(const std::string& rootFolder)
+{
+	s_rootFolder = rootFolder;
+}
+//======================================================================================================
 Texture::Texture(const std::string& tag, const std::string& filename)
 {
 	m_ID = 0;
