@@ -1,13 +1,14 @@
 #pragma once
 
 /*===================================================================#
-| 'RigidBody' source files last updated on 23 July 2021              |
+| 'RigidBody' source files last updated on 7 October 2021            |
 #====================================================================#
 | Class has not been fully tested. No known issues found.            |
 #===================================================================*/
 
 #include "glad.h"
 #include <glm.hpp>
+#include <gtc/quaternion.hpp>
 
 const GLdouble GRAVITY = 1.0000000000667;
 
@@ -41,7 +42,10 @@ public:
 	void SetPosition(const glm::vec3& position);
 	void SetVelocity(const glm::vec3& velocity);
 
-	void Update();
+	void AddForce(const glm::vec3& force);
+	void AddTorque(const glm::vec3& force, const glm::vec3& contactPoint);
+
+	void Update(GLfloat deltaTime);
 
 private:
 
@@ -55,6 +59,10 @@ private:
 	glm::vec3 m_torque;
 	glm::vec3 m_position;
 	glm::vec3 m_velocity;
+	glm::quat m_orientation;
 	glm::vec3 m_acceleration;
 
+	//TODO - Fix this later
+	//glm::vec3 m_angularVelocity;
+	//glm::vec3 m_angularAcceleration;
 };
