@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'HandmadeView' source files last updated on 6 August 2021          |
+| 'HandmadeView' source files last updated on 21 October 2021        |
 #===================================================================*/
 
 #include <memory>
@@ -22,58 +22,40 @@
 class CHandmadeView : public CView
 {
 
-protected: // create from serialization only
-
-	CHandmadeView() noexcept;
-	virtual ~CHandmadeView();
-	DECLARE_DYNCREATE(CHandmadeView)
-
 public:
 
+	CHandmadeView();
+	virtual ~CHandmadeView() {}
 	CHandmadeDoc* GetDocument() const;
+
+private:
 
 	virtual void OnDraw(CDC* pDC);
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 
-protected:
+	afx_msg void OnAppExit();
+	afx_msg void OnAppAbout();
 
 	virtual BOOL OnPreparePrinting(CPrintInfo* pInfo);
 	virtual void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo);
 	virtual void OnEndPrinting(CDC* pDC, CPrintInfo* pInfo);
 
-public:
-
-#ifdef _DEBUG
-	virtual void AssertValid() const;
-	virtual void Dump(CDumpContext& dc) const;
-#endif
-
-protected:
-
-	DECLARE_MESSAGE_MAP()
-	afx_msg void OnSize(UINT nType, int cx, int cy);
-
-	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnDestroy();
-
+	afx_msg void OnSize(UINT nType, int cx, int cy);
+	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
-	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
-
 	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnMButtonUp(UINT nFlags, CPoint point);
-
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnMButtonDown(UINT nFlags, CPoint point);
-
-private:
-
-	bool m_isScreenInitialized;
+	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 
 	bool m_isLeftButtonDown;
 	bool m_isRightButtonDown;
 	bool m_isMiddleButtonDown;
+	bool m_isScreenInitialized;
 
 	int m_mouseWheelMotion;
 	glm::ivec2 m_mouseMotion;
@@ -92,7 +74,7 @@ private:
 
 	std::unique_ptr<Shader> m_testShader;
 
-	//For current testing================================
+	//For current testing===============================================
 	/*std::unique_ptr<Audio> m_audio1;
 	std::unique_ptr<Audio> m_audio2;
 	std::unique_ptr<Audio> m_audio3;*/
@@ -113,17 +95,14 @@ private:
 	//Prefer to use smart pointer objects instead to avoid copies
 	//std::vector<Text> m_text;
 	//std::vector<Audio> m_audio;
-	//==================================================
+	//==================================================================
 
 	std::unique_ptr<FreeCamera> m_UICamera;
 	std::unique_ptr<FreeCamera> m_mainCamera;
 
 	std::vector<std::unique_ptr<Object>> m_objects;
-};
 
-#ifndef _DEBUG  // debug version in HandmadeView.cpp
-inline CHandmadeDoc* CHandmadeView::GetDocument() const
-{
-	return reinterpret_cast<CHandmadeDoc*>(m_pDocument);
-}
-#endif
+	DECLARE_DYNCREATE(CHandmadeView)
+	DECLARE_MESSAGE_MAP()
+
+};

@@ -6,6 +6,7 @@
 #include "Handmade.h"
 #endif
 
+#include "About.h"
 #include "Audio.h"
 #include "HandmadeDoc.h"
 #include "HandmadeView.h"
@@ -13,17 +14,16 @@
 #include "Shader.h"
 #include "Utility.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
-
+//================================================================================================
 IMPLEMENT_DYNCREATE(CHandmadeView, CView)
-
+//================================================================================================
 BEGIN_MESSAGE_MAP(CHandmadeView, CView)
 
 	ON_COMMAND(ID_FILE_PRINT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CView::OnFilePrintPreview)
+	ON_COMMAND(ID_APP_ABOUT, &CHandmadeView::OnAppAbout)
+	ON_COMMAND(ID_APP_EXIT, &CHandmadeView::OnAppExit)
 
 	ON_WM_SIZE()
 	ON_WM_CREATE()
@@ -40,9 +40,8 @@ BEGIN_MESSAGE_MAP(CHandmadeView, CView)
 	ON_WM_MBUTTONDOWN()
 
 END_MESSAGE_MAP()
-
 //======================================================================================================
-CHandmadeView::CHandmadeView() noexcept
+CHandmadeView::CHandmadeView()
 {
 	m_isScreenInitialized = false;
 
@@ -55,13 +54,8 @@ CHandmadeView::CHandmadeView() noexcept
 	m_isMiddleButtonDown = false;
 }
 //======================================================================================================
-CHandmadeView::~CHandmadeView()
-{
-}
-//======================================================================================================
 BOOL CHandmadeView::PreCreateWindow(CREATESTRUCT& cs)
 {
-
 	return CView::PreCreateWindow(cs);
 }
 //======================================================================================================
@@ -344,6 +338,25 @@ void CHandmadeView::OnMButtonDown(UINT nFlags, CPoint point)
 	Invalidate(FALSE);
 }
 //======================================================================================================
+void CHandmadeView::OnAppExit()
+{
+	int result = MessageBox(L"Are you sure you want to exit?",
+		L"Exit Application",
+		MB_YESNO | MB_ICONQUESTION);
+
+	if (result == IDYES)
+	{
+		OnDestroy();
+		PostQuitMessage(0);
+	}
+}
+//======================================================================================================
+void CHandmadeView::OnAppAbout()
+{
+	About aboutDlg;
+	aboutDlg.DoModal();
+}
+//======================================================================================================
 void CHandmadeView::OnDraw(CDC* pDC)
 {
 	CHandmadeDoc* pDoc = GetDocument();
@@ -501,21 +514,8 @@ void CHandmadeView::OnEndPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
 	// TODO: add cleanup after printing
 }
 //======================================================================================================
-// CHandmadeView diagnostics
-#ifdef _DEBUG
-void CHandmadeView::AssertValid() const
-{
-	CView::AssertValid();
-}
-//======================================================================================================
-void CHandmadeView::Dump(CDumpContext& dc) const
-{
-	CView::Dump(dc);
-}
-//======================================================================================================
-CHandmadeDoc* CHandmadeView::GetDocument() const // non-debug version is inline
+CHandmadeDoc* CHandmadeView::GetDocument() const
 {
 	ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CHandmadeDoc)));
 	return (CHandmadeDoc*)m_pDocument;
 }
-#endif //_DEBUG
