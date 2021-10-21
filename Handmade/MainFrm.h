@@ -1,30 +1,28 @@
 #pragma once
 
 /*===================================================================#
-| 'MainFrm' source files last updated on 30 June 2021                |
+| 'MainFrm' source files last updated on 21 October 2021             |
 #===================================================================*/
+
+#include <string>
 
 class CMainFrame : public CFrameWnd
 {
 
-protected: 
-
-	//Create from serialization only
-	CMainFrame() noexcept;
-	virtual ~CMainFrame();
-	DECLARE_DYNCREATE(CMainFrame)
-
 public:
 
-	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
+	CMainFrame() {}
+	virtual ~CMainFrame() {}
+	void SetStatusBarText(const std::string& text);
 
-#ifdef _DEBUG
-	virtual void AssertValid() const;
-	virtual void Dump(CDumpContext& dc) const;
-#endif
+private:
 
-	//Generated message map functions
-protected:
+	afx_msg int OnCreate(LPCREATESTRUCT createStruct);
+	virtual BOOL PreCreateWindow(CREATESTRUCT& createStruct);
+
+	CStatusBar m_statusBar;
+
 	DECLARE_MESSAGE_MAP()
+	DECLARE_DYNCREATE(CMainFrame)
 
 };
