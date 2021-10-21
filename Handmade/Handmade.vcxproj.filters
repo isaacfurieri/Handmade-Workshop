@@ -210,6 +210,9 @@
     <ClInclude Include="Raycast.h">
       <Filter>Header Files\Components\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="About.h">
+      <Filter>Header Files\MFC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Screen.cpp">
@@ -325,6 +328,9 @@
     </ClCompile>
     <ClCompile Include="Raycast.cpp">
       <Filter>Source Files\Components\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="About.cpp">
+      <Filter>Source Files\MFC</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
