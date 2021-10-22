@@ -8,10 +8,12 @@ Axes::Axes(const std::string& filenameModel) : m_buffer("Axes", 6)
 	m_size = 0.0f;
 	m_lineWidth = 0.0f;
 	m_isPrimitive = false;
-	m_model.Load(filenameModel, true);
 	m_arrowTipPositionX = glm::vec3(0.0f);
 	m_arrowTipPositionY = glm::vec3(0.0f);
 	m_arrowTipPositionZ = glm::vec3(0.0f);
+	
+	m_model.Load("Axes", filenameModel, true, "Chrome");
+	m_model.SetModel("Axes");
 }
 //======================================================================================================
 Axes::Axes(GLint size, GLfloat lineWidth) : m_buffer("Axes", 6)

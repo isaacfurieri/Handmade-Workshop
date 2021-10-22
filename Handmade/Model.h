@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Model' source files last updated on 23 September 2021             |
+| 'Model' source files last updated on 22 October 2021               |
 #====================================================================#
 | Class has not been fully tested. No known issues found.            |
 #===================================================================*/
@@ -18,7 +18,7 @@
 struct Mesh
 {
 	std::string name;
-	Material material;
+	std::string materialName;
 
 	std::vector<GLuint> indices;
 	std::vector<glm::vec4> colors;
@@ -62,14 +62,24 @@ class Model : public Object
 
 public:
 
-	Model();
-	virtual ~Model() {}
+	static bool Load(const std::string& tag,
+		const std::string& filename, 
+		bool isNormalized, 
+		const std::string& defaultMaterial);
 
-	bool Load(const std::string& filename,
-		bool isNormalized = false,
+	static void Unload(const std::string& tag = "");
+	static void SetRootFolder(const std::string& rootFolder);
+
+	Model(const std::string& tag = "",
+		const std::string& filename = "", 
+		bool isNormalized = false, 
 		const std::string& defaultMaterial = "Chrome");
 
+	virtual ~Model() {}
+
 	const glm::vec3& GetDimension() const;
+
+	void SetModel(const std::string& tag);
 
 	void SetColor(const glm::vec4& color);
 	void SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
@@ -78,13 +88,11 @@ public:
 	virtual void Update(GLfloat deltaTime) {}
 	virtual void SendToShader(Shader& shader) {}
 
-	void Unload();
-
 private:
 
-	void Normalize();
-	void FillBuffers();
-	void SortVertexData(Mesh& newMesh, const Mesh& oldMesh,
+	static void Normalize(Model& model);
+	static void FillBuffers(Model& model);
+	static void SortVertexData(Mesh& newMesh, const Mesh& oldMesh,
 		const std::vector<Face>& faces);
 
 	glm::vec3 m_dimension;
@@ -95,8 +103,10 @@ private:
 	std::vector<Buffer> m_buffers;
 
 	//These are all the materials loaded from the .mtl file
-	std::vector<Material> m_materials;
+	//This is an entire group of materials for the model
+	Material m_material;
 
 	static std::string s_rootFolder;
+	static std::map<std::string, Model> s_models;
 
 };

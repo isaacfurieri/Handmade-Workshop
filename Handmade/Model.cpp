@@ -6,32 +6,27 @@
 #include "Utility.h"
 
 std::string Model::s_rootFolder = "Assets/Models/";
+std::map<std::string, Model> Model::s_models;
 //======================================================================================================
-Model::Model()
+bool Model::Load(const std::string& tag,
+	const std::string& filename, 
+	bool isNormalized, 
+	const std::string& defaultMaterial)
 {
-	m_dimension = glm::vec3(0.0f);
-}
-//======================================================================================================
-bool Model::Load(const std::string& filename, bool isNormalized, const std::string& defaultMaterial)
-{
-	if (filename.empty())
-	{
-		return false;
-	}
-
+	assert(s_models.find(tag) == s_models.end());
 	std::fstream file(s_rootFolder + filename, std::ios_base::in);
 
 	if (!file)
 	{
 		Utility::Log(Utility::Destination::WindowsMessageBox,
-			"Error loading model file \"" + (s_rootFolder + filename) + "\"."
-			"Possible causes could be a corrupt or missing file. It could also be "
+			"Error loading model file \"" + (s_rootFolder + filename) + "\"\n\n"
+			"Possible causes could be a corrupt or missing file. Another reason could be "
 			"that the filename and/or path are incorrectly spelt.", Utility::Severity::Failure);
 		return false;
 	}
 
 	Mesh rawMesh;
-	Material lastMaterial;
+	std::string lastMaterialName;
 
 	std::string line;
 	std::string lastName;
@@ -39,6 +34,8 @@ bool Model::Load(const std::string& filename, bool isNormalized, const std::stri
 
 	std::vector<std::string> subStrings;
 	subStrings.reserve(10);
+
+	Model model;
 
 	while (!file.eof())
 	{
@@ -106,7 +103,7 @@ bool Model::Load(const std::string& filename, bool isNormalized, const std::stri
 					{
 						vertexGroup.t = std::stoi(numbers[1]) - 1;
 						vertexGroup.n = std::stoi(numbers[2]) - 1;
-						
+
 						if (vertexGroup.t < 0)
 						{
 							vertexGroup.t = rawMesh.textureCoords.size() + (vertexGroup.t + 1);
@@ -121,7 +118,7 @@ bool Model::Load(const std::string& filename, bool isNormalized, const std::stri
 					else
 					{
 						vertexGroup.n = std::stoi(numbers[2]) - 1;
-						
+
 						if (vertexGroup.n < 0)
 						{
 							vertexGroup.n = rawMesh.normals.size() + (vertexGroup.n + 1);
@@ -139,13 +136,13 @@ bool Model::Load(const std::string& filename, bool isNormalized, const std::stri
 			//All materials are found in the subsequent .mtl file
 			if (subStrings[0] == "usemtl")
 			{
-				if (!m_materials.empty())
+				if (!model.m_material.GetGroup().empty())
 				{
-					for (const auto& material : m_materials)
+					for (const auto& material : model.m_material.GetGroup())
 					{
 						if (material.GetName() == subStrings[1])
 						{
-							lastMaterial = material;
+							lastMaterialName = subStrings[1];
 							break;
 						}
 					}
@@ -159,7 +156,8 @@ bool Model::Load(const std::string& filename, bool isNormalized, const std::stri
 			//Note that sometimes the material file might not be found
 			if (subStrings[0] == "mtllib")
 			{
-				Material::Load(m_materials, subStrings[1]);
+				model.m_material.Load(subStrings[1], subStrings[1]);
+				model.m_material.SetGroup(subStrings[1]);
 				continue;
 			}
 
@@ -178,9 +176,9 @@ bool Model::Load(const std::string& filename, bool isNormalized, const std::stri
 					mesh.normals.reserve(rawMesh.normals.size());
 
 					mesh.name = lastName;
-					mesh.material = lastMaterial;
+					mesh.materialName = lastMaterialName;
 					SortVertexData(mesh, rawMesh, faces);
-					m_meshes.push_back(mesh);
+					model.m_meshes.push_back(mesh);
 				}
 
 				//Make a note of the group name for the next mesh group
@@ -214,29 +212,29 @@ bool Model::Load(const std::string& filename, bool isNormalized, const std::stri
 	{
 		Mesh mesh;
 		mesh.name = lastName;
-		mesh.material = lastMaterial;
+
+		mesh.materialName = lastMaterialName;
 		SortVertexData(mesh, rawMesh, faces);
-		m_meshes.push_back(mesh);
+		model.m_meshes.push_back(mesh);
 	}
 
 	//Check if any materials were loaded because there may be a 'mtllib' 
 	//statement missing. This means that no materials, not even default 
 	//ones are loaded so as a last resort, we add a default material
-	if (m_materials.empty())
+	if (model.m_material.GetGroup().empty())
 	{
-		Material material;
-		material.SetMaterial(defaultMaterial);
+		model.m_material.SetGroup("Defaults");
 
-		for (auto& mesh : m_meshes)
+		for (auto& mesh : model.m_meshes)
 		{
-			mesh.material = material;
+			mesh.materialName = defaultMaterial;
 		}
 	}
 
 	//Make sure the model has a normalized width, height and depth if required
 	if (isNormalized)
 	{
-		Normalize();
+		Normalize(model);
 	}
 
 	//Get the new max lengths
@@ -244,7 +242,7 @@ bool Model::Load(const std::string& filename, bool isNormalized, const std::stri
 	glm::vec3 minValues = glm::vec3(0.0f);
 	glm::vec3 maxValues = glm::vec3(0.0f);
 
-	for (const auto& mesh : m_meshes)
+	for (const auto& mesh : model.m_meshes)
 	{
 		for (const auto& vertex : mesh.vertices)
 		{
@@ -253,15 +251,42 @@ bool Model::Load(const std::string& filename, bool isNormalized, const std::stri
 		}
 	}
 
-	m_dimension = maxValues - minValues;
+	model.m_dimension = maxValues - minValues;
 
-	FillBuffers();
+	FillBuffers(model);
+	s_models[tag] = model;
 	return true;
+}
+//======================================================================================================
+Model::Model(const std::string& tag,
+	const std::string& filename,
+	bool isNormalized,
+	const std::string& defaultMaterial)
+{
+	m_dimension = glm::vec3(0.0f);
+
+	if (!filename.empty())
+	{
+		Load(tag, filename, isNormalized, defaultMaterial);
+		SetModel(tag);
+	}
+
+	else if (!tag.empty())
+	{
+		SetModel(tag);
+	}
 }
 //======================================================================================================
 const glm::vec3& Model::GetDimension() const
 {
 	return m_dimension;
+}
+//======================================================================================================
+void Model::SetModel(const std::string& tag)
+{
+	auto it = s_models.find(tag);
+	assert(it != s_models.end());
+	*this = it->second;
 }
 //======================================================================================================
 void Model::SetColor(const glm::vec4& color)
@@ -285,19 +310,17 @@ void Model::SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
 	}
 }
 //======================================================================================================
-void Model::FillBuffers()
+void Model::FillBuffers(Model& model)
 {
 	//We have to create separate buffer objects if the .obj file data has separate groups
 	//because of how the indices have been set up. Single group models will use one buffer
 	//We can use one buffer for all data but then the indices have to be calculated differently
-	for (auto& mesh : m_meshes)
+	for (auto& mesh : model.m_meshes)
 	{
 		//TODO - Need to label each buffer object properly
 		static auto count = 0;
 
 		Buffer buffer("Mesh_" + std::to_string(count++), mesh.indices.size(), true);
-
-		//buffer.Create("Mesh_" + std::to_string(count++), mesh.indices.size(), true);
 
 		buffer.FillEBO(&mesh.indices[0], mesh.indices.size() * sizeof(GLuint));
 		buffer.FillVBO(Buffer::VBO::VertexBuffer,
@@ -322,7 +345,7 @@ void Model::FillBuffers()
 				&mesh.textureCoords[0].x, mesh.textureCoords.size() * sizeof(glm::vec2));
 		}
 
-		m_buffers.push_back(buffer);
+		model.m_buffers.push_back(buffer);
 	}
 }
 //======================================================================================================
@@ -397,12 +420,23 @@ void Model::Render(Shader& shader)
 		m_buffers[count].LinkVBO(shader.GetAttributeID("normalIn"),
 			Buffer::VBO::NormalBuffer, Buffer::ComponentSize::XYZ, Buffer::DataType::FloatData);
 
-		mesh.material.SendToShader(shader);
+		Material material;
 
-		if (mesh.material.IsTextured())
+		for (auto mat : m_material.GetGroup())
+		{
+			if (mat.GetName() == mesh.materialName)
+			{
+				material = mat;
+				break;
+			}
+		}
+
+		material.SendToShader(shader);
+
+		if (material.IsTextured())
 		{
 			shader.SendData("isTextured", true);
-			mesh.material.GetDiffuseMap().Bind();
+			material.GetDiffuseMap().Bind();
 		}
 
 		else
@@ -414,24 +448,49 @@ void Model::Render(Shader& shader)
 	}
 }
 //======================================================================================================
-void Model::Unload()
+void Model::Unload(const std::string& tag)
 {
-	for (auto& buffer : m_buffers)
+	if (!tag.empty())
 	{
-		//TODO - Unload buffer properly
-		//buffer.Destroy();
+		auto it = s_models.find(tag);
+		assert(it != s_models.end());
+		
+		for (auto& buffer : it->second.m_buffers)
+		{
+			Buffer::Destroy(buffer.GetTag());
+		}
+
+		Material::Unload(it->second.m_material.GetTag());
+		s_models.erase(it);
 	}
 
-	m_meshes.clear();
-	m_materials.clear();
+	else
+	{
+		for (auto& model : s_models)
+		{
+			for (auto& buffer : model.second.m_buffers)
+			{
+				Buffer::Destroy(buffer.GetTag());
+			}
+
+			Material::Unload(model.second.m_material.GetTag());
+		}
+
+		s_models.clear();
+	}
 }
 //======================================================================================================
-void Model::Normalize()
+void Model::SetRootFolder(const std::string& rootFolder)
+{
+	s_rootFolder = rootFolder;
+}
+//======================================================================================================
+void Model::Normalize(Model& model)
 {
 	glm::vec3 minValues = glm::vec3(0.0f);
 	glm::vec3 maxValues = glm::vec3(0.0f);
 
-	for (const auto& mesh : m_meshes)
+	for (const auto& mesh : model.m_meshes)
 	{
 		for (const auto& vertex : mesh.vertices)
 		{
@@ -449,7 +508,7 @@ void Model::Normalize()
 
 	auto fraction = (1.0f / glm::max(glm::max(length.x, length.y), length.z));
 
-	for (auto& mesh : m_meshes)
+	for (auto& mesh : model.m_meshes)
 	{
 		for (auto& vertex : mesh.vertices)
 		{

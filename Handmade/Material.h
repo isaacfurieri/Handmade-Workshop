@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Material' source files last updated on 23 September 2021          |
+| 'Material' source files last updated on 22 October 2021            |
 #====================================================================#
 | Class has not been fully tested. No known issues found.            |
 #===================================================================*/
@@ -19,29 +19,30 @@ class Material
 
 public:
 
-	static bool Load(const std::string& filename);
-	static bool Load(std::vector<Material>& materials, 
-		const std::string& filename);
+	static bool Load(const std::string& tag, const std::string& filename);
+	static void Unload(const std::string& tag = "");
+	static void SetRootFolder(const std::string& rootFolder);
 
-	Material();
-	~Material();
+	Material(const std::string& tag = "", const std::string& filename = "");
+	~Material() {}
 
+	const std::string& GetTag() const;
 	const std::string& GetName() const;
-
 	const Texture& GetNormalMap() const;
 	const Texture& GetAmbientMap() const;
 	const Texture& GetDiffuseMap() const;
 	const Texture& GetSpecularMap() const;
+	const std::vector<Material>& GetGroup() const;
 
 	void SetName(const std::string& name);
-	void SetMaterial(const std::string& name);
+	void SetGroup(const std::string& tag);
 
 	bool IsTextured() const;
 
-	void SetNormalMap(const std::string& filename);
-	void SetAmbientMap(const std::string& filename);
-	void SetDiffuseMap(const std::string& filename);
-	void SetSpecularMap(const std::string& filename);
+	void LoadNormalMap(const std::string& tag, const std::string& filename);
+	void LoadAmbientMap(const std::string& tag, const std::string& filename);
+	void LoadDiffuseMap(const std::string& tag, const std::string& filename);
+	void LoadSpecularMap(const std::string& tag, const std::string& filename);
 
 	void SetShininess(GLfloat shininess);
 	void SetRefractiveIndex(GLfloat refractiveIndex);
@@ -61,13 +62,14 @@ public:
 	void SetTransmittance(const glm::vec3& transmittance);
 	void SetTransmittance(GLfloat r, GLfloat g, GLfloat b);
 
-	//we send the shader in here so as to not pass into the ctor which causes other issues
 	void SendToShader(Shader& shader);
 
 private:
 
 	bool m_isTextured;
+	std::string m_tag;
 	std::string m_name;
+	std::vector<Material> m_group;
 
 	GLfloat m_shininess;
 	GLfloat m_refractiveIndex;
@@ -84,6 +86,6 @@ private:
 	glm::vec3 m_transmittance;
 
 	static std::string s_rootFolder;
-	static std::map<std::string, Material> s_materials;
+	static std::map<std::string, std::vector<Material>> s_materialGroups;
 
 };
