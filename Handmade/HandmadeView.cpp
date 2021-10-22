@@ -179,7 +179,7 @@ int CHandmadeView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	//===================================================================
 
-	Material::Load("Materials.mat");
+	Material::Load("Defaults", "Defaults.mtl");
 
 	//===================================================================
 
@@ -241,8 +241,7 @@ int CHandmadeView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	m_light = std::make_unique<Light>(0.0f, 7.5f, 0.0f);
 
-	m_model = std::make_unique<Model>();
-	m_model->Load("Teapot.obj", true);
+	m_model = std::make_unique<Model>("Teapot", "Teapot.obj", true);
 	//m_model->GetTransform().SetScale(5.0f, 5.0f, 5.0f);
 	//m_model->SetColor(1, 0, 1, 1);
 
