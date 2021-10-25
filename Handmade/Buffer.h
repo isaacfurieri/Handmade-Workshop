@@ -97,7 +97,7 @@ public:
 		VBO vbo, ComponentSize componentSize, DataType dataType);
 
 	void Render(RenderMode renderMode,
-		GLuint index = 0, GLuint totalVertices = 0);
+		GLuint index = 0, GLuint totalRenderVertices = 0);
 
 private:
 
