@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Buffer' source files last updated on 28 September 2021            |
+| 'Buffer' source files last updated on 25 October 2021              |
 #====================================================================#
 | Class has not been fully tested. No known issues found.            |
 #===================================================================*/
@@ -82,21 +82,21 @@ public:
 	const std::string& GetTag() const;
 	void SetBuffer(const std::string& tag);
 
-	void FillEBO(const GLuint* data, 
+	void FillEBO(const GLuint* data,
 		GLsizeiptr bufferSize, Fill fill = Fill::Once);
-	void FillVBO(VBO vbo, const void* data, 
+	void FillVBO(VBO vbo, const void* data,
 		GLsizeiptr bufferSize, Fill fill = Fill::Once);
 
-	void AppendEBO(const GLuint* data, 
+	void AppendEBO(const GLuint* data,
 		GLsizeiptr size, GLuint offset);
-	void AppendVBO(VBO vbo, 
+	void AppendVBO(VBO vbo,
 		const void* data, GLsizeiptr size, GLuint offset);
 
 	void LinkEBO();
-	void LinkVBO(GLint attributeID, 
+	void LinkVBO(GLint attributeID,
 		VBO vbo, ComponentSize componentSize, DataType dataType);
 
-	void Render(RenderMode renderMode, 
+	void Render(RenderMode renderMode,
 		GLuint index = 0, GLuint totalVertices = 0);
 
 private:

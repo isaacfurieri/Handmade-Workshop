@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Model' source files last updated on 22 October 2021               |
+| 'Model' source files last updated on 25 October 2021               |
 #====================================================================#
 | Class has not been fully tested. No known issues found.            |
 #===================================================================*/
@@ -63,16 +63,16 @@ class Model : public Object
 public:
 
 	static bool Load(const std::string& tag,
-		const std::string& filename, 
-		bool isNormalized, 
-		const std::string& defaultMaterial);
+		const std::string& filename,
+		bool isNormalized = false,
+		const std::string& defaultMaterial = "Chrome");
 
 	static void Unload(const std::string& tag = "");
 	static void SetRootFolder(const std::string& rootFolder);
 
 	Model(const std::string& tag = "",
-		const std::string& filename = "", 
-		bool isNormalized = false, 
+		const std::string& filename = "",
+		bool isNormalized = false,
 		const std::string& defaultMaterial = "Chrome");
 
 	virtual ~Model() {}

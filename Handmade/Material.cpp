@@ -358,6 +358,8 @@ void Material::SetTransmittance(GLfloat r, GLfloat g, GLfloat b)
 //======================================================================================================
 void Material::SendToShader(Shader& shader)
 {
+	//TODO - Need to tag each material
+	//assert(!m_tag.empty());
 	shader.SendData("material.ambient", m_ambient);
 	shader.SendData("material.diffuse", m_diffuse);
 	shader.SendData("material.specular", m_specular);

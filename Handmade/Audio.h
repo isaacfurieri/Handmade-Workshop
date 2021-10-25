@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Audio' source files last updated on 30 September 2021             |
+| 'Audio' source files last updated on 25 October 2021               |
 #====================================================================#
 | Class has not been fully tested. No known issues found.            |
 #===================================================================*/
@@ -54,7 +54,7 @@ public:
 	static bool Initialize();
 	static void Shutdown();
 	static void Update();
-	
+
 	static bool Load(Type type, const std::string& tag,
 		const std::string& filename);
 	static void Unload(const std::string& tag = "");

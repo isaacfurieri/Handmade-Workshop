@@ -287,6 +287,8 @@ void Audio::SetFrequencyInterval(Interval intervalType, float interval)
 //======================================================================================================
 bool Audio::Play()
 {
+	assert(!m_tag.empty());
+
 	if (!m_channel || (GetPosition() == 0))
 	{
 		s_audioSystem->playSound(m_audioData, m_channelGroup, false, &m_channel);

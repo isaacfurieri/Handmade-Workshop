@@ -36,6 +36,7 @@ bool Model::Load(const std::string& tag,
 	subStrings.reserve(10);
 
 	Model model;
+	model.m_tag = tag;
 
 	while (!file.eof())
 	{
@@ -403,6 +404,8 @@ void Model::SortVertexData(Mesh& newMesh, const Mesh& oldMesh, const std::vector
 //======================================================================================================
 void Model::Render(Shader& shader)
 {
+	assert(!m_tag.empty());
+
 	m_normalMatrix = glm::inverse(glm::mat3(m_transform.GetMatrix()));
 	shader.SendData("normal", m_normalMatrix, true);
 	shader.SendData("model", m_transform.GetMatrix());

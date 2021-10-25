@@ -162,6 +162,8 @@ void Buffer::LinkVBO(GLint attributeID, VBO vbo, ComponentSize componentSize, Da
 //======================================================================================================
 void Buffer::Render(RenderMode renderMode, GLuint index, GLuint totalVertices)
 {
+	assert(!m_tag.empty());
+
 	glBindVertexArray(m_VAO);
 
 	if (m_hasEBO)

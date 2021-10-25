@@ -227,6 +227,8 @@ void Text::IsFirstLetterCentered(bool flag)
 //================================================================================================
 void Text::Render(Shader& shader)
 {
+	assert(!m_tag.empty());
+
 	glm::vec2 textOrigin = glm::vec2(0.0f);
 
 	for (const auto& character : m_string)
