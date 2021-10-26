@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Axes' source files last updated on 28 September 2021              |
+| 'Axes' source files last updated on 25 October 2021                |
 #====================================================================#
 | Class has not been fully tested. No known issues found.            |
 #===================================================================*/
@@ -47,4 +47,6 @@ private:
 	glm::vec3 m_arrowTipPositionY;
 	glm::vec3 m_arrowTipPositionZ;
 
+	static GLuint s_totalObjects;
+	
 };

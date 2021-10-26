@@ -2,8 +2,9 @@
 #include "Input.h"
 #include "Shader.h"
 
+GLuint Axes::s_totalObjects = 0;
 //======================================================================================================
-Axes::Axes(const std::string& filenameModel) : m_buffer("Axes", 6)
+Axes::Axes(const std::string& filenameModel)
 {
 	m_size = 0.0f;
 	m_lineWidth = 0.0f;
@@ -12,11 +13,11 @@ Axes::Axes(const std::string& filenameModel) : m_buffer("Axes", 6)
 	m_arrowTipPositionY = glm::vec3(0.0f);
 	m_arrowTipPositionZ = glm::vec3(0.0f);
 	
-	m_model.Load("Axes", filenameModel, true, "Chrome");
+	m_model.Load("Axes", filenameModel, true);
 	m_model.SetModel("Axes");
 }
 //======================================================================================================
-Axes::Axes(GLint size, GLfloat lineWidth) : m_buffer("Axes", 6)
+Axes::Axes(GLint size, GLfloat lineWidth)
 {
 	m_size = size;
 	m_isPrimitive = true;
