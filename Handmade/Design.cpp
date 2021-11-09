@@ -171,27 +171,22 @@ bool Design::OnEnter()
 	m_UICamera = std::make_unique<FreeCamera>();
 	m_UICamera->SetVelocity(0.0f);
 	m_UICamera->SetSensitivity(0.0f);
+	
+	//=========================================================================
+
+	Screen::Instance()->SetColor(29U, 29U, 29U);
 
 	return true;
 }
 //======================================================================================================
 State* Design::Update(int deltaTime)
 {
-
 	Audio::Update();
 
-	//Screen::Instance()->Refresh();
-
-	//TODO - Add check when exiting application
-	/*int result = MessageBox(L"Are you sure you want to exit?",
-		L"Exit Application",
-		MB_YESNO | MB_ICONQUESTION);
-
-	if (result == IDYES)
+	if (Input::Instance()->IsXClicked())
 	{
-		OnDestroy();
-		PostQuitMessage(0);
-	}*/
+		return nullptr;
+	}
 
 	//==============================================================================
 

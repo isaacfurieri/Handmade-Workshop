@@ -38,15 +38,23 @@ public:
 	static Screen* Instance();
 
 	bool Initialize(const std::string& filename);
-	
+
 	const glm::ivec2& GetResolution();
 
 	void SetVSync(VSync VSync);
 	void IsDepthTestEnabled(bool flag);
 	void SetCursorPosition(GLuint x, GLuint y);
 	void SetResolution(GLint width, GLint height);
-	void SetViewport(GLint x, GLint y, GLsizei width, GLsizei height);
 
+	void SetColor(const glm::vec4& color);
+	void SetColor(const glm::uvec4& color);
+	void SetColor(GLfloat r = 0.0f,
+		GLfloat g = 0.0f, GLfloat b = 0.0f, GLfloat a = 1.0f);
+	void SetColor(GLuint r = 0U,
+		GLuint g = 0U, GLuint b = 0U, GLuint a = 1U);
+
+	void SetViewport(GLint x, GLint y, GLsizei width, GLsizei height);
+	
 	void Refresh();
 	void Present();
 	void Shutdown();
