@@ -149,15 +149,19 @@
   <ItemGroup>
     <ClCompile Include="App.cpp" />
     <ClCompile Include="Audio.cpp" />
+    <ClCompile Include="Axes.cpp" />
     <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Capsule.cpp" />
     <ClCompile Include="Circle.cpp" />
     <ClCompile Include="Cuboid.cpp" />
+    <ClCompile Include="Design.cpp" />
     <ClCompile Include="FreeCamera.cpp" />
     <ClCompile Include="glad.c" />
+    <ClCompile Include="Grid.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="Light.cpp" />
     <ClCompile Include="Line.cpp" />
     <ClCompile Include="LineSegment.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -191,6 +195,7 @@
     <ClInclude Include="Capsule.h" />
     <ClInclude Include="Circle.h" />
     <ClInclude Include="Cuboid.h" />
+    <ClInclude Include="Design.h" />
     <ClInclude Include="FreeCamera.h" />
     <ClInclude Include="Grid.h" />
     <ClInclude Include="Input.h" />
