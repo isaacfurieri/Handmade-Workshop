@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Screen' source files last updated on 21 July 2021                 |
+| 'Screen' source files last updated on 9 November 2021              |
 #===================================================================*/
 
 #include <glm.hpp>
@@ -54,7 +54,7 @@ public:
 		GLuint g = 0U, GLuint b = 0U, GLuint a = 1U);
 
 	void SetViewport(GLint x, GLint y, GLsizei width, GLsizei height);
-	
+
 	void Refresh();
 	void Present();
 	void Shutdown();
