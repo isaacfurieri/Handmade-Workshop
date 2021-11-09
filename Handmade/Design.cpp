@@ -193,32 +193,29 @@ State* Design::Update(int deltaTime)
 		PostQuitMessage(0);
 	}*/
 
-	//TODO - Add mouse wheel functionality
-	/*zDelta /= 120;
-	m_mouseWheelMotion = -zDelta;
+	//==============================================================================
 
 	auto camPos = m_mainCamera->GetTransform().GetPosition();
-	camPos.z -= (zDelta * 2);
-	m_mainCamera->GetTransform().SetPosition(camPos);*/
+	camPos.z -= (Input::Instance()->GetMouseWheel().y);
+	m_mainCamera->GetTransform().SetPosition(camPos);
 
-	//TODO - Add mouse movement 
-	/*glm::ivec2 newMousePosition = glm::ivec2(point.x, -point.y);
-	m_mouseMotion = newMousePosition - m_mousePosition;
-	m_mousePosition = newMousePosition;
-
+	auto mouseMotion = Input::Instance()->GetMouseMotion();
 	static glm::vec3 eulerAngles = m_grid->GetTransform().GetEulerAngles();
 
-	if (m_isLeftButtonDown)
+	if (Input::Instance()->IsLeftButtonClicked())
 	{
-		eulerAngles.x += -m_mouseMotion.y;
-		eulerAngles.y += m_mouseMotion.x;
+		eulerAngles.x += -mouseMotion.y;
+		eulerAngles.y += mouseMotion.x;
 	}
 
-	m_grid->GetTransform().SetRotation(eulerAngles);*/
+	m_grid->GetTransform().SetRotation(eulerAngles);
 
+	//==============================================================================
+	
 	//TODO - Add support to resize window
-	/*Screen::Instance()->SetResolution(cx, cy);
-	Screen::Instance()->SetViewport(0, 0, cx, cy);*/
+	//Screen::Instance()->SetResolution(cx, cy);
+	auto v = Screen::Instance()->GetResolution();
+	Screen::Instance()->SetViewport(0, 0, v.x, v.y);
 
 	return this;
 }
