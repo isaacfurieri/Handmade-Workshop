@@ -22,12 +22,6 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{e6df918f-3ec9-4d14-9ebc-56e1931b8dec}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\MFC">
-      <UniqueIdentifier>{4f17ec31-0d38-4725-b074-a48a03ab201b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\MFC">
-      <UniqueIdentifier>{339c7ee5-68d2-43c3-b7be-58b233085728}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Components">
       <UniqueIdentifier>{dd81d6ec-80be-4487-8fd1-ee19a42310bb}</UniqueIdentifier>
     </Filter>
@@ -88,6 +82,12 @@
     <Filter Include="Header Files\Objects\2D">
       <UniqueIdentifier>{e106f2b1-80e4-4092-89bd-1187bc28ccf1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\States">
+      <UniqueIdentifier>{0f6938e0-d851-4c20-b879-c338c996d34e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\States">
+      <UniqueIdentifier>{c08fcee9-c4fe-4ee6-9cae-1a15d88d6b33}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Screen.h">
@@ -99,35 +99,8 @@
     <ClInclude Include="Utility.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="HandmadeView.h">
-      <Filter>Header Files\MFC</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Header Files\Objects\Cameras</Filter>
-    </ClInclude>
-    <ClInclude Include="FreeCamera.h">
-      <Filter>Header Files\Objects\Cameras</Filter>
-    </ClInclude>
-    <ClInclude Include="OrbitCamera.h">
-      <Filter>Header Files\Objects\Cameras</Filter>
-    </ClInclude>
     <ClInclude Include="Input.h">
       <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Cuboid.h">
-      <Filter>Header Files\Objects\Primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="Quad.h">
-      <Filter>Header Files\Objects\Primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="Object.h">
-      <Filter>Header Files\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="Axes.h">
-      <Filter>Header Files\Objects\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Grid.h">
-      <Filter>Header Files\Objects\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Audio.h">
       <Filter>Header Files\Components\Audio</Filter>
@@ -153,24 +126,6 @@
     <ClInclude Include="Texture.h">
       <Filter>Header Files\Components\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Circle.h">
-      <Filter>Header Files\Objects\Primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="Sphere.h">
-      <Filter>Header Files\Objects\Primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="Point.h">
-      <Filter>Header Files\Objects\Primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="Line.h">
-      <Filter>Header Files\Objects\Primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="Light.h">
-      <Filter>Header Files\Objects\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="LineSegment.h">
-      <Filter>Header Files\Components\Physics</Filter>
-    </ClInclude>
     <ClInclude Include="Text.h">
       <Filter>Header Files\Objects\2D</Filter>
     </ClInclude>
@@ -186,11 +141,59 @@
     <ClInclude Include="Capsule.h">
       <Filter>Header Files\Components\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="Plane.h">
+    <ClInclude Include="LineSegment.h">
       <Filter>Header Files\Components\Physics</Filter>
     </ClInclude>
     <ClInclude Include="Raycast.h">
       <Filter>Header Files\Components\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="App.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files\Objects\Cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="FreeCamera.h">
+      <Filter>Header Files\Objects\Cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="OrbitCamera.h">
+      <Filter>Header Files\Objects\Cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="Circle.h">
+      <Filter>Header Files\Objects\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Cuboid.h">
+      <Filter>Header Files\Objects\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Line.h">
+      <Filter>Header Files\Objects\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Point.h">
+      <Filter>Header Files\Objects\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Quad.h">
+      <Filter>Header Files\Objects\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Sphere.h">
+      <Filter>Header Files\Objects\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Axes.h">
+      <Filter>Header Files\Objects\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Grid.h">
+      <Filter>Header Files\Objects\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Header Files\Objects\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="State.h">
+      <Filter>Header Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="Plane.h">
+      <Filter>Header Files\Components\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>Header Files\Objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -206,35 +209,8 @@
     <ClCompile Include="Utility.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="HandmadeView.cpp">
-      <Filter>Source Files\MFC</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source Files\Objects\Cameras</Filter>
-    </ClCompile>
-    <ClCompile Include="FreeCamera.cpp">
-      <Filter>Source Files\Objects\Cameras</Filter>
-    </ClCompile>
-    <ClCompile Include="OrbitCamera.cpp">
-      <Filter>Source Files\Objects\Cameras</Filter>
-    </ClCompile>
     <ClCompile Include="Input.cpp">
       <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Cuboid.cpp">
-      <Filter>Source Files\Objects\Primitives</Filter>
-    </ClCompile>
-    <ClCompile Include="Quad.cpp">
-      <Filter>Source Files\Objects\Primitives</Filter>
-    </ClCompile>
-    <ClCompile Include="Object.cpp">
-      <Filter>Source Files\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Axes.cpp">
-      <Filter>Source Files\Objects\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Grid.cpp">
-      <Filter>Source Files\Objects\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Audio.cpp">
       <Filter>Source Files\Components\Audio</Filter>
@@ -260,24 +236,6 @@
     <ClCompile Include="Texture.cpp">
       <Filter>Source Files\Components\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Circle.cpp">
-      <Filter>Source Files\Objects\Primitives</Filter>
-    </ClCompile>
-    <ClCompile Include="Sphere.cpp">
-      <Filter>Source Files\Objects\Primitives</Filter>
-    </ClCompile>
-    <ClCompile Include="Line.cpp">
-      <Filter>Source Files\Objects\Primitives</Filter>
-    </ClCompile>
-    <ClCompile Include="Point.cpp">
-      <Filter>Source Files\Objects\Primitives</Filter>
-    </ClCompile>
-    <ClCompile Include="Light.cpp">
-      <Filter>Source Files\Objects\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="LineSegment.cpp">
-      <Filter>Source Files\Components\Physics</Filter>
-    </ClCompile>
     <ClCompile Include="Text.cpp">
       <Filter>Source Files\Objects\2D</Filter>
     </ClCompile>
@@ -290,7 +248,13 @@
     <ClCompile Include="Model.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
     <ClCompile Include="Capsule.cpp">
+      <Filter>Source Files\Components\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="LineSegment.cpp">
       <Filter>Source Files\Components\Physics</Filter>
     </ClCompile>
     <ClCompile Include="Plane.cpp">
@@ -299,16 +263,41 @@
     <ClCompile Include="Raycast.cpp">
       <Filter>Source Files\Components\Physics</Filter>
     </ClCompile>
+    <ClCompile Include="App.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\Objects\Cameras</Filter>
+    </ClCompile>
+    <ClCompile Include="FreeCamera.cpp">
+      <Filter>Source Files\Objects\Cameras</Filter>
+    </ClCompile>
+    <ClCompile Include="OrbitCamera.cpp">
+      <Filter>Source Files\Objects\Cameras</Filter>
+    </ClCompile>
+    <ClCompile Include="Circle.cpp">
+      <Filter>Source Files\Objects\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Cuboid.cpp">
+      <Filter>Source Files\Objects\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Line.cpp">
+      <Filter>Source Files\Objects\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Point.cpp">
+      <Filter>Source Files\Objects\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Quad.cpp">
+      <Filter>Source Files\Objects\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Sphere.cpp">
+      <Filter>Source Files\Objects\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Handmade.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="res\Handmade.rc2">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="Shaders\Main.frag">
       <Filter>Shaders</Filter>
     </None>
@@ -327,13 +316,5 @@
     <None Include="Shaders\Text.vert">
       <Filter>Shaders</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="res\HandmadeDoc.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="res\Handmade.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
   </ItemGroup>
 </Project>
