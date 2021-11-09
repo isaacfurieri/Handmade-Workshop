@@ -2,10 +2,12 @@
 
 /*===================================================================#
 | 'Screen' source files last updated on 9 November 2021              |
+#====================================================================#
+| Class has not been fully tested. No known issues found.            |
 #===================================================================*/
 
+#include "gl.h"
 #include <glm.hpp>
-#include "glad.h"
 #include <string>
 #include <SDL.h>
 

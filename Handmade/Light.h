@@ -1,12 +1,12 @@
 #pragma once
 
 /*===================================================================#
-| 'Light' source files last updated on 28 September 2021             |
+| 'Light' source files last updated on 9 November 2021               |
 #====================================================================#
 | Class has not been fully tested. No known issues found.            |
 #===================================================================*/
 
-#include "glad.h"
+#include "gl.h"
 #include <glm.hpp>
 #include "Buffer.h"
 #include "Object.h"

@@ -1,15 +1,15 @@
 #pragma once
 
 /*===================================================================#
-| 'Shader' source files last updated on 20 July 2021                 |
+| 'Shader' source files last updated on 9 November 2021              |
 #====================================================================#
 | Class has not been fully tested. No known issues found.            |
 #===================================================================*/
 
 #include <map>
 #include <string>
+#include "gl.h"
 #include <glm.hpp>
-#include "glad.h"
 
 class Shader
 {

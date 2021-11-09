@@ -1,14 +1,14 @@
 #pragma once
 
 /*===================================================================#
-| 'Texture' source files last updated on 25 October 2021             |
+| 'Texture' source files last updated on 9 November 2021             |
 #====================================================================#
 | Class has not been fully tested. No known issues found.            |
 #===================================================================*/
 
 #include <map>
 #include <string>
-#include "glad.h"
+#include "gl.h"
 
 class Texture
 {

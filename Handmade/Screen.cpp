@@ -81,7 +81,7 @@ bool Screen::Initialize(const std::string& filename)
 		return false;
 	}
 
-	if (!gladLoadGL())
+	if (!gladLoadGL((GLADloadfunc)SDL_GL_GetProcAddress))
 	{
 		Utility::Log(Utility::Destination::WindowsMessageBox,
 			"GLAD could not be initialized", Utility::Severity::Failure);

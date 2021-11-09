@@ -158,7 +158,7 @@
     <ClCompile Include="Cuboid.cpp" />
     <ClCompile Include="Design.cpp" />
     <ClCompile Include="FreeCamera.cpp" />
-    <ClCompile Include="glad.c" />
+    <ClCompile Include="gl.c" />
     <ClCompile Include="Grid.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Light.cpp" />

@@ -1,12 +1,12 @@
 #pragma once
 
 /*===================================================================#
-| 'Capsule' source files last updated on 4 August 2021               |
+| 'Capsule' source files last updated on 9 November 2021             |
 #====================================================================#
 | Class has not been fully tested. No known issues found.            |
 #===================================================================*/
 
-#include "glad.h"
+#include "gl.h"
 #include <glm.hpp>
 #include "SphereCollider.h"
 //#include "LineSegment.h"

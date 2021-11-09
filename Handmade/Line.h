@@ -1,13 +1,13 @@
 #pragma once
 
 /*===================================================================#
-| 'Line' source files last updated on 28 September 2021              |
+| 'Line' source files last updated on 9 November 2021                |
 #====================================================================#
 | Class has not been fully tested. No known issues found.            |
 #===================================================================*/
 
+#include "gl.h"
 #include <glm.hpp>
-#include "glad.h"
 #include "Buffer.h"
 #include "Object.h"
 

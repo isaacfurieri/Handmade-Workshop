@@ -1,12 +1,12 @@
 #pragma once
 
 /*===================================================================#
-| 'OBBCollider' source files last updated on 4 August 2021           |
+| 'OBBCollider' source files last updated on 9 November 2021         |
 #====================================================================#
 | Class has not been fully tested. No known issues found.            |
 #===================================================================*/
 
-#include "glad.h"
+#include "gl.h"
 #include <glm.hpp>
 #include <gtc/quaternion.hpp>
 #include "BoxCollider.h"
@@ -40,7 +40,7 @@ public:
 	bool IsColliding(const OBBCollider& secondBox) const;
 	bool IsColliding(const BoxCollider& secondBox) const;
 	bool IsColliding(const SphereCollider& secondSphere) const;
-	
+
 	glm::vec3 PointOnBox(const glm::vec3& point) const;
 	glm::vec3 PointOnBox(GLfloat x, GLfloat y, GLfloat z) const;
 

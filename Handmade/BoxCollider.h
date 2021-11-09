@@ -1,12 +1,12 @@
 #pragma once
 
 /*===================================================================#
-| 'BoxCollider' source files last updated on 4 August 2021           |
+| 'BoxCollider' source files last updated on 9 November 2021         |
 #====================================================================#
 | Class has not been fully tested. No known issues found.            |
 #===================================================================*/
 
-#include "glad.h"
+#include "gl.h"
 #include <glm.hpp>
 
 //TODO - Add some kind of 'central system' to render all colliders in the scene
@@ -36,7 +36,7 @@ public:
 
 	bool IsColliding(const glm::vec3& point) const;
 	bool IsColliding(GLfloat x, GLfloat y, GLfloat z) const;
-	
+
 	bool IsColliding(const OBBCollider& secondBox) const;
 	bool IsColliding(const BoxCollider& secondBox) const;
 	bool IsColliding(const SphereCollider& secondSphere) const;
