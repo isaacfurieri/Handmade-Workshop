@@ -91,6 +91,9 @@ bool Screen::Initialize(const std::string& filename)
 	//TODO - Not sure if we need this and where it should go
 	//SDL_SetRelativeMouseMode(SDL_TRUE);
 
+	m_resolution.x = std::stoi(dataMap["Width"]);
+	m_resolution.y = std::stoi(dataMap["Height"]);
+
 	glEnable(GL_BLEND);
 	glEnable(GL_LINE_SMOOTH);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
