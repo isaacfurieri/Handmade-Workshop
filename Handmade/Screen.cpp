@@ -101,15 +101,10 @@ bool Screen::Initialize(const std::string& filename)
 	return true;
 }
 //======================================================================================================
-const glm::vec2& Screen::GetResolution() const
+const glm::ivec2& Screen::GetResolution() 
 {
-	//The resolution cannot be zero. If this happens that means the Screen manager
-	//has not yet been properly set up or the width and height values are faulty
-
-	//TODO - Use this later
-	//SDL_GetWindowSize(m_window, &m_width, &m_height);
-
-	assert(m_resolution != glm::uvec2(0));
+	SDL_GetWindowSize(m_window, &m_resolution.x, &m_resolution.y);
+	assert(m_resolution != glm::ivec2(0));
 	return m_resolution;
 }
 //======================================================================================================
@@ -132,11 +127,11 @@ void Screen::SetCursorPosition(GLuint x, GLuint y)
 	SDL_WarpMouseInWindow(m_window, x, y);
 }
 //======================================================================================================
-void Screen::SetResolution(GLuint width, GLuint height)
+void Screen::SetResolution(GLint width, GLint height)
 {
 	m_resolution.x = width;
 	m_resolution.y = height;
-	glm::max(m_resolution, 1U);
+	glm::max(m_resolution, 1);
 }
 //======================================================================================================
 void Screen::SetViewport(GLint x, GLint y, GLsizei width, GLsizei height)

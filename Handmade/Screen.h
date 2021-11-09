@@ -39,12 +39,12 @@ public:
 
 	bool Initialize(const std::string& filename);
 	
-	const glm::vec2& GetResolution() const;
+	const glm::ivec2& GetResolution();
 
 	void SetVSync(VSync VSync);
 	void IsDepthTestEnabled(bool flag);
 	void SetCursorPosition(GLuint x, GLuint y);
-	void SetResolution(GLuint width, GLuint height);
+	void SetResolution(GLint width, GLint height);
 	void SetViewport(GLint x, GLint y, GLsizei width, GLsizei height);
 
 	void Refresh();
@@ -58,7 +58,7 @@ private:
 	Screen& operator=(Screen&);
 
 	glm::ivec4 m_viewport;
-	glm::uvec2 m_resolution;
+	glm::ivec2 m_resolution;
 
 	SDL_Window* m_window;
 	SDL_GLContext m_context;
