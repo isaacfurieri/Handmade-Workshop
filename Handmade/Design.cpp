@@ -9,7 +9,7 @@ bool Design::OnEnter()
 
 	if (!m_mainShader->Create("Shaders/Main.vert", "Shaders/Main.frag"))
 	{
-		return -1;
+		return false;
 	}
 
 	m_mainShader->BindAttribute("vertexIn");
@@ -27,7 +27,7 @@ bool Design::OnEnter()
 
 	if (!m_textShader->Create("Shaders/Text.vert", "Shaders/Text.frag"))
 	{
-		return -1;
+		return false;
 	}
 
 	m_textShader->BindAttribute("vertexIn");
@@ -207,6 +207,16 @@ State* Design::Update(int deltaTime)
 
 	//==============================================================================
 	
+	for (const auto& object : m_objects)
+	{
+		if (object->IsActive())
+		{
+			object->Update(static_cast<GLfloat>(deltaTime));
+		}
+	}
+
+	//==============================================================================
+	
 	auto resolution = Screen::Instance()->GetResolution();
 	Screen::Instance()->SetViewport(0, 0, resolution.x, resolution.y);
 
@@ -251,7 +261,7 @@ bool Design::Render()
 	//Text rendering & UI
 	//==============================================================================
 
-	const auto PADDING = 25;
+	const auto PADDING = 25.0f;
 	auto resolution = Screen::Instance()->GetResolution();
 
 	textShader.Use();
@@ -321,32 +331,20 @@ bool Design::Render()
 	m_labelZ->GetTransform().SetPosition(pixels.x, pixels.y, 0.0f);
 	m_labelZ->Render();*/
 
-	//TODO - calculate elapsed time
-	static GLfloat deltaTime = 0.0f;
-
 	for (const auto& object : m_objects)
 	{
-		if (object->IsActive())
-		{
-			object->Update(deltaTime);
-		}
-
 		if (object->IsVisible())
 		{
 			object->Render(lightShader);
 		}
 	}
 
-	//Screen::Instance()->Present();
-
 	return true;
 }
 //======================================================================================================
 void Design::OnExit()
 {
-
 	m_objects.clear();
 	Audio::Shutdown();
 	Text::Shutdown();
-
 }

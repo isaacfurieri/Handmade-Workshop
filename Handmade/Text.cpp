@@ -181,7 +181,7 @@ GLuint Text::GetTotalWidth()
 
 	for (const auto& character : m_string)
 	{
-		m_totalWidth += m_font[character].advance / 64.0f;
+		m_totalWidth += m_font[character].advance / 64;
 	}
 
 	return m_totalWidth;
@@ -242,17 +242,17 @@ void Text::Render(Shader& shader)
 		{
 			GLfloat vertices[] = { textOrigin.x - halfWidth, textOrigin.y + halfBearingY, 0.0f,
 				textOrigin.x + halfWidth, textOrigin.y + halfBearingY, 0.0f,
-				textOrigin.x + halfWidth, textOrigin.y + halfBearingY - glyph.height, 0.0f,
-				textOrigin.x - halfWidth, textOrigin.y + halfBearingY - glyph.height, 0.0f };
+				textOrigin.x + halfWidth, textOrigin.y + halfBearingY - (GLfloat)glyph.height, 0.0f,
+				textOrigin.x - halfWidth, textOrigin.y + halfBearingY - (GLfloat)glyph.height, 0.0f };
 			m_buffer.FillVBO(Buffer::VBO::VertexBuffer, vertices, sizeof(vertices), Buffer::Fill::Ongoing);
 		}
 
 		else
 		{
-			GLfloat vertices[] = { textOrigin.x + glyph.bearingX, glyph.bearingY, 0.0f,
-				textOrigin.x + glyph.bearingX + glyph.width, glyph.bearingY, 0.0f,
-				textOrigin.x + glyph.bearingX + glyph.width, glyph.bearingY - glyph.height, 0.0f,
-				textOrigin.x + glyph.bearingX, glyph.bearingY - glyph.height, 0.0f };
+			GLfloat vertices[] = { textOrigin.x + (GLfloat)glyph.bearingX, (GLfloat)glyph.bearingY, 0.0f,
+				textOrigin.x + (GLfloat)glyph.bearingX + (GLfloat)glyph.width, (GLfloat)glyph.bearingY, 0.0f,
+				textOrigin.x + (GLfloat)glyph.bearingX + (GLfloat)glyph.width, (GLfloat)glyph.bearingY - (GLfloat)glyph.height, 0.0f,
+				textOrigin.x + (GLfloat)glyph.bearingX, (GLfloat)glyph.bearingY - (GLfloat)glyph.height, 0.0f };
 			m_buffer.FillVBO(Buffer::VBO::VertexBuffer, vertices, sizeof(vertices), Buffer::Fill::Ongoing);
 		}
 

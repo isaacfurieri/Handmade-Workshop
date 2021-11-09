@@ -6,7 +6,7 @@ GLuint Axes::s_totalObjects = 0;
 //======================================================================================================
 Axes::Axes(const std::string& filenameModel)
 {
-	m_size = 0.0f;
+	m_size = 0;
 	m_lineWidth = 0.0f;
 	m_isPrimitive = false;
 	m_arrowTipPositionX = glm::vec3(0.0f);

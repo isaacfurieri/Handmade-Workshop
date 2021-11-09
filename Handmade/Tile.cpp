@@ -162,7 +162,7 @@ void Tile::SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
 {
 	GLuint offsetColor = 0;
 
-	for (int i = 0; i < (m_spriteSheetCol * m_spriteSheetRow); i++)
+	for (int i = 0; i < (int)(m_spriteSheetCol * m_spriteSheetRow); i++)
 	{
 		GLfloat colors[] = { r, g, b, a,
 							 r, g, b, a,

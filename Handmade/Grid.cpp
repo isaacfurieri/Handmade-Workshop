@@ -38,7 +38,7 @@ void Grid::SetColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
 {
 	GLuint offset = 0;
 
-	for (int i = 0; i < m_size * QUADRANTS; i++)
+	for (auto i = 0; i < m_size * (GLint)QUADRANTS; i++)
 	{
 		GLfloat colors[] = { r, g, b, a, r, g, b, a };
 		m_buffer.AppendVBO(Buffer::VBO::ColorBuffer, colors, sizeof(colors), offset);
