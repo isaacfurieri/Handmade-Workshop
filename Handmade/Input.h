@@ -1,92 +1,90 @@
 #pragma once
 
 /*===================================================================#
-| 'Input' source files last updated on 23 June 2021                  |
-#====================================================================#
-| Class has not been fully tested. No known issues found.            |
+| 'Input' source files last updated on 21 July 2021                  |
 #===================================================================*/
 
+#include <SDL.h>
 #include <glm.hpp>
 
-//All MFC triggered events will feed this class with keyboard and mouse data
-//All objects will request data from this class to manage their entities
-//Instead of using raw Win32 key names, there will exist HM key bindings
-
-//These are the Win32 virtual key codes used for keyboard input
-//Only the numpad numeric values do not link to ASCII codes 
-//https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
-
-#define HM_KEY_A 0x41
-#define HM_KEY_B 0x42
-#define HM_KEY_C 0x43
-#define HM_KEY_D 0x44
-#define HM_KEY_E 0x45
-#define HM_KEY_F 0x46
-#define HM_KEY_G 0x47
-#define HM_KEY_H 0x48
-#define HM_KEY_I 0x49
-#define HM_KEY_J 0x4A
-#define HM_KEY_K 0x4B
-#define HM_KEY_L 0x4C
-#define HM_KEY_M 0x4D
-#define HM_KEY_N 0x4E
-#define HM_KEY_O 0x4F
-#define HM_KEY_P 0x50
-#define HM_KEY_Q 0x51
-#define HM_KEY_R 0x52
-#define HM_KEY_S 0x53
-#define HM_KEY_T 0x54
-#define HM_KEY_U 0x55
-#define HM_KEY_V 0x56
-#define HM_KEY_W 0x57
-#define HM_KEY_X 0x58
-#define HM_KEY_Y 0x59
-#define HM_KEY_Z 0x5A
-
-//======================================================================================================
+typedef const Uint8* KeyState;
 
 class Input
 {
 
 public:
 
+	enum class ButtonState
+	{
+		Up,
+		Down
+	};
+
+	enum class CursorState
+	{
+		On = 1,
+		Off = 0,
+		Show = 1,
+		Hide = 0
+	};
+
+	enum class CursorType
+	{
+		Arrow = SDL_SYSTEM_CURSOR_ARROW,
+		IBeam = SDL_SYSTEM_CURSOR_IBEAM,
+		Wait = SDL_SYSTEM_CURSOR_WAIT,
+		Crosshair = SDL_SYSTEM_CURSOR_CROSSHAIR,
+		WaitArrow = SDL_SYSTEM_CURSOR_WAITARROW,
+		No = SDL_SYSTEM_CURSOR_NO,
+		Hand = SDL_SYSTEM_CURSOR_HAND
+	};
+
 	static Input* Instance();
 
-	//char GetKeyUp() const;
-	int GetKeyDown() const;
-	void SetKeyDown(int keyDown);
+	char GetKeyUp() const;
+	char GetKeyDown() const;
+	KeyState GetKeyStates() const;
 
-	bool IsLeftButtonDown() const;
-	bool IsRightButtonDown() const;
-	bool IsMiddleButtonDown() const;
+	bool IsXClicked() const;
+	bool IsKeyPressed() const;
+	bool IsWindowResized() const;
 
-	const glm::ivec2& GetMousePosition() const;
-	const glm::ivec2& GetMouseMotion() const;
+	bool IsLeftButtonClicked() const;
+	bool IsRightButtonClicked() const;
+	bool IsMiddleButtonClicked() const;
+
 	const glm::ivec2& GetMouseWheel() const;
+	const glm::ivec2& GetMouseMotion() const;
+	const glm::ivec2& GetMousePosition() const;
 
-	void IsLeftButtonDown(bool flag);
-	void IsRightButtonDown(bool flag);
-	void IsMiddleButtonDown(bool flag);
+	void SetCursorType(CursorType cursorType = CursorType::Arrow);
+	void SetCursorState(CursorState cursorEnabled = CursorState::On,
+		CursorState cursorVisible = CursorState::Show);
 
-	void SetMousePosition(const glm::ivec2& mousePosition);
-	void SetMouseMotion(const glm::ivec2& mouseMotion);
-	void SetMouseWheel(const glm::ivec2& mouseWheel);
+	void Update();
 
 private:
 
 	Input();
 	Input(const Input&);
-	Input& operator=(Input&);
+	Input& operator=(const Input&);
 
-	//char m_keyUp;
-	int m_keyDown;
+	char m_keyUp;
+	char m_keyDown;
+
+	bool m_isXClicked;
+	bool m_isKeyPressed;
+	bool m_isWindowResized;
+
+	KeyState m_keyStates;
+	SDL_Cursor* m_cursor;
 
 	glm::ivec2 m_mouseWheel;
 	glm::ivec2 m_mouseMotion;
 	glm::ivec2 m_mousePosition;
 
-	bool m_isLeftButtonDown;
-	bool m_isRightButtonDown;
-	bool m_isMiddleButtonDown;
+	bool m_isLeftButtonClicked;
+	bool m_isRightButtonClicked;
+	bool m_isMiddleButtonClicked;
 
 };
