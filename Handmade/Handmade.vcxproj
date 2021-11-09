@@ -193,7 +193,6 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="About.h" />
     <ClInclude Include="Audio.h" />
     <ClInclude Include="Axes.h" />
     <ClInclude Include="BoxCollider.h" />
@@ -202,17 +201,13 @@
     <ClInclude Include="Capsule.h" />
     <ClInclude Include="Circle.h" />
     <ClInclude Include="Cuboid.h" />
-    <ClInclude Include="framework.h" />
     <ClInclude Include="FreeCamera.h" />
     <ClInclude Include="Grid.h" />
-    <ClInclude Include="Handmade.h" />
-    <ClInclude Include="HandmadeDoc.h" />
     <ClInclude Include="HandmadeView.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Line.h" />
     <ClInclude Include="LineSegment.h" />
-    <ClInclude Include="MainFrm.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="OBBCollider.h" />
@@ -222,13 +217,11 @@
     <ClInclude Include="Point.h" />
     <ClInclude Include="Quad.h" />
     <ClInclude Include="Raycast.h" />
-    <ClInclude Include="Resource.h" />
     <ClInclude Include="RigidBody.h" />
     <ClInclude Include="Screen.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="SphereCollider.h" />
-    <ClInclude Include="targetver.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Tile.h" />
@@ -236,7 +229,6 @@
     <ClInclude Include="Utility.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="About.cpp" />
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Axes.cpp" />
     <ClCompile Include="BoxCollider.cpp" />
@@ -248,14 +240,11 @@
     <ClCompile Include="FreeCamera.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Grid.cpp" />
-    <ClCompile Include="Handmade.cpp" />
-    <ClCompile Include="HandmadeDoc.cpp" />
     <ClCompile Include="HandmadeView.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="Line.cpp" />
     <ClCompile Include="LineSegment.cpp" />
-    <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="OBBCollider.cpp" />
