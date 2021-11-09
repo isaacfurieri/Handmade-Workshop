@@ -207,10 +207,8 @@ State* Design::Update(int deltaTime)
 
 	//==============================================================================
 	
-	//TODO - Add support to resize window
-	//Screen::Instance()->SetResolution(cx, cy);
-	auto v = Screen::Instance()->GetResolution();
-	Screen::Instance()->SetViewport(0, 0, v.x, v.y);
+	auto resolution = Screen::Instance()->GetResolution();
+	Screen::Instance()->SetViewport(0, 0, resolution.x, resolution.y);
 
 	return this;
 }
