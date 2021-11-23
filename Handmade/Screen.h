@@ -6,9 +6,10 @@
 | Class has not been fully tested. No known issues found.            |
 #===================================================================*/
 
+#include <map>
+#include <string>
 #include "GLAD/gl.h"
 #include <glm.hpp>
-#include <string>
 #include <SDL.h>
 
 #define NOMINMAX
@@ -47,6 +48,7 @@ public:
 	void IsDepthTestEnabled(bool flag);
 	void SetCursorPosition(GLuint x, GLuint y);
 	void SetResolution(GLint width, GLint height);
+	void SetViewport(GLint x, GLint y, GLsizei width, GLsizei height);
 
 	void SetColor(const glm::vec4& color);
 	void SetColor(const glm::uvec4& color);
@@ -54,8 +56,6 @@ public:
 		GLfloat g = 0.0f, GLfloat b = 0.0f, GLfloat a = 1.0f);
 	void SetColor(GLuint r = 0U,
 		GLuint g = 0U, GLuint b = 0U, GLuint a = 1U);
-
-	void SetViewport(GLint x, GLint y, GLsizei width, GLsizei height);
 
 	void Refresh();
 	void Present();
@@ -67,7 +67,6 @@ private:
 	Screen(const Screen&);
 	Screen& operator=(Screen&);
 
-	glm::ivec4 m_viewport;
 	glm::ivec2 m_resolution;
 
 	SDL_Window* m_window;

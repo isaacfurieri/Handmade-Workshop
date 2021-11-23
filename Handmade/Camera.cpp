@@ -9,12 +9,19 @@ Camera::Camera()
 {
 	m_velocity = 0.0f;
 	m_fieldOfView = 45.0f;
-	
 	m_viewMatrix = glm::mat4(1.0f);
 	m_projectionMatrix = glm::mat4(1.0f);
 	
+	m_viewport = glm::ivec4(0);
+	m_resolution = glm::ivec2(0);
+
 	m_up = glm::vec3(0.0f, 1.0f, 0.0f);
 	m_forward = glm::vec3(0.0f, 0.0f, -1.0f);
+}
+//======================================================================================================
+const glm::ivec2 Camera::GetResolution() const
+{
+	return m_resolution;
 }
 //======================================================================================================
 glm::vec2 Camera::ConvertWorldToScreen(const glm::vec3& worldPosition)
@@ -57,31 +64,37 @@ void Camera::SetFieldOfView(GLfloat fieldOfView)
 	m_fieldOfView = fieldOfView;
 }
 //======================================================================================================
+void Camera::SetViewport(const glm::ivec4& viewport)
+{
+	m_viewport = viewport;
+	m_resolution.x = viewport.z;
+	m_resolution.y = viewport.w;
+}
+//======================================================================================================
 void Camera::CreateOrthoView(Origin2D origin)
 {
 	Screen::Instance()->IsDepthTestEnabled(false);
-
-	glm::vec2 resolution = Screen::Instance()->GetResolution();
+	Screen::Instance()->SetViewport(m_viewport.x, m_viewport.y, m_viewport.z, m_viewport.w);
 
 	if (origin == Origin2D::TopLeft)
 	{
-		m_projectionMatrix = glm::ortho(0.0f, static_cast<float>(resolution.x),
-											  static_cast<float>(resolution.y), 0.0f);
+		m_projectionMatrix = glm::ortho(0.0f, static_cast<GLfloat>(m_resolution.x),
+											  static_cast<GLfloat>(m_resolution.y), 0.0f);
 	}
 
 	else if (origin == Origin2D::BottomLeft)
 	{
-		m_projectionMatrix = glm::ortho(0.0f, static_cast<float>(resolution.x),
-									    0.0f, static_cast<float>(resolution.y));
+		m_projectionMatrix = glm::ortho(0.0f, static_cast<GLfloat>(m_resolution.x),
+									    0.0f, static_cast<GLfloat>(m_resolution.y));
 	}
 }
 //======================================================================================================
 void Camera::CreatePerspView()
 {
 	Screen::Instance()->IsDepthTestEnabled(true);
+	Screen::Instance()->SetViewport(m_viewport.x, m_viewport.y, m_viewport.z, m_viewport.w);
 
-	glm::vec2 resolution = Screen::Instance()->GetResolution();
-	auto aspectRatio = (resolution.x) / (resolution.y);
+	GLfloat aspectRatio = (m_resolution.x) / static_cast<GLfloat>(m_resolution.y);
 
 	m_projectionMatrix = glm::perspective(glm::radians(m_fieldOfView), 
 		aspectRatio, NEAR_CLIP, FAR_CLIP);

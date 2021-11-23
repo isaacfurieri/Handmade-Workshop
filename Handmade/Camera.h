@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Camera' source files last updated on 26 July 2021                 |
+| 'Camera' source files last updated on 23 November 2021             |
 #====================================================================#
 | Class has not been fully tested. No known issues found.            |
 #===================================================================*/
@@ -27,8 +27,11 @@ public:
 	Camera();
 	virtual ~Camera() = 0 {}
 
+	const glm::ivec2 GetResolution() const;
+	
 	void SetVelocity(GLfloat velocity);
 	void SetFieldOfView(GLfloat fieldOfView);
+	void SetViewport(const glm::ivec4& viewport);
 
 	void CreatePerspView();
 	void CreateOrthoView(Origin2D origin = Origin2D::BottomLeft);
@@ -49,6 +52,9 @@ protected:
 
 	glm::vec3 m_up;
 	glm::vec3 m_forward;
+	
+	glm::ivec4 m_viewport;
+	glm::ivec2 m_resolution;
 
 	glm::mat4 m_viewMatrix;
 	glm::mat4 m_projectionMatrix;

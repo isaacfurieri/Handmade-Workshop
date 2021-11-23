@@ -17,6 +17,7 @@ Screen::Screen()
 {
 	m_window = nullptr;
 	m_context = nullptr;
+	m_resolution = glm::ivec2(0);
 }
 //======================================================================================================
 bool Screen::Initialize(const std::string& filename)
@@ -165,7 +166,6 @@ void Screen::SetColor(GLuint r, GLuint g, GLuint b, GLuint a)
 void Screen::SetViewport(GLint x, GLint y, GLsizei width, GLsizei height)
 {
 	glViewport(x, y, width, height);
-	m_viewport = glm::vec4(x, y, width, height);
 }
 //======================================================================================================
 void Screen::Refresh()
