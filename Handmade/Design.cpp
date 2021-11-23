@@ -268,22 +268,21 @@ bool Design::Render()
 	//==============================================================================
 
 	const auto PADDING = 25.0f;
-	auto resolution = Screen::Instance()->GetResolution();
-
+	
 	textShader.Use();
 
 	m_UICamera->CreateOrthoView();
 	m_UICamera->Update(16.0f);
 	m_UICamera->SendToShader(textShader);
 
-	m_topText->GetTransform().SetPosition(resolution.x - m_topText->GetTotalWidth() - PADDING,
+	/*m_topText->GetTransform().SetPosition(resolution.x - m_topText->GetTotalWidth() - PADDING,
 		resolution.y - 50.0f, 0.0f);
 	m_topText->SendToShader(textShader);
-	m_topText->Render(textShader);
+	m_topText->Render(textShader);*/
 
-	m_bottomText->GetTransform().SetPosition(PADDING, PADDING, 0.0f);
+	/*m_bottomText->GetTransform().SetPosition(PADDING, PADDING, 0.0f);
 	m_bottomText->SendToShader(textShader);
-	m_bottomText->Render(textShader);
+	m_bottomText->Render(textShader);*/
 
 	auto labelPosition = m_mainCamera->ConvertWorldToScreen(m_axes->GetArrowTipPositionX());
 	m_axesLabelText->IsFirstLetterCentered(true);
@@ -350,14 +349,39 @@ bool Design::Render()
 	//==============================================================================
 
 	// Start the Dear ImGui frame
-	/*ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplSDL2_NewFrame();
-	ImGui::NewFrame();
+	//ImGui_ImplOpenGL3_NewFrame();
+	//ImGui_ImplSDL2_NewFrame();
+	//ImGui::NewFrame();
 
-	ImGui::ShowDemoWindow();
-	ImGui::Render();
+	////Begin creates a new window and must have end
+	//ImGui::Begin("A brand new window");
+	//
+	////uncomment to make it live in this window
+	////ImGui::Text("Hello Handmade");  
+	////ImGui::Button("Button");
+	//
+	//ImGui::End();
+	//
+	//ImGui::Button("Button");
+	//
+	//ImGui::Text("Hello Handmade");
 
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());*/
+	//static float f1 = 0.0f;
+	//static float f2 = 0.0f;
+	//static float f3 = 0.0f;
+	//
+	//ImGui::SliderFloat("Some random data", &f1, 0.0f, 1.0f);
+	//ImGui::SliderFloat("Some more data", &f2, 0.0f, 1.0f);
+	//ImGui::SliderFloat("Useful data", &f3, 0.0f, 1.0f);
+
+	////bool showWindow = false;
+	////ImGui::Checkbox("Check me", &showWindow);
+
+	//ImVec4 color = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
+	//ImGui::ColorEdit3("clear color", (float*)&color);
+
+	//ImGui::Render();
+	//ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 	return true;
 }
