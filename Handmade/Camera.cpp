@@ -14,6 +14,7 @@ Camera::Camera()
 	
 	m_viewport = glm::ivec4(0);
 	m_resolution = glm::ivec2(0);
+	m_backgroundColor = glm::vec4(0.0f);
 
 	m_up = glm::vec3(0.0f, 1.0f, 0.0f);
 	m_forward = glm::vec3(0.0f, 0.0f, -1.0f);
@@ -64,17 +65,24 @@ void Camera::SetFieldOfView(GLfloat fieldOfView)
 	m_fieldOfView = fieldOfView;
 }
 //======================================================================================================
-void Camera::SetViewport(const glm::ivec4& viewport)
+void Camera::SetBackgroundColor(const glm::vec4& backgroundColor)
 {
-	m_viewport = viewport;
-	m_resolution.x = viewport.z;
-	m_resolution.y = viewport.w;
+	m_backgroundColor = backgroundColor;
+}
+//======================================================================================================
+void Camera::SetViewport(GLint x, GLint y, GLsizei width, GLsizei height)
+{
+	m_resolution.x = width;
+	m_resolution.y = height;
+	m_viewport = glm::ivec4(x, y, width, height);
 }
 //======================================================================================================
 void Camera::CreateOrthoView(Origin2D origin)
 {
 	Screen::Instance()->IsDepthTestEnabled(false);
 	Screen::Instance()->SetViewport(m_viewport.x, m_viewport.y, m_viewport.z, m_viewport.w);
+	Screen::Instance()->SetColor(m_backgroundColor);
+	Screen::Instance()->Refresh();
 
 	if (origin == Origin2D::TopLeft)
 	{
@@ -93,6 +101,8 @@ void Camera::CreatePerspView()
 {
 	Screen::Instance()->IsDepthTestEnabled(true);
 	Screen::Instance()->SetViewport(m_viewport.x, m_viewport.y, m_viewport.z, m_viewport.w);
+	Screen::Instance()->SetColor(m_backgroundColor);
+	Screen::Instance()->Refresh();
 
 	GLfloat aspectRatio = (m_resolution.x) / static_cast<GLfloat>(m_resolution.y);
 

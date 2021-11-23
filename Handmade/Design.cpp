@@ -167,21 +167,26 @@ bool Design::OnEnter()
 
 	//=========================================================================
 
-	m_mainCamera = std::make_unique<FreeCamera>();
-	m_mainCamera->SetVelocity(0.0f);
-	m_mainCamera->SetSensitivity(0.0f);
-	m_mainCamera->GetTransform().SetPosition(0.0f, 0.0f, 50.0f);
+	m_sceneCamera = std::make_unique<FreeCamera>();
+	m_sceneCamera->SetVelocity(0.0f);
+	m_sceneCamera->SetSensitivity(0.0f);
+	m_sceneCamera->GetTransform().SetPosition(0.0f, 0.0f, 50.0f);
+	m_sceneCamera->SetBackgroundColor(glm::vec4(0.25f, 0.25f, 0.25f, 1.0f));
 
-	m_UICamera = std::make_unique<FreeCamera>();
-	m_UICamera->SetVelocity(0.0f);
-	m_UICamera->SetSensitivity(0.0f);
-	
+	m_consoleCamera = std::make_unique<FreeCamera>();
+	m_consoleCamera->SetVelocity(0.0f);
+	m_consoleCamera->SetSensitivity(0.0f);
+	m_consoleCamera->SetBackgroundColor(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+
+	m_propertiesCamera = std::make_unique<FreeCamera>();
+	m_propertiesCamera->SetVelocity(0.0f);
+	m_propertiesCamera->SetSensitivity(0.0f);
+	m_propertiesCamera->SetBackgroundColor(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
+
 	//=========================================================================
 
 	Screen::Instance()->SetColor(29U, 29U, 29U);
 	
-	
-
 	return true;
 }
 //======================================================================================================
@@ -196,9 +201,9 @@ State* Design::Update(int deltaTime)
 
 	//==============================================================================
 
-	auto camPos = m_mainCamera->GetTransform().GetPosition();
+	auto camPos = m_sceneCamera->GetTransform().GetPosition();
 	camPos.z -= (Input::Instance()->GetMouseWheel().y);
-	m_mainCamera->GetTransform().SetPosition(camPos);
+	m_sceneCamera->GetTransform().SetPosition(camPos);
 
 	auto mouseMotion = Input::Instance()->GetMouseMotion();
 	static glm::vec3 eulerAngles = m_grid->GetTransform().GetEulerAngles();
@@ -238,25 +243,33 @@ bool Design::Render()
 
 	auto resolution = Screen::Instance()->GetResolution();
 
-	m_mainViewport = glm::ivec4(0, resolution.y * 0.25f, resolution.x, resolution.y * 0.75);
+	//Console viewport
+	m_consoleCamera->SetViewport(0, 0, (GLsizei)(resolution.x * 0.75f), (GLsizei)(resolution.y * 0.25f));
+	m_consoleCamera->CreateOrthoView();
+
+	//Properties viewport
+	m_propertiesCamera->SetViewport((GLint)(resolution.x * 0.75f), 0, (GLsizei)(resolution.x * 0.25f), resolution.y);
+	m_propertiesCamera->CreateOrthoView();
+
+	//Scene viewport
+	m_sceneCamera->SetViewport(0, (GLint)(resolution.y * 0.25f), (GLsizei)(resolution.x * 0.75f), (GLsizei)(resolution.y * 0.75f));
+	m_sceneCamera->CreatePerspView();
 	
 	mainShader.Use();
 	
-	m_mainCamera->SetViewport(m_mainViewport);
-	m_mainCamera->CreatePerspView();
-	m_mainCamera->Update(16.0f);
-	m_mainCamera->SendToShader(mainShader);
+	m_sceneCamera->Update(16.0f);
+	m_sceneCamera->SendToShader(mainShader);
 
 	//==============================================================================
 
 	m_grid->Render(mainShader);
 
 	lightShader.Use();
-	lightShader.SendData("cameraPosition", m_mainCamera->GetTransform().GetPosition());
+	lightShader.SendData("cameraPosition", m_sceneCamera->GetTransform().GetPosition());
 
 	m_light->SendToShader(lightShader);
 	m_light->Render(lightShader);
-	m_mainCamera->SendToShader(lightShader);
+	m_sceneCamera->SendToShader(lightShader);
 
 	m_axes->GetTransform().SetRotation(m_grid->GetTransform().GetRotation());
 	m_axes->Render(lightShader);
@@ -271,42 +284,42 @@ bool Design::Render()
 	//Text rendering & UI
 	//==============================================================================
 
-	const auto PADDING = 25.0f;
-	
-	textShader.Use();
+	//const auto PADDING = 25.0f;
+	//
+	//textShader.Use();
 
-	//m_UICamera->SetResolution(resolution.x, resolution.y);
-	//m_UICamera->CreateOrthoView();
-	m_UICamera->Update(16.0f);
-	m_UICamera->SendToShader(textShader);
+	////m_UICamera->SetResolution(resolution.x, resolution.y);
+	////m_UICamera->CreateOrthoView();
+	//m_UICamera->Update(16.0f);
+	//m_UICamera->SendToShader(textShader);
 
-	/*m_topText->GetTransform().SetPosition(resolution.x - m_topText->GetTotalWidth() - PADDING,
-		resolution.y - 50.0f, 0.0f);
-	m_topText->SendToShader(textShader);
-	m_topText->Render(textShader);*/
+	///*m_topText->GetTransform().SetPosition(resolution.x - m_topText->GetTotalWidth() - PADDING,
+	//	resolution.y - 50.0f, 0.0f);
+	//m_topText->SendToShader(textShader);
+	//m_topText->Render(textShader);*/
 
-	/*m_bottomText->GetTransform().SetPosition(PADDING, PADDING, 0.0f);
-	m_bottomText->SendToShader(textShader);
-	m_bottomText->Render(textShader);*/
+	///*m_bottomText->GetTransform().SetPosition(PADDING, PADDING, 0.0f);
+	//m_bottomText->SendToShader(textShader);
+	//m_bottomText->Render(textShader);*/
 
-	auto labelPosition = m_mainCamera->ConvertWorldToScreen(m_axes->GetArrowTipPositionX());
-	m_axesLabelText->IsFirstLetterCentered(true);
-	m_axesLabelText->GetTransform().SetPosition(labelPosition.x, labelPosition.y, 0.0f);
-	m_axesLabelText->SetString("X");
-	m_axesLabelText->SendToShader(textShader);
-	m_axesLabelText->Render(textShader);
+	//auto labelPosition = m_mainCamera->ConvertWorldToScreen(m_axes->GetArrowTipPositionX());
+	//m_axesLabelText->IsFirstLetterCentered(true);
+	//m_axesLabelText->GetTransform().SetPosition(labelPosition.x, labelPosition.y, 0.0f);
+	//m_axesLabelText->SetString("X");
+	//m_axesLabelText->SendToShader(textShader);
+	//m_axesLabelText->Render(textShader);
 
-	labelPosition = m_mainCamera->ConvertWorldToScreen(m_axes->GetArrowTipPositionY());
-	m_axesLabelText->GetTransform().SetPosition(labelPosition.x, labelPosition.y, 0.0f);
-	m_axesLabelText->SendToShader(textShader);
-	m_axesLabelText->SetString("Y");
-	m_axesLabelText->Render(textShader);
+	//labelPosition = m_mainCamera->ConvertWorldToScreen(m_axes->GetArrowTipPositionY());
+	//m_axesLabelText->GetTransform().SetPosition(labelPosition.x, labelPosition.y, 0.0f);
+	//m_axesLabelText->SendToShader(textShader);
+	//m_axesLabelText->SetString("Y");
+	//m_axesLabelText->Render(textShader);
 
-	labelPosition = m_mainCamera->ConvertWorldToScreen(m_axes->GetArrowTipPositionZ());
-	m_axesLabelText->GetTransform().SetPosition(labelPosition.x, labelPosition.y, 0.0f);
-	m_axesLabelText->SendToShader(textShader);
-	m_axesLabelText->SetString("Z");
-	m_axesLabelText->Render(textShader);
+	//labelPosition = m_mainCamera->ConvertWorldToScreen(m_axes->GetArrowTipPositionZ());
+	//m_axesLabelText->GetTransform().SetPosition(labelPosition.x, labelPosition.y, 0.0f);
+	//m_axesLabelText->SendToShader(textShader);
+	//m_axesLabelText->SetString("Z");
+	//m_axesLabelText->Render(textShader);
 
 	//For current testing
 	/*auto count = 0;
@@ -341,30 +354,30 @@ bool Design::Render()
 	m_labelZ->GetTransform().SetPosition(pixels.x, pixels.y, 0.0f);
 	m_labelZ->Render();*/
 
-	for (const auto& object : m_objects)
+	/*for (const auto& object : m_objects)
 	{
 		if (object->IsVisible())
 		{
 			object->Render(lightShader);
 		}
-	}
+	}*/
 
 	//==============================================================================
 	//ImGUI UI (WIP)
 	//==============================================================================
 
 	// Start the Dear ImGui frame
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplSDL2_NewFrame();
-	ImGui::NewFrame();
+	//ImGui_ImplOpenGL3_NewFrame();
+	//ImGui_ImplSDL2_NewFrame();
+	//ImGui::NewFrame();
 
-	//Begin creates a new window and must have end
-	ImGui::Begin("Output console");
-	
-	//uncomment to make it live in this window
-	ImGui::Text("This is where all your debug data will live...");  
-	
-	ImGui::End();
+	////Begin creates a new window and must have end
+	//ImGui::Begin("Output console");
+	//
+	////uncomment to make it live in this window
+	//ImGui::Text("This is where all your debug data will live...");  
+	//
+	//ImGui::End();
 
 	//static float f1 = 0.0f;
 	//static float f2 = 0.0f;
@@ -380,8 +393,8 @@ bool Design::Render()
 	//ImVec4 color = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
 	//ImGui::ColorEdit3("clear color", (float*)&color);
 
-	ImGui::Render();
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	//ImGui::Render();
+	//ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 	return true;
 }

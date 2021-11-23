@@ -101,6 +101,7 @@ bool Screen::Initialize(const std::string& filename)
 
 	glEnable(GL_BLEND);
 	glEnable(GL_LINE_SMOOTH);
+	glEnable(GL_SCISSOR_TEST);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	ImGui::CreateContext();
@@ -166,6 +167,7 @@ void Screen::SetColor(GLuint r, GLuint g, GLuint b, GLuint a)
 void Screen::SetViewport(GLint x, GLint y, GLsizei width, GLsizei height)
 {
 	glViewport(x, y, width, height);
+	glScissor(x, y, width, height);
 }
 //======================================================================================================
 void Screen::Refresh()

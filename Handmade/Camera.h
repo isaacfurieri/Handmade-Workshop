@@ -31,7 +31,8 @@ public:
 	
 	void SetVelocity(GLfloat velocity);
 	void SetFieldOfView(GLfloat fieldOfView);
-	void SetViewport(const glm::ivec4& viewport);
+	void SetBackgroundColor(const glm::vec4& backgroundColor);
+	void SetViewport(GLint x, GLint y, GLsizei width, GLsizei height);
 
 	void CreatePerspView();
 	void CreateOrthoView(Origin2D origin = Origin2D::BottomLeft);
@@ -55,6 +56,7 @@ protected:
 	
 	glm::ivec4 m_viewport;
 	glm::ivec2 m_resolution;
+	glm::vec4 m_backgroundColor;
 
 	glm::mat4 m_viewMatrix;
 	glm::mat4 m_projectionMatrix;

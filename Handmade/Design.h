@@ -49,10 +49,9 @@ private:
 
 	std::unique_ptr<Shader> m_testShader;
 
-	std::unique_ptr<FreeCamera> m_UICamera;
-	std::unique_ptr<FreeCamera> m_mainCamera;
-
-	glm::ivec4 m_mainViewport;
+	std::unique_ptr<FreeCamera> m_sceneCamera;
+	std::unique_ptr<FreeCamera> m_consoleCamera;
+	std::unique_ptr<FreeCamera> m_propertiesCamera;
 
 	//For current testing===============================================
 	/*std::unique_ptr<Audio> m_audio1;
