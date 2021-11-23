@@ -175,7 +175,7 @@ bool Design::OnEnter()
 
 	//=========================================================================
 
-	Screen::Instance()->SetColor(29U, 29U, 29U);
+	Screen::Instance()->SetColor(30U, 30U, 30U);
 	
 	return true;
 }
@@ -228,10 +228,11 @@ bool Design::Render()
 
 	auto resolution = Screen::Instance()->GetResolution();
 
-	auto SetViewport = [](const glm::ivec4& viewport, const glm::vec4& color)
+	auto SetViewport = [](const glm::ivec4& viewport, const glm::uvec4& color)
 	{
 		Screen::Instance()->SetViewport(viewport.x, viewport.y, viewport.z, viewport.w);
 		Screen::Instance()->SetColor(color);
+		Screen::Instance()->Refresh();
 	};
 
 	const auto ONE_QUARTER_WIDTH = static_cast<GLsizei>(resolution.x * 0.25f);
@@ -241,11 +242,11 @@ bool Design::Render()
 
 	//Console viewport
 	SetViewport(glm::ivec4(0, 0, THREE_QUARTER_WIDTH, ONE_QUARTER_HEIGHT), 
-		glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+		glm::uvec4(25U, 25U, 25U, 1U));
 	
 	//Properties viewport
 	SetViewport(glm::ivec4(THREE_QUARTER_WIDTH, 0, ONE_QUARTER_WIDTH, resolution.y),
-		glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+		glm::uvec4(23U, 23U, 23U, 1U));
 
 	//Scene viewport
 	m_sceneCamera->SetViewport(0, ONE_QUARTER_HEIGHT, THREE_QUARTER_WIDTH, THREE_QUARTER_HEIGHT);
@@ -260,15 +261,15 @@ bool Design::Render()
 
 	m_grid->Render(mainShader);
 
-	lightShader.Use();
-	lightShader.SendData("cameraPosition", m_sceneCamera->GetTransform().GetPosition());
+	//lightShader.Use();
+	//lightShader.SendData("cameraPosition", m_sceneCamera->GetTransform().GetPosition());
 
-	m_light->SendToShader(lightShader);
-	m_light->Render(lightShader);
-	m_sceneCamera->SendToShader(lightShader);
+	//m_light->SendToShader(lightShader);
+	//m_light->Render(lightShader);
+	//m_sceneCamera->SendToShader(lightShader);
 
-	m_axes->GetTransform().SetRotation(m_grid->GetTransform().GetRotation());
-	m_axes->Render(lightShader);
+	//m_axes->GetTransform().SetRotation(m_grid->GetTransform().GetRotation());
+	//m_axes->Render(lightShader);
 
 	//m_cube->GetTransform().SetRotation(m_grid->GetTransform().GetRotation());
 	//m_cube->Render(lightShader);
