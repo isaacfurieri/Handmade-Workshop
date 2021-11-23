@@ -1,5 +1,8 @@
 #include <assert.h>
 #include <map>
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_opengl3.h"
+#include "imgui/imgui_impl_sdl.h"
 #include "Screen.h"
 #include "Utility.h"
 
@@ -98,6 +101,10 @@ bool Screen::Initialize(const std::string& filename)
 	glEnable(GL_LINE_SMOOTH);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	ImGui::CreateContext();
+	ImGui_ImplOpenGL3_Init("#version 460");
+	ImGui_ImplSDL2_InitForOpenGL(m_window, m_context);
+
 	return true;
 }
 //======================================================================================================
@@ -172,6 +179,10 @@ void Screen::Present()
 //======================================================================================================
 void Screen::Shutdown()
 {
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplSDL2_Shutdown();
+	ImGui::DestroyContext();
+
 	SDL_GL_DeleteContext(m_context);
 	SDL_DestroyWindow(m_window);
 	SDL_Quit();

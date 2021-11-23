@@ -2,6 +2,10 @@
 #include "Input.h"
 #include "Screen.h"
 
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_opengl3.h"
+#include "imgui/imgui_impl_sdl.h"
+
 //======================================================================================================
 bool Design::OnEnter()
 {
@@ -175,7 +179,7 @@ bool Design::OnEnter()
 	//=========================================================================
 
 	Screen::Instance()->SetColor(29U, 29U, 29U);
-
+	
 	return true;
 }
 //======================================================================================================
@@ -338,6 +342,20 @@ bool Design::Render()
 			object->Render(lightShader);
 		}
 	}
+
+	//==============================================================================
+	//ImGUI UI (WIP)
+	//==============================================================================
+
+	// Start the Dear ImGui frame
+	/*ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplSDL2_NewFrame();
+	ImGui::NewFrame();
+
+	ImGui::ShowDemoWindow();
+	ImGui::Render();
+
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());*/
 
 	return true;
 }
