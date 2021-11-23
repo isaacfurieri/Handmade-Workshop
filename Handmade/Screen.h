@@ -1,12 +1,12 @@
 #pragma once
 
 /*===================================================================#
-| 'Screen' source files last updated on 15 November 2021             |
+| 'Screen' source files last updated on 23 November 2021             |
 #====================================================================#
 | Class has not been fully tested. No known issues found.            |
 #===================================================================*/
 
-#include "gl.h"
+#include "GLAD/gl.h"
 #include <glm.hpp>
 #include <string>
 #include <SDL.h>

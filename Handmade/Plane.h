@@ -1,12 +1,12 @@
 #pragma once
 
 /*===================================================================#
-| 'Plane' source files last updated on 9 November 2021               |
+| 'Plane' source files last updated on 23 November 2021              |
 #====================================================================#
 | Class has not been fully tested. No known issues found.            |
 #===================================================================*/
 
-#include "gl.h"
+#include "GLAD/gl.h"
 #include <glm.hpp>
 #include "LineSegment.h"
 #include "SphereCollider.h"

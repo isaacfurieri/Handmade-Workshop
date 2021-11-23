@@ -88,6 +88,12 @@
     <Filter Include="Header Files\States">
       <UniqueIdentifier>{c08fcee9-c4fe-4ee6-9cae-1a15d88d6b33}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Core\GLAD">
+      <UniqueIdentifier>{1eda3570-7ddc-4ca8-89c7-91227e18b919}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\GLAD">
+      <UniqueIdentifier>{6021f0c6-d0a8-4474-9e50-4da571be1df7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Screen.h">
@@ -197,6 +203,12 @@
     </ClInclude>
     <ClInclude Include="Design.h">
       <Filter>Header Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="GLAD\gl.h">
+      <Filter>Header Files\Core\GLAD</Filter>
+    </ClInclude>
+    <ClInclude Include="GLAD\khrplatform.h">
+      <Filter>Header Files\Core\GLAD</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -308,8 +320,8 @@
     <ClCompile Include="Light.cpp">
       <Filter>Source Files\Objects\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="gl.c">
-      <Filter>Source Files\Core</Filter>
+    <ClCompile Include="GLAD\gl.c">
+      <Filter>Source Files\Core\GLAD</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,12 +1,12 @@
 #pragma once
 
 /*===================================================================#
-| 'Point' source files last updated on 9 November 2021               |
+| 'Point' source files last updated on 23 November 2021              |
 #====================================================================#
 | Class has not been fully tested. No known issues found.            |
 #===================================================================*/
 
-#include "gl.h"
+#include "GLAD/gl.h"
 #include <glm.hpp>
 #include "Buffer.h"
 #include "Object.h"

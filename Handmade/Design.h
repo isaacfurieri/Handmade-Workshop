@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Design' source files last updated on 9 November 2021              |
+| 'Design' source files last updated on 23 November 2021             |
 #===================================================================*/
 
 #include <memory>

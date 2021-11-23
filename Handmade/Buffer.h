@@ -1,14 +1,14 @@
 #pragma once
 
 /*===================================================================#
-| 'Buffer' source files last updated on 9 November 2021              |
+| 'Buffer' source files last updated on 23 November 2021             |
 #====================================================================#
 | Class has not been fully tested. No known issues found.            |
 #===================================================================*/
 
 #include <map>
 #include <string>
-#include "gl.h"
+#include "GLAD/gl.h"
 
 class Buffer
 {

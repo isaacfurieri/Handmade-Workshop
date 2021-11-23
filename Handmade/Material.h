@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Material' source files last updated on 9 November 2021            |
+| 'Material' source files last updated on 23 November 2021           |
 #====================================================================#
 | Class has not been fully tested. No known issues found.            |
 #===================================================================*/
@@ -9,7 +9,7 @@
 #include <map>
 #include <string>
 #include <vector>
-#include "gl.h"
+#include "GLAD/gl.h"
 #include <glm.hpp>
 #include "Shader.h"
 #include "Texture.h"
