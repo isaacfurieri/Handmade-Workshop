@@ -52,7 +52,7 @@ bool Design::OnEnter()
 		return false;
 	}
 
-	m_lightShader->BindAttribute("vertexIn");
+	/*m_lightShader->BindAttribute("vertexIn");
 	m_lightShader->BindAttribute("colorIn");
 	m_lightShader->BindAttribute("textureIn");
 	m_lightShader->BindAttribute("normalIn");
@@ -73,7 +73,7 @@ bool Design::OnEnter()
 	m_lightShader->BindUniform("material.ambient");
 	m_lightShader->BindUniform("material.diffuse");
 	m_lightShader->BindUniform("material.specular");
-	m_lightShader->BindUniform("material.shininess");
+	m_lightShader->BindUniform("material.shininess");*/
 
 	//m_lightShader->BindUniform("light.attenuationLinear");
 	//m_lightShader->BindUniform("light.attenuationConstant");
@@ -242,11 +242,11 @@ bool Design::Render()
 
 	//Console viewport
 	SetViewport(glm::ivec4(0, 0, THREE_QUARTER_WIDTH, ONE_QUARTER_HEIGHT), 
-		glm::uvec4(25U, 25U, 25U, 1U));
+		glm::uvec4(255U, 200U, 0U, 1U));
 	
 	//Properties viewport
 	SetViewport(glm::ivec4(THREE_QUARTER_WIDTH, 0, ONE_QUARTER_WIDTH, resolution.y),
-		glm::uvec4(23U, 23U, 23U, 1U));
+		glm::uvec4(0U, 144U, 255U, 1U));
 
 	//Scene viewport
 	m_sceneCamera->SetViewport(0, ONE_QUARTER_HEIGHT, THREE_QUARTER_WIDTH, THREE_QUARTER_HEIGHT);
@@ -361,22 +361,20 @@ bool Design::Render()
 
 	ImGui::Begin("Output console");
 	
-	auto windowPos = ImVec2(5, THREE_QUARTER_HEIGHT + 5);
-	auto windowSize = ImVec2(THREE_QUARTER_WIDTH - 5, ONE_QUARTER_HEIGHT - 10);
+	auto windowPos = ImVec2(2, THREE_QUARTER_HEIGHT + 3);
+	auto windowSize = ImVec2(THREE_QUARTER_WIDTH - 3, ONE_QUARTER_HEIGHT - 3);
 
 	ImGui::SetWindowPos("Output console", windowPos);
 	ImGui::SetWindowSize("Output console", windowSize);
 	
-
-	//uncomment to make it live in this window
 	ImGui::Text("This is where all your debug data will live...");  
 	
 	ImGui::End();
 
 	ImGui::Begin("Properties");
 
-	windowPos = ImVec2(THREE_QUARTER_WIDTH + 5, 5);
-	windowSize = ImVec2(ONE_QUARTER_WIDTH - 10, resolution.y - 10);
+	windowPos = ImVec2(THREE_QUARTER_WIDTH + 2, 2);
+	windowSize = ImVec2(ONE_QUARTER_WIDTH - 4, resolution.y - 4);
 
 	ImGui::SetWindowPos("Properties", windowPos);
 	ImGui::SetWindowSize("Properties", windowSize);
