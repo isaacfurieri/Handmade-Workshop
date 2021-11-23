@@ -230,10 +230,12 @@ State* Design::Update(int deltaTime)
 bool Design::Render()
 {
 
-	Shader& mainShader = *m_mainShader.get();
-	Shader& textShader = *m_textShader.get();
-	Shader& lightShader = *m_lightShader.get();
-	Shader& testShader = *m_testShader.get();
+	auto& mainShader = *m_mainShader.get();
+	auto& textShader = *m_textShader.get();
+	auto& lightShader = *m_lightShader.get();
+	auto& testShader = *m_testShader.get();
+
+	auto resolution = Screen::Instance()->GetResolution();
 
 	mainShader.Use();
 
