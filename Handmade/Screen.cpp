@@ -56,7 +56,8 @@ bool Screen::Initialize(const std::string& filename)
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, std::stoi(dataMap["Major"]));
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, std::stoi(dataMap["Minor"]));
 
-	auto screenFlag = std::stoi(dataMap["Fullscreen"]) == 1 ? SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN
+	auto screenFlag = std::stoi(dataMap["Fullscreen"]) == 1 
+		? SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED
 		: SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
 
 	m_window = SDL_CreateWindow(dataMap["Name"].c_str(),
