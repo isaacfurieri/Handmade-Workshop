@@ -352,25 +352,36 @@ bool Design::Render()
 	//==============================================================================
 
 	// Start the Dear ImGui frame
-	//ImGui_ImplOpenGL3_NewFrame();
-	//ImGui_ImplSDL2_NewFrame();
-	//ImGui::NewFrame();
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplSDL2_NewFrame();
+	ImGui::NewFrame();
 
-	////Begin creates a new window and must have end
-	//ImGui::Begin("Output console");
-	//
-	////uncomment to make it live in this window
-	//ImGui::Text("This is where all your debug data will live...");  
-	//
-	//ImGui::End();
+	//This makes sure the mouse has no effect on sizing/dragging the window
+	ImGui::SetWindowFocus(nullptr);
 
-	//static float f1 = 0.0f;
-	//static float f2 = 0.0f;
-	//static float f3 = 0.0f;
-	//
-	//ImGui::SliderFloat("Some random data", &f1, 0.0f, 1.0f);
-	//ImGui::SliderFloat("Some more data", &f2, 0.0f, 1.0f);
-	//ImGui::SliderFloat("Useful data", &f3, 0.0f, 1.0f);
+	ImGui::Begin("Output console");
+	
+	auto windowPos = ImVec2(5, THREE_QUARTER_HEIGHT + 5);
+	auto windowSize = ImVec2(THREE_QUARTER_WIDTH - 5, ONE_QUARTER_HEIGHT - 10);
+
+	ImGui::SetWindowPos("Output console", windowPos);
+	ImGui::SetWindowSize("Output console", windowSize);
+	
+
+	//uncomment to make it live in this window
+	ImGui::Text("This is where all your debug data will live...");  
+	
+	ImGui::End();
+
+	ImGui::Begin("Properties");
+
+	windowPos = ImVec2(THREE_QUARTER_WIDTH + 5, 5);
+	windowSize = ImVec2(ONE_QUARTER_WIDTH - 10, resolution.y - 10);
+
+	ImGui::SetWindowPos("Properties", windowPos);
+	ImGui::SetWindowSize("Properties", windowSize);
+	
+	ImGui::End();
 
 	//bool showWindow = false;
 	//ImGui::Checkbox("Check me", &showWindow);
@@ -378,8 +389,8 @@ bool Design::Render()
 	//ImVec4 color = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
 	//ImGui::ColorEdit3("clear color", (float*)&color);
 
-	//ImGui::Render();
-	//ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 	return true;
 }
