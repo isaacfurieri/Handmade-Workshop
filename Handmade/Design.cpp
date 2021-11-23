@@ -173,16 +173,6 @@ bool Design::OnEnter()
 	m_sceneCamera->GetTransform().SetPosition(0.0f, 0.0f, 50.0f);
 	m_sceneCamera->SetBackgroundColor(glm::vec4(0.25f, 0.25f, 0.25f, 1.0f));
 
-	m_consoleCamera = std::make_unique<FreeCamera>();
-	m_consoleCamera->SetVelocity(0.0f);
-	m_consoleCamera->SetSensitivity(0.0f);
-	m_consoleCamera->SetBackgroundColor(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
-
-	m_propertiesCamera = std::make_unique<FreeCamera>();
-	m_propertiesCamera->SetVelocity(0.0f);
-	m_propertiesCamera->SetSensitivity(0.0f);
-	m_propertiesCamera->SetBackgroundColor(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
-
 	//=========================================================================
 
 	Screen::Instance()->SetColor(29U, 29U, 29U);
@@ -226,11 +216,6 @@ State* Design::Update(int deltaTime)
 		}
 	}
 
-	//==============================================================================
-	
-	//auto resolution = Screen::Instance()->GetResolution();
-	//Screen::Instance()->SetViewport(0, 0, resolution.x, resolution.y);
-
 	return this;
 }
 //======================================================================================================
@@ -243,16 +228,28 @@ bool Design::Render()
 
 	auto resolution = Screen::Instance()->GetResolution();
 
-	//Console viewport
-	m_consoleCamera->SetViewport(0, 0, (GLsizei)(resolution.x * 0.75f), (GLsizei)(resolution.y * 0.25f));
-	m_consoleCamera->CreateOrthoView();
+	auto SetViewport = [](const glm::ivec4& viewport, const glm::vec4& color)
+	{
+		Screen::Instance()->SetViewport(viewport.x, viewport.y, viewport.z, viewport.w);
+		Screen::Instance()->SetColor(color);
+		Screen::Instance()->Refresh();
+	};
 
+	const auto ONE_QUARTER_WIDTH = static_cast<GLsizei>(resolution.x * 0.25f);
+	const auto THREE_QUARTER_WIDTH = static_cast<GLsizei>(resolution.x * 0.75f);
+	const auto ONE_QUARTER_HEIGHT = static_cast<GLsizei>(resolution.y * 0.25f);
+	const auto THREE_QUARTER_HEIGHT = static_cast<GLsizei>(resolution.y * 0.75f);
+
+	//Console viewport
+	SetViewport(glm::ivec4(0, 0, THREE_QUARTER_WIDTH, ONE_QUARTER_HEIGHT), 
+		glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+	
 	//Properties viewport
-	m_propertiesCamera->SetViewport((GLint)(resolution.x * 0.75f), 0, (GLsizei)(resolution.x * 0.25f), resolution.y);
-	m_propertiesCamera->CreateOrthoView();
+	SetViewport(glm::ivec4(THREE_QUARTER_WIDTH, 0, ONE_QUARTER_WIDTH, resolution.y),
+		glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
 
 	//Scene viewport
-	m_sceneCamera->SetViewport(0, (GLint)(resolution.y * 0.25f), (GLsizei)(resolution.x * 0.75f), (GLsizei)(resolution.y * 0.75f));
+	m_sceneCamera->SetViewport(0, ONE_QUARTER_HEIGHT, THREE_QUARTER_WIDTH, THREE_QUARTER_HEIGHT);
 	m_sceneCamera->CreatePerspView();
 	
 	mainShader.Use();

@@ -46,13 +46,10 @@ private:
 	std::unique_ptr<Shader> m_mainShader;
 	std::unique_ptr<Shader> m_textShader;
 	std::unique_ptr<Shader> m_lightShader;
-
 	std::unique_ptr<Shader> m_testShader;
 
 	std::unique_ptr<FreeCamera> m_sceneCamera;
-	std::unique_ptr<FreeCamera> m_consoleCamera;
-	std::unique_ptr<FreeCamera> m_propertiesCamera;
-
+	
 	//For current testing===============================================
 	/*std::unique_ptr<Audio> m_audio1;
 	std::unique_ptr<Audio> m_audio2;
