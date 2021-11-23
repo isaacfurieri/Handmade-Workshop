@@ -31,9 +31,13 @@ public:
 	
 	void SetVelocity(GLfloat velocity);
 	void SetFieldOfView(GLfloat fieldOfView);
-	void SetBackgroundColor(const glm::vec4& backgroundColor);
 	void SetViewport(GLint x, GLint y, GLsizei width, GLsizei height);
-
+	
+	void SetBackgroundColor(const glm::vec4& backgroundColor);
+	void SetBackgroundColor(const glm::uvec4& backgroundColor);
+	void SetBackgroundColor(GLuint r, GLuint g, GLuint b, GLuint a = 1U);
+	void SetBackgroundColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a = 1.0f);
+	
 	void CreatePerspView();
 	void CreateOrthoView(Origin2D origin = Origin2D::BottomLeft);
 

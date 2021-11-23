@@ -70,6 +70,30 @@ void Camera::SetBackgroundColor(const glm::vec4& backgroundColor)
 	m_backgroundColor = backgroundColor;
 }
 //======================================================================================================
+void Camera::SetBackgroundColor(const glm::uvec4& backgroundColor)
+{
+	m_backgroundColor.r = backgroundColor.r / 255.0f;
+	m_backgroundColor.g = backgroundColor.g / 255.0f;
+	m_backgroundColor.b = backgroundColor.b / 255.0f;
+	m_backgroundColor.a = backgroundColor.a / 255.0f;
+}
+//======================================================================================================
+void Camera::SetBackgroundColor(GLuint r, GLuint g, GLuint b, GLuint a)
+{
+	m_backgroundColor.r = r / 255.0f;
+	m_backgroundColor.g = g / 255.0f;
+	m_backgroundColor.b = b / 255.0f;
+	m_backgroundColor.a = a / 255.0f;
+}
+//======================================================================================================
+void Camera::SetBackgroundColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
+{
+	m_backgroundColor.r = r;
+	m_backgroundColor.g = g;
+	m_backgroundColor.b = b;
+	m_backgroundColor.a = a;
+}
+//======================================================================================================
 void Camera::SetViewport(GLint x, GLint y, GLsizei width, GLsizei height)
 {
 	m_resolution.x = width;

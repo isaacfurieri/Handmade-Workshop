@@ -171,7 +171,7 @@ bool Design::OnEnter()
 	m_sceneCamera->SetVelocity(0.0f);
 	m_sceneCamera->SetSensitivity(0.0f);
 	m_sceneCamera->GetTransform().SetPosition(0.0f, 0.0f, 50.0f);
-	m_sceneCamera->SetBackgroundColor(glm::vec4(0.25f, 0.25f, 0.25f, 1.0f));
+	m_sceneCamera->SetBackgroundColor(29U, 29U, 29U);
 
 	//=========================================================================
 
@@ -242,11 +242,11 @@ bool Design::Render()
 
 	//Console viewport
 	SetViewport(glm::ivec4(0, 0, THREE_QUARTER_WIDTH, ONE_QUARTER_HEIGHT), 
-		glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+		glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 	
 	//Properties viewport
 	SetViewport(glm::ivec4(THREE_QUARTER_WIDTH, 0, ONE_QUARTER_WIDTH, resolution.y),
-		glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
+		glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 
 	//Scene viewport
 	m_sceneCamera->SetViewport(0, ONE_QUARTER_HEIGHT, THREE_QUARTER_WIDTH, THREE_QUARTER_HEIGHT);
