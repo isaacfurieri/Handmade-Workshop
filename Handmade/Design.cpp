@@ -180,6 +180,8 @@ bool Design::OnEnter()
 
 	Screen::Instance()->SetColor(29U, 29U, 29U);
 	
+	
+
 	return true;
 }
 //======================================================================================================
@@ -221,15 +223,14 @@ State* Design::Update(int deltaTime)
 
 	//==============================================================================
 	
-	auto resolution = Screen::Instance()->GetResolution();
-	Screen::Instance()->SetViewport(0, 0, resolution.x, resolution.y);
+	//auto resolution = Screen::Instance()->GetResolution();
+	//Screen::Instance()->SetViewport(0, 0, resolution.x, resolution.y);
 
 	return this;
 }
 //======================================================================================================
 bool Design::Render()
 {
-
 	auto& mainShader = *m_mainShader.get();
 	auto& textShader = *m_textShader.get();
 	auto& lightShader = *m_lightShader.get();
@@ -237,8 +238,11 @@ bool Design::Render()
 
 	auto resolution = Screen::Instance()->GetResolution();
 
+	m_mainViewport = glm::ivec4(0, resolution.y * 0.25f, resolution.x, resolution.y * 0.75);
+	
 	mainShader.Use();
-
+	
+	m_mainCamera->SetViewport(m_mainViewport);
 	m_mainCamera->CreatePerspView();
 	m_mainCamera->Update(16.0f);
 	m_mainCamera->SendToShader(mainShader);
@@ -271,7 +275,8 @@ bool Design::Render()
 	
 	textShader.Use();
 
-	m_UICamera->CreateOrthoView();
+	//m_UICamera->SetResolution(resolution.x, resolution.y);
+	//m_UICamera->CreateOrthoView();
 	m_UICamera->Update(16.0f);
 	m_UICamera->SendToShader(textShader);
 
@@ -349,22 +354,17 @@ bool Design::Render()
 	//==============================================================================
 
 	// Start the Dear ImGui frame
-	//ImGui_ImplOpenGL3_NewFrame();
-	//ImGui_ImplSDL2_NewFrame();
-	//ImGui::NewFrame();
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplSDL2_NewFrame();
+	ImGui::NewFrame();
 
-	////Begin creates a new window and must have end
-	//ImGui::Begin("A brand new window");
-	//
-	////uncomment to make it live in this window
-	////ImGui::Text("Hello Handmade");  
-	////ImGui::Button("Button");
-	//
-	//ImGui::End();
-	//
-	//ImGui::Button("Button");
-	//
-	//ImGui::Text("Hello Handmade");
+	//Begin creates a new window and must have end
+	ImGui::Begin("Output console");
+	
+	//uncomment to make it live in this window
+	ImGui::Text("This is where all your debug data will live...");  
+	
+	ImGui::End();
 
 	//static float f1 = 0.0f;
 	//static float f2 = 0.0f;
@@ -374,14 +374,14 @@ bool Design::Render()
 	//ImGui::SliderFloat("Some more data", &f2, 0.0f, 1.0f);
 	//ImGui::SliderFloat("Useful data", &f3, 0.0f, 1.0f);
 
-	////bool showWindow = false;
-	////ImGui::Checkbox("Check me", &showWindow);
+	//bool showWindow = false;
+	//ImGui::Checkbox("Check me", &showWindow);
 
 	//ImVec4 color = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
 	//ImGui::ColorEdit3("clear color", (float*)&color);
 
-	//ImGui::Render();
-	//ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 	return true;
 }

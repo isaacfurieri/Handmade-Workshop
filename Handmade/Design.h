@@ -6,6 +6,7 @@
 
 #include <memory>
 #include <vector>
+#include <glm.hpp>
 #include "Audio.h"
 #include "Axes.h"
 #include "Cuboid.h"
@@ -50,6 +51,8 @@ private:
 
 	std::unique_ptr<FreeCamera> m_UICamera;
 	std::unique_ptr<FreeCamera> m_mainCamera;
+
+	glm::ivec4 m_mainViewport;
 
 	//For current testing===============================================
 	/*std::unique_ptr<Audio> m_audio1;
