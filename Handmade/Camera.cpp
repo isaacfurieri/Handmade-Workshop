@@ -34,18 +34,15 @@ glm::vec2 Camera::ConvertWorldToScreen(const glm::vec3& worldPosition)
 	clipCoordinate /= clipCoordinate.w;
 
 	//convert to screen space
-	glm::vec2 resolution = Screen::Instance()->GetResolution();
-	return glm::vec2((clipCoordinate.x + 1.0f) * resolution.x * 0.5f,
-					 (clipCoordinate.y + 1.0f) * resolution.y * 0.5f);
+	return glm::vec2((clipCoordinate.x + 1.0f) * m_resolution.x * 0.5f,
+					 (clipCoordinate.y + 1.0f) * m_resolution.y * 0.5f);
 }
 //======================================================================================================
 glm::vec3 Camera::ConvertScreenToWorld(const glm::vec2& screenPosition, GLfloat zNDC)
 {
-	glm::vec2 resolution = Screen::Instance()->GetResolution();
-
 	//convert to NDC
-	glm::vec4 NDC((2.0f * screenPosition.x) / resolution.x - 1.0f, 
-		          (2.0f * (resolution.y - screenPosition.y)) / resolution.y - 1.0f,
+	glm::vec4 NDC((2.0f * screenPosition.x) / m_resolution.x - 1.0f, 
+		          (2.0f * (m_resolution.y - screenPosition.y)) / m_resolution.y - 1.0f,
 		          zNDC, 1.0f);
 
 	//convert to world space (4D)
@@ -104,9 +101,8 @@ void Camera::SetViewport(GLint x, GLint y, GLsizei width, GLsizei height)
 void Camera::CreateOrthoView(Origin2D origin)
 {
 	Screen::Instance()->IsDepthTestEnabled(false);
-	Screen::Instance()->SetViewport(m_viewport.x, m_viewport.y, m_viewport.z, m_viewport.w);
 	Screen::Instance()->SetColor(m_backgroundColor);
-	Screen::Instance()->Refresh();
+	Screen::Instance()->SetViewport(m_viewport.x, m_viewport.y, m_viewport.z, m_viewport.w);
 
 	if (origin == Origin2D::TopLeft)
 	{
@@ -124,9 +120,8 @@ void Camera::CreateOrthoView(Origin2D origin)
 void Camera::CreatePerspView()
 {
 	Screen::Instance()->IsDepthTestEnabled(true);
-	Screen::Instance()->SetViewport(m_viewport.x, m_viewport.y, m_viewport.z, m_viewport.w);
 	Screen::Instance()->SetColor(m_backgroundColor);
-	Screen::Instance()->Refresh();
+	Screen::Instance()->SetViewport(m_viewport.x, m_viewport.y, m_viewport.z, m_viewport.w);
 
 	GLfloat aspectRatio = (m_resolution.x) / static_cast<GLfloat>(m_resolution.y);
 

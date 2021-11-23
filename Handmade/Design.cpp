@@ -232,7 +232,6 @@ bool Design::Render()
 	{
 		Screen::Instance()->SetViewport(viewport.x, viewport.y, viewport.z, viewport.w);
 		Screen::Instance()->SetColor(color);
-		Screen::Instance()->Refresh();
 	};
 
 	const auto ONE_QUARTER_WIDTH = static_cast<GLsizei>(resolution.x * 0.25f);
@@ -281,30 +280,18 @@ bool Design::Render()
 	//Text rendering & UI
 	//==============================================================================
 
-	//const auto PADDING = 25.0f;
-	//
-	//textShader.Use();
+	/*textShader.Use();
 
-	////m_UICamera->SetResolution(resolution.x, resolution.y);
-	////m_UICamera->CreateOrthoView();
-	//m_UICamera->Update(16.0f);
-	//m_UICamera->SendToShader(textShader);
+	m_sceneCamera->CreateOrthoView();
+	m_sceneCamera->Update(16.0f);
+	m_sceneCamera->SendToShader(textShader);
 
-	///*m_topText->GetTransform().SetPosition(resolution.x - m_topText->GetTotalWidth() - PADDING,
-	//	resolution.y - 50.0f, 0.0f);
-	//m_topText->SendToShader(textShader);
-	//m_topText->Render(textShader);*/
-
-	///*m_bottomText->GetTransform().SetPosition(PADDING, PADDING, 0.0f);
-	//m_bottomText->SendToShader(textShader);
-	//m_bottomText->Render(textShader);*/
-
-	//auto labelPosition = m_mainCamera->ConvertWorldToScreen(m_axes->GetArrowTipPositionX());
-	//m_axesLabelText->IsFirstLetterCentered(true);
-	//m_axesLabelText->GetTransform().SetPosition(labelPosition.x, labelPosition.y, 0.0f);
-	//m_axesLabelText->SetString("X");
-	//m_axesLabelText->SendToShader(textShader);
-	//m_axesLabelText->Render(textShader);
+	auto labelPosition = m_sceneCamera->ConvertWorldToScreen(m_axes->GetArrowTipPositionX());
+	m_axesLabelText->IsFirstLetterCentered(true);
+	m_axesLabelText->GetTransform().SetPosition(labelPosition.x, labelPosition.y, 0.0f);
+	m_axesLabelText->SetString("X");
+	m_axesLabelText->SendToShader(textShader);
+	m_axesLabelText->Render(textShader);*/
 
 	//labelPosition = m_mainCamera->ConvertWorldToScreen(m_axes->GetArrowTipPositionY());
 	//m_axesLabelText->GetTransform().SetPosition(labelPosition.x, labelPosition.y, 0.0f);
