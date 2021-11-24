@@ -177,6 +177,11 @@ bool Design::OnEnter()
 
 	Screen::Instance()->SetColor(30U, 30U, 30U);
 	
+	//=========================================================================
+
+	ImGui::GetIO().Fonts->AddFontFromFileTTF("Assets/Fonts/Arial.ttf", 16.0f);
+	ImGui::GetIO().Fonts->Build();
+
 	return true;
 }
 //======================================================================================================
@@ -351,17 +356,6 @@ bool Design::Render()
 	//ImGUI UI (WIP)
 	//==============================================================================
 
-	static bool isLoaded = false;
-
-	if (!isLoaded)
-	{
-		auto& io = ImGui::GetIO();
-		io.Fonts->AddFontFromFileTTF("Assets/Fonts/Arial.ttf", 16.0f);
-		io.Fonts->Build();
-		isLoaded = true;
-	}
-
-	// Start the Dear ImGui frame
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame();
 	ImGui::NewFrame();
