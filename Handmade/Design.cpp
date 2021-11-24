@@ -221,6 +221,14 @@ State* Design::Update(int deltaTime)
 		}
 	}
 
+	//==============================================================================
+
+	m_resolution = Screen::Instance()->GetResolution();
+	m_minorWidth = static_cast<GLsizei>(m_resolution.x * MINOR);
+	m_majorWidth = static_cast<GLsizei>(m_resolution.x * MAJOR);
+	m_minorHeight = static_cast<GLsizei>(m_resolution.y * MINOR);
+	m_majorHeight = static_cast<GLsizei>(m_resolution.y * MAJOR);
+
 	return this;
 }
 //======================================================================================================
@@ -231,8 +239,6 @@ bool Design::Render()
 	auto& lightShader = *m_lightShader.get();
 	auto& testShader = *m_testShader.get();
 
-	auto resolution = Screen::Instance()->GetResolution();
-
 	auto SetViewport = [](const glm::ivec4& viewport, const glm::uvec4& color)
 	{
 		Screen::Instance()->SetViewport(viewport.x, viewport.y, viewport.z, viewport.w);
@@ -240,21 +246,16 @@ bool Design::Render()
 		Screen::Instance()->Refresh();
 	};
 
-	const auto MINOR_WIDTH = static_cast<GLsizei>(resolution.x * 0.20f);
-	const auto MAJOR_WIDTH = static_cast<GLsizei>(resolution.x * 0.80f);
-	const auto MINOR_HEIGHT = static_cast<GLsizei>(resolution.y * 0.20f);
-	const auto MAJOR_HEIGHT = static_cast<GLsizei>(resolution.y * 0.80f);
-
 	//Console viewport
-	SetViewport(glm::ivec4(0, 0, MAJOR_WIDTH, MINOR_HEIGHT), 
+	SetViewport(glm::ivec4(0, 0, m_majorWidth, m_minorHeight), 
 		glm::uvec4(255U, 200U, 0U, 1U));
 	
 	//Properties viewport
-	SetViewport(glm::ivec4(MAJOR_WIDTH, 0, MINOR_WIDTH, resolution.y),
+	SetViewport(glm::ivec4(m_majorWidth, 0, m_minorWidth, m_resolution.y),
 		glm::uvec4(0U, 144U, 255U, 1U));
 
 	//Scene viewport
-	m_sceneCamera->SetViewport(0, MINOR_HEIGHT, MAJOR_WIDTH, MAJOR_HEIGHT);
+	m_sceneCamera->SetViewport(0, m_minorHeight, m_majorWidth, m_majorHeight);
 	m_sceneCamera->CreatePerspView();
 	
 	mainShader.Use();
@@ -360,35 +361,8 @@ bool Design::Render()
 	ImGui_ImplSDL2_NewFrame();
 	ImGui::NewFrame();
 	
-	ImGui::Begin("Output console", nullptr, 
-		ImGuiWindowFlags_::ImGuiWindowFlags_NoInputs |
-		ImGuiWindowFlags_::ImGuiWindowFlags_NoCollapse);
-	
-	const auto PADDING = 2.0f;
-	auto windowPos = ImVec2(PADDING, 
-		static_cast<float>(MAJOR_HEIGHT + PADDING + 1.0f));
-	auto windowSize = ImVec2(static_cast<float>(MAJOR_WIDTH - PADDING * 2.0f), 
-		static_cast<float>(MINOR_HEIGHT - PADDING * 2.0f));
-
-	ImGui::SetWindowPos("Output console", windowPos);
-	ImGui::SetWindowSize("Output console", windowSize);
-	
-	ImGui::Text("This is where all your debug data will live...");  
-	
-	ImGui::End();
-
-	ImGui::Begin("Properties", nullptr,
-		ImGuiWindowFlags_::ImGuiWindowFlags_NoInputs |
-		ImGuiWindowFlags_::ImGuiWindowFlags_NoCollapse);
-
-	windowPos = ImVec2(static_cast<float>(MAJOR_WIDTH + PADDING), PADDING);
-	windowSize = ImVec2(static_cast<float>(MINOR_WIDTH - PADDING * 2.0f), 
-		static_cast<float>(resolution.y - PADDING * 2.0f));
-
-	ImGui::SetWindowPos("Properties", windowPos);
-	ImGui::SetWindowSize("Properties", windowSize);
-	
-	ImGui::End();
+	RenderConsoleWindow();
+	RenderPropertiesWindow();	
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -401,4 +375,39 @@ void Design::OnExit()
 	m_objects.clear();
 	Audio::Shutdown();
 	Text::Shutdown();
+}
+//======================================================================================================
+void Design::RenderConsoleWindow()
+{
+	ImGui::Begin("Output console", nullptr,
+		ImGuiWindowFlags_::ImGuiWindowFlags_NoInputs |
+		ImGuiWindowFlags_::ImGuiWindowFlags_NoCollapse);
+
+	auto windowPos = ImVec2(UI_PADDING,
+		static_cast<float>(m_majorHeight + UI_PADDING + 1.0f));
+	auto windowSize = ImVec2(static_cast<float>(m_majorWidth - UI_PADDING * 2.0f),
+		static_cast<float>(m_minorHeight - UI_PADDING * 2.0f));
+
+	ImGui::SetWindowPos("Output console", windowPos);
+	ImGui::SetWindowSize("Output console", windowSize);
+
+	ImGui::Text("This is where all your debug data will live...");
+
+	ImGui::End();
+}
+//======================================================================================================
+void Design::RenderPropertiesWindow()
+{
+	ImGui::Begin("Properties", nullptr,
+		ImGuiWindowFlags_::ImGuiWindowFlags_NoInputs |
+		ImGuiWindowFlags_::ImGuiWindowFlags_NoCollapse);
+
+	auto windowPos = ImVec2(static_cast<float>(m_majorWidth + UI_PADDING), UI_PADDING);
+	auto windowSize = ImVec2(static_cast<float>(m_minorWidth - UI_PADDING * 2.0f),
+		static_cast<float>(m_resolution.y - UI_PADDING * 2.0f));
+
+	ImGui::SetWindowPos("Properties", windowPos);
+	ImGui::SetWindowSize("Properties", windowSize);
+
+	ImGui::End();
 }

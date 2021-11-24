@@ -21,6 +21,10 @@
 #include "State.h"
 #include "Text.h"
 
+const auto MINOR = 0.2f;
+const auto MAJOR = 0.8f;
+const auto UI_PADDING = 2.0f;
+
 class Design : public State
 {
 
@@ -35,6 +39,15 @@ public:
 	virtual void OnExit();
 
 private:
+
+	void RenderConsoleWindow();
+	void RenderPropertiesWindow();
+
+	glm::ivec2 m_resolution;
+	GLint m_minorWidth;
+	GLint m_majorWidth;
+	GLint m_minorHeight;
+	GLint m_majorHeight;
 
 	std::unique_ptr<Grid> m_grid;
 	std::unique_ptr<Axes> m_axes;
