@@ -361,8 +361,9 @@ bool Design::Render()
 
 	ImGui::Begin("Output console");
 	
-	auto windowPos = ImVec2(2, MAJOR_HEIGHT + 3);
-	auto windowSize = ImVec2(MAJOR_WIDTH - 3, MINOR_HEIGHT - 3);
+	const auto PADDING = 2.0f;
+	auto windowPos = ImVec2(PADDING, MAJOR_HEIGHT + PADDING + 1.0f);
+	auto windowSize = ImVec2(MAJOR_WIDTH - PADDING * 2.0f, MINOR_HEIGHT - PADDING * 2.0f);
 
 	ImGui::SetWindowPos("Output console", windowPos);
 	ImGui::SetWindowSize("Output console", windowSize);
@@ -373,8 +374,8 @@ bool Design::Render()
 
 	ImGui::Begin("Properties");
 
-	windowPos = ImVec2(MAJOR_WIDTH + 2, 2);
-	windowSize = ImVec2(MINOR_WIDTH - 4, resolution.y - 4);
+	windowPos = ImVec2(MAJOR_WIDTH + PADDING, PADDING);
+	windowSize = ImVec2(MINOR_WIDTH - PADDING * 2.0f, resolution.y - PADDING * 2.0f);
 
 	ImGui::SetWindowPos("Properties", windowPos);
 	ImGui::SetWindowSize("Properties", windowSize);
