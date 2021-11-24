@@ -235,21 +235,21 @@ bool Design::Render()
 		Screen::Instance()->Refresh();
 	};
 
-	const auto ONE_QUARTER_WIDTH = static_cast<GLsizei>(resolution.x * 0.25f);
-	const auto THREE_QUARTER_WIDTH = static_cast<GLsizei>(resolution.x * 0.75f);
-	const auto ONE_QUARTER_HEIGHT = static_cast<GLsizei>(resolution.y * 0.25f);
-	const auto THREE_QUARTER_HEIGHT = static_cast<GLsizei>(resolution.y * 0.75f);
+	const auto MINOR_WIDTH = static_cast<GLsizei>(resolution.x * 0.20f);
+	const auto MAJOR_WIDTH = static_cast<GLsizei>(resolution.x * 0.80f);
+	const auto MINOR_HEIGHT = static_cast<GLsizei>(resolution.y * 0.20f);
+	const auto MAJOR_HEIGHT = static_cast<GLsizei>(resolution.y * 0.80f);
 
 	//Console viewport
-	SetViewport(glm::ivec4(0, 0, THREE_QUARTER_WIDTH, ONE_QUARTER_HEIGHT), 
+	SetViewport(glm::ivec4(0, 0, MAJOR_WIDTH, MINOR_HEIGHT), 
 		glm::uvec4(255U, 200U, 0U, 1U));
 	
 	//Properties viewport
-	SetViewport(glm::ivec4(THREE_QUARTER_WIDTH, 0, ONE_QUARTER_WIDTH, resolution.y),
+	SetViewport(glm::ivec4(MAJOR_WIDTH, 0, MINOR_WIDTH, resolution.y),
 		glm::uvec4(0U, 144U, 255U, 1U));
 
 	//Scene viewport
-	m_sceneCamera->SetViewport(0, ONE_QUARTER_HEIGHT, THREE_QUARTER_WIDTH, THREE_QUARTER_HEIGHT);
+	m_sceneCamera->SetViewport(0, MINOR_HEIGHT, MAJOR_WIDTH, MAJOR_HEIGHT);
 	m_sceneCamera->CreatePerspView();
 	
 	mainShader.Use();
@@ -361,8 +361,8 @@ bool Design::Render()
 
 	ImGui::Begin("Output console");
 	
-	auto windowPos = ImVec2(2, THREE_QUARTER_HEIGHT + 3);
-	auto windowSize = ImVec2(THREE_QUARTER_WIDTH - 3, ONE_QUARTER_HEIGHT - 3);
+	auto windowPos = ImVec2(2, MAJOR_HEIGHT + 3);
+	auto windowSize = ImVec2(MAJOR_WIDTH - 3, MINOR_HEIGHT - 3);
 
 	ImGui::SetWindowPos("Output console", windowPos);
 	ImGui::SetWindowSize("Output console", windowSize);
@@ -373,8 +373,8 @@ bool Design::Render()
 
 	ImGui::Begin("Properties");
 
-	windowPos = ImVec2(THREE_QUARTER_WIDTH + 2, 2);
-	windowSize = ImVec2(ONE_QUARTER_WIDTH - 4, resolution.y - 4);
+	windowPos = ImVec2(MAJOR_WIDTH + 2, 2);
+	windowSize = ImVec2(MINOR_WIDTH - 4, resolution.y - 4);
 
 	ImGui::SetWindowPos("Properties", windowPos);
 	ImGui::SetWindowSize("Properties", windowSize);
