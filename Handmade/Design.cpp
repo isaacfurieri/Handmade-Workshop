@@ -155,9 +155,9 @@ bool Design::OnEnter()
 
 	//==========================================================================
 
-	m_light = std::make_unique<Light>(0.0f, 7.5f, 0.0f);
+	//m_light = std::make_unique<Light>(0.0f, 7.5f, 0.0f);
 
-	m_model = std::make_unique<Model>("Teapot", "Teapot.obj", true);
+	//m_model = std::make_unique<Model>("Teapot", "Teapot.obj", true);
 	//m_model->GetTransform().SetScale(5.0f, 5.0f, 5.0f);
 	//m_model->SetColor(1, 0, 1, 1);
 
@@ -261,12 +261,12 @@ bool Design::Render()
 
 	m_grid->Render(mainShader);
 
-	//lightShader.Use();
-	//lightShader.SendData("cameraPosition", m_sceneCamera->GetTransform().GetPosition());
+	/*lightShader.Use();
+	lightShader.SendData("cameraPosition", m_sceneCamera->GetTransform().GetPosition());
 
-	//m_light->SendToShader(lightShader);
-	//m_light->Render(lightShader);
-	//m_sceneCamera->SendToShader(lightShader);
+	m_light->SendToShader(lightShader);
+	m_light->Render(lightShader);
+	m_sceneCamera->SendToShader(lightShader);*/
 
 	//m_axes->GetTransform().SetRotation(m_grid->GetTransform().GetRotation());
 	//m_axes->Render(lightShader);
@@ -351,15 +351,24 @@ bool Design::Render()
 	//ImGUI UI (WIP)
 	//==============================================================================
 
+	static bool isLoaded = false;
+
+	if (!isLoaded)
+	{
+		auto& io = ImGui::GetIO();
+		io.Fonts->AddFontFromFileTTF("Assets/Fonts/Arial.ttf", 16.0f);
+		io.Fonts->Build();
+		isLoaded = true;
+	}
+
 	// Start the Dear ImGui frame
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame();
 	ImGui::NewFrame();
-
-	//This makes sure the mouse has no effect on sizing/dragging the window
-	ImGui::SetWindowFocus(nullptr);
-
-	ImGui::Begin("Output console");
+	
+	ImGui::Begin("Output console", nullptr, 
+		ImGuiWindowFlags_::ImGuiWindowFlags_NoInputs |
+		ImGuiWindowFlags_::ImGuiWindowFlags_NoCollapse);
 	
 	const auto PADDING = 2.0f;
 	auto windowPos = ImVec2(PADDING, 
@@ -374,7 +383,9 @@ bool Design::Render()
 	
 	ImGui::End();
 
-	ImGui::Begin("Properties");
+	ImGui::Begin("Properties", nullptr,
+		ImGuiWindowFlags_::ImGuiWindowFlags_NoInputs |
+		ImGuiWindowFlags_::ImGuiWindowFlags_NoCollapse);
 
 	windowPos = ImVec2(static_cast<float>(MAJOR_WIDTH + PADDING), PADDING);
 	windowSize = ImVec2(static_cast<float>(MINOR_WIDTH - PADDING * 2.0f), 
@@ -384,12 +395,6 @@ bool Design::Render()
 	ImGui::SetWindowSize("Properties", windowSize);
 	
 	ImGui::End();
-
-	//bool showWindow = false;
-	//ImGui::Checkbox("Check me", &showWindow);
-
-	//ImVec4 color = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
-	//ImGui::ColorEdit3("clear color", (float*)&color);
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
