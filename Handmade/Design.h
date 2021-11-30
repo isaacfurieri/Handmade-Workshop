@@ -1,9 +1,10 @@
 #pragma once
 
 /*===================================================================#
-| 'Design' source files last updated on 23 November 2021             |
+| 'Design' source files last updated on 30 November 2021             |
 #===================================================================*/
 
+#include <deque>
 #include <memory>
 #include <vector>
 #include <glm.hpp>
@@ -24,6 +25,7 @@
 const auto MINOR = 0.2f;
 const auto MAJOR = 0.8f;
 const auto UI_PADDING = 2.0f;
+const auto MAX_CONSOLE_LOG_SIZE = 1000;
 
 class Design : public State
 {
@@ -86,6 +88,7 @@ private:
 	//std::vector<Audio> m_audio;
 	//==================================================================
 
+	std::deque<std::string> m_consoleLog;
 	std::vector<std::unique_ptr<Object>> m_objects;
 
 };

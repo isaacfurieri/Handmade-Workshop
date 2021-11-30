@@ -380,7 +380,8 @@ void Design::OnExit()
 void Design::RenderConsoleWindow()
 {
 	ImGui::Begin("Output console", nullptr,
-		ImGuiWindowFlags_::ImGuiWindowFlags_NoInputs |
+		ImGuiWindowFlags_::ImGuiWindowFlags_NoResize |
+		ImGuiWindowFlags_::ImGuiWindowFlags_NoMove |
 		ImGuiWindowFlags_::ImGuiWindowFlags_NoCollapse);
 
 	auto windowPos = ImVec2(UI_PADDING,
@@ -391,7 +392,15 @@ void Design::RenderConsoleWindow()
 	ImGui::SetWindowPos("Output console", windowPos);
 	ImGui::SetWindowSize("Output console", windowSize);
 
-	ImGui::Text("This is where all your debug data will live...");
+	if (m_consoleLog.size() > MAX_CONSOLE_LOG_SIZE)
+	{
+		m_consoleLog.pop_back();
+	}
+
+	for (auto& log : m_consoleLog)
+	{
+		ImGui::Text(log.c_str());
+	}
 
 	ImGui::End();
 }
