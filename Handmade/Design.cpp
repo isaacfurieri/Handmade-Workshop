@@ -399,7 +399,8 @@ void Design::RenderConsoleWindow()
 void Design::RenderPropertiesWindow()
 {
 	ImGui::Begin("Properties", nullptr,
-		ImGuiWindowFlags_::ImGuiWindowFlags_NoInputs |
+		ImGuiWindowFlags_::ImGuiWindowFlags_NoResize |
+		ImGuiWindowFlags_::ImGuiWindowFlags_NoMove |
 		ImGuiWindowFlags_::ImGuiWindowFlags_NoCollapse);
 
 	auto windowPos = ImVec2(static_cast<float>(m_majorWidth + UI_PADDING), UI_PADDING);
