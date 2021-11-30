@@ -6,6 +6,8 @@
 #include "imgui/imgui_impl_opengl3.h"
 #include "imgui/imgui_impl_sdl.h"
 
+#include "BoxCollider.h"
+
 //======================================================================================================
 bool Design::OnEnter()
 {
@@ -202,6 +204,21 @@ State* Design::Update(int deltaTime)
 
 	auto mouseMotion = Input::Instance()->GetMouseMotion();
 	static glm::vec3 eulerAngles = m_grid->GetTransform().GetEulerAngles();
+
+	//Screen/Mouse collider code - notr yet working properly==========================
+	BoxCollider sceneBox;
+	auto dimension = m_sceneCamera->GetResolution();
+	
+	sceneBox.SetPosition(dimension.x * 0.5f, dimension.y, 0.0f);
+	sceneBox.SetDimension(dimension.x, dimension.y, 0.0f);
+	sceneBox.Update();
+
+	BoxCollider mouseBox;
+	auto mousePosition = Input::Instance()->GetMousePosition();
+	mouseBox.SetPosition(mousePosition.x, mousePosition.y, 0.0f);
+	mouseBox.SetDimension(1.0f, 1.0f, 0.0f);
+	mouseBox.Update();
+	//================================================================================
 
 	if (Input::Instance()->IsLeftButtonClicked())
 	{
