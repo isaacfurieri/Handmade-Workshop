@@ -186,6 +186,31 @@ bool Utility::LoadShaderFile(const std::string& filename, std::string& sourceCod
 	return true;
 }
 //======================================================================================================
+std::string Utility::NumToStr(GLfloat value)
+{
+	return std::to_string(value);
+}
+//======================================================================================================
+std::string Utility::NumToStr(const glm::vec2& value)
+{
+	return std::to_string(value.x) + ", " + std::to_string(value.y);
+}
+//======================================================================================================
+std::string Utility::NumToStr(const glm::vec3& value)
+{
+	return std::to_string(value.x) + ", " 
+		+ std::to_string(value.y) + ", " 
+		+ std::to_string(value.z);
+}
+//======================================================================================================
+std::string Utility::NumToStr(const glm::vec4& value)
+{
+	return std::to_string(value.x) 
+		+ ", " + std::to_string(value.y) 
+		+ ", " + std::to_string(value.z) 
+		+ ", " + std::to_string(value.w);
+}
+//======================================================================================================
 void Utility::Log(Destination destination, const glm::vec2& value, const std::string& label)
 {
 	Log(destination, value.x, value.y, 0.0f, label);

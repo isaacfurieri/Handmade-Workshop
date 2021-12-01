@@ -48,6 +48,11 @@ public:
 	static bool LoadShaderFile(const std::string& filename,
 		std::string& sourceCode);
 
+	static std::string NumToStr(GLfloat value);
+	static std::string NumToStr(const glm::vec2& value);
+	static std::string NumToStr(const glm::vec3& value);
+	static std::string NumToStr(const glm::vec4& value);
+
 	static void Log(Destination destination,
 		GLfloat value, const std::string& label = "");
 	static void Log(Destination destination,
