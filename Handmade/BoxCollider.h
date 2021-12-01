@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'BoxCollider' source files last updated on 23 November 2021        |
+| 'BoxCollider' source files last updated on 1 December 2021         |
 #====================================================================#
 | Class has not been fully tested. No known issues found.            |
 #===================================================================*/
