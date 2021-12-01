@@ -11,6 +11,9 @@
 //======================================================================================================
 bool Design::OnEnter()
 {
+	//TODO - Use a color picker to change this
+	Screen::Instance()->SetColor(30U, 30U, 30U);
+	
 	m_mainShader = std::make_unique<Shader>();
 
 	if (!m_mainShader->Create("Shaders/Main.vert", "Shaders/Main.frag"))
@@ -26,6 +29,8 @@ bool Design::OnEnter()
 	m_mainShader->BindUniform("view");
 	m_mainShader->BindUniform("projection");
 	m_mainShader->BindUniform("isTextured");
+
+	m_consoleLog.push_front("'Main.vert' and 'Main.frag' shaders created and compiled.");
 
 	//===================================================================
 
@@ -45,7 +50,10 @@ bool Design::OnEnter()
 	m_textShader->BindUniform("projection");
 	m_textShader->BindUniform("textureImage");
 
+	m_consoleLog.push_front("'Text.vert' and 'Text.frag' shaders created and compiled.");
+	
 	//===================================================================
+	//TODO - There is a bug with the lighting shaders
 
 	m_lightShader = std::make_unique<Shader>();
 
@@ -81,6 +89,8 @@ bool Design::OnEnter()
 	//m_lightShader->BindUniform("light.attenuationConstant");
 	//m_lightShader->BindUniform("light.attenuationQuadratic");
 
+	//m_consoleLog.push_front("'Light.vert' and 'Light.frag' shaders created and compiled.");
+	
 	//TEST CODE to be used later for multiple lights
 	/*for (size_t i = 0; i < TOTAL_LIGHTS; i++)
 	{
@@ -98,6 +108,7 @@ bool Design::OnEnter()
 	//===================================================================
 
 	Material::Load("Defaults", "Defaults.mtl");
+	m_consoleLog.push_front("Default materials loaded.");
 
 	//===================================================================
 
@@ -105,32 +116,53 @@ bool Design::OnEnter()
 	{
 		return false;
 	}
+	
+	m_consoleLog.push_front("Text sub-system initialized.");
 
 	if (!(Audio::Initialize()))
 	{
 		return false;
 	}
+	
+	m_consoleLog.push_front("Audio sub-system initialized.");
 
 	//===================================================================
 
 	m_grid = std::make_unique<Grid>();
 	m_grid->GetTransform().SetRotation(45.0f, -30.0f, 0.0f);
+	m_consoleLog.push_front("Grid created.");
 
-	m_axes = std::make_unique<Axes>("Arrow.obj");
+	//=========================================================================
 
-	m_topText = std::make_unique<Text>("Quikhand", "Quikhand.ttf", 30);
+	m_sceneCamera = std::make_unique<FreeCamera>();
+	m_sceneCamera->SetVelocity(0.0f);
+	m_sceneCamera->SetSensitivity(0.0f);
+	m_sceneCamera->GetTransform().SetPosition(0.0f, 0.0f, 50.0f);
+	m_sceneCamera->SetBackgroundColor(29U, 29U, 29U);
+	m_consoleLog.push_front("Scene camera created.");
+
+	//=========================================================================
+
+	ImGui::GetIO().Fonts->AddFontFromFileTTF("Assets/Fonts/Arial.ttf", 16.0f);
+	ImGui::GetIO().Fonts->Build();
+
+	//=========================================================================
+	
+	//WIP======================================================================
+	
+	//m_axes = std::make_unique<Axes>("Arrow.obj");
+
+	/*m_topText = std::make_unique<Text>("Quikhand", "Quikhand.ttf", 30);
 	m_topText->SetColor(1.0f, 0.0f, 0.196f, 1.0f);
-	m_topText->SetString("Handmade Alpha");
+	m_topText->SetString("Handmade Alpha");*/
 
-	m_bottomText = std::make_unique<Text>("Quikhand");
+	/*m_bottomText = std::make_unique<Text>("Quikhand");
 	m_bottomText->SetColor(0.0f, 0.564f, 1.0f, 1.0f);
-	m_bottomText->SetString("Click/Drag the mouse to rotate the grid. Use the mouse wheel to zoom in/out");
+	m_bottomText->SetString("Click/Drag the mouse to rotate the grid. Use the mouse wheel to zoom in/out");*/
 
-	m_axesLabelText = std::make_unique<Text>("Arial", "Arial.ttf", 66);
+	/*m_axesLabelText = std::make_unique<Text>("Arial", "Arial.ttf", 66);
 	m_axesLabelText->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
-	m_axesLabelText->SetString("X");
-
-	//For current testing=======================================================
+	m_axesLabelText->SetString("X");*/
 
 	/*m_text.push_back(Text("Quikhand", "Quickhand.ttf", 10));
 	m_text.back().SetColor(1.0f, 0.75f, 0.1f);
@@ -167,23 +199,6 @@ bool Design::OnEnter()
 	//m_cube = std::make_unique<Cuboid>();
 	//m_sphere = std::make_unique<Sphere>(10.0f, 50.0f, 50.0f);
 
-	//=========================================================================
-
-	m_sceneCamera = std::make_unique<FreeCamera>();
-	m_sceneCamera->SetVelocity(0.0f);
-	m_sceneCamera->SetSensitivity(0.0f);
-	m_sceneCamera->GetTransform().SetPosition(0.0f, 0.0f, 50.0f);
-	m_sceneCamera->SetBackgroundColor(29U, 29U, 29U);
-
-	//=========================================================================
-
-	Screen::Instance()->SetColor(30U, 30U, 30U);
-	
-	//=========================================================================
-
-	ImGui::GetIO().Fonts->AddFontFromFileTTF("Assets/Fonts/Arial.ttf", 16.0f);
-	ImGui::GetIO().Fonts->Build();
-
 	return true;
 }
 //======================================================================================================
@@ -218,6 +233,7 @@ State* Design::Update(int deltaTime)
 	mouseBox.SetPosition(mousePosition.x, mousePosition.y, 0.0f);
 	mouseBox.SetDimension(1.0f, 1.0f, 0.0f);
 	mouseBox.Update();
+
 	//================================================================================
 
 	if (Input::Instance()->IsLeftButtonClicked())
