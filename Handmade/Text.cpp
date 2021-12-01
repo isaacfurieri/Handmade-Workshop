@@ -55,9 +55,9 @@ bool Text::Load(const std::string& tag, const std::string& filename, GLuint font
 	{
 		if (FT_Load_Char(freetypeFace, i, FT_LOAD_RENDER))
 		{
-			Utility::Log(Utility::Destination::OutputWindow,
+			Utility::Log(Utility::Destination::WindowsMessageBox,
 				"Error creating glyph", Utility::Severity::Warning);
-			continue;
+			break;
 		}
 
 		//TODO - Find a way to move this to the lower levels

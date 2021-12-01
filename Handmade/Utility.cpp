@@ -15,56 +15,48 @@ void Utility::CheckGLError()
 	case GL_NO_ERROR:
 	{
 		Log(Destination::LogFile, "There are no errors.", Severity::Default);
-		Log(Destination::OutputWindow, "There are no errors.", Severity::Default);
 		break;
 	}
 
 	case GL_INVALID_ENUM:
 	{
 		Log(Destination::LogFile, "Invalid enumeration type passed.", Severity::Failure);
-		Log(Destination::OutputWindow, "Invalid enumeration type passed.", Severity::Failure);
 		break;
 	}
 
 	case GL_INVALID_VALUE:
 	{
 		Log(Destination::LogFile, "Numeric value outside of accepted range.", Severity::Failure);
-		Log(Destination::OutputWindow, "Numeric value outside of accepted range.", Severity::Failure);
 		break;
 	}
 
 	case GL_INVALID_OPERATION:
 	{
 		Log(Destination::LogFile, "Invalid operation.", Severity::Failure);
-		Log(Destination::OutputWindow, "Invalid operation.", Severity::Failure);
 		break;
 	}
 
 	case GL_INVALID_FRAMEBUFFER_OPERATION:
 	{
 		Log(Destination::LogFile, "Framebuffer object incomplete.", Severity::Failure);
-		Log(Destination::OutputWindow, "Framebuffer object incomplete.", Severity::Failure);
 		break;
 	}
 
 	case GL_STACK_OVERFLOW:
 	{
 		Log(Destination::LogFile, "Stack overflow.", Severity::Failure);
-		Log(Destination::OutputWindow, "Stack overflow.", Severity::Failure);
 		break;
 	}
 
 	case GL_STACK_UNDERFLOW:
 	{
 		Log(Destination::LogFile, "Stack underflow.", Severity::Failure);
-		Log(Destination::OutputWindow, "Stack underflow.", Severity::Failure);
 		break;
 	}
 
 	case GL_OUT_OF_MEMORY:
 	{
 		Log(Destination::LogFile, "Out of memory.", Severity::Failure);
-		Log(Destination::OutputWindow, "Out of memory.", Severity::Failure);
 		break;
 	}
 
@@ -207,13 +199,6 @@ void Utility::Log(Destination destination, GLfloat value, const std::string& lab
 				MB_ICONINFORMATION | MB_OK);
 		}
 
-		else if (destination == Destination::OutputWindow)
-		{
-			std::string message = "[" + label + "] " + std::to_string(value) + "\n";
-			OutputDebugString(reinterpret_cast<LPCWSTR>
-				(std::wstring(message.begin(), message.end()).c_str()));
-		}
-
 		else if (destination == Destination::LogFile)
 		{
 			std::fstream file("Data/Output.log", std::ios_base::out | std::ios_base::app);
@@ -233,29 +218,6 @@ void Utility::Log(Destination destination, const std::string& message, Severity 
 			MessageBox(s_windowHandle,
 				reinterpret_cast<LPCWSTR>(std::wstring(message.begin(), message.end()).c_str()),
 				L"Log", static_cast<GLuint>(severity) | MB_OK);
-		}
-
-		else if (destination == Destination::OutputWindow)
-		{
-			std::string finalMessage;
-
-			if (severity == Severity::Failure)
-			{
-				finalMessage = "[FAILURE] " + message + "\n";
-			}
-
-			else if (severity == Severity::Warning)
-			{
-				finalMessage = "[WARNING] " + message + "\n";
-			}
-
-			else
-			{
-				finalMessage = message + "\n";
-			}
-
-			OutputDebugString(reinterpret_cast<LPCWSTR>
-				(std::wstring(finalMessage.begin(), finalMessage.end()).c_str()));
 		}
 
 		else if (destination == Destination::LogFile)
@@ -298,15 +260,6 @@ void Utility::Log(Destination destination, GLfloat x, GLfloat y, GLfloat z, cons
 				reinterpret_cast<LPCWSTR>(std::wstring(message.begin(), message.end()).c_str()),
 				reinterpret_cast<LPCWSTR>(std::wstring(label.begin(), label.end()).c_str()),
 				MB_ICONINFORMATION | MB_OK);
-		}
-
-		else if (destination == Destination::OutputWindow)
-		{
-			std::string message = "[" + label + "] " + "x = " + std::to_string(x) +
-				", y = " + std::to_string(y) +
-				", z = " + std::to_string(z) + "\n";
-			OutputDebugString(reinterpret_cast<LPCWSTR>
-				(std::wstring(message.begin(), message.end()).c_str()));
 		}
 
 		else if (destination == Destination::LogFile)
