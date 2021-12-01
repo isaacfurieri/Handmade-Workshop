@@ -65,19 +65,23 @@ void Utility::CheckGLError()
 //======================================================================================================
 void Utility::DisplayProfile()
 {
-	const GLubyte* profile = nullptr;
+	char text[50];
+	strcpy_s(text, "Graphics card vendor: ");
+	strcat_s(text, reinterpret_cast<const char*>(glGetString(GL_VENDOR)));
+	Utility::Log(Destination::LogFile, text);
 
-	profile = reinterpret_cast<const GLubyte*>(glGetString(GL_VENDOR));
-	Utility::Log(Destination::LogFile, "Graphics card vendor: " + (*profile));
+	strcpy_s(text, "Graphics card model: ");
+	strcat_s(text, reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
+	Utility::Log(Destination::LogFile, text);
 
-	profile = reinterpret_cast<const GLubyte*>(glGetString(GL_RENDERER));
-	Utility::Log(Destination::LogFile, "Graphics card model: " + (*profile));
+	strcpy_s(text, "OpenGL version: ");
+	strcat_s(text, reinterpret_cast<const char*>(glGetString(GL_VERSION)));
+	Utility::Log(Destination::LogFile, text);
 
-	profile = reinterpret_cast<const GLubyte*>(glGetString(GL_VERSION));
-	Utility::Log(Destination::LogFile, "OpenGL version: " + (*profile));
-
-	profile = reinterpret_cast<const GLubyte*>(glGetString(GL_SHADING_LANGUAGE_VERSION));
-	Utility::Log(Destination::LogFile, "GLSL version: " + (*profile));
+	strcpy_s(text, "GLSL version: ");
+	strcat_s(text, reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
+	Utility::Log(Destination::LogFile, text);
+	Utility::Log(Destination::LogFile, "=================================================");
 }
 //======================================================================================================
 void Utility::DisplayExtensions()
@@ -87,9 +91,14 @@ void Utility::DisplayExtensions()
 
 	for (GLint i = 0; i < totalExtensions; i++)
 	{
-		const GLubyte* extension = reinterpret_cast<const GLubyte*>(glGetStringi(GL_EXTENSIONS, i));
-		//Utility::Log(Destination::LogFile, std::to_string(i + 1) + (*extension));
+		char text[100];
+		strcpy_s(text, (std::to_string(i + 1)).c_str());
+		strcat_s(text, ". ");
+		strcat_s(text, reinterpret_cast<const char*>(glGetStringi(GL_EXTENSIONS, i)));
+		Utility::Log(Destination::LogFile, text);
 	}
+
+	Utility::Log(Destination::LogFile, "=================================================");
 }
 //======================================================================================================
 void Utility::SetWindowHandle(HWND windowHandle)
