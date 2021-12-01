@@ -224,7 +224,7 @@ State* Design::Update(int deltaTime)
 	BoxCollider sceneBox;
 	auto dimension = m_sceneCamera->GetResolution();
 	
-	sceneBox.SetPosition(dimension.x * 0.5f, dimension.y, 0.0f);
+	sceneBox.SetPosition(dimension.x * 0.5f, dimension.y * 0.5f, 0.0f);
 	sceneBox.SetDimension(dimension.x, dimension.y, 0.0f);
 	sceneBox.Update();
 
@@ -236,7 +236,7 @@ State* Design::Update(int deltaTime)
 
 	//================================================================================
 
-	if (Input::Instance()->IsLeftButtonClicked())
+	if (Input::Instance()->IsLeftButtonClicked() && sceneBox.IsColliding(mouseBox))
 	{
 		eulerAngles.x += -mouseMotion.y;
 		eulerAngles.y += mouseMotion.x;
