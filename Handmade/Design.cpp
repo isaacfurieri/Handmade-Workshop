@@ -7,13 +7,24 @@
 #include "imgui/imgui_impl_sdl.h"
 
 #include "BoxCollider.h"
+#include "Utility.h"
 
+//======================================================================================================
+Design::Design()
+{
+	m_minorWidth = 0;
+	m_majorWidth = 0;
+	m_minorHeight = 0;
+	m_majorHeight = 0;
+	m_resolution = glm::ivec2(0);
+	m_sceneRotation = glm::vec3(45.0f, -30.0f, 0.0f);
+}
 //======================================================================================================
 bool Design::OnEnter()
 {
 	//TODO - Use a color picker to change this
 	Screen::Instance()->SetColor(30U, 30U, 30U);
-	
+
 	m_mainShader = std::make_unique<Shader>();
 
 	if (!m_mainShader->Create("Shaders/Main.vert", "Shaders/Main.frag"))
@@ -51,7 +62,7 @@ bool Design::OnEnter()
 	m_textShader->BindUniform("textureImage");
 
 	m_consoleLog.push_front("'Text.vert' and 'Text.frag' shaders created and compiled.");
-	
+
 	//===================================================================
 	//TODO - There is a bug with the lighting shaders
 
@@ -90,7 +101,7 @@ bool Design::OnEnter()
 	//m_lightShader->BindUniform("light.attenuationQuadratic");
 
 	//m_consoleLog.push_front("'Light.vert' and 'Light.frag' shaders created and compiled.");
-	
+
 	//TEST CODE to be used later for multiple lights
 	/*for (size_t i = 0; i < TOTAL_LIGHTS; i++)
 	{
@@ -116,14 +127,14 @@ bool Design::OnEnter()
 	{
 		return false;
 	}
-	
+
 	m_consoleLog.push_front("Text sub-system initialized.");
 
 	if (!(Audio::Initialize()))
 	{
 		return false;
 	}
-	
+
 	m_consoleLog.push_front("Audio sub-system initialized.");
 
 	//===================================================================
@@ -280,9 +291,9 @@ bool Design::Render()
 	};
 
 	//Console viewport
-	SetViewport(glm::ivec4(0, 0, m_majorWidth, m_minorHeight), 
+	SetViewport(glm::ivec4(0, 0, m_majorWidth, m_minorHeight),
 		glm::uvec4(255U, 200U, 0U, 1U));
-	
+
 	//Properties viewport
 	SetViewport(glm::ivec4(m_majorWidth, 0, m_minorWidth, m_resolution.y),
 		glm::uvec4(0U, 144U, 255U, 1U));
@@ -393,9 +404,9 @@ bool Design::Render()
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame();
 	ImGui::NewFrame();
-	
+
 	RenderConsoleWindow();
-	RenderPropertiesWindow();	
+	RenderPropertiesWindow();
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

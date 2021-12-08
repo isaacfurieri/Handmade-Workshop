@@ -1,7 +1,7 @@
 #pragma once
 
 /*===================================================================#
-| 'Design' source files last updated on 30 November 2021             |
+| 'Design' source files last updated on 8 December 2021              |
 #===================================================================*/
 
 #include <deque>
@@ -32,7 +32,7 @@ class Design : public State
 
 public:
 
-	Design() {}
+	Design();
 	virtual ~Design() {}
 
 	virtual bool OnEnter();
