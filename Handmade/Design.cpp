@@ -158,10 +158,12 @@ bool Design::OnEnter()
 	ImGui::GetIO().Fonts->Build();
 
 	//=========================================================================
-	
+
 	//WIP======================================================================
-	
+
 	//m_axes = std::make_unique<Axes>("Arrow.obj");
+
+	m_quad = std::make_unique<Quad>(m_grid.get());
 
 	/*m_topText = std::make_unique<Text>("Quikhand", "Quikhand.ttf", 30);
 	m_topText->SetColor(1.0f, 0.0f, 0.196f, 1.0f);
@@ -206,7 +208,6 @@ bool Design::OnEnter()
 	//m_model->GetTransform().SetScale(5.0f, 5.0f, 5.0f);
 	//m_model->SetColor(1, 0, 1, 1);
 
-	//m_quad = std::make_unique<Quad>();
 	//m_cube = std::make_unique<Cuboid>();
 	//m_sphere = std::make_unique<Sphere>(10.0f, 50.0f, 50.0f);
 
@@ -229,12 +230,11 @@ State* Design::Update(int deltaTime)
 	m_sceneCamera->GetTransform().SetPosition(camPos);
 
 	auto mouseMotion = Input::Instance()->GetMouseMotion();
-	static glm::vec3 eulerAngles = m_grid->GetTransform().GetEulerAngles();
 
 	//Screen/Mouse collider code - notr yet working properly==========================
 	BoxCollider sceneBox;
 	auto dimension = m_sceneCamera->GetResolution();
-	
+
 	sceneBox.SetPosition(dimension.x * 0.5f, dimension.y * 0.5f, 0.0f);
 	sceneBox.SetDimension(dimension.x, dimension.y, 0.0f);
 	sceneBox.Update();
@@ -249,14 +249,14 @@ State* Design::Update(int deltaTime)
 
 	if (Input::Instance()->IsLeftButtonClicked() && sceneBox.IsColliding(mouseBox))
 	{
-		eulerAngles.x += -mouseMotion.y;
-		eulerAngles.y += mouseMotion.x;
+		m_sceneRotation.x += -mouseMotion.y;
+		m_sceneRotation.y += mouseMotion.x;
 	}
 
-	m_grid->GetTransform().SetRotation(eulerAngles);
-
-	//==============================================================================
+	m_grid->GetTransform().SetRotation(m_sceneRotation);
 	
+	//==============================================================================
+
 	for (const auto& object : m_objects)
 	{
 		if (object->IsActive())
@@ -301,15 +301,16 @@ bool Design::Render()
 	//Scene viewport
 	m_sceneCamera->SetViewport(0, m_minorHeight, m_majorWidth, m_majorHeight);
 	m_sceneCamera->CreatePerspView();
-	
+
 	mainShader.Use();
-	
+
 	m_sceneCamera->Update(16.0f);
 	m_sceneCamera->SendToShader(mainShader);
 
 	//==============================================================================
 
 	m_grid->Render(mainShader);
+	m_quad->Render(mainShader);
 
 	/*lightShader.Use();
 	lightShader.SendData("cameraPosition", m_sceneCamera->GetTransform().GetPosition());
@@ -462,6 +463,34 @@ void Design::RenderPropertiesWindow()
 
 	ImGui::SetWindowPos("Properties", windowPos);
 	ImGui::SetWindowSize("Properties", windowSize);
+
+	ImGui::TextColored({ 0.0f, 0.56f, 0.8f, 1.0f }, "Transform");
+	ImGui::Separator();
+	
+	auto position = m_quad->GetTransform().GetPosition();
+	ImGui::SliderFloat3("Position", &position.x, -25.0f, 25.0f, "%.2f");
+	m_quad->GetTransform().SetPosition(position);
+	
+	//TODO - There is a tiny bug here with the sliders
+	auto rotation = m_quad->GetTransform().GetEulerAngles();
+	ImGui::SliderFloat3("Rotation", &rotation.x, -360.0f, 360.0f, "%.2f");
+	m_quad->GetTransform().SetRotation(rotation);
+	
+	auto scale = m_quad->GetTransform().GetScale();
+	ImGui::SliderFloat3("Scale", &scale.x, 1.0f, 30.0f, "%.2f");
+	m_quad->GetTransform().SetScale(scale);
+
+	for (int i = 0; i < 5; i++)
+	{
+		ImGui::Spacing();
+	}
+
+	ImGui::TextColored({ 0.0f, 0.56f, 0.8f, 1.0f }, "Material");
+	ImGui::Separator();
+
+	auto color = m_quad->GetColor();
+	ImGui::ColorEdit4("Color", &color.r);
+	m_quad->SetColor(color);
 
 	ImGui::End();
 }
