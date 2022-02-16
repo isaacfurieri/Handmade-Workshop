@@ -17,7 +17,7 @@ Design::Design()
 	m_minorHeight = 0;
 	m_majorHeight = 0;
 	m_resolution = glm::ivec2(0);
-	m_sceneRotation = glm::vec3(45.0f, -30.0f, 0.0f);
+	m_sceneRotation = glm::vec3(90.0f, 0.0f, 0.0f);
 }
 //======================================================================================================
 bool Design::OnEnter()
@@ -246,12 +246,12 @@ State* Design::Update(int deltaTime)
 	mouseBox.Update();
 
 	//================================================================================
-
-	if (Input::Instance()->IsLeftButtonClicked() && sceneBox.IsColliding(mouseBox))
+	//Uncomment to Unlock Grid
+	/*if (Input::Instance()->IsLeftButtonClicked() && sceneBox.IsColliding(mouseBox))
 	{
 		m_sceneRotation.x += -mouseMotion.y;
 		m_sceneRotation.y += mouseMotion.x;
-	}
+	}*/
 
 	m_grid->GetTransform().SetRotation(m_sceneRotation);
 
@@ -504,6 +504,7 @@ void Design::RenderPropertiesWindow()
 	static int listbox_items_current = 1;
 	ImGui::ListBox("Tile Type\n(single select)", &listbox_items_current, listbox_items, IM_ARRAYSIZE(listbox_items), 4);
 
-	
+	//TODO
+	//Add list of Tiles that contains tiles from selected box 
 	ImGui::End();
 }
