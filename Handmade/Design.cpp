@@ -254,7 +254,7 @@ State* Design::Update(int deltaTime)
 	}
 
 	m_grid->GetTransform().SetRotation(m_sceneRotation);
-	
+
 	//==============================================================================
 
 	for (const auto& object : m_objects)
@@ -466,16 +466,16 @@ void Design::RenderPropertiesWindow()
 
 	ImGui::TextColored({ 0.0f, 0.56f, 0.8f, 1.0f }, "Transform");
 	ImGui::Separator();
-	
+
 	auto position = m_quad->GetTransform().GetPosition();
 	ImGui::SliderFloat3("Position", &position.x, -25.0f, 25.0f, "%.2f");
 	m_quad->GetTransform().SetPosition(position);
-	
+
 	//TODO - There is a tiny bug here with the sliders
 	auto rotation = m_quad->GetTransform().GetEulerAngles();
 	ImGui::SliderFloat3("Rotation", &rotation.x, -360.0f, 360.0f, "%.2f");
 	m_quad->GetTransform().SetRotation(rotation);
-	
+
 	auto scale = m_quad->GetTransform().GetScale();
 	ImGui::SliderFloat3("Scale", &scale.x, 1.0f, 30.0f, "%.2f");
 	m_quad->GetTransform().SetScale(scale);
@@ -492,5 +492,18 @@ void Design::RenderPropertiesWindow()
 	ImGui::ColorEdit4("Color", &color.r);
 	m_quad->SetColor(color);
 
+	for (int i = 0; i < 5; i++)
+	{
+		ImGui::Spacing();
+	}
+
+	ImGui::TextColored({ 0.0f, 0.56f, 0.8f, 1.0f }, "TileSet");
+	ImGui::Separator();
+	
+	const char* listbox_items[] = { "Floor and Walls", "Decoration", "Traps", "Items" };
+	static int listbox_items_current = 1;
+	ImGui::ListBox("Tile Type\n(single select)", &listbox_items_current, listbox_items, IM_ARRAYSIZE(listbox_items), 4);
+
+	
 	ImGui::End();
 }
